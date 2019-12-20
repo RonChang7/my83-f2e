@@ -9,5 +9,9 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
         requiredStoreModules: ['example'],
       },
     },
+    {
+      path: '/login',
+      component: resolve('@/views/login/Index.vue'),
+    },
   ]
 }
