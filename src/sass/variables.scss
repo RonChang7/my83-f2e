@@ -1,0 +1,22 @@
+@import 'utils/variables';
+
+// color
+$text-default-color: #333;
+
+$primary-color: #ef6e2e;
+
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    'primary': $primary-color,
+  )
+  ,$theme-colors
+);
+
+
+// background color
+$bg-default-color: #fff;
+$bg-secondary-color: #e8e8e8;
+
+// default font size
+$base-font-size: 16px;

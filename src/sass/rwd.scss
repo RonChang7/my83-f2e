@@ -1,0 +1,21 @@
+$grid-breakpoints: (
+  sm: 576px,
+  md: 768px,
+  lg: 992px
+) !default;
+
+@mixin max-media($type) {
+  $value: map-get($grid-breakpoints, $type) - 1;
+
+  @media (max-width: $value) {
+    @content;
+  }
+}
+
+@mixin min-media($type) {
+  $value: map-get($grid-breakpoints, $type);
+
+  @media (min-width: $value) {
+    @content;
+  }
+}

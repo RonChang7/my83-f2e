@@ -1,0 +1,15 @@
+@import 'normalize.css/normalize.css';
+
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  color: $text-default-color;
+  font-size: $base-font-size;
+}
+
+a {
+  text-decoration-line: none;
+}
