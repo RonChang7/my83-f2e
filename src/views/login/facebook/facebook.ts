@@ -7,23 +7,6 @@ import {
 } from './facebook.type'
 
 export class Facebook {
-  private constructor() {
-    this.initFacebookSDK().then(() => {
-      this.getLoginState()
-      Facebook.state.isLoaded = true
-    })
-  }
-
-  private static instance: Facebook
-
-  public static getInstance(): Facebook {
-    if (!Facebook.instance) {
-      Facebook.instance = new Facebook()
-    }
-
-    return Facebook.instance
-  }
-
   public static state: FaceBookStatus = {
     isLoaded: false,
     accessToken: '',
@@ -33,6 +16,23 @@ export class Facebook {
       name: '',
       avatar: '',
     },
+  }
+
+  private static instance: Facebook
+
+  private constructor() {
+    this.initFacebookSDK().then(() => {
+      this.getLoginState()
+      Facebook.state.isLoaded = true
+    })
+  }
+
+  public static getInstance(): Facebook {
+    if (!Facebook.instance) {
+      Facebook.instance = new Facebook()
+    }
+
+    return Facebook.instance
   }
 
   public login() {
