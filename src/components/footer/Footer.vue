@@ -44,7 +44,15 @@
           幫助
         </h3>
         <div class="content">
-          <p><a id="contact-customer-service" href="#">線上客服</a></p>
+          <p>
+            <a
+              id="contact-customer-service"
+              @click.prevent="openZendeskChat"
+              href="#"
+            >
+              線上客服
+            </a>
+          </p>
           <p><a href="/faq">常見問題</a></p>
           <p>
             服務信箱：
@@ -87,8 +95,8 @@
       </section>
     </div>
     <div class="copyright">
-      Copyright © {{ new Date().getFullYear() }} 上恩資訊股份有限公司 UPN Inc.
-      All Rights Reserved.
+      Copyright © {{ currentYear }} 上恩資訊股份有限公司 UPN Inc. All Rights
+      Reserved.
     </div>
   </footer>
 </template>
@@ -97,8 +105,26 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { Zendesk } from '@/modules/zendesk/zendesk'
 
-export default {} as ComponentOption
+export default {
+  data() {
+    return {
+      currentYear: new Date().getFullYear(),
+    }
+  },
+  methods: {
+    openZendeskChat() {
+      const zendeskInstance = Zendesk.getInstance()
+
+      if (Zendesk.isLoaded) {
+        Zendesk.showChatWindow()
+      } else {
+        zendeskInstance.onLoaded(() => Zendesk.showChatWindow())
+      }
+    },
+  },
+} as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,
@@ -118,9 +144,13 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  currentYear: number
+}
 
-export interface Methods {}
+export interface Methods {
+  openZendeskChat: () => void
+}
 
 export interface Computed {}
 
