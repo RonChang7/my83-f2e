@@ -44,14 +44,11 @@
           幫助
         </h3>
         <div class="content">
-          <p>
-            <a
-              id="contact-customer-service"
-              @click.prevent="openZendeskChat"
-              href="#"
-            >
+          <p class="d-flex align-items-center">
+            <a @click.prevent="openZendeskChat" class="mr-2" href="#">
               線上客服
             </a>
+            <Loading v-if="zendeskLoading" :fontSize="`12px`" />
           </p>
           <p><a href="/faq">常見問題</a></p>
           <p>
@@ -79,7 +76,7 @@
         </h3>
         <div class="content">
           <p><a href="/aboutUs">關於MY83</a></p>
-          <p class="flex">
+          <p class="d-flex">
             <img
               src="@/assets/images/icon/facebook.svg"
               alt="facebook-icon"
@@ -105,22 +102,32 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import Loading from '@/components/loading/LoadingIcon.vue'
 import { Zendesk } from '@/modules/zendesk/zendesk'
 
 export default {
+  components: {
+    Loading,
+  },
   data() {
     return {
       currentYear: new Date().getFullYear(),
+      zendeskLoading: false,
     }
   },
   methods: {
     openZendeskChat() {
       const zendeskInstance = Zendesk.getInstance()
+      this.zendeskLoading = true
 
       if (Zendesk.isLoaded) {
         Zendesk.showChatWindow()
+        this.zendeskLoading = false
       } else {
-        zendeskInstance.onLoaded(() => Zendesk.showChatWindow())
+        zendeskInstance.onLoad(() => {
+          Zendesk.showChatWindow()
+          this.zendeskLoading = false
+        })
       }
     },
   },
@@ -146,6 +153,7 @@ export interface Instance extends Vue {}
 
 export interface Data {
   currentYear: number
+  zendeskLoading: boolean
 }
 
 export interface Methods {
