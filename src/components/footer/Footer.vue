@@ -3,7 +3,9 @@
     <div class="sectionArea">
       <section class="slogan">
         <h3 class="title">
-          <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
+          <GlobalLink to="/">
+            <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
+          </GlobalLink>
         </h3>
         <div class="content">
           從
@@ -18,7 +20,7 @@
         <div class="content">
           <a
             class="logo"
-            href="http://www.cw.com.tw/article/article.action?id=5064306"
+            href="https://www.cw.com.tw/article/article.action?id=5064306"
             target="_blank"
           >
             <img src="@/assets/images/footer/cw.png" />
@@ -32,7 +34,7 @@
           </a>
           <a
             class="logo"
-            href="//news.cnyes.com/news/id/3547407"
+            href="https://news.cnyes.com/news/id/3547407"
             target="_blank"
           >
             <img src="@/assets/images/footer/cnyes.png" />
@@ -44,13 +46,13 @@
           幫助
         </h3>
         <div class="content">
-          <p class="d-flex align-items-center">
+          <p>
             <a @click.prevent="openZendeskChat" class="mr-2" href="#">
               線上客服
             </a>
             <Loading v-if="zendeskLoading" :fontSize="`12px`" />
           </p>
-          <p><a href="/faq">常見問題</a></p>
+          <p><GlobalLink to="/faq">常見問題</GlobalLink></p>
           <p>
             服務信箱：
             <a href="mailto:service@my83.com.tw">service@my83.com.tw</a>
@@ -60,7 +62,7 @@
             <a href="tel:(02) 2363-8833">(02) 2363-8833</a>
           </p>
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
-          <p class="tips flex">
+          <p class="tips d-flex align-items-center">
             <img
               src="@/assets/images/icon/info.svg"
               alt="info-icon"
@@ -75,8 +77,8 @@
           關於MY83
         </h3>
         <div class="content">
-          <p><a href="/aboutUs">關於MY83</a></p>
-          <p class="d-flex">
+          <p><GlobalLink to="/aboutUs">關於MY83</GlobalLink></p>
+          <p class="d-flex align-items-center">
             <img
               src="@/assets/images/icon/facebook.svg"
               alt="facebook-icon"
@@ -86,8 +88,8 @@
               小資族聰明買保險
             </a>
           </p>
-          <p><a href="/terms">服務條款</a></p>
-          <p><a href="/privacy">隱私條款</a></p>
+          <p><GlobalLink to="/terms">服務條款</GlobalLink></p>
+          <p><GlobalLink to="/privacy">隱私條款</GlobalLink></p>
         </div>
       </section>
     </div>
@@ -104,10 +106,12 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import Loading from '@/components/loading/LoadingIcon.vue'
 import { Zendesk } from '@/modules/zendesk/zendesk'
+import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 
 export default {
   components: {
     Loading,
+    GlobalLink,
   },
   data() {
     return {
@@ -170,16 +174,19 @@ export interface Props {}
 @import '@/sass/rwd.scss';
 
 footer {
-  background: $bg-secondary-color;
-  color: #333333;
+  background: $secondary-bg;
   padding: 40px 45px 20px;
   display: flex;
   flex-direction: column;
 
+  @include max-media('xl') {
+    padding: 40px 25px 20px;
+  }
+
   .sectionArea {
     display: flex;
 
-    @include max-media('md') {
+    @include max-media('xl') {
       flex-direction: column;
     }
 
@@ -187,12 +194,13 @@ footer {
       flex: 1 0 25%;
       padding-right: 10px;
 
-      @include max-media('md') {
+      @include max-media('xl') {
         flex: 0 0 100%;
         margin-bottom: 30px;
       }
 
       h3.title {
+        color: $gray-primary;
         margin-bottom: 10px;
         margin-top: 0;
         font-size: 1rem;
@@ -205,6 +213,8 @@ footer {
       }
 
       &.slogan {
+        color: $gray-primary;
+
         .title {
           margin-bottom: 15px;
 
@@ -233,13 +243,19 @@ footer {
 
       &.contact,
       &.about {
+        color: $text-default-color;
+
+        a {
+          color: $text-default-color;
+
+          &:hover {
+            color: $gray-primary;
+          }
+        }
+
         .content {
           p {
             margin-bottom: 5px;
-
-            a {
-              color: #333333;
-            }
           }
 
           .tips {
@@ -257,7 +273,6 @@ footer {
   }
 
   .copyright {
-    color: #6c6c6c;
     font-size: 0.75rem;
     border-top: 1px solid #b4b4b4;
     padding-top: 10px;
