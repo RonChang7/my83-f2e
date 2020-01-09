@@ -6,10 +6,18 @@
 
 html,
 body {
+  font-family: 'Noto Sans TC', sans-serif;
   color: $text-default-color;
   font-size: $base-font-size;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
+  color: $secondary-color;
   text-decoration-line: none;
+
+  &:hover {
+    color: $secondary-hover-color;
+  }
 }
