@@ -13,5 +13,12 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       path: '/login',
       component: resolve('@/views/login/Index.vue'),
     },
+    {
+      path: '/header-menu',
+      component: resolve('@/views/header-menu/HeaderMenu.vue'),
+      meta: {
+        hideFooter: true,
+      },
+    },
   ]
 }
