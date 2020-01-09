@@ -1,4 +1,6 @@
-export default {
+import { Configuration } from '@nuxt/types'
+
+const config: Configuration = {
   server: {
     port: 8006,
   },
@@ -8,32 +10,37 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'MY83 保險網－把保險變簡單',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || '',
+        content:
+          'MY83 把保險變簡單，幫助你讓生活更有保障。保險其實是很好的概念，能減輕遭遇風險時的負擔。MY83 不是保險業務員，也和任何保險公司無關，保戶在這裡使用任何資源都是免費的。我們從保戶的立場成立保險媒合平台，希望讓大家有能力可以分辨適合自己的保險。幫助消費者保險買對不買貴，也讓專業的業務員服務更多的消費者！',
       },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    bodyAttrs: {
+      ontouchstart: '',
+    },
   },
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#ef6e2e' },
   /*
    ** Global CSS
    */
-  css: ['@/sass/main.scss'],
+  css: ['@/sass/main.scss', '@/sass/fonts.scss'],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
+    '@/plugins/app-init',
   ],
   /*
    ** Nuxt.js dev-modules
@@ -51,11 +58,10 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
-    '@nuxtjs/pwa',
+    // '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
     ['@nuxtjs/dotenv', { path: './' }],
+    'nuxt-user-agent',
   ],
   /*
    ** Axios module configuration
@@ -80,3 +86,5 @@ export default {
     },
   },
 }
+
+export default config
