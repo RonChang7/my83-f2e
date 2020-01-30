@@ -1,6 +1,6 @@
 <template>
-  <div :class="classObject" class="BaseBadge">
-    <slot></slot>
+  <div v-if="msg" class="BaseInputErrorMessage">
+    {{ msg }}
   </div>
 </template>
 
@@ -11,21 +11,9 @@ import { CombinedVueInstance } from 'vue/types/vue'
 
 export default {
   props: {
-    type: {
+    msg: {
       type: String,
-      default: 'primary',
-    },
-    activeHover: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  computed: {
-    classObject() {
-      return {
-        [`BaseBadge__${this.type}`]: true,
-        [`BaseBadge__${this.type}--hover`]: this.activeHover,
-      }
+      default: '',
     },
   },
 } as ComponentOption
@@ -52,25 +40,20 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {
-  classObject: Record<string, boolean>
-}
+export interface Computed {}
 
 export interface Props {
-  type: 'primary'
-  activeHover: boolean
+  msg: string
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
-@import '@/sass/mixins.scss';
 
-.BaseBadge {
-  @include badge;
-
-  &__primary {
-    @include badge-primary;
-  }
+.BaseInputErrorMessage {
+  color: $error-color;
+  font-size: 0.875rem;
+  font-weight: normal;
+  padding-top: 8px;
 }
 </style>
