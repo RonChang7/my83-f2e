@@ -7,12 +7,14 @@ export interface HeaderNavItem {
   children?: HeaderNavItem[]
 }
 
-export interface HeaderPersonalizedData {
+export interface HeaderPersonalized {
   avatar: string
   notification_count: number
   sales: SalesInfo
   menu: HeaderNavItem[]
 }
+
+export type HeaderPersonalizedData = HeaderPersonalized | {}
 
 export interface SalesInfo {
   is_verify: boolean
