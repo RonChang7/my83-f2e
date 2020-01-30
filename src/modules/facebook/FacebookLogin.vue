@@ -5,6 +5,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { Facebook } from './facebook'
 import { FaceBookStatus } from './facebook.type'
 
+// Manual refresh token when (current time - token expire time) is less than REFRESH_TIME_THRESHOLD
 const REFRESH_TIME_THRESHOLD = 60 * 1000
 
 export default {

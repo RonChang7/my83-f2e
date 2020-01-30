@@ -45,6 +45,7 @@ export class Facebook {
         {
           // https://developers.facebook.com/docs/reference/javascript/FB.login/v5.0
           auth_type: 'rerequest',
+          scope: 'email',
         }
       )
     )
