@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import freezeWindowScroll from '@/utils/freeze-window-scroll'
-import { PopupManager } from '@/modules/popup-manager/popup-manager'
+import { PopupManager } from '@/services/popup-manager/popup-manager'
 import './popup-shadow.scss'
 
 export default {
@@ -43,10 +43,20 @@ export default {
   },
   watch: {
     visible(val) {
-      return val ? this.open() : this.close()
+      if (val) {
+        if (process.server) {
+          throw new Error('Do not open popup during server-side rendering.')
+        }
+
+        this.open()
+      } else {
+        this.close()
+      }
     },
   },
   beforeCreate() {
+    if (process.server) return
+
     const key = PopupManager.register(this as ComponentInstance)
     if (!key) throw new Error('沒有正確註冊 PopupManager')
 
