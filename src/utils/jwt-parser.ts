@@ -32,20 +32,15 @@ export const jwtParser = (token: string | undefined): Response<boolean> => {
 export type Response<T> = T extends true ? JwtToken : Error
 
 interface JwtToken {
+  [key: string]: any
   success: boolean
   iss: string
   iat: number
   exp: number
   nbf: number
   jti: string
-  sub: JwtTokenSub
+  sub: any
   prv: string
-}
-
-interface JwtTokenSub {
-  uid: number
-  role: string
-  role_code: number
 }
 
 interface Error {

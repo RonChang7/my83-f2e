@@ -8,14 +8,18 @@ export class User {
 
   public static id: number = 0
 
-  public static role: Role = ''
+  public static role: Role = 'guest'
 
   public static roleCode: number = -1
+
+  public static firstHttpReferrer: string = ''
+
+  public static firstUrl: string = ''
 
   private static instance: User
 
   private constructor() {
-    this.UpdateUser()
+    this.updateUser()
   }
 
   public static getInstance(): User {
@@ -26,14 +30,14 @@ export class User {
     return User.instance
   }
 
-  public UpdateUser() {
+  public updateUser() {
     const jwtToken = Cookies.get(tokenKey)
     const jwtDecode = jwtParser(jwtToken)
     User.isValid = jwtDecode.success
 
     if (User.isValid) {
-      const { role, role_code, uid } = (jwtDecode as Response<true>).sub
-      User.id = uid
+      const { role, role_code, sub } = jwtDecode as Response<true>
+      User.id = sub
       User.role = role as Role
       User.roleCode = role_code
     } else {
@@ -41,11 +45,21 @@ export class User {
     }
   }
 
+  public updateLandingUrl() {
+    User.firstHttpReferrer = document.referrer
+    User.firstUrl = window.location.href
+  }
+
   private resetUser() {
     User.id = 0
-    User.role = ''
+    User.role = 'guest'
     User.roleCode = -1
   }
 }
 
 type Role = 'guest' | 'client' | 'sales' | 'admin' | ''
+
+export interface UrlInfo {
+  firstHttpReferrer: string
+  firstUrl: string
+}
