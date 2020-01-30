@@ -31,7 +31,7 @@ module.exports = {
         exports: 'always-multiline',
         functions: 'never',
         imports: 'always-multiline',
-        objects: 'always-multiline',
+        objects: 'only-multiline',
       },
     ],
     'prettier/prettier': [
