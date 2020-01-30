@@ -19,6 +19,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const data = await api.fetchHeaderData()
           commit(types.UPDATE_HEADER_NAV_DATA, data)
         } catch (err) {
+          // @todo: error handler
           console.log(err)
         }
       },
@@ -27,6 +28,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const data = await api.fetchPersonalizedHeaderData()
           commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
         } catch (err) {
+          // @todo: error handler
           console.log(err)
         }
       },
