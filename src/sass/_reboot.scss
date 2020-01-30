@@ -14,10 +14,16 @@ body {
 }
 
 a {
-  color: $secondary-color;
+  color: $primary-color;
   text-decoration-line: none;
 
   &:hover {
-    color: $secondary-hover-color;
+    color: $primary-hover-color;
+    cursor: pointer;
   }
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $secondary-bg;
 }
