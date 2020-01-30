@@ -96,11 +96,11 @@ export interface Methods {
   shouldShowMenu: (index: number) => boolean
 }
 
-export interface Computed {}
-
-export interface Props {
+export interface Computed {
   headerNavItems: HeaderNavItem[]
 }
+
+export interface Props {}
 </script>
 
 <style lang="scss" scoped>

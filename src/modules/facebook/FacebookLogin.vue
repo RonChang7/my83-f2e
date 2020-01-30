@@ -12,7 +12,6 @@ export default {
   data() {
     return {
       facebookStatus: null,
-      JWTToken: '',
     }
   },
   methods: {
@@ -69,7 +68,6 @@ export interface Instance extends Vue {}
 export interface Data {
   facebook: Facebook
   facebookStatus: FaceBookStatus
-  JWTToken: string
 }
 
 export interface Methods {
@@ -77,7 +75,11 @@ export interface Methods {
 }
 
 export interface Computed {
-  slot: object
+  slot: {
+    user: object
+    isLoaded: boolean
+    facebookLogin: Function
+  }
 }
 
 export interface Props {}

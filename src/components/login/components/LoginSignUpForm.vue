@@ -94,7 +94,9 @@ export interface Data {
   message: string
 }
 
-export interface Methods {}
+export interface Methods {
+  facebookLogin: (fbToken: string) => void
+}
 
 export interface Computed {}
 

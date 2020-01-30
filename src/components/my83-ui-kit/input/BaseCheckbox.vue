@@ -33,8 +33,8 @@ export default {
   },
   methods: {
     update(e) {
-      this.$emit('update:checked', e.target.checked)
-      this.$emit('update', e.target.checked)
+      this.$emit('update:checked', (e.target as HTMLInputElement).checked)
+      this.$emit('update', (e.target as HTMLInputElement).checked)
     },
   },
 } as ComponentOption
@@ -59,7 +59,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  update: (e: Event) => void
+}
 
 export interface Computed {}
 

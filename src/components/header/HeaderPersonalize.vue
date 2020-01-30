@@ -184,13 +184,12 @@ export interface Methods {
 }
 
 export interface Computed {
+  headerPersonalizedData: HeaderPersonalizedData
   notificationCount: number | string
   menu: Menu
 }
 
-export interface Props {
-  headerPersonalizedData: HeaderPersonalizedData
-}
+export interface Props {}
 
 interface Menu extends HeaderNavItem {
   clickEvent?: string

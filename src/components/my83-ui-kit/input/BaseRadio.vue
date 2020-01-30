@@ -38,8 +38,11 @@ export default {
   },
   methods: {
     update(e) {
-      this.$emit('update:currentSelectedValue', e.target.value)
-      this.$emit('update', e.target.value)
+      this.$emit(
+        'update:currentSelectedValue',
+        (e.target as HTMLInputElement).value
+      )
+      this.$emit('update', (e.target as HTMLInputElement).value)
     },
   },
 } as ComponentOption
@@ -65,7 +68,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  update: () => void
+  update: (e: Event) => void
 }
 
 export interface Computed {}

@@ -94,7 +94,7 @@ export interface Methods {
 export interface Computed {
   href: string | undefined
   htmlTag: GlobalLinkTag
-  props: { [key: string]: any }
+  props: Record<string, any>
 }
 
 export interface Props {

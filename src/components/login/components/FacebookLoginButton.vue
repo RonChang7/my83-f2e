@@ -110,6 +110,7 @@ export interface Computed {}
 
 export interface Props {
   text: string
+  state: 'loading' | ''
 }
 </script>
 

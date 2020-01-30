@@ -92,9 +92,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
-  loadingIconColor: () => string
-}
+export interface Methods {}
 
 export interface Computed {
   classObject: Record<string, boolean>

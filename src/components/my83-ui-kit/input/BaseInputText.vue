@@ -69,8 +69,8 @@ export default {
   },
   methods: {
     update(e) {
-      this.$emit('update:value', e.target.value)
-      this.$emit('update', e.target.value)
+      this.$emit('update:value', (e.target as HTMLInputElement).value)
+      this.$emit('update', (e.target as HTMLInputElement).value)
     },
   },
 } as ComponentOption
@@ -98,7 +98,7 @@ export interface Data {
 }
 
 export interface Methods {
-  update: () => void
+  update: (e: Event) => void
 }
 
 export interface Computed {}

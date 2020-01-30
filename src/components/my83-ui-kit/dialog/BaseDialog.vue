@@ -134,7 +134,10 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  closePanel: () => void
+  enterToConfirm: () => void
+}
 
 export interface Computed {}
 

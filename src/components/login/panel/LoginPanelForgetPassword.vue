@@ -142,7 +142,6 @@ type Errors<T> = {
 
 interface Form {
   email: string
-  password: string
 }
 </script>
 
