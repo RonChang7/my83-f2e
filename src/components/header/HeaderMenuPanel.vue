@@ -52,6 +52,9 @@
           >
             {{ item.description }}
           </div>
+          <a v-if="item.clickEvent" @click.prevent="$emit(item.clickEvent)">
+            {{ item.name }}
+          </a>
         </div>
       </div>
     </template>

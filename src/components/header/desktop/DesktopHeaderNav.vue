@@ -122,6 +122,7 @@ export interface Props {
     position: absolute;
     top: 54px;
     margin-left: -17px;
+    z-index: 10;
   }
 }
 </style>

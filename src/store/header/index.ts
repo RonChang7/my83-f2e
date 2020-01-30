@@ -15,12 +15,20 @@ export const createStoreModule = <R>(): Module<State, R> => {
     getters: {},
     actions: {
       async [types.FETCH_HEADER_NAV_DATA]({ commit }) {
-        const data = await api.fetchHeaderData()
-        commit(types.UPDATE_HEADER_NAV_DATA, data)
+        try {
+          const data = await api.fetchHeaderData()
+          commit(types.UPDATE_HEADER_NAV_DATA, data)
+        } catch (err) {
+          console.log(err)
+        }
       },
       async [types.FETCH_HEADER_PERSONALIZED_DATA]({ commit }) {
-        const data = await api.fetchPersonalizedHeaderData()
-        commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
+        try {
+          const data = await api.fetchPersonalizedHeaderData()
+          commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
+        } catch (err) {
+          console.log(err)
+        }
       },
     },
     mutations: {
@@ -34,7 +42,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
   }
 }
 
-export interface State {
+interface State {
   headerNavItems: HeaderNavItem[]
   headerPersonalizedData: HeaderPersonalizedData | {}
 }

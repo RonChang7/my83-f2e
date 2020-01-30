@@ -10,7 +10,7 @@
         </GlobalLink>
       </li>
       <li>
-        <span class="HeaderPersonalize__name">
+        <span @click="showLoginPanel" class="HeaderPersonalize__name">
           登入/註冊
         </span>
       </li>
@@ -18,7 +18,10 @@
 
     <ul v-else class="HeaderPersonalize__authorized">
       <li>
-        <HeaderSalesDetail :salesInfo="headerPersonalizedData.sales" />
+        <HeaderSalesDetail
+          v-if="headerPersonalizedData.sales"
+          :salesInfo="headerPersonalizedData.sales"
+        />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -45,8 +48,9 @@
           />
         </span>
         <HeaderMenuPanel
-          :headerNavItems="headerPersonalizedData.menu"
+          :headerNavItems="menu"
           :class="{ 'HeaderPersonalize__menu--show': shouldShowMenu }"
+          @logout="logout"
           class="HeaderPersonalize__menu"
         />
       </li>
@@ -62,12 +66,18 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderMenuPanel from './HeaderMenuPanel.vue'
 import HeaderSalesDetail from './HeaderSalesDetail.vue'
-import { HeaderPersonalizedData } from '@/api/header/header.type'
+import {
+  HeaderPersonalizedData,
+  HeaderPersonalized,
+  HeaderNavItem,
+} from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseNotification from '@/components/base/icon/24/BaseNotification.vue'
 import BaseBadge from '@/components/my83-ui-kit/badge/BaseBadge.vue'
 import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
+import * as types from '@/store/global/global.type'
+import { logout } from '@/api/login/login'
 
 export default {
   components: {
@@ -98,6 +108,16 @@ export default {
     getScreenWidth() {
       this.screenWidth = window.innerWidth
     },
+    showLoginPanel() {
+      this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(`global/${types.UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        location.reload()
+      })
+    },
+    async logout() {
+      const result = await logout()
+      result && location.reload()
+    },
   },
   computed: {
     ...mapState('header', ['headerPersonalizedData']),
@@ -106,10 +126,20 @@ export default {
         return 0
       }
 
-      const count = (this.headerPersonalizedData as HeaderPersonalizedData)
+      const count = (this.headerPersonalizedData as HeaderPersonalized)
         .notification_count
 
       return count > 99 ? '99+' : count
+    },
+    menu() {
+      return [
+        ...(this.headerPersonalizedData as HeaderPersonalized).menu,
+        {
+          name: '登出',
+          link: null,
+          clickEvent: 'logout',
+        },
+      ]
     },
   },
   mounted() {
@@ -150,14 +180,20 @@ export interface Methods {
   isEmpty: () => boolean
   menuToggle: () => void
   getScreenWidth: () => void
+  logout: () => void
 }
 
 export interface Computed {
   notificationCount: number | string
+  menu: Menu
 }
 
 export interface Props {
-  headerPersonalizedData: HeaderPersonalizedData | {}
+  headerPersonalizedData: HeaderPersonalizedData
+}
+
+interface Menu extends HeaderNavItem {
+  clickEvent?: string
 }
 </script>
 

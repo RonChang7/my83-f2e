@@ -46,11 +46,11 @@
           幫助
         </h3>
         <div class="content">
-          <p>
+          <p class="d-flex align-items-center">
             <a @click.prevent="openZendeskChat" class="mr-2" href="#">
               線上客服
             </a>
-            <Loading v-if="zendeskLoading" :fontSize="`12px`" />
+            <LoadingIcon v-if="zendeskLoading" size="0.875rem" />
           </p>
           <p><GlobalLink to="/faq">常見問題</GlobalLink></p>
           <p>
@@ -104,13 +104,13 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import Loading from '@/components/loading/LoadingIcon.vue'
-import { Zendesk } from '@/modules/zendesk/zendesk'
+import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
+import { Zendesk } from '@/services/zendesk/zendesk'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 
 export default {
   components: {
-    Loading,
+    LoadingIcon,
     GlobalLink,
   },
   data() {
