@@ -1,4 +1,4 @@
-import initZendesk from './zendesk-sdk'
+import initZendesk from '@/libs/zendesk-sdk'
 
 export class Zendesk {
   public static isLoaded: boolean = false
@@ -47,8 +47,10 @@ export class Zendesk {
 
     const id = window.setInterval(() => {
       Zendesk.isLoaded = !!(window.$zopim && window.$zopim.livechat)
+
       if (Zendesk.isLoaded) {
         Zendesk.isLoaded = true
+        window.$zopim.livechat.setLanguage('zh_TW') // 調整預設語言
         callback && callback()
         window.clearInterval(id)
       }
