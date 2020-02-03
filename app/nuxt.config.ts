@@ -1,8 +1,9 @@
 import { Configuration } from '@nuxt/types'
+require('dotenv').config()
 
 const config: Configuration = {
   server: {
-    port: 8006,
+    port: process.env.NUXT_ENV_PORT,
   },
   mode: 'universal',
   srcDir: './src',
