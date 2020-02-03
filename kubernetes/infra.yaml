@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my83-f2e
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: my83-f2e-ingress
+  namespace: my83-f2e
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: k8s-my83-f2e-ip
+    kubernetes.io/ingress.class: gce
+    kubernetes.io/ingress.allow-http: "true"
+spec:
+  rules:
+    - host: front.mamilove.com.tw
+      http:
+        paths:
+          - backend:
+              serviceName: my83-f2e-app-prod-service
+              servicePort: 3000
+    - host: staging-front.mamilove.com.tw
+      http:
+        paths:
+          - backend:
+              serviceName: my83-f2e-app-staging-service
+              servicePort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my83-f2e-app-prod-service
+  namespace: my83-f2e
+spec:
+  type: NodePort
+  selector:
+    app: my83-f2e-app
+    env: prod
+  ports:
+    - protocol: TCP
+      targetPort: 3000
+      port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my83-f2e-app-staging-service
+  namespace: my83-f2e
+spec:
+  type: NodePort
+  selector:
+    app: my83-f2e-app
+    env: staging
+  ports:
+    - protocol: TCP
+      targetPort: 3000
+      port: 3000
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: drone-deploy
+  namespace: my83-f2e
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: drone-deploy-role
+subjects:
+  - kind: ServiceAccount
+    name: drone-deploy-account
+    namespace: kube-ops
