@@ -1,0 +1,18 @@
+version: '3'
+
+networks:
+  system-proxy_frontend:
+    external: true
+
+services:
+  app:
+    expose:
+      - ${APP_CONTAINER_PORT}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=system-proxy_frontend
+      - traefik.http.routers.my83-f2e-app.rule=Host(`local-front.mamilove.com.tw`)
+      - traefik.http.routers.my83-f2e-app.entrypoints=web
+      - traefik.http.services.my83-f2e-app.loadbalancer.server.port=${APP_CONTAINER_PORT}
+    networks:
+      - system-proxy_frontend

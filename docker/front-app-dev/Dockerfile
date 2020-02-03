@@ -1,0 +1,6 @@
+FROM node:10
+
+ENV APP_ROOT /app
+ENV HOST 0.0.0.0
+
+WORKDIR ${APP_ROOT}

@@ -1,0 +1,21 @@
+# Mamilove Front Docker
+
+## 環境需求
+- Docker for macOS
+- docker-sync, unison, eugenmayer/dockersync/unox [安裝方式](https://docker-sync.readthedocs.io/en/latest/getting-started/installation.html)
+
+## 使用方式
+複製 `.env.example` 並命名 `.env`
+```
+cp .env.example .env
+```
+
+依照自己需求改寫 `COMPOSE_FILE`
+- 開發用 `docker-compose.dev.yml`
+- 直接放出 port 用 `docker-compose.expose.yml`, 使用 proxy 用 `docker-compose.proxy.yml`
+- 使用 docker-sync `docker-compose.sync.yml`
+
+設定 `DOCKER_HOST_IP`
+- 進入一個 container 的 bash
+- `ping host.docker.internal`
+- 由 ping 指令 回應的 IP 填入 DOCKER_HOST_IP

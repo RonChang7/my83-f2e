@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  app:
+    tty: true
+    build:
+      context: ./front-app-dev
+      dockerfile: Dockerfile
+    volumes:
+      - ../app:/app
+    extra_hosts:
+      - local-api.my83.com.tw:${DOCKER_HOST_IP}

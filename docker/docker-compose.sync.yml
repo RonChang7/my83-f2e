@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  app:
+    volumes:
+      - app-sync:${APP_CODE_PATH_CONTAINER}:nocopy
+
+volumes:
+  app-sync:
+    external:
+      name: my83-f2e-app-sync
