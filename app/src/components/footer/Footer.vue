@@ -179,22 +179,26 @@ footer {
   display: flex;
   flex-direction: column;
 
-  @include max-media('xl') {
+  @include max-media('md') {
     padding: 40px 25px 20px;
   }
 
   .sectionArea {
     display: flex;
 
-    @include max-media('xl') {
+    @include max-media('md') {
       flex-direction: column;
     }
 
     section {
-      flex: 1 0 25%;
-      padding-right: 10px;
+      flex: 1 1 25%;
+      padding-right: 50px;
 
-      @include max-media('xl') {
+      &:last-child {
+        padding-right: 0;
+      }
+
+      @include max-media('md') {
         flex: 0 0 100%;
         margin-bottom: 30px;
       }
@@ -219,8 +223,8 @@ footer {
           margin-bottom: 15px;
 
           .logo {
-            width: auto;
-            height: 50px;
+            max-width: 218px;
+            width: 100%;
           }
         }
       }
