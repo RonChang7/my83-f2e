@@ -8,5 +8,7 @@
 
 @mixin card-secondary {
   background: $default-bg;
+  border: 0;
+  border-radius: 0;
   @include shadow-02;
 }
