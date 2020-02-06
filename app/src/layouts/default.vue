@@ -9,7 +9,9 @@
       <BaseDialog v-if="globalDialogVisible" />
     </client-only>
     <Header v-if="shouldShowHeader" />
-    <nuxt />
+    <div class="container">
+      <nuxt />
+    </div>
     <Footer v-if="shouldShowFooter" />
   </div>
 </template>
@@ -90,3 +92,11 @@ export interface Computed {
 
 export interface Props {}
 </script>
+
+<style lang="scss" scoped>
+@import '@/sass/variables.scss';
+
+.container {
+  background: $primary-bg;
+}
+</style>
