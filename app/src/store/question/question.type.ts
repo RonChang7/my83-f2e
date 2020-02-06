@@ -1,0 +1,5 @@
+// Actions
+export const FETCH_QUESTION_DATA = 'FETCH_QUESTION_DATA'
+
+// Mutations
+export const UPDATE_QUESTION_DATA = 'UPDATE_QUESTION_DATA'
