@@ -44,6 +44,10 @@ const config: Configuration = {
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     '@/plugins/personalized-header',
+    {
+      src: '@/plugins/polyfill',
+      mode: 'client',
+    },
   ],
   /*
    ** Nuxt.js dev-modules
