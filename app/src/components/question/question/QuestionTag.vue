@@ -1,7 +1,7 @@
 <template functional>
-  <div class="QuestionTag">
+  <span class="QuestionTag">
     {{ props.text }}
-  </div>
+  </span>
 </template>
 
 <script lang="ts">
@@ -28,10 +28,10 @@ export interface Props {
 @import '@/sass/variables.scss';
 
 .QuestionTag {
-  display: inline-block;
   color: $secondary-color;
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 24px;
 
   &:hover {
     color: $secondary-hover-color;
