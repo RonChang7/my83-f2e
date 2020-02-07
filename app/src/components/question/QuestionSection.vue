@@ -6,8 +6,8 @@
     <QuestionTitle :text="subject" />
     <QuestionContent :content="content" />
     <QuestionImages v-if="images.length" :images="images" />
-    <QuestionTags v-if="tags.length" :tags="tags" />
-    <QuestionTags v-if="tags.length" :tags="companies" />
+    <QuestionTags v-if="tags.length" :tags="tags" icon-type="tag" />
+    <QuestionTags v-if="tags.length" :tags="companies" icon-type="company" />
     <BaseMeta :createdAt="createdAt" :answerCount="answerCount" />
   </BaseCard>
 </template>

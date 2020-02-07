@@ -1,13 +1,15 @@
 <template>
   <div class="QuestionTags">
-    <!-- @todo: 缺 icon -->
-    <!-- eslint-disable-next-line vue/require-component-is -->
-    <component v-if="iconType.length" :is="iconType" />
-    <template v-for="tag in tags">
-      <GlobalLink :key="tag.id" :to="tag.link.path">
-        <QuestionTag :text="tag.name" />
-      </GlobalLink>
-    </template>
+    <div class="QuestionTags__icon">
+      <component v-if="iconName" :is="iconName" />
+    </div>
+    <div class="QuestionTags__tag">
+      <template v-for="tag in tags">
+        <GlobalLink :key="tag.id" :to="tag.link.path">
+          <QuestionTag :text="tag.name" />
+        </GlobalLink>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -17,11 +19,15 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionTag from './QuestionTag.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+const BaseCompany = () => import('@/components/base/icon/24/BaseCompany.vue')
+const BaseTag = () => import('@/components/base/icon/24/BaseTag.vue')
 
 export default {
   components: {
     GlobalLink,
     QuestionTag,
+    BaseCompany,
+    BaseTag,
   },
   props: {
     iconType: {
@@ -31,6 +37,18 @@ export default {
     tags: {
       type: Array,
       required: true,
+    },
+  },
+  computed: {
+    iconName() {
+      switch (this.iconType) {
+        case 'tag':
+          return 'BaseTag'
+        case 'company':
+          return 'BaseCompany'
+        default:
+          return null
+      }
     },
   },
 } as ComponentOption
@@ -57,7 +75,9 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  iconName: string | null
+}
 
 export interface Props {
   iconType: 'tag' | 'company' | ''
@@ -70,9 +90,7 @@ export interface Props {
 
 .QuestionTags {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 
   a::v-deep {
     &:not(:last-child):after {
@@ -83,6 +101,10 @@ export interface Props {
       font-size: 0.875rem;
       font-weight: 500;
     }
+  }
+
+  &__icon {
+    margin-right: 6px;
   }
 }
 </style>
