@@ -1,8 +1,14 @@
 <template>
   <BaseCard class="QuestionSection">
-    <QuestionAuthorInfo :avatar="avatar" :name="author" :target="targetTag" />
+    <div class="QuestionSection__header">
+      <QuestionAuthorInfo :avatar="avatar" :name="author" :target="targetTag" />
+    </div>
     <QuestionTitle :text="subject" />
     <QuestionContent :content="content" />
+    <QuestionImages v-if="images.length" :images="images" />
+    <QuestionTags v-if="tags.length" :tags="tags" />
+    <QuestionTags v-if="tags.length" :tags="companies" />
+    <BaseMeta :createdAt="createdAt" :answerCount="answerCount" />
   </BaseCard>
 </template>
 
@@ -13,10 +19,17 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionAuthorInfo from './question/QuestionAuthorInfo.vue'
 import QuestionTitle from './question/QuestionTitle.vue'
 import QuestionContent from './question/QuestionContent.vue'
+import QuestionImages from './question/QuestionImages.vue'
+import QuestionTags from './question/QuestionTags.vue'
+import BaseMeta from './base/BaseMeta.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { State } from '@/store/question/index'
-import { QuestionData, AuthorInfo } from '@/api/question/question.type'
-import { nl2br } from '@/utils/text-parser'
+import {
+  QuestionData,
+  AuthorInfo,
+  QuestionMeta,
+} from '@/api/question/question.type'
+import { textToUrl } from '@/utils/text-parser'
 
 export default {
   components: {
@@ -24,6 +37,9 @@ export default {
     QuestionAuthorInfo,
     QuestionTitle,
     QuestionContent,
+    QuestionImages,
+    QuestionTags,
+    BaseMeta,
   },
   computed: {
     subject() {
@@ -32,7 +48,7 @@ export default {
     },
     content() {
       const { question } = this.$store.state.question as State
-      return question ? nl2br(question.content) : ''
+      return question ? textToUrl(question.content) : ''
     },
     avatar() {
       const { question } = this.$store.state.question as State
@@ -45,6 +61,26 @@ export default {
     targetTag() {
       const { question } = this.$store.state.question as State
       return question ? question.target_tag : {}
+    },
+    images() {
+      const { question } = this.$store.state.question as State
+      return question ? question.images : []
+    },
+    tags() {
+      const { question } = this.$store.state.question as State
+      return question ? question.tags : []
+    },
+    companies() {
+      const { question } = this.$store.state.question as State
+      return question ? question.companies : []
+    },
+    answerCount() {
+      const { question } = this.$store.state.question as State
+      return question ? question.question_meta.answer_count : 0
+    },
+    createdAt() {
+      const { question } = this.$store.state.question as State
+      return question ? question.created_at : 0
     },
   },
 } as ComponentOption
@@ -77,6 +113,11 @@ export interface Computed {
   avatar: Pick<AuthorInfo, 'avatar_url'>
   author: Pick<AuthorInfo, 'nickname'>
   targetTag: Pick<QuestionData, 'target_tag'>
+  images: Pick<QuestionData, 'images'>
+  tags: Pick<QuestionData, 'tags'>
+  companies: Pick<QuestionData, 'companies'>
+  answerCount: Pick<QuestionMeta, 'answer_count'>
+  createdAt: Pick<QuestionData, 'created_at'>
 }
 
 export interface Props {}
@@ -87,5 +128,10 @@ export interface Props {}
   width: 740px;
   padding-top: 30px;
   padding-bottom: 30px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 </style>
