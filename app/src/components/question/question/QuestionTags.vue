@@ -1,6 +1,7 @@
 <template>
   <div class="QuestionTags">
     <div class="QuestionTags__icon">
+      <!-- eslint-disable-next-line vue/require-component-is -->
       <component v-if="iconName" :is="iconName" />
     </div>
     <div class="QuestionTags__tag">
