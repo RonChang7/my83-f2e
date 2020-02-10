@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import * as types from './question.type'
 import * as api from '@/api/question/question'
-import { QuestionData } from '@/api/question/question.type'
+import { QuestionData, AnswerData } from '@/api/question/question.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -9,6 +9,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     state() {
       return {
         question: null,
+        answer: null,
       }
     },
     getters: {},
@@ -22,10 +23,22 @@ export const createStoreModule = <R>(): Module<State, R> => {
           console.log(err)
         }
       },
+      async [types.FETCH_ANSWER_DATA]({ commit }, id: number) {
+        try {
+          const { data } = await api.fetchAnswerData(id)
+          commit(types.UPDATE_ANSWER_DATA, data)
+        } catch (err) {
+          // @todo: error handler
+          console.log(err)
+        }
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data) {
         state.question = data
+      },
+      [types.UPDATE_ANSWER_DATA](state, data) {
+        state.answer = data
       },
     },
   }
@@ -33,4 +46,5 @@ export const createStoreModule = <R>(): Module<State, R> => {
 
 export interface State {
   question: QuestionData | null
+  answer: AnswerData | null
 }
