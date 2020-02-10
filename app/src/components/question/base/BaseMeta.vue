@@ -1,10 +1,26 @@
 <template>
   <div class="BaseMeta">
-    <!-- @todo: 缺 icon -->
     <div class="BaseMeta__meta">
-      {{ likeCount }}
-      {{ dislikeCount }}
-      {{ answerCount }}
+      <template v-if="metaType === 'question'">
+        <div class="BaseMeta__count">
+          <BaseComment24 />
+          {{ answerCount }}
+        </div>
+      </template>
+      <template v-else-if="metaType === 'answer'">
+        <div class="BaseMeta__count">
+          <BaseThumbUp />
+          {{ likeCount }}
+        </div>
+        <div class="BaseMeta__count">
+          <BaseThumbDown />
+          {{ dislikeCount }}
+        </div>
+        <div class="BaseMeta__count">
+          <BaseComment18 />
+          {{ answerCount }}
+        </div>
+      </template>
     </div>
     <div class="BaseMeta__createdAt">{{ relativeTime }}</div>
   </div>
@@ -15,8 +31,19 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { postingTimeParser } from '@/utils/time-parser'
+const BaseThumbUp = () => import('@/components/base/icon/18/BaseThumbUp.vue')
+const BaseThumbDown = () =>
+  import('@/components/base/icon/18/BaseThumbDown.vue')
+const BaseComment18 = () => import('@/components/base/icon/18/BaseComment.vue')
+const BaseComment24 = () => import('@/components/base/icon/24/BaseComment.vue')
 
 export default {
+  components: {
+    BaseThumbUp,
+    BaseThumbDown,
+    BaseComment18,
+    BaseComment24,
+  },
   props: {
     likeCount: {
       type: Number,
@@ -32,6 +59,10 @@ export default {
     },
     createdAt: {
       type: Number,
+      required: true,
+    },
+    metaType: {
+      type: String,
       required: true,
     },
   },
@@ -73,6 +104,7 @@ export interface Props {
   dislikeCount: number | null
   answerCount: number
   createdAt: number
+  metaType: 'question' | 'answer'
 }
 </script>
 
@@ -90,13 +122,13 @@ export interface Props {
     color: $gray-tertiary;
   }
 
-  &__likeCount {
-  }
+  &__count {
+    display: flex;
+    align-items: center;
 
-  &__dislikeCount {
-  }
-
-  &__answerCount {
+    & > svg {
+      margin-right: 6px;
+    }
   }
 }
 </style>
