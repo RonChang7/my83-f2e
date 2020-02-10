@@ -4,6 +4,19 @@ export interface QuestionDataResponse {
   data: QuestionData
 }
 
+export interface AnswerDataResponse {
+  data: AnswerData[]
+}
+
+export interface AnswerData {
+  answer_id: number
+  content: string
+  created_at: number
+  author_info: AuthorInfo
+  answer_meta: AnswerMeta
+  responses: Response[]
+}
+
 export interface QuestionData {
   question_id: number
   subject: string
@@ -46,4 +59,17 @@ export interface Company {
   id: number
   name: string
   link: Link
+}
+
+export interface AnswerMeta {
+  liked_count: number
+  disliked_count: number
+  response_count: number
+}
+
+export interface response {
+  response_id: number
+  content: string
+  author_info: AuthorInfo
+  created_at: number
 }
