@@ -2,7 +2,9 @@
   <div class="QuestionAuthorInfo">
     <img :src="avatar" alt="avatar" class="avatar" />
     {{ name }}·
-    <GlobalLink :to="target.link.path">{{ target.name }}</GlobalLink>
+    <GlobalLink v-if="target !== null" :to="target.link.path">
+      {{ target.name }}
+    </GlobalLink>
   </div>
 </template>
 

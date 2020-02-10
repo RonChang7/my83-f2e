@@ -29,5 +29,6 @@ export interface Props {
 .QuestionContent {
   color: $gray-primary;
   margin-bottom: 24px;
+  line-height: 2;
 }
 </style>
