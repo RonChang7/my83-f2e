@@ -1,7 +1,6 @@
 <template>
   <ul class="DesktopHeaderNav">
     <li v-for="(item, index) in headerNavItems" :key="index">
-      <!-- eslint-disable-next-line vue/require-component-is -->
       <component
         :is="item.link ? 'GlobalLink' : 'span'"
         :to="item.link ? item.link.path : ''"

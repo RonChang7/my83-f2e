@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable-next-line vue/require-component-is -->
   <component :is="htmlTag" v-bind="props" v-on="$listeners">
     <slot></slot>
   </component>

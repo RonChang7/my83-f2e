@@ -5,7 +5,6 @@
       :key="index"
       @click="menuToggle(index)"
     >
-      <!-- eslint-disable-next-line vue/require-component-is -->
       <component
         :is="item.link ? 'GlobalLink' : 'span'"
         :to="item.link ? item.link.path : ''"
