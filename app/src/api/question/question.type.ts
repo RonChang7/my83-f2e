@@ -67,7 +67,7 @@ export interface AnswerMeta {
   response_count: number
 }
 
-export interface response {
+export interface Response {
   response_id: number
   content: string
   author_info: AuthorInfo

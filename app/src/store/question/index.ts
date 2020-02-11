@@ -9,7 +9,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     state() {
       return {
         question: null,
-        answer: null,
+        answers: null,
       }
     },
     getters: {},
@@ -38,7 +38,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.question = data
       },
       [types.UPDATE_ANSWER_DATA](state, data) {
-        state.answer = data
+        state.answers = data
       },
     },
   }
@@ -46,5 +46,5 @@ export const createStoreModule = <R>(): Module<State, R> => {
 
 export interface State {
   question: QuestionData | null
-  answer: AnswerData | null
+  answers: AnswerData[] | null
 }
