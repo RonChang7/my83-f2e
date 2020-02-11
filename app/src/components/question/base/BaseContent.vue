@@ -1,5 +1,5 @@
 <template functional>
-  <div v-html="props.content" class="QuestionContent" />
+  <div v-html="props.content" class="BaseContent" />
 </template>
 
 <script lang="ts">
@@ -26,7 +26,7 @@ export interface Props {
 @import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
-.QuestionContent {
+.BaseContent {
   color: $gray-primary;
   margin-bottom: 24px;
   line-height: 2;
