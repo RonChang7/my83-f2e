@@ -1,10 +1,10 @@
 <template>
-  <BaseCard class="QuestionSection">
+  <div class="QuestionSection">
     <div class="QuestionSection__header">
       <QuestionAuthorInfo :avatar="avatar" :name="author" :target="targetTag" />
     </div>
     <QuestionTitle :text="subject" />
-    <QuestionContent :content="content" />
+    <BaseContent :content="content" />
     <QuestionImages v-if="images.length" :images="images" />
     <QuestionTags v-if="tags.length" :tags="tags" icon-type="tag" />
     <QuestionTags
@@ -17,7 +17,7 @@
       :answerCount="answerCount"
       meta-type="question"
     />
-  </BaseCard>
+  </div>
 </template>
 
 <script lang="ts">
@@ -26,11 +26,10 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionAuthorInfo from './question/QuestionAuthorInfo.vue'
 import QuestionTitle from './question/QuestionTitle.vue'
-import QuestionContent from './question/QuestionContent.vue'
+import BaseContent from './base/BaseContent.vue'
 import QuestionImages from './question/QuestionImages.vue'
 import QuestionTags from './question/QuestionTags.vue'
 import BaseMeta from './base/BaseMeta.vue'
-import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { State } from '@/store/question/index'
 import {
   QuestionData,
@@ -41,10 +40,9 @@ import { textToUrl } from '@/utils/text-parser'
 
 export default {
   components: {
-    BaseCard,
     QuestionAuthorInfo,
     QuestionTitle,
-    QuestionContent,
+    BaseContent,
     QuestionImages,
     QuestionTags,
     BaseMeta,
@@ -132,10 +130,13 @@ export interface Props {}
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/mixins.scss';
+
 .QuestionSection {
+  @include card-primary;
   width: 740px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding: 30px;
+  margin-bottom: 20px;
 
   &__header {
     display: flex;
