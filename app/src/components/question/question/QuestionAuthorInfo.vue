@@ -1,7 +1,8 @@
 <template>
   <div class="QuestionAuthorInfo">
     <img :src="avatar" alt="avatar" class="avatar" />
-    {{ name }}·
+    {{ name }}
+    <span v-if="target !== null">·</span>
     <GlobalLink v-if="target !== null" :to="target.link.path">
       {{ target.name }}
     </GlobalLink>
