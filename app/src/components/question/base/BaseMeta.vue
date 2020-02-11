@@ -55,7 +55,7 @@ export default {
     },
     answerCount: {
       type: Number,
-      required: true,
+      required: null,
     },
     createdAt: {
       type: Number,
@@ -102,9 +102,9 @@ export interface Computed {
 export interface Props {
   likeCount: number | null
   dislikeCount: number | null
-  answerCount: number
+  answerCount: number | null
   createdAt: number
-  metaType: 'question' | 'answer'
+  metaType: 'question' | 'answer' | 'response'
 }
 </script>
 
@@ -119,12 +119,14 @@ export interface Props {
   font-size: 0.875rem;
 
   &__meta {
+    display: flex;
     color: $gray-tertiary;
   }
 
   &__count {
     display: flex;
     align-items: center;
+    margin-right: 24px;
 
     & > svg {
       margin-right: 6px;
