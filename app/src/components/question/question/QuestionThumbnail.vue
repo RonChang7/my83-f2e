@@ -1,11 +1,11 @@
 <template>
-  <div class="QuestionThumbnail">
+  <figure class="QuestionThumbnail">
     <BaseLazyImage
       :imageUrl="imageUrl"
       :imageAlt="imageAlt"
       :ignorePlaceholder="true"
     />
-  </div>
+  </figure>
 </template>
 
 <script lang="ts">
@@ -62,6 +62,10 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+
+figure {
+  margin: 0;
+}
 
 .QuestionThumbnail {
   flex: 0 0 auto;
