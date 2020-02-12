@@ -21,5 +21,12 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
         hideFooter: true,
       },
     },
+    {
+      path: '/question/:id',
+      component: resolve('@/views/question/page/Index.vue'),
+      meta: {
+        requiredStoreModules: ['question'],
+      },
+    },
   ]
 }
