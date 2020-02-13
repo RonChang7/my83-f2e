@@ -95,9 +95,9 @@ export interface Props {
 .AnswerSection {
   @include card-primary;
 
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
-  width: 740px;
   padding: 0 30px;
   margin-bottom: 20px;
 
