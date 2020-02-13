@@ -13,8 +13,8 @@
       icon-type="company"
     />
     <BaseMeta
-      :createdAt="createdAt"
-      :answerCount="answerCount"
+      :created-at="createdAt"
+      :answer-count="answerCount"
       meta-type="question"
     />
   </div>

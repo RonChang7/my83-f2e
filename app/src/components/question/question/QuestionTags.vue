@@ -1,7 +1,7 @@
 <template>
   <div class="QuestionTags">
     <div class="QuestionTags__icon">
-      <component v-if="iconName" :is="iconName" />
+      <component :is="iconName" v-if="iconName" />
     </div>
     <div class="QuestionTags__tag">
       <template v-for="tag in tags">

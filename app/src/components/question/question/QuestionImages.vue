@@ -8,10 +8,10 @@
     <QuestionThumbnail
       v-for="(image, index) in images"
       :key="index"
-      :imageUrl="image"
-      :imageAlt="image"
-      @click.native="currentImageIndex = index"
+      :image-url="image"
+      :image-alt="image"
       class="QuestionImages__Thumbnail"
+      @click.native="currentImageIndex = index"
     />
   </div>
 </template>
