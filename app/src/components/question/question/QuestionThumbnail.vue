@@ -70,6 +70,7 @@ figure {
 .QuestionThumbnail {
   flex: 0 0 auto;
   width: 100px;
+  height: 100%;
   border: solid 2px $gray-quaternary;
   margin-bottom: 10px;
   margin-right: 10px;
