@@ -84,7 +84,7 @@ export default {
     },
     thumbnailClassName: {
       type: String,
-      required: true,
+      default: '',
     },
   },
   watch: {
@@ -103,6 +103,15 @@ export default {
         `.${this.thumbnailClassName}`
       )
 
+      const getThumbBoundsFn = (index) => {
+        // See Options -> getThumbBoundsFn section of documentation for more info
+        const thumbnail = thumbnails[index] // find thumbnail
+        const pageYScroll =
+          window.pageYOffset || document.documentElement.scrollTop
+        const rect = thumbnail.getBoundingClientRect()
+        return { x: rect.left, y: rect.top + pageYScroll, w: rect.width }
+      }
+
       // default PhotoSwipe options
       const options: Options = {
         history: false,
@@ -110,14 +119,9 @@ export default {
         showHideOpacity: true,
         bgOpacity: 0.6,
         closeOnScroll: false,
-        getThumbBoundsFn() {
-          // See Options -> getThumbBoundsFn section of documentation for more info
-          const thumbnail = thumbnails[vm.index] // find thumbnail
-          const pageYScroll =
-            window.pageYOffset || document.documentElement.scrollTop
-          const rect = thumbnail.getBoundingClientRect()
-          return { x: rect.left, y: rect.top + pageYScroll, w: rect.width }
-        },
+        getThumbBoundsFn: this.thumbnailClassName.length
+          ? getThumbBoundsFn
+          : undefined,
       }
 
       const gallery: PhotoSwipe<Options> = new PhotoSwipe(
