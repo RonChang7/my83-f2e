@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ border: index > 0 }" class="ResponseSection">
+  <div
+    :id="`response-${response.response_id}`"
+    :class="{ border: index > 0 }"
+    class="ResponseSection"
+  >
     <div class="ResponseSection__header">
       <BaseAuthorInfo :author-info="response.author_info" />
     </div>
