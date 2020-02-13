@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import * as types from './header.type'
-import { HeaderNavItem, HeaderPersonalizedData } from '@/api/header/header.type'
+import { HeaderNavItem, HeaderPersonalized } from '@/api/header/header.type'
 import * as api from '@/api/header/header'
 
 export const createStoreModule = <R>(): Module<State, R> => {
@@ -9,7 +9,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     state() {
       return {
         headerNavItems: [],
-        headerPersonalizedData: {},
+        headerPersonalized: null,
       }
     },
     getters: {},
@@ -38,13 +38,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.headerNavItems = data
       },
       [types.UPDATE_HEADER_PERSONALIZED_DATA](state, data) {
-        state.headerPersonalizedData = data
+        state.headerPersonalized = data
       },
     },
   }
 }
 
-interface State {
+export interface State {
   headerNavItems: HeaderNavItem[]
-  headerPersonalizedData: HeaderPersonalizedData | {}
+  headerPersonalized: HeaderPersonalized | null
 }

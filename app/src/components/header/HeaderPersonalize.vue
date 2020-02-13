@@ -1,7 +1,7 @@
 <template>
   <div class="HeaderPersonalize">
     <ul
-      v-if="isEmpty(headerPersonalizedData)"
+      v-if="isEmpty(menu) && isEmpty(personalize)"
       class="HeaderPersonalize__unauthorized"
     >
       <li>
@@ -19,8 +19,8 @@
     <ul v-else class="HeaderPersonalize__authorized">
       <li>
         <HeaderSalesDetail
-          v-if="headerPersonalizedData.sales"
-          :salesInfo="headerPersonalizedData.sales"
+          v-if="personalize.sales"
+          :salesInfo="personalize.sales"
         />
       </li>
       <li>
@@ -37,7 +37,7 @@
       <li @click="menuToggle" class="HeaderPersonalize__admin">
         <span class="HeaderPersonalize__name">
           <img
-            :src="headerPersonalizedData.avatar"
+            :src="personalize.avatar"
             class="HeaderPersonalize__avatar"
             alt="avatar"
           />
@@ -61,16 +61,12 @@
 <script lang="ts">
 import Vue from 'vue'
 import _ from 'lodash'
-import { mapState } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderMenuPanel from './HeaderMenuPanel.vue'
 import HeaderSalesDetail from './HeaderSalesDetail.vue'
-import {
-  HeaderPersonalizedData,
-  HeaderPersonalized,
-  HeaderNavItem,
-} from '@/api/header/header.type'
+import { State } from '@/store/header/index'
+import { HeaderNavItem, Personalize } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseNotification from '@/components/base/icon/24/BaseNotification.vue'
 import BaseBadge from '@/components/my83-ui-kit/badge/BaseBadge.vue'
@@ -120,20 +116,27 @@ export default {
     },
   },
   computed: {
-    ...mapState('header', ['headerPersonalizedData']),
+    personalize() {
+      const { headerPersonalized } = this.$store.state.header as State
+      return headerPersonalized ? headerPersonalized.personalize : {}
+    },
     notificationCount() {
-      if (_.isEmpty(this.headerPersonalizedData)) {
-        return 0
-      }
-
-      const count = (this.headerPersonalizedData as HeaderPersonalized)
-        .notification_count
+      const count = _.isEmpty(this.personalize)
+        ? 0
+        : this.personalize.notification_count
 
       return count > 99 ? '99+' : count
     },
     menu() {
+      const { headerPersonalized } = this.$store.state.header as State
+      const menu = headerPersonalized ? headerPersonalized.menu : []
+
+      if (_.isEmpty(menu)) {
+        return menu
+      }
+
       return [
-        ...(this.headerPersonalizedData as HeaderPersonalized).menu,
+        ...menu,
         {
           name: '登出',
           link: null,
@@ -184,7 +187,7 @@ export interface Methods {
 }
 
 export interface Computed {
-  headerPersonalizedData: HeaderPersonalizedData
+  personalize: Personalize
   notificationCount: number | string
   menu: Menu
 }

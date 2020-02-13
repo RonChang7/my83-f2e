@@ -8,16 +8,20 @@ export interface HeaderNavItem {
 }
 
 export interface HeaderPersonalized {
-  avatar: string
-  notification_count: number
-  sales: SalesInfo
+  personalize: Personalize
   menu: HeaderNavItem[]
 }
-
-export type HeaderPersonalizedData = HeaderPersonalized | {}
 
 export interface SalesInfo {
   is_verify: boolean
   vip_countdown: number
   reward_point: number
+}
+
+export interface Personalize {
+  avatar: string
+  username: string
+  nickname: string
+  notification_count: number
+  sales: SalesInfo
 }
