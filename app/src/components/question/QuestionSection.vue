@@ -27,8 +27,6 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionAuthorInfo from './question/QuestionAuthorInfo.vue'
 import QuestionTitle from './question/QuestionTitle.vue'
 import BaseContent from './base/BaseContent.vue'
-import QuestionImages from './question/QuestionImages.vue'
-import QuestionTags from './question/QuestionTags.vue'
 import BaseMeta from './base/BaseMeta.vue'
 import { State } from '@/store/question/index'
 import {
@@ -37,6 +35,8 @@ import {
   QuestionMeta,
 } from '@/api/question/question.type'
 import { textToUrl } from '@/utils/text-parser'
+const QuestionImages = () => import('./question/QuestionImages.vue')
+const QuestionTags = () => import('./question/QuestionTags.vue')
 
 export default {
   components: {
