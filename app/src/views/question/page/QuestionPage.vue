@@ -1,6 +1,6 @@
 <template>
   <div class="QuestionPage">
-    <div class="QuestionPage__column">
+    <div class="QuestionPage__column left">
       <QuestionSection />
       <AnswersSection />
       <AddAnswerSection />
@@ -85,10 +85,16 @@ export interface Props {}
   padding: 40px 0 100px;
 
   &__column {
+    display: flex;
+    flex-direction: column;
     margin-right: 20px;
 
     &:last-child {
       margin-right: 0;
+    }
+
+    &.left {
+      width: 740px;
     }
   }
 }

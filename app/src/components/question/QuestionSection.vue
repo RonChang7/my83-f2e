@@ -134,7 +134,8 @@ export interface Props {}
 
 .QuestionSection {
   @include card-primary;
-  width: 740px;
+
+  flex: 1 0 auto;
   padding: 30px;
   margin-bottom: 20px;
 
