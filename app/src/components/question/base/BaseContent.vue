@@ -1,5 +1,6 @@
 <template functional>
-  <div v-html="props.content" class="BaseContent" />
+  <!-- eslint-disable-next-line vue/no-v-html -->
+  <div class="BaseContent" v-html="props.content" />
 </template>
 
 <script lang="ts">

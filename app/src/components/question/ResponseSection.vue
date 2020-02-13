@@ -1,10 +1,10 @@
 <template>
   <div :class="{ border: index > 0 }" class="ResponseSection">
     <div class="ResponseSection__header">
-      <BaseAuthorInfo :authorInfo="response.author_info" />
+      <BaseAuthorInfo :author-info="response.author_info" />
     </div>
     <BaseContent :content="response.content" />
-    <BaseMeta :createdAt="response.created_at" meta-type="response" />
+    <BaseMeta :created-at="response.created_at" meta-type="response" />
   </div>
 </template>
 

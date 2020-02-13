@@ -4,14 +4,14 @@
       共 {{ answerCount }} 則留言
     </div>
     <div class="AnswerSection__header">
-      <BaseAuthorInfo :authorInfo="answer.author_info" />
+      <BaseAuthorInfo :author-info="answer.author_info" />
     </div>
     <BaseContent :content="answer.content" />
     <BaseMeta
-      :likeCount="answer.answer_meta.like_count"
-      :dislikeCount="answer.answer_meta.dislike_count"
-      :answerCount="answer.answer_meta.response_count"
-      :createdAt="answer.created_at"
+      :like-count="answer.answer_meta.like_count"
+      :dislike-count="answer.answer_meta.dislike_count"
+      :answer-count="answer.answer_meta.response_count"
+      :created-at="answer.created_at"
       meta-type="answer"
     />
     <AnswerInteraction />

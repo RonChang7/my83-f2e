@@ -2,9 +2,9 @@
   <div class="BaseAuthorInfo">
     <div class="BaseAuthorInfo__avatar">
       <BaseLazyImage
-        :imageUrl="authorInfo.avatar_url"
-        :imageAlt="authorInfo.nickname"
-        :imageLoadedStyle="avatarStyle"
+        :image-url="authorInfo.avatar_url"
+        :image-alt="authorInfo.nickname"
+        :image-loaded-style="avatarStyle"
       />
     </div>
     <div class="BaseAuthorInfo__detail">

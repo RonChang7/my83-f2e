@@ -1,9 +1,9 @@
 <template>
   <figure class="QuestionThumbnail">
     <BaseLazyImage
-      :imageUrl="imageUrl"
-      :imageAlt="imageAlt"
-      :ignorePlaceholder="true"
+      :image-url="imageUrl"
+      :image-alt="imageAlt"
+      :ignore-placeholder="true"
     />
   </figure>
 </template>

@@ -4,8 +4,8 @@
       v-for="(answer, index) in answers"
       :key="answer.answer_id"
       :answer="answer"
-      :shouldShowAnswerCount="index === 0"
-      :answerCount="answerCount"
+      :should-show-answer-count="index === 0"
+      :answer-count="answerCount"
     />
   </div>
 </template>
