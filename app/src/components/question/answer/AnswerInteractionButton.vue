@@ -1,6 +1,5 @@
 <template>
   <div :class="{ selected: isSelected }" class="AnswerInteractionButton">
-    <!-- eslint-disable-next-line vue/require-component-is -->
     <component :is="icon" />
     {{ buttonText }}
   </div>
