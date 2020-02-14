@@ -1,8 +1,11 @@
 <template>
   <div class="AnswerInteraction">
-    <AnswerInteractionButton type="like" />
-    <AnswerInteractionButton type="unlike" />
-    <AnswerInteractionButton type="response" />
+    <AnswerInteractionButton
+      v-for="(buttonType, index) in buttonTypes"
+      :key="index"
+      :type="buttonType"
+      @action="actionHandler"
+    />
   </div>
 </template>
 
@@ -10,11 +13,21 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import AnswerInteractionButton from './AnswerInteractionButton.vue'
+import AnswerInteractionButton, { Type } from './AnswerInteractionButton.vue'
 
 export default {
   components: {
     AnswerInteractionButton,
+  },
+  data() {
+    return {
+      buttonTypes: ['like', 'unlike', 'response'],
+    }
+  },
+  methods: {
+    actionHandler(type) {
+      this.$emit('action', type)
+    },
   },
 } as ComponentOption
 
@@ -36,9 +49,13 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  buttonTypes: Type[]
+}
 
-export interface Methods {}
+export interface Methods {
+  actionHandler: (type: Type) => void
+}
 
 export interface Computed {}
 
