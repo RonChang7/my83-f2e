@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ selected: isSelected }" class="AnswerInteractionButton">
+  <div
+    :class="{ selected: isSelected }"
+    class="AnswerInteractionButton"
+    @click="clickHandler"
+  >
     <component :is="icon" />
     {{ buttonText }}
   </div>
@@ -13,7 +17,7 @@ const BaseComment = () => import('@/components/base/icon/24/BaseComment.vue')
 const BaseLike = () => import('@/components/base/icon/24/BaseLike.vue')
 const BaseUnlike = () => import('@/components/base/icon/24/BaseUnlike.vue')
 
-type Type = 'like' | 'unlike' | 'response'
+export type Type = 'like' | 'unlike' | 'response'
 type ButtonTextType = '讚' | '不滿' | '留言'
 type IconType = 'BaseLike' | 'BaseUnlike' | 'BaseComment'
 
@@ -51,6 +55,11 @@ export default {
     },
     buttonText() {
       return ButtonText[this.type]
+    },
+  },
+  methods: {
+    clickHandler() {
+      this.$emit('action', this.type)
     },
   },
 } as ComponentOption
