@@ -100,7 +100,6 @@ export interface Props {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 
-// @todo: 補上 interaction color change
 .AnswerInteractionButton {
   display: flex;
   align-items: center;
@@ -114,8 +113,8 @@ export interface Props {
   &:hover {
     color: $gray-primary;
 
-    > svg > ptah {
-      stroke: $gray-primary;
+    &::v-deep svg > path {
+      fill: $gray-primary;
     }
   }
 
@@ -123,8 +122,8 @@ export interface Props {
   &.selected {
     color: $primary-color;
 
-    > svg > ptah {
-      stroke: $primary-color;
+    &::v-deep svg > path {
+      fill: $primary-color;
     }
   }
 }
