@@ -7,6 +7,7 @@
       :class="state"
       :disabled="disabled"
       :autocomplete="autocomplete"
+      :autofocus="autofocus"
       class="BaseInputText__input"
       @input="input"
       @blur="$emit('blur')"
@@ -60,6 +61,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
     autocomplete: {
       type: String,
       default: 'on',
@@ -108,6 +113,7 @@ export interface Props {
   placeholder: string
   state: string
   disabled: boolean
+  autofocus: boolean
   autocomplete: 'on' | 'off'
 }
 </script>
@@ -152,13 +158,6 @@ export interface Props {
         fill: $primary-color;
       }
     }
-  }
-
-  &__message {
-    margin-top: 8px;
-    color: $error-color;
-    font-size: 0.875rem;
-    font-weight: 400;
   }
 }
 </style>
