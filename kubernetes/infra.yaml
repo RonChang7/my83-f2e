@@ -14,13 +14,13 @@ metadata:
     kubernetes.io/ingress.allow-http: "true"
 spec:
   rules:
-    - host: front.mamilove.com.tw
+    - host: front.my83.com.tw
       http:
         paths:
           - backend:
               serviceName: my83-f2e-app-prod-service
               servicePort: 3000
-    - host: staging-front.mamilove.com.tw
+    - host: staging-front.my83.com.tw
       http:
         paths:
           - backend:
