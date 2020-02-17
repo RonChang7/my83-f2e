@@ -23,6 +23,8 @@ steps:
       - cd app
       - npm install
       - npm run build
+    depends_on:
+      - restore-cache
     when:
       branch: master
       event: push
@@ -36,6 +38,8 @@ steps:
       rebuild: true
       mount:
         - ./app/node_modules
+    depends_on:
+      - build-app
     when:
       branch: master
       event: push
@@ -52,6 +56,8 @@ steps:
       dockerfile: ./docker/front-app-prod/Dockerfile
       context: ./app
       cache_from: node:10-alpine
+    depends_on:
+      - build-app
     when:
       branch: master
       event: push
@@ -78,6 +84,8 @@ steps:
       - cd kubernetes/
       - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_COMMIT_SHA}/" ./staging.yaml
       - kubectl apply -f ./staging.yaml
+    depends_on:
+      - push-image
     when:
       branch: master
       event: push
@@ -92,6 +100,8 @@ steps:
         *{{ repo.name }}* <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> {{#success build.status}}成功{{else}}失敗{{/success}} 部署
         <https://drone.upn.com.tw/{{ repo.owner }}/{{ repo.name }}/{{ build.number }}|查看部署訊息>
         <http://staging-front.mamilove.com.tw|查看部署結果>
+    depends_on:
+      - deploy-staging
     when:
       branch: master
       event: push
@@ -112,6 +122,8 @@ steps:
       - docker push $${GCR_HOST}/$${GCR_REPO}:$${DRONE_TAG}
     when:
       branch: master
+      ref:
+        - refs/tags/release-*
       event: tag
 
   - name: deploy-production
@@ -136,8 +148,12 @@ steps:
       - cd kubernetes
       - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_TAG}/" ./prod.yaml
       - kubectl apply -f ./prod.yaml
+    depends_on:
+      - tagged-image
     when:
       branch: master
+      ref:
+        - refs/tags/release-*
       event: tag
 
   - name: notify-deploy-prod
@@ -150,11 +166,15 @@ steps:
         *{{ repo.name }}* <https://github.com/{{ repo.owner }}/{{ repo.name }}/releases/tag/{{ build.tag }}|{{ build.tag }}> {{#success build.status}}成功{{else}}失敗{{/success}} 部署
         <https://drone.upn.com.tw/{{ repo.owner }}/{{ repo.name }}/{{ build.number }}|查看部署訊息>
         <http://front.mamilove.com.tw|查看部署結果>
+    depends_on:
+      - deploy-production
     when:
       status:
         - success
         - failure
       branch: master
+      ref:
+        - refs/tags/release-*
       event: tag
 
 volumes:
