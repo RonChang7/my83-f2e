@@ -97,9 +97,23 @@ steps:
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
-        *{{ repo.name }}* <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}> {{#success build.status}}成功{{else}}失敗{{/success}} 部署
-        <https://drone.upn.com.tw/{{ repo.owner }}/{{ repo.name }}/{{ build.number }}|查看部署訊息>
-        <http://staging-front.mamilove.com.tw|查看部署結果>
+        *{{ repo.name }}* 
+          
+        {{#if build.pull }}
+          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
+        {{else}}
+          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
+        {{/if}}
+
+        Link: <http://staging-front.my83.com.tw|查看部署結果>
+
+        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+
+        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
+
+        Author: {{ build.author }}
+
+        <{{ build.link }}|Visit build page ↗>
     depends_on:
       - deploy-staging
     when:
@@ -163,14 +177,22 @@ steps:
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
+        *{{ repo.name }}* 
+        
         {{#if build.pull }}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
         {{else}}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
         {{/if}}
+
+        Link: <http://front.my83.com.tw|查看部署結果>
+
         Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
+
         Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
+
         Author: {{ build.author }}
+
         <{{ build.link }}|Visit build page ↗>
     depends_on:
       - deploy-production
