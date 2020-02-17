@@ -20,16 +20,19 @@ export class Facebook {
 
   private static instance: Facebook
 
-  private constructor() {
+  private appId: string
+
+  private constructor(appId: string) {
+    this.appId = appId
     this.initFacebookSDK().then(() => {
       this.getLoginState()
       Facebook.state.isLoaded = true
     })
   }
 
-  public static getInstance(): Facebook {
+  public static getInstance(appId: string): Facebook {
     if (!Facebook.instance) {
-      Facebook.instance = new Facebook()
+      Facebook.instance = new Facebook(appId)
     }
 
     return Facebook.instance
@@ -52,10 +55,11 @@ export class Facebook {
   }
 
   private initFacebookSDK() {
+    const appId = this.appId
     return new Promise((resolve) => {
       window.fbAsyncInit = function() {
         window.FB.init({
-          appId: process.env.FACEBOOK_APP_ID,
+          appId,
           cookie: true,
           xfbml: true,
           version: 'v5.0',

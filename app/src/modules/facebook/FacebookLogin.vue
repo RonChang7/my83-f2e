@@ -28,7 +28,7 @@ export default {
     },
   },
   mounted() {
-    this.facebook = Facebook.getInstance()
+    this.facebook = Facebook.getInstance(this.$env.FACEBOOK_APP_ID)
     this.facebookStatus = Facebook.state
   },
   computed: {
