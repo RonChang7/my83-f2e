@@ -4,8 +4,8 @@
       :value="value"
       :checked="value === currentSelectedValue"
       :disabled="disabled"
-      @change="update"
       type="radio"
+      @change="update"
     />
     <span class="icon"></span>
     <span class="label">{{ label }}</span>

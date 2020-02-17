@@ -1,15 +1,15 @@
 <template>
-  <BaseModal :visible="visible" :lockScroll="true" @close="closePanel">
+  <BaseModal :visible="visible" :lock-scroll="true" @close="closePanel">
     <div class="LoginPanel__wrapper">
       <div class="LoginPanel">
         <LoginHeader
+          :display-back-button="currentPanel !== 'login'"
           @close="closePanel"
           @to-panel="toPanel"
-          :displayBackButton="currentPanel !== 'login'"
         />
         <LoginPanelLogin
           v-if="currentPanel === 'login'"
-          :displayForgetPasswordWording="displayForgetPasswordWording"
+          :display-forget-password-wording="displayForgetPasswordWording"
           @to-panel="toPanel"
           @login-success="afterLogin"
         />

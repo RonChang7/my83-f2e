@@ -15,19 +15,19 @@
     <BaseInputText
       :value.sync="form.email"
       :state="errors.email ? errors.email.state : ''"
-      @blur="validate('email', form.email)"
       name="email"
       type="email"
       placeholder="hello@my83.com.tw"
+      @blur="validate('email', form.email)"
     />
     <BaseInputErrorMessage :msg="errors.email ? errors.email.message : ''" />
 
     <BaseButton
-      :isFullWidth="true"
+      :is-full-width="true"
       :state="state"
-      @click.native="submit"
       size="l-b"
       class="LoginPanelForgetPassword__button"
+      @click.native="submit"
     >
       寄送密碼重設信
     </BaseButton>

@@ -47,7 +47,7 @@
         </h3>
         <div class="content">
           <p class="d-flex align-items-center">
-            <a @click.prevent="openZendeskChat" class="mr-2" href="#">
+            <a class="mr-2" href="#" @click.prevent="openZendeskChat">
               線上客服
             </a>
             <LoadingIcon v-if="zendeskLoading" size="0.875rem" />

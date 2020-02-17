@@ -1,6 +1,6 @@
 <template>
   <div class="LoginLoginForm">
-    <FacebookLoginButton @login="facebookLogin" :state="state.facebook" />
+    <FacebookLoginButton :state="state.facebook" @login="facebookLogin" />
     <BaseInputErrorMessage
       :msg="errors.facebook ? errors.facebook.message : ''"
     />
@@ -20,10 +20,10 @@
       :value.sync="form.email"
       :autocomplete="autocomplete ? 'on' : 'off'"
       :state="errors.email ? errors.email.state : ''"
-      @blur="validate('email', form.email)"
       name="email"
       type="email"
       placeholder="hello@my83.com.tw"
+      @blur="validate('email', form.email)"
     />
     <BaseInputErrorMessage :msg="errors.email ? errors.email.message : ''" />
 
@@ -37,11 +37,11 @@
       :value.sync="form.password"
       :autocomplete="autocomplete ? 'on' : 'off'"
       :state="errors.password ? errors.password.state : ''"
-      @blur="validate('password', form.password)"
-      @enter="submit"
       name="password"
       type="password"
       placeholder="輸入密碼"
+      @blur="validate('password', form.password)"
+      @enter="submit"
     />
     <BaseInputErrorMessage
       :msg="errors.password ? errors.password.message : ''"
@@ -53,10 +53,10 @@
       class="checkbox"
     />
     <BaseButton
-      :isFullWidth="true"
-      @click.native="submit"
+      :is-full-width="true"
       :state="state.email"
       size="l-b"
+      @click.native="submit"
     >
       登入
     </BaseButton>

@@ -17,7 +17,7 @@
       <client-only>
         <HeaderMenuPanel
           v-if="item.children"
-          :headerNavItems="item.children"
+          :header-nav-items="item.children"
           :class="{ 'MobileHeaderNav__menu--show': shouldShowMenu(index) }"
           class="MobileHeaderNav__menu"
         />

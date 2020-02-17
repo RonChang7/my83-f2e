@@ -2,9 +2,9 @@
   <div class="LoginHeader">
     <div class="LoginHeader__back">
       <div
-        @click="$emit('to-panel', 'login')"
         v-if="displayBackButton"
         class="LoginHeader__back__button"
+        @click="$emit('to-panel', 'login')"
       >
         <BaseArrowLeft />
         返回

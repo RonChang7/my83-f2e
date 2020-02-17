@@ -12,7 +12,7 @@
       <client-only>
         <HeaderMenuPanel
           v-if="item.children"
-          :headerNavItems="item.children"
+          :header-nav-items="item.children"
           class="DesktopHeaderNav__menu"
         />
       </client-only>

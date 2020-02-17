@@ -7,16 +7,16 @@
       :class="state"
       :disabled="disabled"
       :autocomplete="autocomplete"
+      class="BaseInputText__input"
       @input="update"
       @blur="$emit('blur')"
       @focus="$emit('focus')"
       @keyup.enter="$emit('enter')"
-      class="BaseInputText__input"
     />
     <div
       v-if="type === 'password'"
-      @click="displayPassword = !displayPassword"
       class="BaseInputText__showPasswordButton"
+      @click="displayPassword = !displayPassword"
     >
       <BaseEyeFill v-if="displayPassword" />
       <BaseEyeOutline v-else />

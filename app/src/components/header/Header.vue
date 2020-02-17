@@ -1,9 +1,9 @@
 <template>
   <header>
     <template v-if="this.$ua.isFromPc()">
-      <DesktopHeader :enableRwd="true" />
+      <DesktopHeader :enable-rwd="true" />
     </template>
-    <MobileHeader :enableRwd="this.$ua.isFromPc()" />
+    <MobileHeader :enable-rwd="this.$ua.isFromPc()" />
   </header>
 </template>
 
