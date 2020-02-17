@@ -20,6 +20,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           commit(types.UPDATE_HEADER_NAV_DATA, data)
         } catch (err) {
           // @todo: error handler
+          // eslint-disable-next-line no-console
           console.log(err)
         }
       },
@@ -29,6 +30,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
         } catch (err) {
           // @todo: error handler
+          // eslint-disable-next-line no-console
           console.log(err)
         }
       },
