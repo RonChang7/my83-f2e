@@ -68,9 +68,9 @@ steps:
         from_secret: K8S_TOKEN
     commands:
       # 設定 k8s context
-      - kubectl config set-cluster default --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
-      - kubectl config set-credentials drone-deploy-account --token=$${K8S_TOKEN}
-      - kubectl config set-context default-context --cluster=default --user=drone-deploy-account
+      - kubectl config set-cluster main-cluster --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
+      - kubectl config set-credentials deploy-account --token=$${K8S_TOKEN}
+      - kubectl config set-context default-context --cluster=main-cluster --user=deploy-account --namespace=my83-f2e
       - kubectl config use-context default-context
       # 更新 env secret
       - kubectl -n my83-f2e create secret generic my83-f2e-app-env-staging --from-env-file=/drone-secret/env.staging --dry-run -o yaml | kubectl apply -f -
@@ -126,12 +126,12 @@ steps:
         from_secret: K8S_TOKEN
     commands:
       # 設定 k8s context
-      - kubectl config set-cluster default --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
-      - kubectl config set-credentials drone-deploy-account --token=$${K8S_TOKEN}
-      - kubectl config set-context default-context --cluster=default --user=drone-deploy-account
+      - kubectl config set-cluster main-cluster --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
+      - kubectl config set-credentials deploy-account --token=$${K8S_TOKEN}
+      - kubectl config set-context default-context --cluster=main-cluster --user=deploy-account --namespace=my83-f2e
       - kubectl config use-context default-context
       # 更新 env secret
-      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.prod --dry-run -o yaml | kubectl apply -f -
+      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.production --dry-run -o yaml | kubectl apply -f -
       # 用 yaml 部署
       - cd kubernetes
       - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_TAG}/" ./prod.yaml
@@ -163,7 +163,7 @@ volumes:
       path: /tmp/drone-cache
   - name: secret
     host:
-      path: /home/drone/secret/my83-f2e
+      path: /home/drone/secret/my83/my83-f2e
 
 trigger:
   branch:
