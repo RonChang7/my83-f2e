@@ -61,7 +61,18 @@ const config: Configuration = {
   modules: [
     // '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt-community/dotenv-module
-    ['@nuxtjs/dotenv', { path: './' }],
+    [
+      // ref: https://github.com/samtgarson/nuxt-env
+      'nuxt-env',
+      {
+        keys: [
+          { key: 'NUXT_ENV_API_URL' }, // secret: Only inject the var server side
+          { key: 'NUXT_ENV_JWT_TOKEN_NAME' },
+          { key: 'FACEBOOK_APP_ID' },
+          { key: 'ZENDESK_CHAT_ID' },
+        ],
+      },
+    ],
     'nuxt-user-agent',
   ],
   /*
