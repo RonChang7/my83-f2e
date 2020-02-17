@@ -5,9 +5,6 @@ import { createStoreModule as createHeaderStoreModule } from '@/store/header/ind
 import * as types from '@/store/header/header.type'
 import { User } from '@/services/user/user'
 
-// import global types
-import '@/types/ua.type'
-
 const storeModules = {
   global: {
     moduleName: 'global',
