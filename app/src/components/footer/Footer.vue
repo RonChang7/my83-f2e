@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     openZendeskChat() {
-      const zendeskInstance = Zendesk.getInstance()
+      const zendeskInstance = Zendesk.getInstance(this.$env.ZENDESK_CHAT_ID)
       this.zendeskLoading = true
 
       if (Zendesk.isLoaded) {

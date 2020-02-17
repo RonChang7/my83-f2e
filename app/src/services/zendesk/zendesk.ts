@@ -5,15 +5,15 @@ export class Zendesk {
 
   private static instance: Zendesk
 
-  private constructor() {
-    initZendesk().then(() => {
+  private constructor(chatId: string) {
+    initZendesk(chatId).then(() => {
       this.onLoad()
     })
   }
 
-  public static getInstance(): Zendesk {
+  public static getInstance(chatId: string): Zendesk {
     if (!Zendesk.instance) {
-      Zendesk.instance = new Zendesk()
+      Zendesk.instance = new Zendesk(chatId)
     }
 
     return Zendesk.instance

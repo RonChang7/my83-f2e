@@ -1,5 +1,5 @@
 // API file: https://api.zopim.com/
-export default () =>
+export default (chatId) =>
   new Promise((resolve) => {
     ;(function(d, s, id) {
       const z = (window.$zopim = function(c) {
@@ -21,5 +21,5 @@ export default () =>
       $.onload = () => {
         resolve()
       }
-    })(document, 'script', process.env.ZENDESK_CHAT_ID)
+    })(document, 'script', chatId)
   })
