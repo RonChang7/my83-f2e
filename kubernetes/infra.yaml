@@ -60,13 +60,13 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: drone-deploy
+  name: deploy-role-binding
   namespace: my83-f2e
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: drone-deploy-role
+  name: deploy-role
 subjects:
   - kind: ServiceAccount
-    name: drone-deploy-account
-    namespace: kube-ops
+    name: deploy-account
+    namespace: k8s-dev-ops
