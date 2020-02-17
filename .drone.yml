@@ -97,22 +97,16 @@ steps:
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
-        *{{ repo.name }}* 
-          
+        *{{ repo.name }}*  
         {{#if build.pull }}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
         {{else}}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
         {{/if}}
-
-        Link: <http://staging-front.my83.com.tw|查看部署結果>
-
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-
-        Author: {{ build.author }}
-
+        Link: http://staging-front.my83.com.tw  
+        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>  
+        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>  
+        Author: {{ build.author }}  
         <{{ build.link }}|Visit build page ↗>
     depends_on:
       - deploy-staging
@@ -177,22 +171,16 @@ steps:
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
-        *{{ repo.name }}* 
-        
+        *{{ repo.name }}*  
         {{#if build.pull }}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
         {{else}}
           *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
         {{/if}}
-
-        Link: <http://front.my83.com.tw|查看部署結果>
-
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-
-        Author: {{ build.author }}
-
+        Link: http://front.my83.com.tw  
+        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>  
+        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>  
+        Author: {{ build.author }}  
         <{{ build.link }}|Visit build page ↗>
     depends_on:
       - deploy-production
