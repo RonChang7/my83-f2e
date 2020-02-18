@@ -8,11 +8,11 @@ networks:
 services:
   app:
     expose:
-      - ${APP_PORT_CONTAINER}
+      - ${APP_CONTAINER_PORT}
     labels:
       - my83-gateway.enable=true
       - traefik.enable=true
       - traefik.docker.network=${MY83_GATEWAY_NETWORK_NAME}
-      - traefik.http.services.my83-f2e-app.loadbalancer.server.port=${APP_PORT_CONTAINER}
+      - traefik.http.services.my83-f2e-app.loadbalancer.server.port=${APP_CONTAINER_PORT}
     networks:
       - my83-gateway
