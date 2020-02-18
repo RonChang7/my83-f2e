@@ -3,10 +3,7 @@ version: '3.7'
 services:
   app:
     tty: true
-    build:
-      context: ./front-app-dev
-      dockerfile: Dockerfile
     volumes:
-      - ../app:/app
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
     extra_hosts:
       - local-api.my83.com.tw:${DOCKER_HOST_IP}
