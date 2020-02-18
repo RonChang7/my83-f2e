@@ -3,8 +3,8 @@
     <!-- Panel with multi-column -->
     <template v-if="HeaderMenuPanelWithMultiColumn">
       <div
-        ref="column"
         v-for="(column, column_index) in headerNavItems"
+        ref="column"
         :key="column_index"
         class="HeaderMenuPanel__column"
       >
@@ -153,7 +153,6 @@ export interface Props {
 .HeaderMenuPanel {
   padding: 20px 35px;
   color: $text-default-color;
-  display: flex;
 
   @include min-media('xl') {
     @include card-primary;
