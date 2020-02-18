@@ -1,4 +1,4 @@
-# Mamilove Front Docker
+# MY83 F2E Docker
 
 ## 環境需求
 - Docker for macOS
@@ -12,10 +12,9 @@ cp .env.example .env
 
 依照自己需求改寫 `COMPOSE_FILE`
 - 開發用 `docker-compose.dev.yml`
-- 直接放出 port 用 `docker-compose.expose.yml`, 使用 proxy 用 `docker-compose.proxy.yml`
+- 直接放出 port 用 `docker-compose.expose.yml`, 使用 my83-gateway 用 `docker-compose.gateway.yml`
 - 使用 docker-sync `docker-compose.sync.yml`
 
 設定 `DOCKER_HOST_IP`
-- 進入一個 container 的 bash
-- `ping host.docker.internal`
-- 由 ping 指令 回應的 IP 填入 DOCKER_HOST_IP
+- docker run -it busybox ping host.docker.internal -c 1
+- 由回應的 IP 填入 DOCKER_HOST_IP
