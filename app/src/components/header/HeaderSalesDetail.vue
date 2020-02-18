@@ -9,7 +9,7 @@
     </GlobalLink>
 
     <GlobalLink
-      v-else-if="salesInfo.vip_countdown"
+      v-else-if="shouldShowCountdown"
       class="HeaderSalesDetail__vipCountdown"
       to="/pricing"
     >
@@ -89,8 +89,13 @@ export default {
       this.countdownDisplay.sec = padLeft(sec, 2)
     },
   },
+  computed: {
+    shouldShowCountdown() {
+      return this.salesInfo.vip_countdown >= Date.now()
+    },
+  },
   mounted() {
-    if (this.salesInfo.is_verify && this.salesInfo.vip_countdown) {
+    if (this.salesInfo.is_verify && this.shouldShowCountdown) {
       this.countdown =
         this.salesInfo.vip_countdown - Math.round(Date.now() / 1000)
 
@@ -132,7 +137,9 @@ export interface Methods {
   countdownTransformer: (sec: number) => void
 }
 
-export interface Computed {}
+export interface Computed {
+  shouldShowCountdown: boolean
+}
 
 export interface Props {
   salesInfo: SalesInfo
