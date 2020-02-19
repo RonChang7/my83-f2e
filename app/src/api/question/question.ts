@@ -12,7 +12,7 @@ import request from '@/api/request'
 
 /**
  * @description 取得單則 Question 內容
- * @param id Question id
+ * @param {number} id Question id
  */
 export const fetchQuestionData = async (
   id: number
@@ -25,7 +25,7 @@ export const fetchQuestionData = async (
 
 /**
  * @description 取得單則 Question 之 Answer 內容
- * @param id Question id
+ * @param {number} id Question id
  */
 export const fetchAnswerData = async (
   id: number
@@ -38,7 +38,7 @@ export const fetchAnswerData = async (
 
 /**
  * @description 取得單則 Question 個人化資料
- * @param id Question id
+ * @param {number} id Question id
  */
 export const fetchQuestionPersonalizeData = async (
   id: number
@@ -51,7 +51,7 @@ export const fetchQuestionPersonalizeData = async (
 
 /**
  * @description 取得單則 Question 之 Answer 個人化資料
- * @param id Question id
+ * @param {number} id Question id
  */
 export const fetchAnswerPersonalizeData = async (
   id: number
@@ -64,7 +64,7 @@ export const fetchAnswerPersonalizeData = async (
 
 /**
  * @description 追蹤 Question
- * @param id Question id
+ * @param {number} id Question id
  */
 export const followQuestion = async (
   id: number
@@ -77,7 +77,7 @@ export const followQuestion = async (
 
 /**
  * @description 取消追蹤 Question
- * @param id Question id
+ * @param {number} id Question id
  */
 export const unFollowQuestion = async (
   id: number
@@ -90,8 +90,8 @@ export const unFollowQuestion = async (
 
 /**
  * @description 設定最佳解答
- * @param questionId Question id
- * @param answerId Answer id
+ * @param {number} questionId Question id
+ * @param {number} answerId Answer id
  */
 export const setBestAnswer = async (
   questionId: number,
@@ -105,7 +105,7 @@ export const setBestAnswer = async (
 
 /**
  * @description 取消最佳解答
- * @param id Question id
+ * @param {number} id Question id
  */
 export const unsetBestAnswer = async (
   id: number
