@@ -3,14 +3,14 @@
     <PhotoSwipeGallery
       :index.sync="currentImageIndex"
       :images="galleryImages"
-      thumbnail-class-name="QuestionImages__Thumbnail"
+      thumbnail-class-name="QuestionImages__thumbnail"
     />
     <QuestionThumbnail
       v-for="(image, index) in images"
       :key="index"
       :image-url="image"
       :image-alt="image"
-      class="QuestionImages__Thumbnail"
+      class="QuestionImages__thumbnail"
       @click.native="currentImageIndex = index"
     />
   </div>
@@ -89,7 +89,7 @@ export interface Props {
   flex-wrap: wrap;
   margin-bottom: 44px;
 
-  &__Thumbnail {
+  &__thumbnail {
     cursor: pointer;
   }
 }
