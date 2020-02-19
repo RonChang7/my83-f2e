@@ -104,7 +104,6 @@ export default {
       )
 
       const getThumbBoundsFn = (index) => {
-        // See Options -> getThumbBoundsFn section of documentation for more info
         const thumbnail = thumbnails[index] // find thumbnail
         const pageYScroll =
           window.pageYOffset || document.documentElement.scrollTop
@@ -119,6 +118,7 @@ export default {
         showHideOpacity: true,
         bgOpacity: 0.6,
         closeOnScroll: false,
+        // See Options -> getThumbBoundsFn section of documentation for more info
         getThumbBoundsFn: this.thumbnailClassName.length
           ? getThumbBoundsFn
           : undefined,
@@ -207,5 +207,20 @@ export interface Props {
 
 .pswp__caption__center {
   text-align: center;
+}
+
+.pswp__button--arrow--right:before,
+.pswp__button--arrow--left:before {
+  width: 46px;
+  height: 86px;
+  top: 20px;
+}
+
+.pswp__button--arrow--right:before {
+  background: url('~assets/images/icon/arrow-next.svg');
+}
+
+.pswp__button--arrow--left:before {
+  background: url('~assets/images/icon/arrow-previous.svg');
 }
 </style>
