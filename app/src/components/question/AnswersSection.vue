@@ -6,6 +6,9 @@
       :answer="answer"
       :should-show-answer-count="index === 0"
       :answer-count="answerCount"
+      :is-best-answer="bestAnswerId === answer.answer_id"
+      :is-question-author="isQuestionAuthor"
+      :question-id="questionId"
     />
   </div>
 </template>
@@ -30,6 +33,18 @@ export default {
     answers() {
       const { answers } = this.$store.state.question as State
       return answers || []
+    },
+    bestAnswerId() {
+      const { question } = this.$store.state.question as State
+      return question ? question.best_answer_id : null
+    },
+    isQuestionAuthor() {
+      const { question } = this.$store.state.question as State
+      return question ? question.personalize?.is_owner : false
+    },
+    questionId() {
+      const { question } = this.$store.state.question as State
+      return question ? question.question_id : 0
     },
   },
 } as ComponentOption
@@ -59,6 +74,9 @@ export interface Methods {}
 export interface Computed {
   answerCount: Pick<QuestionMeta, 'answer_count'>
   answers: AnswerData[]
+  bestAnswerId: boolean
+  isQuestionAuthor: boolean
+  questionId: number
 }
 
 export interface Props {}
@@ -66,5 +84,6 @@ export interface Props {}
 
 <style lang="scss" scoped>
 .AnswersSection {
+  flex: 0 0 auto;
 }
 </style>

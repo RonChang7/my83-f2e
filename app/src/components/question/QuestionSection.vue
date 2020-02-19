@@ -2,6 +2,12 @@
   <div class="QuestionSection">
     <div class="QuestionSection__header">
       <QuestionAuthorInfo :avatar="avatar" :name="author" :target="targetTag" />
+      <BaseHeaderFunction
+        section-type="question"
+        :section-id="id"
+        :author-info="authorInfo"
+        :personalize="personalize"
+      />
     </div>
     <QuestionTitle :text="subject" />
     <BaseContent :content="content" />
@@ -28,6 +34,7 @@ import QuestionAuthorInfo from './question/QuestionAuthorInfo.vue'
 import QuestionTitle from './question/QuestionTitle.vue'
 import BaseContent from './base/BaseContent.vue'
 import BaseMeta from './base/BaseMeta.vue'
+import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
 import { State } from '@/store/question/index'
 import {
   QuestionData,
@@ -46,8 +53,13 @@ export default {
     QuestionImages,
     QuestionTags,
     BaseMeta,
+    BaseHeaderFunction,
   },
   computed: {
+    id() {
+      const { question } = this.$store.state.question as State
+      return question ? question.question_id : 0
+    },
     subject() {
       const { question } = this.$store.state.question as State
       return question ? question.subject : ''
@@ -63,6 +75,14 @@ export default {
     author() {
       const { question } = this.$store.state.question as State
       return question ? question.author_info.nickname : ''
+    },
+    authorInfo() {
+      const { question } = this.$store.state.question as State
+      return question ? question.author_info : {}
+    },
+    personalize() {
+      const { question } = this.$store.state.question as State
+      return question ? question.personalize : {}
     },
     targetTag() {
       const { question } = this.$store.state.question as State
@@ -114,10 +134,12 @@ export interface Data {}
 export interface Methods {}
 
 export interface Computed {
+  id: Pick<QuestionData, 'question_id'>
   subject: Pick<QuestionData, 'subject'>
   content: Pick<QuestionData, 'content'>
   avatar: Pick<AuthorInfo, 'avatar_url'>
   author: Pick<AuthorInfo, 'nickname'>
+  authorInfo: AuthorInfo
   targetTag: Pick<QuestionData, 'target_tag'>
   images: Pick<QuestionData, 'images'>
   tags: Pick<QuestionData, 'tags'>
@@ -135,7 +157,7 @@ export interface Props {}
 .QuestionSection {
   @include card-primary;
 
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   padding: 30px;
   margin-bottom: 20px;
 

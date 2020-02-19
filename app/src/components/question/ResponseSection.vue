@@ -6,6 +6,11 @@
   >
     <div class="ResponseSection__header">
       <BaseAuthorInfo :author-info="response.author_info" />
+      <BaseHeaderFunction
+        section-type="response"
+        :section-id="response.response_id"
+        :author-info="response.author_info"
+      />
     </div>
     <BaseContent :content="response.content" />
     <BaseMeta :created-at="response.created_at" meta-type="response" />
@@ -19,6 +24,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import BaseMeta from './base/BaseMeta.vue'
 import BaseAuthorInfo from './base/BaseAuthorInfo.vue'
 import BaseContent from './base/BaseContent.vue'
+import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
 import { Response } from '@/api/question/question.type'
 
 export default {
@@ -26,6 +32,7 @@ export default {
     BaseMeta,
     BaseAuthorInfo,
     BaseContent,
+    BaseHeaderFunction,
   },
   props: {
     response: {
@@ -80,6 +87,8 @@ export interface Props {
   }
 
   &__header {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 12px;
   }
 }
