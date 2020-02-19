@@ -2,8 +2,13 @@
   <div class="QuestionPage">
     <div class="QuestionPage__column left">
       <QuestionSection />
+      <client-only>
+        <AddAnswerSection v-if="userRole === 'sales'" />
+      </client-only>
       <AnswersSection />
-      <AddAnswerSection />
+      <client-only>
+        <AddAnswerSection v-if="userRole !== 'sales'" />
+      </client-only>
     </div>
     <div class="QuestionPage__column">
       <div
@@ -23,12 +28,18 @@ import QuestionSection from '@/components/question/QuestionSection.vue'
 import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
 import { scrollTo } from '@/utils/element'
+import { User, Role } from '@/services/user/user'
 
 export default {
   components: {
     QuestionSection,
     AnswersSection,
     AddAnswerSection,
+  },
+  data() {
+    return {
+      userRole: User.role,
+    }
   },
   methods: {
     /**
@@ -67,7 +78,9 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  userRole: Role
+}
 
 export interface Methods {
   scrollToAnchorPoint: (anchor: string) => void
@@ -79,10 +92,16 @@ export interface Props {}
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .QuestionPage {
   display: flex;
   justify-content: center;
   padding: 40px 0 100px;
+
+  @include max-media('xl') {
+    flex-direction: column;
+  }
 
   &__column {
     display: flex;
@@ -95,6 +114,10 @@ export interface Props {}
 
     &.left {
       width: 740px;
+
+      @include max-media('xl') {
+        width: 100%;
+      }
     }
   }
 }
