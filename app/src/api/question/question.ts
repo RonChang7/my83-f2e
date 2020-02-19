@@ -1,6 +1,19 @@
-import { QuestionDataResponse, AnswerDataResponse } from './question.type'
+import {
+  QuestionDataResponse,
+  AnswerDataResponse,
+  QuestionPersonalizeResponse,
+  AnswerPersonalizeResponse,
+  FollowQuestionResponse,
+  UnFollowQuestionResponse,
+  SetBestAnswerResponse,
+  UnsetBestAnswerResponse,
+} from './question.type'
 import request from '@/api/request'
 
+/**
+ * @description 取得單則 Question 內容
+ * @param id Question id
+ */
 export const fetchQuestionData = async (
   id: number
 ): Promise<QuestionDataResponse> => {
@@ -10,11 +23,95 @@ export const fetchQuestionData = async (
   return data
 }
 
+/**
+ * @description 取得單則 Question 之 Answer 內容
+ * @param id Question id
+ */
 export const fetchAnswerData = async (
   id: number
 ): Promise<AnswerDataResponse> => {
   const { data } = await request.get<AnswerDataResponse>(
     `/api/v1/question/${id}/answers`
+  )
+  return data
+}
+
+/**
+ * @description 取得單則 Question 個人化資料
+ * @param id Question id
+ */
+export const fetchQuestionPersonalizeData = async (
+  id: number
+): Promise<QuestionPersonalizeResponse> => {
+  const { data } = await request.get<QuestionPersonalizeResponse>(
+    `/api/v1/question/${id}/personalize`
+  )
+  return data
+}
+
+/**
+ * @description 取得單則 Question 之 Answer 個人化資料
+ * @param id Question id
+ */
+export const fetchAnswerPersonalizeData = async (
+  id: number
+): Promise<AnswerPersonalizeResponse[]> => {
+  const { data } = await request.get<AnswerPersonalizeResponse[]>(
+    `/api/v1/question/${id}/answers/personalize`
+  )
+  return data
+}
+
+/**
+ * @description 追蹤 Question
+ * @param id Question id
+ */
+export const followQuestion = async (
+  id: number
+): Promise<FollowQuestionResponse> => {
+  const { data } = await request.get<FollowQuestionResponse>(
+    `/api/v1/question/${id}/follow`
+  )
+  return data
+}
+
+/**
+ * @description 取消追蹤 Question
+ * @param id Question id
+ */
+export const unFollowQuestion = async (
+  id: number
+): Promise<UnFollowQuestionResponse> => {
+  const { data } = await request.get<UnFollowQuestionResponse>(
+    `/api/v1/question/${id}/unfollow`
+  )
+  return data
+}
+
+/**
+ * @description 設定最佳解答
+ * @param questionId Question id
+ * @param answerId Answer id
+ */
+export const setBestAnswer = async (
+  questionId: number,
+  answerId: number
+): Promise<SetBestAnswerResponse> => {
+  const { data } = await request.post<SetBestAnswerResponse>(
+    `/api/v1/question/${questionId}/best-answer/${answerId}`
+  )
+  return data
+}
+
+/**
+ * @description 取消最佳解答
+ * @param id Question id
+ */
+export const unsetBestAnswer = async (
+  id: number
+): Promise<UnsetBestAnswerResponse> => {
+  const { data } = await request.post<UnsetBestAnswerResponse>(
+    `/api/v1/question/${id}/unset-best-answer`
   )
   return data
 }

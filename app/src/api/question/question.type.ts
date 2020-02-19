@@ -1,4 +1,4 @@
-import { Link } from '../type'
+import { Link, SimpleResponse } from '../type'
 
 export interface QuestionDataResponse {
   data: QuestionData
@@ -8,6 +8,23 @@ export interface AnswerDataResponse {
   data: AnswerData[]
 }
 
+export interface QuestionPersonalizeResponse {
+  personalize: QuestionPersonalize
+}
+
+export interface AnswerPersonalizeResponse {
+  answer_id: number
+  personalize: AnswerPersonalize
+}
+
+export interface FollowQuestionResponse extends SimpleResponse {}
+
+export interface UnFollowQuestionResponse extends SimpleResponse {}
+
+export interface SetBestAnswerResponse extends SimpleResponse {}
+
+export interface UnsetBestAnswerResponse extends SimpleResponse {}
+
 export interface AnswerData {
   answer_id: number
   content: string
@@ -15,6 +32,7 @@ export interface AnswerData {
   author_info: AuthorInfo
   answer_meta: AnswerMeta
   responses: Response[]
+  personalize?: AnswerPersonalize
 }
 
 export interface QuestionData {
@@ -28,13 +46,15 @@ export interface QuestionData {
   target_tag: Tag
   question_meta: QuestionMeta
   companies: Company[]
+  personalize?: QuestionPersonalize
+  best_answer_id: number | null
 }
 
 export interface AuthorInfo {
   nickname: string
   avatar_url: string
   role: Role
-  role_meta: RoleMeta
+  role_meta: RoleMeta | null
 }
 
 export type Role = 0 | 1 | 2
@@ -72,4 +92,16 @@ export interface Response {
   content: string
   author_info: AuthorInfo
   created_at: number
+}
+
+export interface QuestionPersonalize {
+  is_owner: boolean
+  is_reporter: boolean
+  is_follower: boolean
+}
+
+export interface AnswerPersonalize {
+  is_owner: boolean
+  is_reporter: boolean
+  like_status: -1 | 0 | 1
 }
