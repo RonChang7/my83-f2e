@@ -1,6 +1,12 @@
 <template>
   <div class="QuestionAuthorInfo">
-    <img :src="avatar" alt="avatar" class="avatar" />
+    <div class="QuestionAuthorInfo__avatar">
+      <BaseLazyImage
+        :image-url="avatar"
+        :image-alt="name"
+        :image-loaded-style="avatarStyle"
+      />
+    </div>
     {{ name }}
     <span v-if="target !== null">·</span>
     <GlobalLink v-if="target !== null" :to="target.link.path">
@@ -15,10 +21,12 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Tag } from '@/api/question/question.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 
 export default {
   components: {
     GlobalLink,
+    BaseLazyImage,
   },
   props: {
     avatar: {
@@ -33,6 +41,13 @@ export default {
       type: Object,
       default: () => {},
     },
+  },
+  data() {
+    return {
+      avatarStyle: {
+        borderRadius: '50%',
+      },
+    }
   },
 } as ComponentOption
 
@@ -54,7 +69,9 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  avatarStyle: CSSStyleDeclaration
+}
 
 export interface Methods {}
 
@@ -75,10 +92,9 @@ export interface Props {
   align-items: center;
   font-size: 0.875rem;
 
-  .avatar {
+  &__avatar {
     width: 25px;
     height: 25px;
-    border-radius: 50%;
     margin-right: 8px;
   }
 
