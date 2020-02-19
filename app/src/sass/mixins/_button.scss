@@ -83,21 +83,21 @@ $button-font: (
     fill: $gray-secondary;
   }
 
+  &.active:not([disabled]) {
+    color: $primary-color;
+    border-color: $primary-color;
+
+    &::v-deep svg > path {
+      fill: $primary-color;
+    }
+  }
+
   &:hover:not([disabled]) {
     color: $gray-primary;
     border-color: $gray-secondary;
 
     &::v-deep svg > path {
       fill: $gray-primary;
-    }
-  }
-
-  &:active:not([disabled]) {
-    color: $primary-color;
-    border-color: $primary-color;
-
-    &::v-deep svg > path {
-      fill: $primary-color;
     }
   }
 
