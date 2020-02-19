@@ -58,7 +58,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         'status' in data && (state.loginPanel.display = data.status!)
         data.targetPanel && (state.loginPanel.targetPanel = data.targetPanel)
       },
-      [types.UPDATE_AFTER_LOGIN_EVENT](state, data) {
+      [types.UPDATE_AFTER_LOGIN_EVENT](state, data: Function) {
         state.actionAfterLogin = data
       },
       [types.UPDATE_GLOBAL_DIALOG_DISPLAY](state, visible: boolean) {
