@@ -31,5 +31,6 @@ export interface Props {
   color: $gray-primary;
   margin-bottom: 24px;
   line-height: 2;
+  overflow-y: auto;
 }
 </style>
