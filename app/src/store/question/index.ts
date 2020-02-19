@@ -1,7 +1,29 @@
+import _ from 'lodash'
 import { Module } from 'vuex'
 import * as types from './question.type'
 import * as api from '@/api/question/question'
-import { QuestionData, AnswerData } from '@/api/question/question.type'
+import {
+  QuestionData,
+  AnswerData,
+  QuestionPersonalize,
+  AnswerPersonalize,
+  FollowQuestionResponse,
+  UnFollowQuestionResponse,
+  SetBestAnswerResponse,
+  UnsetBestAnswerResponse,
+} from '@/api/question/question.type'
+
+const DefaultQuestionPersonalize: QuestionPersonalize = {
+  is_owner: false,
+  is_reporter: false,
+  is_follower: false,
+}
+
+const DefaultAnswerPersonalize: AnswerPersonalize = {
+  is_owner: false,
+  is_reporter: false,
+  like_status: 0,
+}
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -32,13 +54,138 @@ export const createStoreModule = <R>(): Module<State, R> => {
           console.log(err)
         }
       },
+      [types.HIGHLIGHT_BEST_ANSWER]({ commit, state }, bestAnswerId: number) {
+        const bestAnswerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === bestAnswerId
+        )
+
+        if (bestAnswerIndex !== -1) {
+          commit(types.UPDATE_TOP_ANSWER_ORDER, bestAnswerIndex)
+        }
+      },
+      async [types.FETCH_QUESTION_PERSONALIZE_DATA]({ commit }, id: number) {
+        try {
+          const { personalize } = await api.fetchQuestionPersonalizeData(id)
+          commit(types.UPDATE_QUESTION_PERSONALIZE_DATA, personalize)
+        } catch (err) {
+          // @todo: error handler
+          console.log(err)
+        }
+      },
+      async [types.FETCH_ANSWER_PERSONALIZE_DATA](
+        { commit, state },
+        id: number
+      ) {
+        try {
+          const data = await api.fetchAnswerPersonalizeData(id)
+
+          const answers = state.answers?.map((answer) => {
+            const personalize = data.find((personalizeResponse) => {
+              return personalizeResponse.answer_id === answer.answer_id
+            })
+
+            if (personalize) {
+              return {
+                ...answer,
+                personalize: personalize.personalize,
+              }
+            }
+            return answer
+          })
+
+          commit(types.UPDATE_ANSWER_PERSONALIZE_DATA, answers)
+        } catch (err) {
+          // @todo: error handler
+          console.log(err)
+        }
+      },
+      async [types.FOLLOW_QUESTION]({ commit }, id: number) {
+        try {
+          const { success } = await api.followQuestion(id)
+          if (success) {
+            commit(types.UPDATE_QUESTION_FOLLOW_STATE, true)
+          }
+          return success
+        } catch (err) {
+          const { success } = err.response.data as FollowQuestionResponse
+          return success
+        }
+      },
+      async [types.UNFOLLOW_QUESTION]({ commit }, id: number) {
+        try {
+          const { success } = await api.unFollowQuestion(id)
+          if (success) {
+            commit(types.UPDATE_QUESTION_FOLLOW_STATE, false)
+          }
+          return success
+        } catch (err) {
+          const { success } = err.response.data as UnFollowQuestionResponse
+          return success
+        }
+      },
+      async [types.SET_QUESTION_BEST_ANSWER](
+        { commit },
+        data: setQuestionBestAnswerPayload
+      ) {
+        const { questionId, answerId } = data
+        try {
+          const { success } = await api.setBestAnswer(questionId, answerId)
+          if (success) {
+            commit(types.UPDATE_QUESTION_BEST_ANSWER, answerId)
+          }
+          return success
+        } catch (err) {
+          const { success } = err.response.data as SetBestAnswerResponse
+          return success
+        }
+      },
+      async [types.UNSET_QUESTION_BEST_ANSWER]({ commit }, id: number) {
+        try {
+          const { success } = await api.unsetBestAnswer(id)
+          if (success) {
+            commit(types.UPDATE_QUESTION_BEST_ANSWER, null)
+          }
+          return success
+        } catch (err) {
+          const { success } = err.response.data as UnsetBestAnswerResponse
+          return success
+        }
+      },
     },
     mutations: {
-      [types.UPDATE_QUESTION_DATA](state, data) {
-        state.question = data
+      [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
+        state.question = {
+          ...data,
+          personalize: DefaultQuestionPersonalize,
+        }
       },
-      [types.UPDATE_ANSWER_DATA](state, data) {
+      [types.UPDATE_ANSWER_DATA](state, data: AnswerData[]) {
+        state.answers = data.map((answer) => {
+          return {
+            ...answer,
+            personalize: DefaultAnswerPersonalize,
+          }
+        })
+      },
+      [types.UPDATE_TOP_ANSWER_ORDER](state, index: number) {
+        const bestAnswer: AnswerData = state.answers!.splice(index, 1)[0]
+        state.answers!.unshift(bestAnswer)
+      },
+      [types.UPDATE_QUESTION_PERSONALIZE_DATA](
+        state,
+        data: QuestionPersonalize
+      ) {
+        state.question!.personalize = data
+      },
+      [types.UPDATE_ANSWER_PERSONALIZE_DATA](state, data: AnswerData[]) {
         state.answers = data
+      },
+      [types.UPDATE_QUESTION_FOLLOW_STATE](state, status: boolean) {
+        state.question!.personalize!.is_follower = status
+      },
+      [types.UPDATE_QUESTION_BEST_ANSWER](state, answerId: number | null) {
+        state.question!.best_answer_id = answerId
       },
     },
   }
@@ -47,4 +194,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   question: QuestionData | null
   answers: AnswerData[] | null
+}
+
+interface setQuestionBestAnswerPayload {
+  questionId: number
+  answerId: number
 }
