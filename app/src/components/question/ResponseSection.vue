@@ -12,7 +12,7 @@
         :author-info="response.author_info"
       />
     </div>
-    <BaseContent :content="response.content" />
+    <BaseContent :content="content" />
     <BaseMeta :created-at="response.created_at" meta-type="response" />
   </div>
 </template>
@@ -25,7 +25,8 @@ import BaseMeta from './base/BaseMeta.vue'
 import BaseAuthorInfo from './base/BaseAuthorInfo.vue'
 import BaseContent from './base/BaseContent.vue'
 import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
-import { Response } from '@/api/question/question.type'
+import { ResponseData } from '@/api/question/question.type'
+import { textToUrl } from '@/utils/text-parser'
 
 export default {
   components: {
@@ -42,6 +43,11 @@ export default {
     index: {
       type: Number,
       required: true,
+    },
+  },
+  computed: {
+    content() {
+      return textToUrl(this.response.content)
     },
   },
 } as ComponentOption
@@ -71,7 +77,7 @@ export interface Methods {}
 export interface Computed {}
 
 export interface Props {
-  response: Response
+  response: ResponseData
   index: number
 }
 </script>
