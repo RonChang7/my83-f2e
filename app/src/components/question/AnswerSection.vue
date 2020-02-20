@@ -34,6 +34,8 @@
         :has-response="!!answer.responses.length"
         :active-panel.sync="activeResponsePanel"
         :is-focus.sync="isResponsePanelFocus"
+        :question-id="questionId"
+        :answer-id="answer.answer_id"
       />
     </div>
   </div>

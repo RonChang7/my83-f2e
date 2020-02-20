@@ -14,43 +14,68 @@
           placeholder="設定你的暱稱"
           :value.sync="form.nickname"
         />
-        <div class="AnswerEditor__nickname__inputInfo">暱稱設定後不可修改</div>
+        <div v-if="!nickname" class="AnswerEditor__nickname__inputInfo">
+          暱稱設定後不可修改
+        </div>
       </div>
     </div>
     <div class="AnswerEditor__content">
       <BaseRickTextEditor :content.sync="form.content" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseButton size="m" type="secondary" @click.native="cancel">
+      <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
+      <BaseButton size="m" type="secondary" @click.native="reset">
         取消
       </BaseButton>
-      <BaseButton size="m" :is-disabled="disableSubmit" @click.native="submit">
+      <BaseButton
+        size="m"
+        :is-disabled="disableSubmit"
+        :state="submitState"
+        @click.native="submit"
+      >
         留言
       </BaseButton>
+    </div>
+    <div v-if="userRole === 'sales'" class="AnswerEditor__function">
+      <BaseCheckbox :checked.sync="acceptRule" label="我同意遵守版規" />
+    </div>
+    <div v-if="userRole === 'sales'" class="AnswerEditor__rule">
+      <AnswerSalesRule />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseRickTextEditor from '../base/BaseRickTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import { ADD_ANSWER } from '@/store/question/question.type'
+import {
+  PostDataFactory,
+  AnswerPostData,
+} from '@/services/question/post-template-factory'
+import { AddAnswerResponse } from '@/api/question/question.type'
+import { scrollTo } from '@/utils/element'
+import { Role } from '@/services/user/user'
+const BaseCheckbox = () =>
+  import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
 const BaseInputText = () =>
   import('@/components/my83-ui-kit/input/BaseInputText.vue')
+const AnswerSalesRule = () => import('./AnswerSalesRule.vue')
 
-const FormDefault = {
-  nickname: '',
-  content: '',
-}
+const AnswerFormData = new PostDataFactory('answer')
 
 export default {
   components: {
     BaseInputText,
     BaseRickTextEditor,
     BaseButton,
+    BaseCheckbox,
+    BaseInputErrorMessage,
+    AnswerSalesRule,
   },
   props: {
     avatar: {
@@ -61,19 +86,67 @@ export default {
       type: String,
       required: true,
     },
+    userRole: {
+      type: String,
+      required: true,
+    },
+    questionId: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      form: _.cloneDeep(FormDefault),
+      form: AnswerFormData.form,
+      errMsg: '',
+      submitState: '',
+      acceptRule: false,
     }
   },
   methods: {
-    closePanel() {
-      this.$emit('close-editor')
+    validate() {
+      if (this.userRole === 'sales' && !this.acceptRule) {
+        this.errMsg = '請同意遵守版規'
+        return false
+      }
+      this.errMsg = ''
+      return true
     },
-    submit() {},
-    cancel() {
-      this.form = _.cloneDeep(FormDefault)
+    async submit() {
+      if (!this.validate()) return
+
+      const payload = {
+        questionId: this.questionId,
+        nickname: this.nickname ? this.nickname : this.form.nickname,
+        content: this.form.content,
+      }
+
+      this.submitState = 'loading'
+
+      const response = await this.$store.dispatch(
+        `question/${ADD_ANSWER}`,
+        payload
+      )
+
+      if (typeof response === 'number') {
+        this.$nextTick(() => {
+          this.scrollToNewPost(response)
+        })
+        this.reset()
+      } else {
+        const { success, message } = response as AddAnswerResponse
+        this.errMsg = success ? '' : message
+      }
+
+      this.submitState = ''
+    },
+    reset() {
+      AnswerFormData.reset()
+      this.form = AnswerFormData.form as AnswerPostData
+    },
+    scrollToNewPost(id) {
+      const el = document.querySelector(`#answer-${id}`) as HTMLElement
+      el && scrollTo(el, window)
     },
   },
   computed: {
@@ -81,6 +154,9 @@ export default {
       const nickname = this.nickname || this.form.nickname
       return !(nickname && this.form.content)
     },
+  },
+  mounted() {
+    this.$emit('is-loaded')
   },
 } as ComponentOption
 
@@ -103,15 +179,17 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance extends Vue {}
 
 export interface Data {
-  form: {
-    nickname: string
-    content: string
-  }
+  form: AnswerPostData
+  errMsg: string
+  submitState: string
+  acceptRule: boolean
 }
 
 export interface Methods {
-  closePanel: () => void
+  validate: () => boolean
   submit: () => void
+  reset: () => void
+  scrollToNewPost: (id: number) => void
 }
 
 export interface Computed {
@@ -121,6 +199,8 @@ export interface Computed {
 export interface Props {
   avatar: string
   nickname: string
+  userRole: Role
+  questionId: number
 }
 </script>
 
@@ -138,7 +218,8 @@ export interface Props {
     display: flex;
   }
 
-  &__content {
+  &__content,
+  &__rule {
     margin-top: 10px;
   }
 
@@ -160,6 +241,11 @@ export interface Props {
   }
 
   &__nickname {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: $gray-primary;
+
     &__input {
       width: 220px;
     }

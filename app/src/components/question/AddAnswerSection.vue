@@ -1,18 +1,28 @@
 <template>
-  <div class="AddAnswerSection" :class="{ openEditor }">
-    <BaseButton
-      v-if="!openEditor"
-      size="l-b"
-      @click.native="panelDisplayHandler(true)"
-    >
-      我要留言
-    </BaseButton>
-    <AnswerEditor
-      v-else
-      :avatar="avatar"
-      :nickname="nickname"
-      @close-editor="panelDisplayHandler(false)"
-    />
+  <div
+    class="AddAnswerSection"
+    :class="{
+      openEditor: openEditor && editorIsLoaded,
+      sales: userRole === 'sales',
+    }"
+  >
+    <transition mode="out-in">
+      <BaseButton
+        v-if="!openEditor & editorIsLoaded"
+        size="xl"
+        @click.native="panelDisplayHandler(true)"
+      >
+        我要留言
+      </BaseButton>
+      <AnswerEditor
+        v-else
+        :avatar="avatar"
+        :nickname="nickname"
+        :user-role="userRole"
+        :question-id="questionId"
+        @is-loaded="editorIsLoaded = true"
+      />
+    </transition>
   </div>
 </template>
 
@@ -20,17 +30,18 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { AvatarMap } from './helpers/reply-default-avatar'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { User } from '@/services/user/user'
-import { State } from '@/store/header/index'
+import { User, Role } from '@/services/user/user'
+import { State as HeaderState } from '@/store/header/index'
+import { State } from '@/store/question/index'
+import {
+  OPEN_LOGIN_PANEL,
+  UPDATE_AFTER_LOGIN_EVENT,
+} from '@/store/global/global.type'
 const AnswerEditor = () => import('./answer/AnswerEditor.vue')
 
 const UserRole = User.role
-const AvatarMap = {
-  sales: '/images/avatar/sales_girl4.png',
-  client: '/images/avatar/client_girl1.png',
-  admin: '/images/avatar/client_girl1.png',
-}
 
 export default {
   components: {
@@ -41,17 +52,37 @@ export default {
     return {
       openEditor: false,
       avatar: AvatarMap[UserRole],
+      editorIsLoaded: false,
+      userRole: User.role,
     }
   },
   methods: {
+    isLogin() {
+      return User.role !== 'guest'
+    },
+    showLoginPanel() {
+      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        location.reload()
+      })
+    },
     panelDisplayHandler(status) {
+      if (status && !this.isLogin()) {
+        this.showLoginPanel()
+        return
+      }
+
       this.openEditor = status
     },
   },
   computed: {
     nickname() {
-      const { headerPersonalized } = this.$store.state.header as State
+      const { headerPersonalized } = this.$store.state.header as HeaderState
       return headerPersonalized ? headerPersonalized.personalize.nickname : ''
+    },
+    questionId() {
+      const { question } = this.$store.state.question as State
+      return question ? question.question_id : 0
     },
   },
 } as ComponentOption
@@ -76,13 +107,21 @@ export interface Instance extends Vue {}
 
 export interface Data {
   openEditor: boolean
+  avatar: string
+  editorIsLoaded: boolean
+  userRole: Role
 }
 
 export interface Methods {
-  panelDisplayHandler: (boolean) => void
+  isLogin: () => boolean
+  showLoginPanel: () => void
+  panelDisplayHandler: (status: boolean) => void
 }
 
-export interface Computed {}
+export interface Computed {
+  nickname: string
+  questionId: number
+}
 
 export interface Props {}
 </script>
@@ -91,10 +130,11 @@ export interface Props {}
 .AddAnswerSection {
   display: flex;
   justify-content: center;
-  padding: 20px 0 80px;
+  margin: 20px 0;
 
-  &.openEditor {
-    padding: 0;
+  &.openEditor,
+  &.sales {
+    margin-top: 0;
   }
 }
 </style>
