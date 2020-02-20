@@ -106,9 +106,9 @@ export interface Props {
         position: relative;
         left: 3px;
         top: 3px;
-        width: 10px;
-        height: 10px;
-        border-radius: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
         background-color: $secondary-color;
       }
     }
@@ -141,7 +141,7 @@ export interface Props {
   .icon {
     height: 20px;
     width: 20px;
-    border: 2px solid $gray-secondary;
+    border: 1px solid $gray-secondary;
     border-radius: 10px;
     margin: 2px;
     transition-duration: 0.3s;

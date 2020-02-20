@@ -122,7 +122,7 @@ export interface Props {
   .icon {
     height: 18px;
     width: 18px;
-    border: 2px solid $gray-secondary;
+    border: 1px solid $gray-secondary;
     border-radius: $border-radius;
     margin: 3px;
     transition: background-color 0.3s;
