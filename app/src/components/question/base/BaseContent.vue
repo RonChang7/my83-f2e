@@ -32,5 +32,6 @@ export interface Props {
   margin-bottom: 24px;
   line-height: 2;
   overflow-y: auto;
+  word-wrap: break-word;
 }
 </style>

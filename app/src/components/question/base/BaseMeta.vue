@@ -31,6 +31,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { postingTimeParser } from '@/utils/time-parser'
+import { PostType } from '@/services/question/post-template-factory'
 const BaseThumbUp = () => import('@/components/base/icon/18/BaseThumbUp.vue')
 const BaseThumbDown = () =>
   import('@/components/base/icon/18/BaseThumbDown.vue')
@@ -104,7 +105,7 @@ export interface Props {
   dislikeCount: number | null
   answerCount: number | null
   createdAt: number
-  metaType: 'question' | 'answer' | 'response'
+  metaType: PostType
 }
 </script>
 
