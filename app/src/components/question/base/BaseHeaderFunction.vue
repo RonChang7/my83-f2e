@@ -156,16 +156,12 @@ export default {
       return ''
     },
     shouldShowConsultSalesButton() {
-      return (
-        this.sectionType !== 'question' &&
-        this.sectionAuthorRole === 'sales' &&
-        this.userRole !== 'sales'
-      )
-    },
-    shouldShowMoreButton() {
       if (!this.isMounted) return false
 
-      return this.sectionType !== 'response'
+      return this.sectionAuthorRole === 'sales' && this.userRole !== 'sales'
+    },
+    shouldShowMoreButton() {
+      return this.sectionType !== 'response' && !this.personalize.is_owner
     },
   },
   methods: {
