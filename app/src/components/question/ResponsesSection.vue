@@ -13,7 +13,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Response } from '@/api/question/question.type'
+import { ResponseData } from '@/api/question/question.type'
 const ResponseSection = () => import('./ResponseSection.vue')
 
 export default {
@@ -53,7 +53,7 @@ export interface Methods {}
 export interface Computed {}
 
 export interface Props {
-  responses: Response[]
+  responses: ResponseData[]
 }
 </script>
 

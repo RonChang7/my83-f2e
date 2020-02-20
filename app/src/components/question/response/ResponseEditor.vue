@@ -15,7 +15,7 @@
             placeholder="設定你的暱稱"
             :value.sync="form.nickname"
           />
-          <div class="ResponseEditor__nickname__inputInfo">
+          <div v-if="!nickname" class="ResponseEditor__nickname__inputInfo">
             暱稱設定後不可修改
           </div>
         </div>
@@ -31,12 +31,14 @@
         />
       </div>
       <div class="ResponseEditor__function">
-        <BaseButton size="m" type="secondary" @click.native="cancel">
+        <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
+        <BaseButton size="m" type="secondary" @click.native="reset">
           取消
         </BaseButton>
         <BaseButton
           size="m"
           :is-disabled="disableSubmit"
+          :state="submitState"
           @click.native="submit"
         >
           留言
@@ -54,24 +56,30 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
+import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import { AddResponseResponse } from '@/api/question/question.type'
+import { ADD_RESPONSE } from '@/store/question/question.type'
+import {
+  PostDataFactory,
+  ResponsePostData,
+} from '@/services/question/post-template-factory'
+import { scrollTo } from '@/utils/element'
+import { nl2br } from '@/utils/text-parser'
 
-const FormDefault = {
-  nickname: '',
-  content: '',
-}
+let ResponseFormData: PostDataFactory
 
 export default {
   components: {
     BaseInputText,
     BaseInputTextarea,
     BaseButton,
+    BaseInputErrorMessage,
   },
   props: {
     avatar: {
@@ -94,10 +102,20 @@ export default {
       type: Boolean,
       default: false,
     },
+    questionId: {
+      type: Number,
+      required: true,
+    },
+    answerId: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
-      form: _.cloneDeep(FormDefault),
+      form: null,
+      errMsg: '',
+      submitState: '',
     }
   },
   methods: {
@@ -107,10 +125,41 @@ export default {
     activePanelHandler(status) {
       this.$emit('update:activePanel', status)
     },
-    submit() {},
-    cancel() {
-      this.form = _.cloneDeep(FormDefault)
+    async submit() {
+      const payload = {
+        questionId: this.questionId,
+        answerId: this.answerId,
+        nickname: this.nickname ? this.nickname : this.form.nickname,
+        content: nl2br(this.form.content), // 相容舊版，所以新增 response 要補上 <br />
+      }
+
+      this.submitState = 'loading'
+
+      const response = await this.$store.dispatch(
+        `question/${ADD_RESPONSE}`,
+        payload
+      )
+
+      if (typeof response === 'number') {
+        this.$nextTick(() => {
+          this.scrollToNewPost(response)
+        })
+        this.reset()
+      } else {
+        const { success, message } = response as AddResponseResponse
+        this.errMsg = success ? '' : message
+      }
+
+      this.submitState = ''
+    },
+    reset() {
+      ResponseFormData.reset()
+      this.form = ResponseFormData.form as ResponsePostData
       this.activePanelHandler(false)
+    },
+    scrollToNewPost(id) {
+      const el = document.querySelector(`#response-${id}`) as HTMLElement
+      el && scrollTo(el, window)
     },
     focusHandler(status) {
       this.$emit('update:isFocus', status)
@@ -145,6 +194,10 @@ export default {
       },
     },
   },
+  created() {
+    ResponseFormData = new PostDataFactory('response')
+    this.form = ResponseFormData.form as ResponsePostData
+  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -166,16 +219,17 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance extends Vue {}
 
 export interface Data {
-  form: {
-    nickname: string
-    content: string
-  }
+  form: ResponsePostData
+  errMsg: string
+  submitState: string
 }
 
 export interface Methods {
   closePanel: () => void
   activePanelHandler: (status: boolean) => void
   submit: () => void
+  reset: () => void
+  scrollToNewPost: (id: number) => void
   autoFocusHelper: () => void
   focusHandler: () => void
 }
@@ -190,6 +244,8 @@ export interface Props {
   hasResponse: boolean
   activePanel: boolean
   isFocus: boolean
+  questionId: number
+  answerId: number
 }
 </script>
 
@@ -238,6 +294,11 @@ export interface Props {
   }
 
   &__nickname {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    color: $gray-primary;
+
     &__input {
       width: 220px;
     }
