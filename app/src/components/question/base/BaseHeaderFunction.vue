@@ -56,6 +56,7 @@ import {
   SET_QUESTION_BEST_ANSWER,
   UNSET_QUESTION_BEST_ANSWER,
 } from '@/store/question/question.type'
+import { PostType } from '@/services/question/post-template-factory'
 
 enum RoleMap {
   guest = -1,
@@ -137,7 +138,15 @@ export default {
       return ''
     },
     shouldShowBestAnswerButton() {
-      return this.sectionType === 'answer' && this.isQuestionAuthor
+      /**
+       * 區塊是 Answer 且是 Question 的作者，但是不能是 Answer 的作者
+       * 避免業務員自問自答，將自己的回答設定成最佳解答
+       */
+      return (
+        this.sectionType === 'answer' &&
+        this.isQuestionAuthor &&
+        !this.personalize.is_owner
+      )
     },
     BestAnswerButtonText() {
       if (this.sectionType === 'answer') {
@@ -259,7 +268,7 @@ export interface Computed {
 }
 
 export interface Props {
-  sectionType: 'question' | 'answer' | 'response'
+  sectionType: PostType
   sectionId: number
   authorInfo: AuthorInfo
   personalize: QuestionPersonalize | AnswerPersonalize

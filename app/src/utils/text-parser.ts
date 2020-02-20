@@ -2,6 +2,9 @@ import linkifyStr from 'linkifyjs/string'
 
 export const textToUrl = (content: string) => {
   const string = linkifyStr(content, {
+    attributes: {
+      rel: 'noopener nofollow',
+    },
     className: '',
     nl2br: true,
     validate: {
