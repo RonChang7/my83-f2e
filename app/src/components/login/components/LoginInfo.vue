@@ -6,7 +6,7 @@
       class="introduction"
       src="@/assets/images/login/img-brand-feature.png"
       alt="my83 introduction"
-      srcset="@/assets/images/login/img-brand-feature@2x.png"
+      srcset="@/assets/images/login/img-brand-feature@2x.png 2x"
     />
   </div>
 </template>
