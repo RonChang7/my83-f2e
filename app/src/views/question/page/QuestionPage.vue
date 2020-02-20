@@ -27,7 +27,6 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionSection from '@/components/question/QuestionSection.vue'
 import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
-import { scrollTo } from '@/utils/element'
 import { User, Role } from '@/services/user/user'
 
 export default {
@@ -48,9 +47,7 @@ export default {
      */
     scrollToAnchorPoint(anchor) {
       const el = document.querySelector(anchor) as HTMLElement
-      if (el) {
-        scrollTo(el, window)
-      }
+      el && el.scrollIntoView()
     },
   },
   mounted() {
@@ -97,7 +94,7 @@ export interface Props {}
 .QuestionPage {
   display: flex;
   justify-content: center;
-  padding: 40px 0 100px;
+  padding: 40px 0 60px;
 
   @include max-media('xl') {
     flex-direction: column;
