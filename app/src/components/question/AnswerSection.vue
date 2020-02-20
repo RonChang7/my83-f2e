@@ -213,7 +213,7 @@ export interface Props {
     align-items: center;
     font-weight: 500;
     height: 50px;
-    background: #ffeadf;
+    background: $primary-bright-color;
     color: $primary-color;
     margin: 0 -28px;
     padding: 0 28px;
