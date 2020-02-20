@@ -11,6 +11,11 @@ import {
   UnFollowQuestionResponse,
   SetBestAnswerResponse,
   UnsetBestAnswerResponse,
+  AddAnswerPayload,
+  AddAnswerResponse,
+  AddResponsePayload,
+  ResponseData,
+  AddResponseResponse,
 } from '@/api/question/question.type'
 
 const DefaultQuestionPersonalize: QuestionPersonalize = {
@@ -152,6 +157,42 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return success
         }
       },
+      async [types.ADD_ANSWER]({ commit }, payload: AddAnswerPayload) {
+        try {
+          const { success, data } = await api.addAnswer(payload)
+          if (success) {
+            commit(types.UPDATE_NEW_ANSWER, data)
+            commit(types.UPDATE_ANSWER_COUNT)
+          }
+          return data!.answer_id
+        } catch (err) {
+          const res = err.response.data as AddAnswerResponse
+          return res
+        }
+      },
+      async [types.ADD_RESPONSE](
+        { commit, state },
+        payload: AddResponsePayload
+      ) {
+        try {
+          const { success, data } = await api.addResponse(payload)
+          if (success) {
+            const answerIndex = _.findIndex(
+              state.answers,
+              (answer) => answer.answer_id === payload.answerId
+            )
+
+            commit(types.UPDATE_NEW_RESPONSE, {
+              answerIndex,
+              data,
+            })
+          }
+          return data!.response_id
+        } catch (err) {
+          const res = err.response.data as AddResponseResponse
+          return res
+        }
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
@@ -187,6 +228,21 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_QUESTION_BEST_ANSWER](state, answerId: number | null) {
         state.question!.best_answer_id = answerId
       },
+      [types.UPDATE_NEW_ANSWER](state, data: AnswerData) {
+        state.answers!.push({
+          ...data,
+          personalize: DefaultAnswerPersonalize,
+        })
+      },
+      [types.UPDATE_ANSWER_COUNT](state) {
+        state.question!.question_meta.answer_count += 1
+      },
+      [types.UPDATE_NEW_RESPONSE](
+        state,
+        { answerIndex, data }: MutateResponsePayload
+      ) {
+        state.answers![answerIndex].responses.push(data)
+      },
     },
   }
 }
@@ -199,4 +255,9 @@ export interface State {
 interface setQuestionBestAnswerPayload {
   questionId: number
   answerId: number
+}
+
+interface MutateResponsePayload {
+  answerIndex: number
+  data: ResponseData
 }
