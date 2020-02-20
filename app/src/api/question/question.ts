@@ -7,6 +7,10 @@ import {
   UnFollowQuestionResponse,
   SetBestAnswerResponse,
   UnsetBestAnswerResponse,
+  AddAnswerPayload,
+  AddAnswerResponse,
+  AddResponsePayload,
+  AddResponseResponse,
 } from './question.type'
 import request from '@/api/request'
 
@@ -112,6 +116,45 @@ export const unsetBestAnswer = async (
 ): Promise<UnsetBestAnswerResponse> => {
   const { data } = await request.post<UnsetBestAnswerResponse>(
     `/api/v1/question/${id}/unset-best-answer`
+  )
+  return data
+}
+
+/**
+ * @description 新增 Answer
+ * @param {AddAnswerPayload} payload
+ */
+export const addAnswer = async ({
+  questionId,
+  nickname,
+  content,
+}: AddAnswerPayload): Promise<AddAnswerResponse> => {
+  const { data } = await request.post<AddAnswerResponse>(
+    `/api/v1/question/${questionId}/create-answer`,
+    {
+      nickname,
+      content,
+    }
+  )
+  return data
+}
+
+/**
+ * @description 新增 Response
+ * @param {AddResponsePayload} payload
+ */
+export const addResponse = async ({
+  questionId,
+  answerId,
+  nickname,
+  content,
+}: AddResponsePayload): Promise<AddResponseResponse> => {
+  const { data } = await request.post<AddResponseResponse>(
+    `/api/v1/question/${questionId}/answer/${answerId}/create-response`,
+    {
+      nickname,
+      content,
+    }
   )
   return data
 }

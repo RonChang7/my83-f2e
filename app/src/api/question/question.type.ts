@@ -25,13 +25,31 @@ export interface SetBestAnswerResponse extends SimpleResponse {}
 
 export interface UnsetBestAnswerResponse extends SimpleResponse {}
 
+export interface AddAnswerPayload {
+  questionId: number
+  nickname?: string
+  content: string
+}
+
+export interface AddResponsePayload extends AddAnswerPayload {
+  answerId: number
+}
+
+export interface AddAnswerResponse extends SimpleResponse {
+  data?: AnswerData
+}
+
+export interface AddResponseResponse extends SimpleResponse {
+  data?: ResponseData
+}
+
 export interface AnswerData {
   answer_id: number
   content: string
   created_at: number
   author_info: AuthorInfo
   answer_meta: AnswerMeta
-  responses: Response[]
+  responses: ResponseData[]
   personalize?: AnswerPersonalize
 }
 
@@ -87,7 +105,7 @@ export interface AnswerMeta {
   response_count: number
 }
 
-export interface Response {
+export interface ResponseData {
   response_id: number
   content: string
   author_info: AuthorInfo
