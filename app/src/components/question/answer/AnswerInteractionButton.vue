@@ -110,20 +110,19 @@ export interface Props {
     margin-right: 6px;
   }
 
-  &:hover {
-    color: $gray-primary;
-
-    &::v-deep svg > path {
-      fill: $gray-primary;
-    }
-  }
-
-  &:active,
   &.selected {
     color: $primary-color;
 
     &::v-deep svg > path {
       fill: $primary-color;
+    }
+  }
+
+  &:hover {
+    color: $gray-primary;
+
+    &::v-deep svg > path {
+      fill: $gray-primary;
     }
   }
 }
