@@ -15,21 +15,21 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 const BaseComment = () => import('@/components/base/icon/24/BaseComment.vue')
 const BaseLike = () => import('@/components/base/icon/24/BaseLike.vue')
-const BaseUnlike = () => import('@/components/base/icon/24/BaseUnlike.vue')
+const BaseDislike = () => import('@/components/base/icon/24/BaseDislike.vue')
 
-export type Type = 'like' | 'unlike' | 'response'
+export type Type = 'like' | 'dislike' | 'response'
 type ButtonTextType = '讚' | '不滿' | '留言'
-type IconType = 'BaseLike' | 'BaseUnlike' | 'BaseComment'
+type IconType = 'BaseLike' | 'BaseDislike' | 'BaseComment'
 
 const ButtonText: Record<Type, ButtonTextType> = {
   like: '讚',
-  unlike: '不滿',
+  dislike: '不滿',
   response: '留言',
 }
 
 const Icon: Record<Type, IconType> = {
   like: 'BaseLike',
-  unlike: 'BaseUnlike',
+  dislike: 'BaseDislike',
   response: 'BaseComment',
 }
 
@@ -37,7 +37,7 @@ export default {
   components: {
     BaseComment,
     BaseLike,
-    BaseUnlike,
+    BaseDislike,
   },
   props: {
     type: {

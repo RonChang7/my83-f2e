@@ -100,8 +100,8 @@ export interface Company {
 }
 
 export interface AnswerMeta {
-  liked_count: number
-  disliked_count: number
+  like_count: number
+  dislike_count: number
   response_count: number
 }
 
