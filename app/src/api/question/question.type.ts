@@ -43,6 +43,17 @@ export interface AddResponseResponse extends SimpleResponse {
   data?: ResponseData
 }
 
+export interface UpdateLikeStatuePayload {
+  questionId: number
+  answerId: number
+  likeStatus: LikeStatus
+}
+
+export interface UpdateLikeStatueResponse extends SimpleResponse {
+  answer_meta?: AnswerMeta
+  like_status?: LikeStatus
+}
+
 export interface AnswerData {
   answer_id: number
   content: string
@@ -121,5 +132,7 @@ export interface QuestionPersonalize {
 export interface AnswerPersonalize {
   is_owner: boolean
   is_reporter: boolean
-  like_status: -1 | 0 | 1
+  like_status: LikeStatus
 }
+
+export type LikeStatus = -1 | 0 | 1
