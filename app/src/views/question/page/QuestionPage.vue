@@ -89,12 +89,14 @@ export interface Props {}
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
 .QuestionPage {
   display: flex;
   justify-content: center;
   padding: 40px 0 60px;
+  background: $primary-bg;
 
   @include max-media('xl') {
     flex-direction: column;
