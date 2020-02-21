@@ -19,13 +19,16 @@
       </div>
       <BaseContent :content="answer.content" />
       <BaseMeta
-        :like-count="answer.answer_meta.like_count"
-        :dislike-count="answer.answer_meta.dislike_count"
+        :like-count="likeCount"
+        :dislike-count="dislikeCount"
         :answer-count="answer.answer_meta.response_count"
         :created-at="answer.created_at"
         meta-type="answer"
       />
-      <AnswerInteraction @action="buttonActionHandler" />
+      <AnswerInteraction
+        :like-status="likeStatus"
+        @action="buttonActionHandler"
+      />
       <ResponsesSection :responses="answer.responses" />
       <ResponseEditor
         v-if="displayResponsePanel"
@@ -57,9 +60,16 @@ import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { AnswerData } from '@/api/question/question.type'
 import { User } from '@/services/user/user'
 import { State } from '@/store/header/index'
+import { SET_LIKE_STATUS } from '@/store/question/question.type'
 const ResponseEditor = () => import('./response/ResponseEditor.vue')
 
 const UserRole = User.role
+
+const enum LikeStatus {
+  LIKE = 1,
+  NONE = 0,
+  UNLIKE = -1,
+}
 
 export default {
   components: {
@@ -104,6 +114,9 @@ export default {
       activeResponsePanel: false,
       isResponsePanelFocus: false,
       avatar: AvatarMap[UserRole],
+      temporarilyLikeCount: null,
+      temporarilyDislikeCount: null,
+      temporarilyLikeStatus: null,
     }
   },
   computed: {
@@ -117,6 +130,21 @@ export default {
     displayResponsePanel() {
       return this.openEditor || this.hasResponse
     },
+    likeCount() {
+      return this.temporarilyLikeCount !== null
+        ? this.temporarilyLikeCount
+        : this.answer.answer_meta.like_count
+    },
+    dislikeCount() {
+      return this.temporarilyDislikeCount !== null
+        ? this.temporarilyDislikeCount
+        : this.answer.answer_meta.dislike_count
+    },
+    likeStatus() {
+      return this.temporarilyLikeStatus !== null
+        ? this.temporarilyLikeStatus
+        : this.answer.personalize!.like_status
+    },
   },
   methods: {
     buttonActionHandler(type) {
@@ -124,7 +152,11 @@ export default {
         case 'response':
           this.openResponsePanel()
           break
-        default:
+        case 'like':
+          this.setLikeStatus(LikeStatus.LIKE)
+          break
+        case 'dislike':
+          this.setLikeStatus(LikeStatus.UNLIKE)
           break
       }
     },
@@ -132,6 +164,40 @@ export default {
       this.openEditor = true
       this.activeResponsePanel = true
       this.isResponsePanelFocus = true
+    },
+    async setLikeStatus(status) {
+      const likeStatus =
+        status === this.answer.personalize!.like_status ? 0 : status
+
+      this.temporarilyLikeCount = this.answer.answer_meta.like_count
+      this.temporarilyDislikeCount = this.answer.answer_meta.dislike_count
+
+      if (status === 1) {
+        this.temporarilyLikeCount += likeStatus === status ? 1 : -1
+      }
+      if (status === -1) {
+        this.temporarilyDislikeCount += likeStatus === status ? 1 : -1
+      }
+      if (status + this.answer.personalize!.like_status === 0) {
+        if (status === 1) {
+          this.temporarilyDislikeCount -= 1
+        }
+        if (status === -1) {
+          this.temporarilyLikeCount -= 1
+        }
+      }
+
+      this.temporarilyLikeStatus = likeStatus
+
+      await this.$store.dispatch(`question/${SET_LIKE_STATUS}`, {
+        questionId: this.questionId,
+        answerId: this.answer.answer_id,
+        likeStatus,
+      })
+
+      this.temporarilyLikeCount = null
+      this.temporarilyDislikeCount = null
+      this.temporarilyLikeStatus = null
     },
   },
 } as ComponentOption
@@ -159,17 +225,24 @@ export interface Data {
   activeResponsePanel: boolean
   isResponsePanelFocus: boolean
   avatar: string
+  temporarilyLikeCount: number | null
+  temporarilyDislikeCount: number | null
+  temporarilyLikeStatus: number | null
 }
 
 export interface Methods {
   buttonActionHandler: (type: Type) => void
   openResponsePanel: () => void
+  setLikeStatus: (status: LikeStatus) => void
 }
 
 export interface Computed {
   nickname: string
   hasResponse: boolean
   displayResponsePanel: boolean
+  likeCount: number
+  dislikeCount: number
+  likeStatus: number
 }
 
 export interface Props {

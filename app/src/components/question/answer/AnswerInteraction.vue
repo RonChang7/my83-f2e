@@ -4,6 +4,7 @@
       v-for="(buttonType, index) in buttonTypes"
       :key="index"
       :type="buttonType"
+      :is-selected="likeStatusType === buttonType"
       @action="actionHandler"
     />
   </div>
@@ -14,10 +15,17 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import AnswerInteractionButton, { Type } from './AnswerInteractionButton.vue'
+import { LikeStatus } from '@/api/question/question.type'
 
 export default {
   components: {
     AnswerInteractionButton,
+  },
+  props: {
+    likeStatus: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     return {
@@ -27,6 +35,18 @@ export default {
   methods: {
     actionHandler(type) {
       this.$emit('action', type)
+    },
+  },
+  computed: {
+    likeStatusType() {
+      switch (this.likeStatus) {
+        case 1:
+          return 'like'
+        case -1:
+          return 'dislike'
+        case 0:
+          return ''
+      }
     },
   },
 } as ComponentOption
@@ -57,9 +77,13 @@ export interface Methods {
   actionHandler: (type: Type) => void
 }
 
-export interface Computed {}
+export interface Computed {
+  likeStatusType: 'like' | 'dislike' | ''
+}
 
-export interface Props {}
+export interface Props {
+  likeStatus: LikeStatus
+}
 </script>
 
 <style lang="scss" scoped>
