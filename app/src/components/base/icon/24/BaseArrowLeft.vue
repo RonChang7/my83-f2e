@@ -6,13 +6,8 @@
     viewBox="0 0 24 24"
   >
     <path
-      fill="none"
-      fill-rule="evenodd"
-      stroke="#6C6C6C"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M16 4l-8 8 8 8"
+      fill="#6C6C6C"
+      d="M15.293 3.293c.39-.39 1.024-.39 1.414 0 .36.36.388.928.083 1.32l-.083.094L9.414 12l7.293 7.293c.36.36.388.928.083 1.32l-.083.094c-.36.36-.928.388-1.32.083l-.094-.083-8-8c-.36-.36-.388-.927-.083-1.32l.083-.094 8-8z"
     />
   </svg>
 </template>

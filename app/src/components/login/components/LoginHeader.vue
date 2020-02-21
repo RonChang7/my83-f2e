@@ -66,6 +66,7 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
 .LoginHeader {
@@ -95,11 +96,25 @@ export interface Props {
       font-weight: 400;
       font-size: 0.875rem;
       cursor: pointer;
+
+      &:hover {
+        color: $gray-primary;
+
+        &::v-deep svg > path {
+          fill: $gray-primary;
+        }
+      }
     }
   }
 
   &__close {
     text-align: right;
+
+    &:hover {
+      &::v-deep svg > path {
+        fill: $gray-primary;
+      }
+    }
   }
 }
 </style>
