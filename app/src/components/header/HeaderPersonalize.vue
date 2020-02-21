@@ -101,15 +101,20 @@ export default {
     getScreenWidth() {
       this.screenWidth = window.innerWidth
     },
+    reloadHandler() {
+      return this.$ua.isFromPc()
+        ? window.location.reload()
+        : (window.location.href = this.$route.meta.perviousPath)
+    },
     showLoginPanel() {
       this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${types.UPDATE_AFTER_LOGIN_EVENT}`, () => {
-        location.reload()
+        this.reloadHandler()
       })
     },
     async logout() {
       const result = await logout()
-      result && location.reload()
+      result && this.reloadHandler()
     },
   },
   computed: {
@@ -180,6 +185,8 @@ export interface Methods {
   isEmpty: () => boolean
   menuToggle: () => void
   getScreenWidth: () => void
+  reloadHandler: () => Function
+  showLoginPanel: () => void
   logout: () => void
 }
 
