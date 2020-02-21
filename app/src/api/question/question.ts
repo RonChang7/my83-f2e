@@ -11,6 +11,8 @@ import {
   AddAnswerResponse,
   AddResponsePayload,
   AddResponseResponse,
+  UpdateLikeStatuePayload,
+  UpdateLikeStatueResponse,
 } from './question.type'
 import request from '@/api/request'
 
@@ -155,6 +157,21 @@ export const addResponse = async ({
       nickname,
       content,
     }
+  )
+  return data
+}
+
+/**
+ * @description 更新 Answer like status
+ * @param {UpdateLikeStatuePayload} payload
+ */
+export const likeAnswer = async ({
+  questionId,
+  answerId,
+  likeStatus,
+}: UpdateLikeStatuePayload): Promise<UpdateLikeStatueResponse> => {
+  const { data } = await request.get<UpdateLikeStatueResponse>(
+    `/api/v1/question/${questionId}/answer/${answerId}/like/${likeStatus}`
   )
   return data
 }
