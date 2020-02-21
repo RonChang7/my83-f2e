@@ -17,11 +17,8 @@
     </ul>
 
     <ul v-else class="HeaderPersonalize__authorized">
-      <li>
-        <HeaderSalesDetail
-          v-if="personalize.sales"
-          :salesInfo="personalize.sales"
-        />
+      <li v-if="personalize.sales">
+        <HeaderSalesDetail :salesInfo="personalize.sales" />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
