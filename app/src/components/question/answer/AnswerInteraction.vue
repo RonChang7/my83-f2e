@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      buttonTypes: ['like', 'unlike', 'response'],
+      buttonTypes: ['like', 'dislike', 'response'],
     }
   },
   methods: {
