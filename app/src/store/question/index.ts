@@ -16,6 +16,9 @@ import {
   AddResponsePayload,
   ResponseData,
   AddResponseResponse,
+  UpdateLikeStatuePayload,
+  AnswerMeta,
+  LikeStatus,
 } from '@/api/question/question.type'
 
 const DefaultQuestionPersonalize: QuestionPersonalize = {
@@ -162,7 +165,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const { success, data } = await api.addAnswer(payload)
           if (success) {
             commit(types.UPDATE_NEW_ANSWER, data)
-            commit(types.UPDATE_ANSWER_COUNT)
           }
           return data!.answer_id
         } catch (err) {
@@ -191,6 +193,33 @@ export const createStoreModule = <R>(): Module<State, R> => {
         } catch (err) {
           const res = err.response.data as AddResponseResponse
           return res
+        }
+      },
+      async [types.SET_LIKE_STATUS](
+        { commit, state },
+        payload: UpdateLikeStatuePayload
+      ) {
+        try {
+          const {
+            success,
+            answer_meta: data,
+            like_status: likeStatus,
+          } = await api.likeAnswer(payload)
+          if (success) {
+            const answerIndex = _.findIndex(
+              state.answers,
+              (answer) => answer.answer_id === payload.answerId
+            )
+
+            commit(types.UPDATE_LIKE_STATUS, {
+              answerIndex,
+              data,
+              likeStatus,
+            })
+          }
+        } catch (err) {
+          // @todo: error handler
+          console.log(err)
         }
       },
     },
@@ -231,10 +260,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_NEW_ANSWER](state, data: AnswerData) {
         state.answers!.push({
           ...data,
-          personalize: DefaultAnswerPersonalize,
+          personalize: {
+            ...DefaultAnswerPersonalize,
+            is_owner: true,
+          },
         })
-      },
-      [types.UPDATE_ANSWER_COUNT](state) {
         state.question!.question_meta.answer_count += 1
       },
       [types.UPDATE_NEW_RESPONSE](
@@ -242,6 +272,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
         { answerIndex, data }: MutateResponsePayload
       ) {
         state.answers![answerIndex].responses.push(data)
+        state.answers![answerIndex].answer_meta.response_count += 1
+      },
+      [types.UPDATE_LIKE_STATUS](
+        state,
+        { answerIndex, data, likeStatus }: MutateAnswerLIkeResponse
+      ) {
+        state.answers![answerIndex].answer_meta = data
+        state.answers![answerIndex].personalize!.like_status = likeStatus
       },
     },
   }
@@ -260,4 +298,10 @@ interface setQuestionBestAnswerPayload {
 interface MutateResponsePayload {
   answerIndex: number
   data: ResponseData
+}
+
+interface MutateAnswerLIkeResponse {
+  answerIndex: number
+  data: AnswerMeta
+  likeStatus: LikeStatus
 }
