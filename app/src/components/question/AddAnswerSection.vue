@@ -63,7 +63,7 @@ export default {
     showLoginPanel() {
       this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
-        location.reload()
+        window.location.reload()
       })
     },
     panelDisplayHandler(status) {
