@@ -1,22 +1,29 @@
 <template>
   <div class="QuestionPage">
-    <div class="QuestionPage__column left">
-      <GuideSection v-if="!$ua.isFromPc() && shouldShowGuide" />
+    <div class="QuestionPage__row">
+      <div class="QuestionPage__column left">
+        <HotServiceSection v-if="!$ua.isFromPc() && shouldShowGuide" />
 
-      <QuestionSection />
+        <GuideSection v-if="!$ua.isFromPc() && shouldShowGuide" />
 
-      <client-only>
-        <AddAnswerSection v-if="userRole === 'sales'" />
-      </client-only>
+        <QuestionSection />
 
-      <AnswersSection />
+        <client-only>
+          <AddAnswerSection v-if="userRole === 'sales'" />
+        </client-only>
 
-      <client-only>
-        <AddAnswerSection v-if="userRole !== 'sales'" />
-      </client-only>
+        <AnswersSection />
+
+        <client-only>
+          <AddAnswerSection v-if="userRole !== 'sales'" />
+        </client-only>
+      </div>
+      <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
+        <GuideSection v-if="shouldShowGuide" />
+      </div>
     </div>
-    <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
-      <GuideSection v-if="shouldShowGuide" />
+    <div v-if="$ua.isFromPc()" class="QuestionPage__row">
+      <HotServiceSection />
     </div>
   </div>
 </template>
@@ -29,6 +36,7 @@ import QuestionSection from '@/components/question/QuestionSection.vue'
 import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
 import GuideSection from '@/components/question/GuideSection.vue'
+import HotServiceSection from '@/components/question/HotServiceSection.vue'
 import { User, Role } from '@/services/user/user'
 
 export default {
@@ -37,6 +45,7 @@ export default {
     AnswersSection,
     AddAnswerSection,
     GuideSection,
+    HotServiceSection,
   },
   data() {
     return {
@@ -56,6 +65,11 @@ export default {
   },
   computed: {
     shouldShowGuide() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+    shouldShowHotService() {
       if (process.server || !this.isMounted) return true
 
       return this.userRole !== 'sales'
@@ -99,6 +113,7 @@ export interface Methods {
 
 export interface Computed {
   shouldShowGuide: boolean
+  shouldShowHotService: boolean
 }
 
 export interface Props {}
@@ -110,13 +125,17 @@ export interface Props {}
 
 .QuestionPage {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   padding: 40px 0 60px;
   background: $primary-bg;
 
   @include max-media('xl') {
-    flex-direction: column;
     padding: 0 0 90px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: center;
   }
 
   &__column {
