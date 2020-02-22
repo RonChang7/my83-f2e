@@ -1,21 +1,22 @@
 <template>
   <div class="QuestionPage">
     <div class="QuestionPage__column left">
+      <GuideSection v-if="!$ua.isFromPc() && shouldShowGuide" />
+
       <QuestionSection />
+
       <client-only>
         <AddAnswerSection v-if="userRole === 'sales'" />
       </client-only>
+
       <AnswersSection />
+
       <client-only>
         <AddAnswerSection v-if="userRole !== 'sales'" />
       </client-only>
     </div>
-    <div class="QuestionPage__column">
-      <div
-        style="width: 360px; height: 100vh; background: black; color: white;"
-      >
-        MOCK
-      </div>
+    <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
+      <GuideSection v-if="shouldShowGuide" />
     </div>
   </div>
 </template>
@@ -27,6 +28,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionSection from '@/components/question/QuestionSection.vue'
 import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
+import GuideSection from '@/components/question/GuideSection.vue'
 import { User, Role } from '@/services/user/user'
 
 export default {
@@ -34,10 +36,12 @@ export default {
     QuestionSection,
     AnswersSection,
     AddAnswerSection,
+    GuideSection,
   },
   data() {
     return {
       userRole: User.role,
+      isMounted: false,
     }
   },
   methods: {
@@ -50,7 +54,16 @@ export default {
       el && el.scrollIntoView()
     },
   },
+  computed: {
+    shouldShowGuide() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+  },
   mounted() {
+    this.isMounted = true
+
     if (this.$route.hash) {
       this.scrollToAnchorPoint(this.$route.hash)
     }
@@ -77,13 +90,16 @@ export interface Instance extends Vue {}
 
 export interface Data {
   userRole: Role
+  isMounted: boolean
 }
 
 export interface Methods {
   scrollToAnchorPoint: (anchor: string) => void
 }
 
-export interface Computed {}
+export interface Computed {
+  shouldShowGuide: boolean
+}
 
 export interface Props {}
 </script>
@@ -100,6 +116,7 @@ export interface Props {}
 
   @include max-media('xl') {
     flex-direction: column;
+    padding: 0 0 90px;
   }
 
   &__column {
@@ -117,6 +134,10 @@ export interface Props {}
       @include max-media('xl') {
         width: 100%;
       }
+    }
+
+    &.right {
+      width: 360px;
     }
   }
 }
