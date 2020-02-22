@@ -99,6 +99,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .AnswerInteractionButton {
   display: flex;
@@ -118,11 +119,13 @@ export interface Props {
     }
   }
 
-  &:hover {
-    color: $gray-primary;
+  @include min-media('xl') {
+    &:hover {
+      color: $gray-primary;
 
-    &::v-deep svg > path {
-      fill: $gray-primary;
+      &::v-deep svg > path {
+        fill: $gray-primary;
+      }
     }
   }
 }

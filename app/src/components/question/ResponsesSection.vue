@@ -59,9 +59,14 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .ResponsesSection {
   padding-left: 40px;
   border-top: 1px solid $gray-quaternary;
+
+  @include max-media('xl') {
+    padding-left: 30px;
+  }
 }
 </style>

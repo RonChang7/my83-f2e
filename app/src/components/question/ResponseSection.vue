@@ -86,7 +86,7 @@ export interface Props {
 @import '@/sass/variables.scss';
 
 .ResponseSection {
-  padding: 12px 0;
+  padding: 20px 0;
 
   &.border {
     border-top: 1px solid $gray-quaternary;

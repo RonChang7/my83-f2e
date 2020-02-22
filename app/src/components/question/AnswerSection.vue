@@ -268,6 +268,11 @@ export interface Props {
   flex-direction: column;
   margin-bottom: 20px;
 
+  @include max-media('xl') {
+    @include card-secondary;
+    margin-bottom: 10px;
+  }
+
   &__title {
     display: flex;
     align-items: center;
@@ -275,12 +280,24 @@ export interface Props {
     height: 50px;
     border-bottom: 1px solid $gray-quaternary;
     padding: 0 30px;
+
+    @include max-media('xl') {
+      height: 36px;
+      color: $text-default-color;
+      padding: 0 20px;
+      border-bottom: 4px solid $primary-bg;
+      font-size: 0.875em;
+    }
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
     margin: 30px 0 15px;
+
+    @include max-media('xl') {
+      margin: 20px 0;
+    }
   }
 
   &__bestAnswer {
@@ -293,6 +310,14 @@ export interface Props {
     margin: 0 -28px;
     padding: 0 28px;
     border-radius: 2px 2px 0 0;
+
+    @include max-media('xl') {
+      height: 36px;
+      margin: 0 -18px;
+      padding: 0 18px;
+      border-radius: 0;
+      font-size: 0.875em;
+    }
   }
 
   &__content {
@@ -302,6 +327,15 @@ export interface Props {
       padding: 0 28px;
       border: 2px solid $primary-color;
       border-radius: $border-radius;
+    }
+
+    @include max-media('xl') {
+      padding: 0 20px;
+
+      &.bestAnswer {
+        padding: 0 18px;
+        border-radius: 0;
+      }
     }
   }
 }

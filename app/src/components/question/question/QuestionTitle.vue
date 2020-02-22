@@ -31,5 +31,9 @@ export interface Props {
   font-size: 1.75rem;
   font-weight: 500;
   margin: 12px 0 20px;
+
+  @include max-media('xl') {
+    font-size: 1.375rem;
+  }
 }
 </style>

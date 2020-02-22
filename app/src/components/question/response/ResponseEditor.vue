@@ -280,6 +280,10 @@ export interface Props {
   border-top: 1px solid $gray-quaternary;
   font-size: 0.875rem;
 
+  @include max-media('xl') {
+    padding: 12px 0;
+  }
+
   &.hasResponse {
     margin-left: 30px;
   }

@@ -88,6 +88,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .AnswerInteraction {
   display: flex;
@@ -97,5 +98,11 @@ export interface Props {
   margin-top: 16px;
   padding: 0 160px;
   border-top: 1px solid $gray-quaternary;
+
+  @include max-media('xl') {
+    height: 40px;
+    padding: 0 45px;
+    margin-top: 12px;
+  }
 }
 </style>
