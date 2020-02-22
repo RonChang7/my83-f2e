@@ -66,11 +66,16 @@ import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputError
 import { AddResponseResponse } from '@/api/question/question.type'
 import { ADD_RESPONSE } from '@/store/question/question.type'
 import {
+  OPEN_LOGIN_PANEL,
+  UPDATE_AFTER_LOGIN_EVENT,
+} from '@/store/global/global.type'
+import {
   PostDataFactory,
   ResponsePostData,
 } from '@/services/question/post-template-factory'
 import { scrollTo } from '@/utils/element'
 import { nl2br } from '@/utils/text-parser'
+import { User } from '@/services/user/user'
 
 let ResponseFormData: PostDataFactory
 
@@ -119,10 +124,24 @@ export default {
     }
   },
   methods: {
+    isLogin() {
+      return User.role !== 'guest'
+    },
+    showLoginPanel() {
+      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        window.location.reload()
+      })
+    },
     closePanel() {
       this.$emit('close-editor')
     },
     activePanelHandler(status) {
+      if (status && !this.isLogin()) {
+        this.showLoginPanel()
+        return
+      }
+
       this.$emit('update:activePanel', status)
     },
     async submit() {
@@ -225,6 +244,8 @@ export interface Data {
 }
 
 export interface Methods {
+  isLogin: () => boolean
+  showLoginPanel: () => void
   closePanel: () => void
   activePanelHandler: (status: boolean) => void
   submit: () => void

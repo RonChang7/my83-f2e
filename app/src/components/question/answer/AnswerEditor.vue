@@ -142,6 +142,7 @@ export default {
     },
     reset() {
       AnswerFormData.reset()
+      this.acceptRule = false
       this.form = AnswerFormData.form as AnswerPostData
     },
     scrollToNewPost(id) {
