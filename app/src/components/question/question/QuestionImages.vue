@@ -84,10 +84,16 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .QuestionImages {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 44px;
+
+  @include max-media('xl') {
+    margin-bottom: 20px;
+  }
 
   &__thumbnail {
     cursor: pointer;

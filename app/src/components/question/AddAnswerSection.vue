@@ -9,7 +9,7 @@
     <transition mode="out-in">
       <BaseButton
         v-if="!openEditor & editorIsLoaded"
-        size="xl"
+        :size="addAnswerButtonSize"
         @click.native="panelDisplayHandler(true)"
       >
         我要留言
@@ -84,6 +84,9 @@ export default {
       const { question } = this.$store.state.question as State
       return question ? question.question_id : 0
     },
+    addAnswerButtonSize() {
+      return this.$ua.isFromPc() ? 'xl' : 'l-b'
+    },
   },
 } as ComponentOption
 
@@ -121,20 +124,34 @@ export interface Methods {
 export interface Computed {
   nickname: string
   questionId: number
+  addAnswerButtonSize: string
 }
 
 export interface Props {}
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .AddAnswerSection {
   display: flex;
   justify-content: center;
   margin: 20px 0;
 
+  @include max-media('xl') {
+    margin: 10px 0;
+  }
+
   &.openEditor,
   &.sales {
     margin-top: 0;
+
+    @include max-media('xl') {
+      &.sales,
+      &.openEditor {
+        margin: 10px 0 20px;
+      }
+    }
   }
 }
 </style>

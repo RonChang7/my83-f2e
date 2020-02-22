@@ -30,7 +30,7 @@ export interface Props {
 .BaseContent {
   color: $gray-primary;
   margin-bottom: 24px;
-  line-height: 2;
+  line-height: 1.7;
   overflow-y: auto;
   word-wrap: break-word;
 }

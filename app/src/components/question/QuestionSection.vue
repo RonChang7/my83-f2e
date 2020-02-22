@@ -153,6 +153,7 @@ export interface Props {}
 
 <style lang="scss" scoped>
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .QuestionSection {
   @include card-primary;
@@ -160,6 +161,13 @@ export interface Props {}
   flex: 0 0 auto;
   padding: 30px;
   margin-bottom: 20px;
+
+  @include max-media('xl') {
+    @include card-secondary;
+
+    padding: 20px;
+    margin-bottom: 10px;
+  }
 
   &__header {
     display: flex;
