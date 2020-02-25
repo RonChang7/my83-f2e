@@ -11,7 +11,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import RelatedSection from './RelatedSection.vue'
+import RelatedSection from './related/RelatedSection.vue'
 import { State } from '@/store/question/index'
 import { RelatedBlog } from '@/api/question/question.type'
 

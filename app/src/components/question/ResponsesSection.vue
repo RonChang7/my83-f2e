@@ -14,7 +14,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { ResponseData } from '@/api/question/question.type'
-const ResponseSection = () => import('./ResponseSection.vue')
+const ResponseSection = () => import('./response/ResponseSection.vue')
 
 export default {
   components: {
