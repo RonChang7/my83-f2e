@@ -94,6 +94,7 @@ export interface Props {}
   @include min-media('xl') {
     @include card-primary;
     padding: 30px;
+    margin-bottom: 20px;
   }
 
   padding: 10px 20px;
