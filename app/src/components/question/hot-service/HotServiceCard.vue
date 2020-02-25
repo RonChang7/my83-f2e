@@ -1,11 +1,11 @@
 <template>
   <GlobalLink class="HotServiceCard" :to="item.url">
-    <img
-      class="HotServiceCard__image"
-      :src="require(`@/assets/images/question/${item.src}`)"
-      :srcset="require(`@/assets/images/question/${item.srcset}`)"
-      alt="icon"
-    />
+    <div class="HotServiceCard__image">
+      <BaseLazyImage
+        :image-url="require(`@/assets/images/question/${item.src}`)"
+        image-alt="icon"
+      />
+    </div>
     <div class="HotServiceCard__title">
       {{ item.title }}
     </div>
@@ -27,11 +27,13 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { HotServiceContent } from './hot-service-content'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 
 export default {
   components: {
     BaseButton,
     GlobalLink,
+    BaseLazyImage,
   },
   props: {
     item: {
