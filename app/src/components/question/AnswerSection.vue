@@ -56,7 +56,6 @@ import BaseContent from './base/BaseContent.vue'
 import BaseMeta from './base/BaseMeta.vue'
 import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
 import { AvatarMap } from './helpers/reply-default-avatar'
-import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { AnswerData } from '@/api/question/question.type'
 import { User } from '@/services/user/user'
 import { State } from '@/store/header/index'
@@ -73,7 +72,6 @@ const enum LikeStatus {
 
 export default {
   components: {
-    BaseCard,
     BaseAuthorInfo,
     BaseContent,
     BaseMeta,
