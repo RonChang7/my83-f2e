@@ -13,6 +13,8 @@ import {
   AddResponseResponse,
   UpdateLikeStatuePayload,
   UpdateLikeStatueResponse,
+  RelatedBlogsResponse,
+  RelatedQuestionsResponse,
 } from './question.type'
 import request from '@/api/request'
 
@@ -172,6 +174,24 @@ export const likeAnswer = async ({
 }: UpdateLikeStatuePayload): Promise<UpdateLikeStatueResponse> => {
   const { data } = await request.get<UpdateLikeStatueResponse>(
     `/api/v1/question/${questionId}/answer/${answerId}/like/${likeStatus}`
+  )
+  return data
+}
+
+export const fetchRelatedQuestions = async (
+  id: number
+): Promise<RelatedQuestionsResponse> => {
+  const { data } = await request.get<RelatedQuestionsResponse>(
+    `/api/v1/question/${id}/related-questions`
+  )
+  return data
+}
+
+export const fetchRelatedBlogs = async (
+  id: number
+): Promise<RelatedBlogsResponse> => {
+  const { data } = await request.get<RelatedBlogsResponse>(
+    `/api/v1/question/${id}/related-blogs`
   )
   return data
 }
