@@ -19,6 +19,8 @@ import {
   UpdateLikeStatuePayload,
   AnswerMeta,
   LikeStatus,
+  RelatedQuestion,
+  RelatedBlog,
 } from '@/api/question/question.type'
 
 const DefaultQuestionPersonalize: QuestionPersonalize = {
@@ -40,6 +42,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
       return {
         question: null,
         answers: null,
+        relatedQuestions: null,
+        relatedBlogs: null,
       }
     },
     getters: {},
@@ -222,6 +226,24 @@ export const createStoreModule = <R>(): Module<State, R> => {
           console.log(err)
         }
       },
+      async [types.FETCH_RELATED_QUESTIONS]({ commit }, id: number) {
+        try {
+          const { data } = await api.fetchRelatedQuestions(id)
+          commit(types.UPDATE_RELATED_QUESTIONS, data)
+        } catch (err) {
+          // @todo: error handler, e.g. question not exist.
+          console.log(err)
+        }
+      },
+      async [types.FETCH_RELATED_BLOGS]({ commit }, id: number) {
+        try {
+          const { data } = await api.fetchRelatedBlogs(id)
+          commit(types.UPDATE_RELATED_BLOGS, data)
+        } catch (err) {
+          // @todo: error handler, e.g. question not exist.
+          console.log(err)
+        }
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
@@ -281,6 +303,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.answers![answerIndex].answer_meta = data
         state.answers![answerIndex].personalize!.like_status = likeStatus
       },
+      [types.UPDATE_RELATED_QUESTIONS](state, data: RelatedQuestion[]) {
+        state.relatedQuestions = data
+      },
+      [types.UPDATE_RELATED_BLOGS](state, data: RelatedBlog[]) {
+        state.relatedBlogs = data
+      },
     },
   }
 }
@@ -288,6 +316,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   question: QuestionData | null
   answers: AnswerData[] | null
+  relatedQuestions: RelatedQuestion[] | null
+  relatedBlogs: RelatedBlog[] | null
 }
 
 interface setQuestionBestAnswerPayload {
