@@ -48,19 +48,19 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseAuthorInfo from './base/BaseAuthorInfo.vue'
-import AnswerInteraction from './answer/AnswerInteraction.vue'
-import { Type } from './answer/AnswerInteractionButton.vue'
-import ResponsesSection from './ResponsesSection.vue'
-import BaseContent from './base/BaseContent.vue'
-import BaseMeta from './base/BaseMeta.vue'
-import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
-import { AvatarMap } from './helpers/reply-default-avatar'
+import { AvatarMap } from '../helpers/reply-default-avatar'
+import ResponsesSection from '../ResponsesSection.vue'
+import BaseContent from '../base/BaseContent.vue'
+import BaseMeta from '../base/BaseMeta.vue'
+import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
+import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
+import AnswerInteraction from './AnswerInteraction.vue'
+import { Type } from './AnswerInteractionButton.vue'
 import { AnswerData } from '@/api/question/question.type'
 import { User } from '@/services/user/user'
 import { State } from '@/store/header/index'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
-const ResponseEditor = () => import('./response/ResponseEditor.vue')
+const ResponseEditor = () => import('../response/ResponseEditor.vue')
 
 const UserRole = User.role
 

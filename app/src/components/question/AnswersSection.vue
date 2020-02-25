@@ -19,7 +19,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { State } from '@/store/question/index'
 import { QuestionMeta, AnswerData } from '@/api/question/question.type'
-const AnswerSection = () => import('./AnswerSection.vue')
+const AnswerSection = () => import('./answer/AnswerSection.vue')
 
 export default {
   components: {

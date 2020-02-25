@@ -24,7 +24,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import RelatedCard from './related/RelatedCard.vue'
+import RelatedCard from './RelatedCard.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { RelatedBlog, RelatedQuestion } from '@/api/question/question.type'
 
