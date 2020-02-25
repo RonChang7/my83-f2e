@@ -54,6 +54,14 @@ export interface UpdateLikeStatueResponse extends SimpleResponse {
   like_status?: LikeStatus
 }
 
+export interface RelatedBlogsResponse {
+  data: RelatedBlog[]
+}
+
+export interface RelatedQuestionsResponse {
+  data: RelatedQuestion[]
+}
+
 export interface AnswerData {
   answer_id: number
   content: string
@@ -136,3 +144,13 @@ export interface AnswerPersonalize {
 }
 
 export type LikeStatus = -1 | 0 | 1
+
+export interface RelatedBlog {
+  title: string
+  link: Link
+  view_count: number
+}
+
+export interface RelatedQuestion extends RelatedBlog {
+  answer_count: number
+}
