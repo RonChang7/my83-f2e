@@ -8,6 +8,8 @@ import {
   HIGHLIGHT_BEST_ANSWER,
   FETCH_QUESTION_PERSONALIZE_DATA,
   FETCH_ANSWER_PERSONALIZE_DATA,
+  FETCH_RELATED_QUESTIONS,
+  FETCH_RELATED_BLOGS,
 } from '@/store/question/question.type'
 import { State } from '@/store/question/index'
 import { User } from '@/services/user/user'
@@ -19,6 +21,8 @@ export default {
     await Promise.all([
       store.dispatch(`question/${FETCH_QUESTION_DATA}`, id),
       store.dispatch(`question/${FETCH_ANSWER_DATA}`, id),
+      store.dispatch(`question/${FETCH_RELATED_QUESTIONS}`, id),
+      store.dispatch(`question/${FETCH_RELATED_BLOGS}`, id),
     ])
 
     const { question } = store.state.question as State

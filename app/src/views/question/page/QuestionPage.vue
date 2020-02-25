@@ -8,6 +8,13 @@
 
         <QuestionSection />
 
+        <RelatedQuestionSection v-if="!$ua.isFromPc()" :max-post="5" />
+
+        <RelatedBlogSection
+          v-if="!$ua.isFromPc() && shouldShowBlogSection"
+          :max-post="5"
+        />
+
         <client-only>
           <AddAnswerSection v-if="userRole === 'sales'" />
         </client-only>
@@ -20,6 +27,8 @@
       </div>
       <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
         <GuideSection v-if="shouldShowGuide" />
+        <RelatedQuestionSection />
+        <RelatedBlogSection v-if="shouldShowBlogSection" />
       </div>
     </div>
     <div v-if="$ua.isFromPc()" class="QuestionPage__row">
@@ -37,6 +46,8 @@ import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
 import GuideSection from '@/components/question/GuideSection.vue'
 import HotServiceSection from '@/components/question/HotServiceSection.vue'
+import RelatedQuestionSection from '@/components/question/RelatedQuestionSection.vue'
+import RelatedBlogSection from '@/components/question/RelatedBlogSection.vue'
 import { User, Role } from '@/services/user/user'
 
 export default {
@@ -46,6 +57,8 @@ export default {
     AddAnswerSection,
     GuideSection,
     HotServiceSection,
+    RelatedQuestionSection,
+    RelatedBlogSection,
   },
   data() {
     return {
@@ -70,6 +83,11 @@ export default {
       return this.userRole !== 'sales'
     },
     shouldShowHotService() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+    shouldShowBlogSection() {
       if (process.server || !this.isMounted) return true
 
       return this.userRole !== 'sales'
