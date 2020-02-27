@@ -1,23 +1,30 @@
 <template>
-  <div v-if="promotion" ref="promotion" class="MobilePromotionSection">
-    <div class="MobilePromotionSection__header">
+  <div
+    v-if="recommendProduct"
+    ref="recommendProduct"
+    class="MobileRecommendProductSection"
+  >
+    <div class="MobileRecommendProductSection__header">
       保險商品推薦
     </div>
-    <div class="MobilePromotionSection__wrapper">
+    <div class="MobileRecommendProductSection__wrapper">
       <GlobalLink
-        class="MobilePromotionSection__content"
+        class="MobileRecommendProductSection__content"
         :class="{ fixed: shouldFixBanner }"
-        :to="promotion.link.path"
+        :to="recommendProduct.link.path"
       >
-        <div v-if="promotion.image" class="MobilePromotionSection__icon">
-          <BaseLazyImage :image-url="promotion.image" />
+        <div
+          v-if="recommendProduct.image"
+          class="MobileRecommendProductSection__icon"
+        >
+          <BaseLazyImage :image-url="recommendProduct.image" />
         </div>
-        <div class="MobilePromotionSection__title">
-          {{ promotion.title }}
+        <div class="MobileRecommendProductSection__title">
+          {{ recommendProduct.title }}
         </div>
-        <div class="MobilePromotionSection__button">
+        <div class="MobileRecommendProductSection__button">
           <BaseButton size="l-a" :is-full-width="true">
-            {{ promotion.action_text }}
+            {{ recommendProduct.action_text }}
           </BaseButton>
         </div>
       </GlobalLink>
@@ -33,7 +40,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { State } from '@/store/question/index'
-import { Promotion } from '@/api/question/question.type'
+import { RecommendProduct } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -43,31 +50,33 @@ export default {
   },
   data() {
     return {
-      promotionObserver: null,
+      recommendProductObserver: null,
       shouldFixBanner: false,
     }
   },
   computed: {
-    promotion() {
+    recommendProduct() {
       const { question } = this.$store.state.question as State
-      return question ? question.promotion : null
+      return question ? question.recommend_product : null
     },
   },
   mounted() {
-    if (!this.promotion) return
+    if (!this.recommendProduct) return
 
-    this.promotionObserver = new IntersectionObserver((entries) => {
+    this.recommendProductObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         this.shouldFixBanner = entry.boundingClientRect.bottom <= 0
       })
     })
 
-    this.promotionObserver.observe(this.$refs.promotion as Element)
+    this.recommendProductObserver.observe(
+      this.$refs.recommendProduct as Element
+    )
   },
   destroyed() {
-    if (this.promotionObserver) {
-      ;(this.promotionObserver as IntersectionObserver).disconnect()
-      this.promotionObserver = null
+    if (this.recommendProductObserver) {
+      ;(this.recommendProductObserver as IntersectionObserver).disconnect()
+      this.recommendProductObserver = null
     }
   },
 } as ComponentOption
@@ -91,7 +100,7 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance extends Vue {}
 
 export interface Data {
-  promotionObserver: IntersectionObserver | null
+  recommendProductObserver: IntersectionObserver | null
   shouldFixBanner: boolean
 }
 
@@ -100,7 +109,7 @@ export interface Methods {}
 export interface Computed {}
 
 export interface Props {
-  promotion: Promotion | null
+  recommendProduct: RecommendProduct | null
 }
 </script>
 
@@ -109,7 +118,7 @@ export interface Props {
 @import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
-.MobilePromotionSection {
+.MobileRecommendProductSection {
   @include card-secondary;
 
   margin-bottom: 10px;

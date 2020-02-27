@@ -1,15 +1,18 @@
 <template>
-  <BaseCard v-if="promotion" class="DesktopPromotionSection">
-    <template v-slot:title>{{ promotion.header }}</template>
-    <GlobalLink :to="promotion.link.path">
-      <div class="DesktopPromotionSection__content">
-        <div v-if="promotion.image" class="DesktopPromotionSection__icon">
-          <BaseLazyImage :image-url="promotion.image" />
+  <BaseCard v-if="recommendProduct" class="DesktopRecommendProductSection">
+    <template v-slot:title>{{ recommendProduct.header }}</template>
+    <GlobalLink :to="recommendProduct.link.path">
+      <div class="DesktopRecommendProductSection__content">
+        <div
+          v-if="recommendProduct.image"
+          class="DesktopRecommendProductSection__icon"
+        >
+          <BaseLazyImage :image-url="recommendProduct.image" />
         </div>
-        {{ promotion.title }}
+        {{ recommendProduct.title }}
       </div>
       <BaseButton size="l-a" :is-full-width="true">
-        {{ promotion.action_text }}
+        {{ recommendProduct.action_text }}
       </BaseButton>
     </GlobalLink>
   </BaseCard>
@@ -24,7 +27,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { State } from '@/store/question/index'
-import { Promotion } from '@/api/question/question.type'
+import { RecommendProduct } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -34,9 +37,9 @@ export default {
     GlobalLink,
   },
   computed: {
-    promotion() {
+    recommendProduct() {
       const { question } = this.$store.state.question as State
-      return question ? question.promotion : null
+      return question ? question.recommend_product : null
     },
   },
 } as ComponentOption
@@ -66,14 +69,14 @@ export interface Methods {}
 export interface Computed {}
 
 export interface Props {
-  promotion: Promotion | null
+  recommendProduct: RecommendProduct | null
 }
 </script>
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 
-.DesktopPromotionSection {
+.DesktopRecommendProductSection {
   margin-bottom: 20px;
   padding-bottom: 16px;
 
