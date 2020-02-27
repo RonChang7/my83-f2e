@@ -36,6 +36,7 @@ $button-font: (
   font-weight: 500;
   font-size: $font-size;
   transition: 0.3s;
+  user-select: none;
   cursor: pointer;
 
   &:focus {
