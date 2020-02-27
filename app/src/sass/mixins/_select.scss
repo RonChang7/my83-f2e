@@ -1,0 +1,31 @@
+@mixin select {
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 0;
+  background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDE4IDE4Ij4gICAgPHBhdGggZmlsbD0iIzZDNkM2QyIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNNC41MyA2LjQ3Yy0uMjkyLS4yOTMtLjc2Ny0uMjkzLTEuMDYgMC0uMjkzLjI5Mi0uMjkzLjc2NyAwIDEuMDZsNC45OTggNWMuMjkzLjI5My43NjcuMjkzIDEuMDYgMGw1LjAwMi01Yy4yOTMtLjI5Mi4yOTMtLjc2NyAwLTEuMDYtLjI5Mi0uMjkzLS43NjctLjI5My0xLjA2IDBsLTQuNDcyIDQuNDdMNC41MyA2LjQ3eiIvPjwvc3ZnPg==) calc(100% - 10px) center no-repeat;
+  background-color: $input-field-default-bg;
+  border-radius: $border-radius;
+  color: $gray-secondary;
+  font-size: 0.875rem;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:disabled {
+    color: $gray-tertiary;
+    background-color: $secondary-bg;
+    cursor: not-allowed;
+  }
+
+  &.placeholder {
+    color: $gray-tertiary;
+  }
+
+  &.error {
+    border: 1px solid $error-color;
+    padding: 9px 11px;
+  }
+}
