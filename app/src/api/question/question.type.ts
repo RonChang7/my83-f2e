@@ -85,7 +85,7 @@ export interface QuestionData {
   companies: Company[]
   personalize?: QuestionPersonalize
   best_answer_id: number | null
-  promotion: Promotion | null
+  recommend_product: RecommendProduct | null
 }
 
 export interface AuthorInfo {
@@ -156,7 +156,7 @@ export interface RelatedQuestion extends RelatedBlog {
   answer_count: number
 }
 
-export interface Promotion {
+export interface RecommendProduct {
   header: string
   title: string
   image: string
