@@ -34,7 +34,15 @@
     >
       免費諮詢
     </BaseButton>
-    <BaseMore v-if="shouldShowMoreButton" class="BaseHeaderFunction__more" />
+    <div
+      v-if="shouldShowMoreButton"
+      ref="more"
+      class="BaseHeaderFunction__more"
+      @click="showDropdownPanel(false)"
+      @mousedown="showDropdownPanel(true)"
+    >
+      <BaseMore />
+    </div>
   </div>
 </template>
 
@@ -42,6 +50,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { CancelReportDialogContent } from '../report/cancel-report-dialog-info'
 import {
   AuthorInfo,
   QuestionPersonalize,
@@ -55,8 +64,25 @@ import {
   UNFOLLOW_QUESTION,
   SET_QUESTION_BEST_ANSWER,
   UNSET_QUESTION_BEST_ANSWER,
+  UPDATE_QUESTION_DROPDOWN_MENU_STATUS,
+  OPEN_REPORT_PANEL,
+  CANCEL_REPORT,
 } from '@/store/question/question.type'
+import {
+  OPEN_LOGIN_PANEL,
+  UPDATE_AFTER_LOGIN_EVENT,
+  UPDATE_GLOBAL_DIALOG,
+  OPEN_GLOBAL_DIALOG,
+  CLOSE_GLOBAL_DIALOG,
+} from '@/store/global/global.type'
 import { PostType } from '@/services/question/post-template-factory'
+import {
+  DropdownMenu,
+  DropdownMenuOption,
+  Report,
+} from '@/store/question/index'
+import { GlobalDialogContent } from '@/store/global/index'
+import { SimpleResponse } from '@/api/type'
 
 enum RoleMap {
   guest = -1,
@@ -214,6 +240,95 @@ export default {
       }
       window.location.href = `${path}?content=${query.content}&source=${query.source}`
     },
+    isLogin() {
+      return User.role !== 'guest'
+    },
+    showLoginPanel() {
+      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        window.location.reload()
+      })
+    },
+    showDropdownPanel(disableBlur = false) {
+      if (!this.isLogin()) {
+        this.showLoginPanel()
+        return
+      }
+
+      const el = this.$refs.more as HTMLElement
+      const paddingTop = 8
+      const paddingLeft = 140
+
+      const payload: DropdownMenu = {
+        visible: true,
+        top: el.offsetTop + el.clientHeight + paddingTop,
+        left: el.offsetLeft + el.clientWidth - paddingLeft,
+        disableBlur,
+        options: this.dropdownMenuOptions(),
+      }
+
+      this.$store.dispatch(
+        `question/${UPDATE_QUESTION_DROPDOWN_MENU_STATUS}`,
+        payload
+      )
+    },
+    reportOption() {
+      const reportText = this.personalize.is_reporter ? '取消檢舉' : '檢舉'
+      const questionId =
+        this.sectionType === 'question' ? this.sectionId : this.questionId
+      const answerId =
+        this.sectionType === 'answer' ? this.sectionId : undefined
+      let payload = {}
+      let action: Function
+
+      if (this.personalize.is_reporter) {
+        payload = {
+          ...CancelReportDialogContent,
+          rightButtonCloseDialogAfterClick: false,
+          rightConfirmFn: async () => {
+            const result = await this.$store.dispatch(
+              `question/${CANCEL_REPORT}`,
+              {
+                questionId,
+                answerId,
+              }
+            )
+
+            if (typeof result === 'boolean' && result) {
+              this.$store.dispatch(`global/${CLOSE_GLOBAL_DIALOG}`)
+            } else {
+              this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, {
+                ...payload,
+                errMsg: (result as SimpleResponse).message,
+              })
+            }
+          },
+        } as GlobalDialogContent
+
+        action = () => {
+          this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
+          this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
+        }
+      } else {
+        payload = {
+          visible: true,
+          questionId,
+          answerId,
+        } as Partial<Report>
+
+        action = () => {
+          this.$store.dispatch(`question/${OPEN_REPORT_PANEL}`, payload)
+        }
+      }
+
+      return {
+        title: reportText,
+        action,
+      }
+    },
+    dropdownMenuOptions() {
+      return [this.reportOption()]
+    },
   },
   mounted() {
     this.isMounted = true
@@ -248,7 +363,15 @@ export interface Data {
 }
 
 export interface Methods {
-  consultSales: () => void
+  editPost(): void
+  followQuestion(): void
+  setBestAnswer(): void
+  consultSales(): void
+  isLogin(): boolean
+  showLoginPanel(): void
+  showDropdownPanel(disableBlur: boolean): void
+  reportOption(): DropdownMenuOption
+  dropdownMenuOptions(): DropdownMenuOption[]
 }
 
 export interface Computed {
@@ -283,8 +406,16 @@ export interface Props {
   }
 
   &__more {
+    width: 24px;
+    height: 24px;
     margin-left: 10px;
     cursor: pointer;
+  }
+
+  &__dropdownPanel {
+    position: absolute;
+    margin-top: 32px;
+    margin-left: -106px;
   }
 }
 </style>
