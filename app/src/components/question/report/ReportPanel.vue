@@ -33,7 +33,7 @@
       </div>
       <div class="ReportPanel__function">
         <BaseButton
-          size="xl"
+          :size="buttonSize"
           type="secondary"
           :is-full-width="true"
           @click.native="closePanel"
@@ -41,7 +41,7 @@
           取消
         </BaseButton>
         <BaseButton
-          size="xl"
+          :size="buttonSize"
           :is-full-width="true"
           :state="state"
           @click.native="submit"
@@ -51,6 +51,7 @@
       </div>
       <BaseInputErrorMessage
         :msg="errors.submit ? errors.submit.message : ''"
+        text-align="center"
       />
     </div>
   </BaseModal>
@@ -66,7 +67,9 @@ import BaseSelect, {
   Option,
 } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
-import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import BaseButton, {
+  Props as BaseButtonProps,
+} from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { CLOSE_REPORT_PANEL, ADD_REPORT } from '@/store/question/question.type'
 import { SimpleResponse } from '@/api/type'
@@ -114,6 +117,11 @@ export default {
       ],
       state: '',
     }
+  },
+  computed: {
+    buttonSize() {
+      return this.$ua.isFromPc() ? 'xl' : 'l-a'
+    },
   },
   methods: {
     closePanel() {
@@ -200,7 +208,9 @@ export interface Methods {
   submit(): void
 }
 
-export interface Computed {}
+export interface Computed {
+  buttonSize: Pick<BaseButtonProps, 'size'>
+}
 
 export interface Props {
   visible: boolean
@@ -224,6 +234,7 @@ export interface ValidateMessage {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ReportPanel {
   @include card-primary;
@@ -235,6 +246,11 @@ export interface ValidateMessage {
   width: 482px;
   color: $gray-primary;
   padding: 40px;
+
+  @include max-media('md') {
+    width: calc(100vw - 24px);
+    padding: 30px;
+  }
 
   &__close {
     position: absolute;
@@ -267,6 +283,14 @@ export interface ValidateMessage {
 
   &__comment {
     margin-bottom: 40px;
+
+    @include max-media('md') {
+      margin-bottom: 30px;
+    }
+
+    &::v-deep textarea {
+      font-size: 0.875rem;
+    }
   }
 
   &__function {

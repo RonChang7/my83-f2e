@@ -29,7 +29,7 @@
           {{ rightButtonText }}
         </BaseButton>
       </div>
-      <BaseInputErrorMessage :msg="errMsg" />
+      <BaseInputErrorMessage :msg="errMsg" text-align="center" />
     </div>
   </BaseModal>
 </template>
