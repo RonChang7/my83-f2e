@@ -3,8 +3,8 @@
     <input
       :checked="checked"
       :disabled="disabled"
-      @change="update"
       type="checkbox"
+      @change="update"
     />
     <span class="icon"></span>
     <span class="label">{{ label }}</span>

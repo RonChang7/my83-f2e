@@ -4,7 +4,7 @@
       <LoginPanel
         v-if="loginPanel.display"
         :visible="loginPanel.display"
-        :currentPanel="loginPanel.targetPanel"
+        :current-panel="loginPanel.targetPanel"
       />
       <BaseDialog v-if="globalDialogVisible" />
     </client-only>

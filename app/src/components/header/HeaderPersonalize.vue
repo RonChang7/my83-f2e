@@ -10,7 +10,7 @@
         </GlobalLink>
       </li>
       <li>
-        <span @click="showLoginPanel" class="HeaderPersonalize__name">
+        <span class="HeaderPersonalize__name" @click="showLoginPanel">
           登入/註冊
         </span>
       </li>
@@ -18,7 +18,7 @@
 
     <ul v-else class="HeaderPersonalize__authorized">
       <li v-if="personalize.sales">
-        <HeaderSalesDetail :salesInfo="personalize.sales" />
+        <HeaderSalesDetail :sales-info="personalize.sales" />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -31,7 +31,7 @@
           </BaseBadge>
         </GlobalLink>
       </li>
-      <li @click="menuToggle" class="HeaderPersonalize__admin">
+      <li class="HeaderPersonalize__admin" @click="menuToggle">
         <span class="HeaderPersonalize__name">
           <img
             :src="personalize.avatar"
@@ -45,10 +45,10 @@
           />
         </span>
         <HeaderMenuPanel
-          :headerNavItems="menu"
+          :header-nav-items="menu"
           :class="{ 'HeaderPersonalize__menu--show': shouldShowMenu }"
-          @logout="logout"
           class="HeaderPersonalize__menu"
+          @logout="logout"
         />
       </li>
     </ul>

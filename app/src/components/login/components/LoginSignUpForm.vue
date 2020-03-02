@@ -4,9 +4,9 @@
       註冊 只需 1 分鐘就能完成！
     </div>
     <FacebookLoginButton
-      @login="facebookLogin"
       :state="state"
       text="以 Facebook 註冊"
+      @login="facebookLogin"
     />
     <BaseInputErrorMessage :msg="message" />
 

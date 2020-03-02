@@ -3,7 +3,7 @@
     <LoginInfo />
     <div class="vertical-line"></div>
     <LoginLoginForm
-      :displayForgetPasswordWording="displayForgetPasswordWording"
+      :display-forget-password-wording="displayForgetPasswordWording"
       @to-panel="(name) => $emit('to-panel', name)"
       @login-success="$emit('login-success')"
     />

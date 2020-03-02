@@ -1,11 +1,11 @@
 <template>
   <transition
     :name="transitionName"
+    appear
     @after-enter="$emit('opened')"
     @after-leave="$emit('closed')"
-    appear
   >
-    <div v-show="visible" @click.self="handleWrapperClick" class="BaseModal">
+    <div v-show="visible" class="BaseModal" @click.self="handleWrapperClick">
       <slot></slot>
     </div>
   </transition>

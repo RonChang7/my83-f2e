@@ -1,9 +1,9 @@
 <template>
   <FacebookLogin v-slot="{ user, isLoaded, facebookLogin }">
     <button
-      @click="login(facebookLogin)"
       :disabled="!isLoaded || isDisabled"
       class="FacebookLoginButton"
+      @click="login(facebookLogin)"
     >
       <div v-if="!isLoading" class="FacebookLoginButton__wrapper">
         <div class="FacebookLoginButton__icon" />

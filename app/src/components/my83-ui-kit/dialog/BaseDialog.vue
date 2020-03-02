@@ -1,30 +1,30 @@
 <template>
-  <BaseModal :visible="visible" :lockScroll="lockScroll" @close="closePanel">
+  <BaseModal :visible="visible" :lock-scroll="lockScroll" @close="closePanel">
     <div
       ref="dialog"
-      @keyup.esc="closePanel"
-      @keyup.enter="enterToConfirm"
       tabindex="0"
       class="BaseDialog"
+      @keyup.esc="closePanel"
+      @keyup.enter="enterToConfirm"
     >
-      <BaseClose @click.native="closePanel" class="BaseDialog__close" />
+      <BaseClose class="BaseDialog__close" @click.native="closePanel" />
       <div v-if="title" class="BaseDialog__title">{{ title }}</div>
       <div v-if="content" class="BaseDialog__content">{{ content }}</div>
       <div class="BaseDialog__action">
         <BaseButton
-          :isFullWidth="true"
+          :is-full-width="true"
           :type="leftButtonType"
-          @click.native="$emit('left-confirm')"
           size="l-a"
+          @click.native="$emit('left-confirm')"
         >
           {{ leftButtonText }}
         </BaseButton>
         <BaseButton
-          :isFullWidth="true"
-          :type="rightButtonType"
-          @click.native="$emit('right-confirm')"
           v-if="rightButtonText"
+          :is-full-width="true"
+          :type="rightButtonType"
           size="l-a"
+          @click.native="$emit('right-confirm')"
         >
           {{ rightButtonText }}
         </BaseButton>
