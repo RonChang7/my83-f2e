@@ -93,7 +93,7 @@ export interface Props {
 }
 
 export interface Option {
-  key: string
+  text: string
   value: string | number
 }
 </script>
