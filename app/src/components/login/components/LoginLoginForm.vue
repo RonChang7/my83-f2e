@@ -60,7 +60,10 @@
     >
       登入
     </BaseButton>
-    <BaseInputErrorMessage :msg="errors.login ? errors.login.message : ''" />
+    <BaseInputErrorMessage
+      text-align="center"
+      :msg="errors.login ? errors.login.message : ''"
+    />
 
     <LoginFooter @to-panel="(name) => $emit('to-panel', name)" />
   </div>

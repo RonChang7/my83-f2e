@@ -32,7 +32,10 @@
       寄送密碼重設信
     </BaseButton>
 
-    <BaseInputErrorMessage :msg="errors.api ? errors.api.message : ''" />
+    <BaseInputErrorMessage
+      text-align="center"
+      :msg="errors.api ? errors.api.message : ''"
+    />
 
     <LoginFooter @to-panel="(name) => $emit('to-panel', name)" />
   </div>

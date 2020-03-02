@@ -50,3 +50,9 @@ export interface Computed {}
 
 export interface Props {}
 </script>
+
+<style lang="scss" scoped>
+.HeaderMenu {
+  margin-bottom: 25px;
+}
+</style>

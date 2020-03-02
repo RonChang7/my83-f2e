@@ -136,7 +136,7 @@ export interface Props {
 
   @include max-media('lg') {
     width: calc(100vw - 24px);
-    height: calc(100vh - 28px);
+    height: calc(100% - 14px);
     padding: 15px;
   }
 

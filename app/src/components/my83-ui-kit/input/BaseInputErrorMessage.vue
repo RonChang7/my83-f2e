@@ -1,5 +1,11 @@
 <template>
-  <div v-if="msg" class="BaseInputErrorMessage">
+  <div
+    v-if="msg"
+    class="BaseInputErrorMessage"
+    :style="{
+      textAlign,
+    }"
+  >
     {{ msg }}
   </div>
 </template>
@@ -14,6 +20,10 @@ export default {
     msg: {
       type: String,
       default: '',
+    },
+    textAlign: {
+      type: String,
+      default: 'left',
     },
   },
 } as ComponentOption
@@ -44,6 +54,7 @@ export interface Computed {}
 
 export interface Props {
   msg: string
+  textAlign: Pick<CSSStyleDeclaration, 'textAlign'>
 }
 </script>
 

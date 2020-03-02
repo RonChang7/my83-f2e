@@ -8,7 +8,7 @@
       text="以 Facebook 註冊"
       @login="facebookLogin"
     />
-    <BaseInputErrorMessage :msg="message" />
+    <BaseInputErrorMessage text-align="center" :msg="message" />
 
     <div class="LoginSignUpForm__info">
       為確保用戶真實性，僅提供 Facebook 註冊
