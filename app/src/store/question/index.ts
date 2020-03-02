@@ -22,6 +22,7 @@ import {
   RelatedQuestion,
   RelatedBlog,
 } from '@/api/question/question.type'
+import { SimpleResponse } from '@/api/type'
 
 const DefaultQuestionPersonalize: QuestionPersonalize = {
   is_owner: false,
@@ -44,6 +45,18 @@ export const createStoreModule = <R>(): Module<State, R> => {
         answers: null,
         relatedQuestions: null,
         relatedBlogs: null,
+        dropdownMenu: {
+          visible: false,
+          top: null,
+          left: null,
+          disableBlur: false,
+          options: null,
+        },
+        report: {
+          visible: false,
+          questionId: null,
+          answerId: null,
+        },
       }
     },
     getters: {},
@@ -244,6 +257,90 @@ export const createStoreModule = <R>(): Module<State, R> => {
           console.log(err)
         }
       },
+      [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](
+        { commit },
+        data: DropdownMenu
+      ) {
+        commit(types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS, data)
+      },
+      [types.OPEN_REPORT_PANEL]({ commit }, payload: Report) {
+        commit(types.UPDATE_REPORT_PANEL_VISIBLE, payload)
+      },
+      [types.CLOSE_REPORT_PANEL]({ commit }) {
+        commit(types.UPDATE_REPORT_PANEL_VISIBLE, {
+          visible: false,
+          questionId: null,
+          answerId: null,
+          comment: '',
+        })
+      },
+      async [types.ADD_REPORT]({ state, commit }, comment: string) {
+        const { questionId, answerId } = state.report
+        try {
+          if (answerId) {
+            const { success } = await api.addAnswerReport({
+              questionId: questionId!,
+              answerId,
+              comment,
+            })
+            const answerIndex = _.findIndex(
+              state.answers,
+              (answer) => answer.answer_id === answerId
+            )
+            commit(types.UPDATE_REPORT_STATUS, {
+              answerIndex,
+              reportStatus: true,
+            })
+            return success
+          } else {
+            const { success } = await api.addQuestionReport({
+              questionId: questionId!,
+              comment,
+            })
+            commit(types.UPDATE_REPORT_STATUS, {
+              reportStatus: true,
+            })
+            return success
+          }
+        } catch (err) {
+          const res = err.response.data as SimpleResponse
+          return res
+        }
+      },
+      async [types.CANCEL_REPORT](
+        { state, commit },
+        payload: CancelReportPayload
+      ) {
+        const { questionId, answerId } = payload
+        try {
+          if (answerId) {
+            const { success } = await api.cancelAnswerReport({
+              questionId: questionId!,
+              answerId,
+            })
+            const answerIndex = _.findIndex(
+              state.answers,
+              (answer) => answer.answer_id === answerId
+            )
+            commit(types.UPDATE_REPORT_STATUS, {
+              answerIndex,
+              reportStatus: false,
+            })
+            return success
+          } else {
+            const { success } = await api.cancelQuestionReport({
+              questionId: questionId!,
+            })
+            commit(types.UPDATE_REPORT_STATUS, {
+              reportStatus: false,
+            })
+            return success
+          }
+        } catch (err) {
+          const res = err.response.data as SimpleResponse
+          return res
+        }
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
@@ -298,7 +395,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_LIKE_STATUS](
         state,
-        { answerIndex, data, likeStatus }: MutateAnswerLIkeResponse
+        { answerIndex, data, likeStatus }: MutateAnswerLikePayload
       ) {
         state.answers![answerIndex].answer_meta = data
         state.answers![answerIndex].personalize!.like_status = likeStatus
@@ -309,6 +406,25 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_RELATED_BLOGS](state, data: RelatedBlog[]) {
         state.relatedBlogs = data
       },
+      [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](state, data: DropdownMenu) {
+        state.dropdownMenu = data
+      },
+      [types.UPDATE_REPORT_PANEL_VISIBLE](state, data: Partial<Report>) {
+        state.report = {
+          ...state.report,
+          ...data,
+        }
+      },
+      [types.UPDATE_REPORT_STATUS](
+        state,
+        { answerIndex, reportStatus }: MutateReportPayload
+      ) {
+        if (answerIndex) {
+          state.answers![answerIndex].personalize!.is_reporter = reportStatus
+        } else {
+          state.question!.personalize!.is_reporter = reportStatus
+        }
+      },
     },
   }
 }
@@ -318,6 +434,8 @@ export interface State {
   answers: AnswerData[] | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
+  dropdownMenu: DropdownMenu
+  report: Report
 }
 
 interface setQuestionBestAnswerPayload {
@@ -330,8 +448,34 @@ interface MutateResponsePayload {
   data: ResponseData
 }
 
-interface MutateAnswerLIkeResponse {
+interface MutateAnswerLikePayload {
   answerIndex: number
   data: AnswerMeta
   likeStatus: LikeStatus
+}
+
+interface MutateReportPayload {
+  answerIndex?: number
+  reportStatus: boolean
+}
+
+type CancelReportPayload = Omit<Report, 'visible'>
+
+export interface DropdownMenu {
+  visible: boolean
+  top: number | null
+  left: number | null
+  disableBlur: boolean
+  options: DropdownMenuOption[] | null
+}
+
+export interface DropdownMenuOption {
+  title: string
+  action: Function
+}
+
+export interface Report {
+  visible: boolean
+  questionId: number | null
+  answerId: number | null
 }
