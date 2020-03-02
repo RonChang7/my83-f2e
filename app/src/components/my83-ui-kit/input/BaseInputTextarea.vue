@@ -7,6 +7,7 @@
       :class="state"
       :disabled="disabled"
       :autofocus="autofocus"
+      :style="{ height: height ? height : '' }"
       class="BaseInputTextarea__input"
       @input="update"
       @blur="$emit('blur')"
@@ -54,6 +55,10 @@ export default {
     },
     autoGrowMaxHeight: {
       type: Number,
+      default: null,
+    },
+    height: {
+      type: String,
       default: null,
     },
   },
@@ -116,6 +121,7 @@ export interface Props {
   autofocus: boolean
   autoGrow: boolean
   autoGrowMaxHeight: number
+  height: string
 }
 </script>
 

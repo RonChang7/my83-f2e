@@ -15,7 +15,7 @@
         :value="option.value"
         :select="value === option.value"
       >
-        {{ option.key }}
+        {{ option.text }}
       </option>
     </select>
   </div>

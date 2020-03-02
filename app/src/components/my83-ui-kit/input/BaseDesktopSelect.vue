@@ -28,7 +28,7 @@
           }
         "
       >
-        {{ option.key }}
+        {{ option.text }}
       </div>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
       const selected = this.options.find(
         (option) => option.value === this.value
       )
-      return selected ? selected.key : this.placeholder
+      return selected ? selected.text : this.placeholder
     },
   },
   methods: {
@@ -122,9 +122,13 @@ export default {
       this.$nextTick(() => {
         const SelectEl = this.$refs.select as HTMLElement
         const bottomPadding = SelectEl.getBoundingClientRect().top
+        const defaultHeight = this.options.length * 40 + 26
+        const maxHeight = 426
         const adjustHeight =
           Math.floor((screenHeight - bottomPadding - 26 - 40) / 40) * 40 + 26
-        ;(this.$refs.panel as HTMLElement).style.height = `${adjustHeight}px`
+
+        const height = Math.min(defaultHeight, maxHeight, adjustHeight)
+        ;(this.$refs.panel as HTMLElement).style.height = `${height}px`
       })
     },
     scrollSelectedIntoView() {
@@ -195,7 +199,7 @@ export interface Props extends BaseSelectProps {}
 
     position: absolute;
     padding: 12px 0;
-    max-height: 426px;
+    height: auto;
     overflow: auto;
 
     &:focus {
