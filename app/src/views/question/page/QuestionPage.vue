@@ -1,5 +1,16 @@
 <template>
   <div class="QuestionPage">
+    <QuestionDropdownPanel
+      v-if="dropdownMenu.visible"
+      ref="dropdownPanel"
+      :style="dropdownMenuStyle"
+      :visible="dropdownMenu.visible"
+      @blur="hidePanel"
+    />
+    <ReportPanel
+      v-if="shouldShowReportPanel"
+      :visible="shouldShowReportPanel"
+    />
     <div class="QuestionPage__row">
       <div class="QuestionPage__column left">
         <HotServiceSection v-if="!$ua.isFromPc() && shouldShowGuide" />
@@ -7,6 +18,10 @@
         <GuideSection v-if="!$ua.isFromPc() && shouldShowGuide" />
 
         <QuestionSection />
+
+        <MobileRecommendProductSection
+          v-if="!$ua.isFromPc() && shouldShowRecommendProduct"
+        />
 
         <RelatedQuestionSection v-if="!$ua.isFromPc()" :max-post="5" />
 
@@ -27,6 +42,7 @@
       </div>
       <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
         <GuideSection v-if="shouldShowGuide" />
+        <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
         <RelatedQuestionSection />
         <RelatedBlogSection v-if="shouldShowBlogSection" />
       </div>
@@ -49,6 +65,15 @@ import HotServiceSection from '@/components/question/HotServiceSection.vue'
 import RelatedQuestionSection from '@/components/question/RelatedQuestionSection.vue'
 import RelatedBlogSection from '@/components/question/RelatedBlogSection.vue'
 import { User, Role } from '@/services/user/user'
+import { State, DropdownMenu } from '@/store/question/index'
+import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
+const DesktopRecommendProductSection = () =>
+  import('@/components/question/DesktopRecommendProductSection.vue')
+const MobileRecommendProductSection = () =>
+  import('@/components/question/MobileRecommendProductSection.vue')
+const QuestionDropdownPanel = () =>
+  import('@/components/question/panel/QuestionDropdownPanel.vue')
+const ReportPanel = () => import('@/components/question/report/ReportPanel.vue')
 
 export default {
   components: {
@@ -59,6 +84,10 @@ export default {
     HotServiceSection,
     RelatedQuestionSection,
     RelatedBlogSection,
+    DesktopRecommendProductSection,
+    MobileRecommendProductSection,
+    QuestionDropdownPanel,
+    ReportPanel,
   },
   data() {
     return {
@@ -74,6 +103,32 @@ export default {
     scrollToAnchorPoint(anchor) {
       const el = document.querySelector(anchor) as HTMLElement
       el && el.scrollIntoView()
+    },
+    hidePanel() {
+      if (this.dropdownMenu.disableBlur) {
+        this.$store.dispatch(
+          `question/${UPDATE_QUESTION_DROPDOWN_MENU_STATUS}`,
+          {
+            ...this.dropdownMenu,
+            disableBlur: false,
+          }
+        )
+        ;((this.$refs.dropdownPanel as Vue).$el as HTMLElement).focus()
+        return
+      }
+
+      const payload: DropdownMenu = {
+        visible: false,
+        top: null,
+        left: null,
+        disableBlur: false,
+        options: [],
+      }
+
+      this.$store.dispatch(
+        `question/${UPDATE_QUESTION_DROPDOWN_MENU_STATUS}`,
+        payload
+      )
     },
   },
   computed: {
@@ -91,6 +146,28 @@ export default {
       if (process.server || !this.isMounted) return true
 
       return this.userRole !== 'sales'
+    },
+    shouldShowRecommendProduct() {
+      const { question } = this.$store.state.question as State
+      const recommendProduct = question ? question.recommend_product : null
+
+      if (!!recommendProduct && (process.server || !this.isMounted)) return true
+
+      return this.userRole !== 'sales'
+    },
+    shouldShowReportPanel() {
+      const { report } = this.$store.state.question as State
+      return report.visible
+    },
+    dropdownMenu() {
+      const { dropdownMenu } = this.$store.state.question as State
+      return dropdownMenu
+    },
+    dropdownMenuStyle() {
+      return {
+        top: `${this.dropdownMenu.top}px`,
+        left: `${this.dropdownMenu.left}px`,
+      }
     },
   },
   mounted() {
@@ -127,11 +204,17 @@ export interface Data {
 
 export interface Methods {
   scrollToAnchorPoint: (anchor: string) => void
+  hidePanel(): void
 }
 
 export interface Computed {
   shouldShowGuide: boolean
   shouldShowHotService: boolean
+  shouldShowBlogSection: boolean
+  shouldShowRecommendProduct: boolean
+  shouldShowReportPanel: boolean
+  dropdownMenu: DropdownMenu
+  dropdownMenuStyle: CSSStyleDeclaration
 }
 
 export interface Props {}
