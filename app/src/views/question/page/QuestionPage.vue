@@ -23,11 +23,23 @@
           v-if="!$ua.isFromPc() && shouldShowRecommendProduct"
         />
 
-        <RelatedQuestionSection v-if="!$ua.isFromPc()" :max-post="5" />
+        <div
+          ref="mobileRelatedSection"
+          class="QuestionPage__mobileRelatedSection"
+        >
+          <RelatedQuestionSection v-if="!$ua.isFromPc()" :max-post="5" />
 
-        <RelatedBlogSection
-          v-if="!$ua.isFromPc() && shouldShowBlogSection"
-          :max-post="5"
+          <RelatedBlogSection
+            v-if="!$ua.isFromPc() && shouldShowBlogSection"
+            :max-post="5"
+          />
+        </div>
+
+        <BaseScrollToTopButton
+          v-if="!$ua.isFromPc() && shouldShowScrollToTop"
+          class="scrollToTop"
+          :class="{ hasProduct: shouldShowRecommendProduct }"
+          @click.native="scrollToTop"
         />
 
         <client-only>
@@ -64,9 +76,11 @@ import GuideSection from '@/components/question/GuideSection.vue'
 import HotServiceSection from '@/components/question/HotServiceSection.vue'
 import RelatedQuestionSection from '@/components/question/RelatedQuestionSection.vue'
 import RelatedBlogSection from '@/components/question/RelatedBlogSection.vue'
+import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import { User, Role } from '@/services/user/user'
 import { State, DropdownMenu } from '@/store/question/index'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
+import { scrollTo } from '@/utils/element'
 const DesktopRecommendProductSection = () =>
   import('@/components/question/DesktopRecommendProductSection.vue')
 const MobileRecommendProductSection = () =>
@@ -88,11 +102,14 @@ export default {
     MobileRecommendProductSection,
     QuestionDropdownPanel,
     ReportPanel,
+    BaseScrollToTopButton,
   },
   data() {
     return {
       userRole: User.role,
       isMounted: false,
+      scrollToTopObserver: null,
+      shouldShowScrollToTop: false,
     }
   },
   methods: {
@@ -129,6 +146,10 @@ export default {
         `question/${UPDATE_QUESTION_DROPDOWN_MENU_STATUS}`,
         payload
       )
+    },
+    scrollToTop() {
+      const header = document.querySelector('header')
+      scrollTo(header!, window)
     },
   },
   computed: {
@@ -176,6 +197,20 @@ export default {
     if (this.$route.hash) {
       this.scrollToAnchorPoint(this.$route.hash)
     }
+
+    this.scrollToTopObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        this.shouldShowScrollToTop = entry.boundingClientRect.bottom <= 0
+      })
+    })
+
+    this.scrollToTopObserver.observe(this.$refs.mobileRelatedSection as Element)
+  },
+  destroyed() {
+    if (this.scrollToTopObserver) {
+      ;(this.scrollToTopObserver as IntersectionObserver).disconnect()
+      this.scrollToTopObserver = null
+    }
   },
 } as ComponentOption
 
@@ -200,11 +235,14 @@ export interface Instance extends Vue {}
 export interface Data {
   userRole: Role
   isMounted: boolean
+  scrollToTopObserver: IntersectionObserver | null
+  shouldShowScrollToTop: boolean
 }
 
 export interface Methods {
   scrollToAnchorPoint: (anchor: string) => void
   hidePanel(): void
+  scrollToTop(): void
 }
 
 export interface Computed {
@@ -259,6 +297,16 @@ export interface Props {}
     &.right {
       width: 360px;
     }
+  }
+}
+
+.scrollToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  .hasProduct {
+    bottom: 90px;
   }
 }
 </style>
