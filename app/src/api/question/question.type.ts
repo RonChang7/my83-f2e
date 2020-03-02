@@ -62,6 +62,17 @@ export interface RelatedQuestionsResponse {
   data: RelatedQuestion[]
 }
 
+export interface addReportPayload {
+  questionId: number
+  answerId?: number
+  comment: string
+}
+
+export interface cancelReportPayload {
+  questionId: number
+  answerId?: number
+}
+
 export interface AnswerData {
   answer_id: number
   content: string

@@ -1,3 +1,4 @@
+import { SimpleResponse } from '../type'
 import {
   QuestionDataResponse,
   AnswerDataResponse,
@@ -15,6 +16,8 @@ import {
   UpdateLikeStatueResponse,
   RelatedBlogsResponse,
   RelatedQuestionsResponse,
+  addReportPayload,
+  cancelReportPayload,
 } from './question.type'
 import request from '@/api/request'
 
@@ -192,6 +195,52 @@ export const fetchRelatedBlogs = async (
 ): Promise<RelatedBlogsResponse> => {
   const { data } = await request.get<RelatedBlogsResponse>(
     `/api/v1/question/${id}/related-blogs`
+  )
+  return data
+}
+
+export const addQuestionReport = async ({
+  questionId,
+  comment,
+}: addReportPayload): Promise<SimpleResponse> => {
+  const { data } = await request.post<SimpleResponse>(
+    `/api/v1/question/${questionId}/report`,
+    {
+      comment,
+    }
+  )
+  return data
+}
+
+export const cancelQuestionReport = async ({
+  questionId,
+}: cancelReportPayload): Promise<SimpleResponse> => {
+  const { data } = await request.post<SimpleResponse>(
+    `/api/v1/question/${questionId}/cancel-report`
+  )
+  return data
+}
+
+export const addAnswerReport = async ({
+  questionId,
+  answerId,
+  comment,
+}: addReportPayload): Promise<SimpleResponse> => {
+  const { data } = await request.post<SimpleResponse>(
+    `/api/v1/question/${questionId}/answer/${answerId}/report`,
+    {
+      comment,
+    }
+  )
+  return data
+}
+
+export const cancelAnswerReport = async ({
+  questionId,
+  answerId,
+}: cancelReportPayload): Promise<SimpleResponse> => {
+  const { data } = await request.post<SimpleResponse>(
+    `/api/v1/question/${questionId}/answer/${answerId}/cancel-report`
   )
   return data
 }
