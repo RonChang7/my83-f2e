@@ -10,6 +10,7 @@
       :right-button-text="globalDialogContent.rightButtonText"
       :right-button-type="globalDialogContent.rightButtonType"
       :default-action-button="globalDialogContent.defaultActionButton"
+      :err-msg="globalDialogContent.errMsg"
       @close="closeDialog"
       @left-confirm="leftConfirm"
       @right-confirm="rightConfirm"
@@ -46,14 +47,26 @@ export default {
         this.globalDialogContent.leftConfirmFn()
       }
 
-      this.closeDialog()
+      if (
+        typeof this.globalDialogContent.leftButtonCloseDialogAfterClick ===
+          'undefined' ||
+        this.globalDialogContent.leftButtonCloseDialogAfterClick === true
+      ) {
+        this.closeDialog()
+      }
     },
     rightConfirm() {
       if (typeof this.globalDialogContent.rightConfirmFn === 'function') {
         this.globalDialogContent.rightConfirmFn()
       }
 
-      this.closeDialog()
+      if (
+        typeof this.globalDialogContent.rightButtonCloseDialogAfterClick ===
+          'undefined' ||
+        this.globalDialogContent.rightButtonCloseDialogAfterClick === true
+      ) {
+        this.closeDialog()
+      }
     },
   },
 } as ComponentOption
