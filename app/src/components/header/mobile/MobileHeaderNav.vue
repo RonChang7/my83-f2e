@@ -3,6 +3,7 @@
     <li
       v-for="(item, index) in headerNavItems"
       :key="index"
+      ref="nav"
       @click="menuToggle(index)"
     >
       <component
@@ -28,7 +29,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import _ from 'lodash'
 import { mapState } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -47,20 +47,22 @@ export default {
   },
   data() {
     return {
-      displayMenu: [],
+      displayMenuIndex: null,
     }
   },
   methods: {
     menuToggle(index) {
-      if (this.shouldShowMenu(index)) {
-        const removeIndex = _.indexOf(this.displayMenu, index)
-        this.displayMenu.splice(removeIndex, 1)
-      } else {
-        this.displayMenu.push(index)
-      }
+      this.displayMenuIndex = this.shouldShowMenu(index) ? null : index
+      this.$nextTick(() => {
+        if (this.displayMenuIndex !== null) {
+          ;(this.$refs.nav as HTMLElement[])[
+            this.displayMenuIndex
+          ].scrollIntoView()
+        }
+      })
     },
     shouldShowMenu(index) {
-      return _.includes(this.displayMenu, index)
+      return this.displayMenuIndex === index
     },
   },
   computed: {
@@ -87,7 +89,7 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance extends Vue {}
 
 export interface Data {
-  displayMenu: Array<number>
+  displayMenuIndex: number | null
 }
 
 export interface Methods {
@@ -140,7 +142,7 @@ export interface Props {}
     padding: 0 25px;
     cursor: pointer;
 
-    &:active {
+    span:active {
       color: $primary-color;
     }
   }
