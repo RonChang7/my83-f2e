@@ -1,5 +1,9 @@
 import request from '../request'
-import { HeaderNavItem, HeaderPersonalized } from './header.type'
+import {
+  HeaderNavItem,
+  HeaderPersonalized,
+  HeaderDataResponse,
+} from './header.type'
 
 /**
  * @description 取得 Header 選單資料
@@ -17,8 +21,4 @@ export const fetchPersonalizedHeaderData = async (): Promise<HeaderPersonalized>
     '/api/menu/personalize'
   )
   return data
-}
-
-interface HeaderDataResponse {
-  header: HeaderNavItem[]
 }

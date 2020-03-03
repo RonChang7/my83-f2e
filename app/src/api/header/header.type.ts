@@ -1,5 +1,9 @@
 import { Link } from '../type'
 
+export interface HeaderDataResponse {
+  header: HeaderNavItem[]
+}
+
 export interface HeaderNavItem {
   name: string
   link: Link | null
