@@ -140,7 +140,6 @@ export interface Props {}
 
   a {
     font-weight: 500;
-    line-height: 1.5;
   }
 }
 </style>

@@ -259,10 +259,11 @@ footer {
 
         .content {
           p {
-            margin-bottom: 5px;
+            margin: 5px 0px;
           }
 
           .tips {
+            margin-top: 10px;
             font-size: 0.75rem;
             font-weight: 500;
           }

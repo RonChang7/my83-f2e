@@ -293,7 +293,6 @@ interface Form {
   label {
     color: $gray-primary;
     margin-bottom: 5px;
-    line-height: 1.5;
   }
 
   hr {

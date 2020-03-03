@@ -158,7 +158,6 @@ interface Form {
   width: 320px;
   margin: 0 60px;
   color: $gray-primary;
-  line-height: 1.5;
 
   @include max-media('lg') {
     width: 100%;

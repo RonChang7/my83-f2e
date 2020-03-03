@@ -72,7 +72,7 @@ export interface Props {
 .LoginHeader {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 
   @include max-media('lg') {
     margin-bottom: 0;
