@@ -91,7 +91,7 @@ export default {
   },
   computed: {
     shouldShowCountdown() {
-      return this.salesInfo.vip_countdown >= Date.now()
+      return this.salesInfo.vip_countdown * 1000 >= Date.now()
     },
   },
   mounted() {
