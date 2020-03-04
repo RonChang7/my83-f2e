@@ -106,10 +106,10 @@ export interface Data {
 }
 
 export interface Methods {
-  closePanel: () => void
-  toPanel: (panelName: TargetPanel) => void
-  afterLogin: (callback: Function) => void
-  sendForgetPasswordSuccess: () => void
+  closePanel(): void
+  toPanel(panelName: TargetPanel): void
+  afterLogin(): void
+  sendForgetPasswordSuccess(): void
 }
 
 export interface Computed {

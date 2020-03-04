@@ -130,9 +130,9 @@ export interface Data {
 }
 
 export interface Methods {
-  validate: () => void
-  submit: () => void
-  sendForgetPassword: () => void
+  validate(): void
+  submit(): void
+  sendForgetPassword(): void
 }
 
 export interface Computed {}

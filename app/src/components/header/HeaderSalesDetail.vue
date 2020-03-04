@@ -133,8 +133,8 @@ export interface Data {
 }
 
 export interface Methods {
-  setCountdown: () => void
-  countdownTransformer: (sec: number) => void
+  setCountdown(): void
+  countdownTransformer(sec: number): void
 }
 
 export interface Computed {

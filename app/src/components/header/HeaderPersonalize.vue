@@ -183,11 +183,11 @@ export interface Data {
 
 export interface Methods {
   isEmpty: () => boolean
-  menuToggle: () => void
-  getScreenWidth: () => void
-  reloadHandler: () => Function
-  showLoginPanel: () => void
-  logout: () => void
+  menuToggle(): void
+  getScreenWidth(): void
+  reloadHandler(): Function
+  showLoginPanel(): void
+  logout(): void
 }
 
 export interface Computed {

@@ -79,9 +79,9 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  closeDialog: () => void
-  leftConfirm: () => void
-  rightConfirm: () => void
+  closeDialog(): void
+  leftConfirm(): void
+  rightConfirm(): void
 }
 
 export interface Computed {

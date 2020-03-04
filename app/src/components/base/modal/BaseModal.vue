@@ -78,7 +78,7 @@ export interface Data {
 }
 
 export interface Methods {
-  handleWrapperClick: () => void
+  handleWrapperClick(): void
 }
 
 export interface Computed {}

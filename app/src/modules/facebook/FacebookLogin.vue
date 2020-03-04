@@ -71,14 +71,14 @@ export interface Data {
 }
 
 export interface Methods {
-  facebookLogin: () => void
+  facebookLogin(): void
 }
 
 export interface Computed {
   slot: {
     user: object
     isLoaded: boolean
-    facebookLogin: Function
+    facebookLogin: Methods['facebookLogin']
   }
 }
 

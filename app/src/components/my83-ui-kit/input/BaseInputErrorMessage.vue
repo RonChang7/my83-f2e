@@ -54,7 +54,7 @@ export interface Computed {}
 
 export interface Props {
   msg: string
-  textAlign: Pick<CSSStyleDeclaration, 'textAlign'>
+  textAlign: 'left' | 'right' | 'center' | 'justify' | 'initial' | 'inherit'
 }
 </script>
 

@@ -97,8 +97,8 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export interface Methods {
-  open: () => void
-  close: () => void
+  open(): void
+  close(): void
 }
 
 export interface Computed {}

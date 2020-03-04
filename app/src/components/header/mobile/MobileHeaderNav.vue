@@ -55,9 +55,7 @@ export default {
       this.displayMenuIndex = this.shouldShowMenu(index) ? null : index
       this.$nextTick(() => {
         if (this.displayMenuIndex !== null) {
-          ;(this.$refs.nav as HTMLElement[])[
-            this.displayMenuIndex
-          ].scrollIntoView()
+          this.$refs.nav[this.displayMenuIndex].scrollIntoView()
         }
       })
     },
@@ -86,15 +84,19 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    nav: HTMLElement[]
+  }
+}
 
 export interface Data {
   displayMenuIndex: number | null
 }
 
 export interface Methods {
-  menuToggle: (index: number) => void
-  shouldShowMenu: (index: number) => boolean
+  menuToggle(index: number): void
+  shouldShowMenu(index: number): boolean
 }
 
 export interface Computed {

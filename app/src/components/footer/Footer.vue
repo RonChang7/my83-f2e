@@ -168,7 +168,7 @@ export interface Data {
 }
 
 export interface Methods {
-  openZendeskChat: () => void
+  openZendeskChat(): void
 }
 
 export interface Computed {}

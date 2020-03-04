@@ -95,7 +95,7 @@ export interface Data {
 }
 
 export interface Methods {
-  facebookLogin: (fbToken: string) => void
+  facebookLogin(fbToken: string): void
 }
 
 export interface Computed {}

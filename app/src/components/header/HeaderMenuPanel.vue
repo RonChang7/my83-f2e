@@ -81,8 +81,8 @@ export default {
   methods: {
     columnWidthHandler() {
       if (!this.$ua.isFromPc() || !this.$refs.column) return
-      const columns = (this.$refs.column as Array<HTMLElement>).filter(Boolean)
-      const panel = this.$refs.panel as HTMLElement
+      const columns = this.$refs.column.filter(Boolean)
+      const panel = this.$refs.panel
       // 因為 display: none 的 DOM 無法取得寬度 (Child DOM 也是)
       panel.style.display = 'flex'
 
@@ -128,12 +128,17 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    column: HTMLElement[]
+    panel: HTMLElement
+  }
+}
 
 export interface Data {}
 
 export interface Methods {
-  columnWidthHandler: () => void
+  columnWidthHandler(): void
 }
 
 export interface Computed {

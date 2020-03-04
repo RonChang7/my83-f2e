@@ -26,7 +26,9 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import FacebookLogin from '@/modules/facebook/FacebookLogin.vue'
+import FacebookLogin, {
+  Methods as FacebookLoginMethods,
+} from '@/modules/facebook/FacebookLogin.vue'
 import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
 
 export default {
@@ -101,9 +103,9 @@ export interface Data {
   isDisabled: boolean
 }
 
-export interface Methods {
-  login: (facebookLogin: Function) => void
-  buttonText: (name: string) => string
+export interface Methods extends FacebookLoginMethods {
+  login(facebookLogin: FacebookLoginMethods['facebookLogin']): void
+  buttonText(name: string): string
 }
 
 export interface Computed {}

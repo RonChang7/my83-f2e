@@ -235,11 +235,11 @@ export interface Data {
 }
 
 export interface Methods {
-  validate: (key: string, value: any) => void
-  submit: () => void
-  facebookLogin: (fbToken: string, role: 'sales' | 'client' | undefined) => void
-  emailLogin: () => void
-  newUserRedirect: (role: 'sales' | 'client') => void
+  validate(key: string, value: any): void
+  submit(): void
+  facebookLogin(fbToken: string, role: 'sales' | 'client' | undefined): void
+  emailLogin(): void
+  newUserRedirect(role: 'sales' | 'client'): void
 }
 
 export interface Computed {}
