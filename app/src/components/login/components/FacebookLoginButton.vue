@@ -8,12 +8,16 @@
       <div v-if="!isLoading" class="FacebookLoginButton__wrapper">
         <div class="FacebookLoginButton__icon" />
         <div
-          :class="{ 'ml-2': !user.avatar }"
+          :class="{ 'ml-2': user ? !user.avatar : false }"
           class="FacebookLoginButton__content"
         >
-          {{ buttonText(user.name) }}
+          {{ user ? buttonText(user.name) : buttonText() }}
         </div>
-        <img :src="user.avatar" alt="" class="FacebookLoginButton__avatar" />
+        <img
+          :src="user ? user.avatar : ''"
+          alt=""
+          class="FacebookLoginButton__avatar"
+        />
       </div>
       <div v-show="isLoading">
         <LoadingIcon size="18px" color="#fff" />

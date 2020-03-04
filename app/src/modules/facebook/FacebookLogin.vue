@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Facebook } from './facebook'
-import { FaceBookStatus } from './facebook.type'
+import { FaceBookStatus, FacebookUser } from './facebook.type'
 
 // Manual refresh token when (current time - token expire time) is less than REFRESH_TIME_THRESHOLD
 const REFRESH_TIME_THRESHOLD = 60 * 1000
@@ -34,7 +34,7 @@ export default {
   computed: {
     slot() {
       return {
-        user: this.facebookStatus ? this.facebookStatus.user : {},
+        user: this.facebookStatus ? this.facebookStatus.user : null,
         isLoaded: this.facebookStatus ? this.facebookStatus.isLoaded : false,
         facebookLogin: this.facebookLogin,
       }
@@ -77,7 +77,7 @@ export interface Methods {
 
 export interface Computed {
   slot: {
-    user: object
+    user: FacebookUser | null
     isLoaded: boolean
     facebookLogin: Methods['facebookLogin']
   }
