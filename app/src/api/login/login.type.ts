@@ -1,21 +1,17 @@
-export interface EmailLoginResponse {
+import { SimpleResponse } from '../type'
+
+export interface EmailLoginResponse extends SimpleResponse {
   status?: number
-  success: boolean
-  message?: string
 }
 
-export interface FacebookLoginResponse {
+export interface FacebookSignUpResponse extends SimpleResponse {
   status?: number
-  success: boolean
-  is_my83_user?: boolean
-  message?: string
 }
 
-export interface ForgetPasswordResponse {
-  success: boolean
-  message?: string
+export interface FacebookLoginResponse extends SimpleResponse {
+  status?: number
 }
 
-export interface LogoutResponse {
-  success: boolean
-}
+export interface ForgetPasswordResponse extends SimpleResponse {}
+
+export interface LogoutResponse extends SimpleResponse {}

@@ -1,4 +1,5 @@
 import {
+  FacebookSignUpResponse,
   FacebookLoginResponse,
   EmailLoginResponse,
   LogoutResponse,
@@ -8,20 +9,17 @@ import request from '@/api/request'
 import { UrlInfo } from '@/services/user/user'
 
 /**
- * @description Facebook 註冊 / 登入
- * @param fbToken Facebook token
- * @param role 'sales' | 'client'
- * @param firstHttpReferrer url
- * @param firstUrl url
+ * @description Facebook 註冊
+ * @param {FacebookSignUpPayload} payload
  */
-export const facebookLogin = async ({
+export const facebookSignUp = async ({
   fbToken,
   role,
   firstHttpReferrer,
   firstUrl,
-}: FacebookLoginPayload): Promise<FacebookLoginResponse> => {
-  const { data, status } = await request.post<FacebookLoginResponse>(
-    '/api/auth/facebook-login',
+}: FacebookSignUpPayload): Promise<FacebookSignUpResponse> => {
+  const { data, status } = await request.post<FacebookSignUpResponse>(
+    '/api/auth/facebook-signup',
     {
       fb_token: fbToken,
       role,
@@ -37,11 +35,32 @@ export const facebookLogin = async ({
 }
 
 /**
+ * @description Facebook 登入
+ * @param {FacebookLoginPayload} payload
+ */
+export const facebookLogin = async ({
+  fbToken,
+  firstHttpReferrer,
+  firstUrl,
+}: FacebookLoginPayload): Promise<FacebookLoginResponse> => {
+  const { data, status } = await request.post<FacebookLoginResponse>(
+    '/api/auth/facebook-login',
+    {
+      fb_token: fbToken,
+      first_http_referer: firstHttpReferrer,
+      first_url: firstUrl,
+    }
+  )
+
+  return {
+    status,
+    ...data,
+  }
+}
+
+/**
  * @description email 登入
- * @param email email
- * @param password password
- * @param firstHttpReferrer url
- * @param firstUrl url
+ * @param {EmailLoginPayload} payload
  */
 export const emailLogin = async ({
   email,
@@ -65,6 +84,11 @@ export const emailLogin = async ({
   }
 }
 
+/**
+ * @description 忘記密碼
+ * @param {string} email email
+ * @param {string} redirectUri 送出後轉址頁面網址
+ */
 export const forgetPassword = async (
   email: string,
   redirectUri: string
@@ -87,7 +111,11 @@ export const logout = async (): Promise<boolean> => {
 
 export interface FacebookLoginPayload extends UrlInfo {
   fbToken: string
-  role?: 'sales' | 'client' | undefined
+}
+
+export interface FacebookSignUpPayload extends UrlInfo {
+  fbToken: string
+  role: 'client' | 'sales'
 }
 
 export interface EmailLoginPayload extends UrlInfo {
@@ -96,6 +124,7 @@ export interface EmailLoginPayload extends UrlInfo {
 }
 
 export const login = {
+  facebookSignUp,
   facebookLogin,
   emailLogin,
 }

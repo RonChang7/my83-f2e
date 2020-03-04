@@ -85,6 +85,7 @@ import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputError
 import { User } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
+import { SimpleResponse } from '@/api/type'
 
 export default {
   components: {
@@ -156,38 +157,55 @@ export default {
         this.$set(this.errors, 'password', { state: 'error' })
       }
     },
-    async facebookLogin(fbToken, role) {
+    async facebookSignUp(fbToken, role) {
       const { firstHttpReferrer, firstUrl } = User
-      this.state.facebook = 'loading'
-
       try {
-        await login.facebookLogin({
+        await login.facebookSignUp({
           fbToken,
           role,
           firstHttpReferrer,
           firstUrl,
         })
 
-        if (role) {
-          this.newUserRedirect(role)
-          return
-        }
+        this.newUserRedirect(role)
+      } catch (error) {
+        this.state.facebook = ''
+
+        const { message } = error.response.data as SimpleResponse
+
+        this.$set(this.errors, 'facebook', {
+          message,
+          state: 'error',
+        })
+      }
+    },
+    async facebookLogin(fbToken) {
+      const { firstHttpReferrer, firstUrl } = User
+      this.state.facebook = 'loading'
+
+      try {
+        await login.facebookLogin({
+          fbToken,
+          firstHttpReferrer,
+          firstUrl,
+        })
+
         this.$emit('login-success')
       } catch (error) {
         this.state.facebook = ''
 
-        const { success, is_my83_user, message } = error.response.data
+        const { message } = error.response.data as SimpleResponse
         const status = error.response.status
 
-        if (status === 401 && !success && !is_my83_user) {
+        if (status === 401) {
           this.$store.dispatch(`global/${types.UPDATE_GLOBAL_DIALOG}`, {
             ...FacebookLoginNotMy83User,
-            leftConfirmFn: () => this.facebookLogin(fbToken, 'client'),
-            rightConfirmFn: () => this.facebookLogin(fbToken, 'sales'),
+            leftConfirmFn: () => this.facebookSignUp(fbToken, 'client'),
+            rightConfirmFn: () => this.facebookSignUp(fbToken, 'sales'),
           } as GlobalDialogContent)
 
           this.$store.dispatch(`global/${types.OPEN_GLOBAL_DIALOG}`)
-        } else if (!success && message) {
+        } else if (message) {
           this.$set(this.errors, 'facebook', {
             message,
             state: 'error',
@@ -197,11 +215,7 @@ export default {
     },
     newUserRedirect(role) {
       // @todo: Change path after migrate to Nuxt.js
-      if (role === 'sales') {
-        window.location.href = '/salesCenter'
-      } else if (role === 'client') {
-        window.location.href = '/clientCenter'
-      }
+      window.location.href = role === 'sales' ? '/salesCenter' : '/clientCenter'
     },
   },
 } as ComponentOption
@@ -237,7 +251,8 @@ export interface Data {
 export interface Methods {
   validate(key: string, value: any): void
   submit(): void
-  facebookLogin(fbToken: string, role: 'sales' | 'client' | undefined): void
+  facebookSignUp(fbToken: string, role: 'sales' | 'client'): void
+  facebookLogin(fbToken: string): void
   emailLogin(): void
   newUserRedirect(role: 'sales' | 'client'): void
 }
