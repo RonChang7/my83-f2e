@@ -1,19 +1,19 @@
 <template>
   <div ref="panel" class="HeaderMenuPanel">
     <!-- Panel with multi-column -->
-    <template v-if="HeaderMenuPanelWithMultiColumn">
+    <template v-if="headerMenuPanelWithMultiColumn">
       <div
-        v-for="(column, column_index) in headerNavItems"
+        v-for="(column, columnIndex) in headerNavItems"
         ref="column"
-        :key="column_index"
+        :key="columnIndex"
         class="HeaderMenuPanel__column"
       >
         <div v-if="column.children" class="HeaderMenuPanel__column__title">
           {{ column.name }}
         </div>
         <div
-          v-for="(item, item_index) in column.children"
-          :key="item_index"
+          v-for="(item, itemIndex) in column.children"
+          :key="itemIndex"
           class="HeaderMenuPanel__column__link wider"
         >
           <GlobalLink v-if="item.link" :to="item.link.path">
@@ -39,8 +39,8 @@
           {{ headerNavItems.name }}
         </div>
         <div
-          v-for="(item, item_index) in headerNavItems"
-          :key="item_index"
+          v-for="(item, itemIndex) in headerNavItems"
+          :key="itemIndex"
           class="HeaderMenuPanel__column__link"
         >
           <GlobalLink v-if="item.link" :to="item.link.path">
@@ -101,7 +101,7 @@ export default {
     },
   },
   computed: {
-    HeaderMenuPanelWithMultiColumn() {
+    headerMenuPanelWithMultiColumn() {
       return this.headerNavItems.filter((item) => item.children).length
     },
   },
@@ -137,7 +137,7 @@ export interface Methods {
 }
 
 export interface Computed {
-  HeaderMenuPanelWithMultiColumn: boolean
+  headerMenuPanelWithMultiColumn: boolean
 }
 
 export interface Props {
