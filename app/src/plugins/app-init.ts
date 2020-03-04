@@ -2,7 +2,8 @@ import _ from 'lodash'
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { createStoreModule as createGlobalStoreModule } from '@/store/global/index'
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
-import * as types from '@/store/header/header.type'
+import { FETCH_HEADER_NAV_DATA } from '@/store/header/header.type'
+import { GET_USER_AGENT } from '@/store/global/global.type'
 import { User } from '@/services/user/user'
 
 const storeModules = {
@@ -31,9 +32,12 @@ export default (async ({ app, store }) => {
   // Server pre-fetch Header data for SEO performance
   if (process.server) {
     await store.dispatch(
-      `${storeModules.header.moduleName}/${types.FETCH_HEADER_NAV_DATA}`
+      `${storeModules.header.moduleName}/${FETCH_HEADER_NAV_DATA}`
     )
   }
+
+  // Update user-agent
+  store.dispatch(`${storeModules.global.moduleName}/${GET_USER_AGENT}`)
 
   if (process.client && User.role === 'guest') {
     user.updateLandingUrl()

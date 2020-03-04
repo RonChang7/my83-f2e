@@ -16,13 +16,17 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
   },
   mounted() {
-    if (this.$ua.isFromPc() || window.innerWidth >= 1200) return
+    if (this.isDesktop || window.innerWidth >= 1200) return
     const el = this.$el as HTMLElement
     const offsetTop = el.offsetTop
     const offsetHeight = el.offsetHeight
@@ -55,7 +59,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {}
 </script>

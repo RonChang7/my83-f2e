@@ -71,8 +71,12 @@ import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
 import * as types from '@/store/global/global.type'
 import { logout } from '@/api/login/login'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
     HeaderSalesDetail,
@@ -102,7 +106,7 @@ export default {
       this.screenWidth = window.innerWidth
     },
     reloadHandler() {
-      return this.$ua.isFromPc()
+      return this.isDesktop
         ? window.location.reload()
         : (window.location.href = this.$route.meta.perviousPath)
     },
@@ -149,12 +153,10 @@ export default {
   },
   mounted() {
     this.getScreenWidth()
-    this.$ua.isFromPc() &&
-      window.addEventListener('resize', this.getScreenWidth)
+    this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
   },
   beforeDestroy() {
-    this.$ua.isFromPc() &&
-      window.removeEventListener('resize', this.getScreenWidth)
+    this.isDesktop && window.removeEventListener('resize', this.getScreenWidth)
   },
 } as ComponentOption
 
@@ -190,7 +192,7 @@ export interface Methods {
   logout(): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
   personalize: Personalize
   notificationCount: number | string
   menu: Menu

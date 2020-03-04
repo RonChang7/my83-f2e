@@ -1,9 +1,9 @@
 <template>
   <header>
-    <template v-if="this.$ua.isFromPc()">
+    <template v-if="isDesktop">
       <DesktopHeader :enable-rwd="true" />
     </template>
-    <MobileHeader :enable-rwd="this.$ua.isFromPc()" />
+    <MobileHeader :enable-rwd="isDesktop" />
   </header>
 </template>
 
@@ -15,8 +15,12 @@ import DesktopHeader from './desktop/DesktopHeader.vue'
 import MobileHeader from './mobile/MobileHeader.vue'
 import * as types from '@/store/header/header.type'
 import { User } from '@/services/user/user'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     DesktopHeader,
     MobileHeader,
@@ -54,7 +58,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {}
 </script>

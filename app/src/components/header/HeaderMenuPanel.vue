@@ -67,8 +67,12 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
   },
@@ -80,7 +84,7 @@ export default {
   },
   methods: {
     columnWidthHandler() {
-      if (!this.$ua.isFromPc() || !this.$refs.column) return
+      if (!this.isDesktop || !this.$refs.column) return
       const columns = this.$refs.column.filter(Boolean)
       const panel = this.$refs.panel
       // 因為 display: none 的 DOM 無法取得寬度 (Child DOM 也是)
@@ -106,7 +110,7 @@ export default {
     },
   },
   mounted() {
-    if (this.$ua.isFromPc()) {
+    if (this.isDesktop) {
       this.columnWidthHandler()
     }
   },
@@ -141,7 +145,7 @@ export interface Methods {
   columnWidthHandler(): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
   headerMenuPanelWithMultiColumn: boolean
 }
 
