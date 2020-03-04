@@ -29,7 +29,7 @@ export default {
   },
   mounted() {
     this.facebook = Facebook.getInstance(this.$env.FACEBOOK_APP_ID)
-    this.facebookStatus = Facebook.state
+    this.facebookStatus = this.facebook.facebookState
   },
   computed: {
     slot() {
@@ -63,10 +63,11 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  facebook: Facebook
+}
 
 export interface Data {
-  facebook: Facebook
   facebookStatus: FaceBookStatus
 }
 

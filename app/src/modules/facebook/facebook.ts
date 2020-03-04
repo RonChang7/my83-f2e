@@ -7,7 +7,9 @@ import {
 } from './facebook.type'
 
 export class Facebook {
-  public static state: FaceBookStatus = {
+  private static instance: Facebook
+
+  public facebookState: FaceBookStatus = {
     isLoaded: false,
     accessToken: '',
     accessTokenExpireTime: 0,
@@ -18,15 +20,13 @@ export class Facebook {
     },
   }
 
-  private static instance: Facebook
-
   private appId: string
 
   private constructor(appId: string) {
     this.appId = appId
     this.initFacebookSDK().then(() => {
       this.getLoginState()
-      Facebook.state.isLoaded = true
+      this.facebookState.isLoaded = true
     })
   }
 
@@ -96,24 +96,24 @@ export class Facebook {
   // 取得 Facebook user detail (name & id)
   private getUserDetails() {
     window.FB.api('/me', (response: ResponseGetUserDetails) => {
-      Facebook.state.user.id = response.id
-      Facebook.state.user.name = response.name
-      Facebook.state.user.avatar = `https://graph.facebook.com/${response.id}/picture`
+      this.facebookState.user.id = response.id
+      this.facebookState.user.name = response.name
+      this.facebookState.user.avatar = `https://graph.facebook.com/${response.id}/picture`
     })
   }
 
   private updateStatus(response: ResponseGetLoginStatus<Status>) {
     if (response.status === 'connected') {
-      Facebook.state.accessToken = (response.authResponse as AuthResponse<
+      this.facebookState.accessToken = (response.authResponse as AuthResponse<
         'connected'
       >).accessToken
-      Facebook.state.accessTokenExpireTime =
+      this.facebookState.accessTokenExpireTime =
         Date.now() +
         (response.authResponse as AuthResponse<'connected'>).expiresIn * 1000
       this.getUserDetails()
     } else {
-      Facebook.state.accessToken = ''
-      Facebook.state.accessTokenExpireTime = 0
+      this.facebookState.accessToken = ''
+      this.facebookState.accessTokenExpireTime = 0
     }
   }
 }
