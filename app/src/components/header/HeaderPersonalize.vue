@@ -1,7 +1,7 @@
 <template>
   <div class="HeaderPersonalize">
     <ul
-      v-if="isEmpty(menu) && isEmpty(personalize)"
+      v-if="checkItemEmpty(menu) && checkItemEmpty(personalize)"
       class="HeaderPersonalize__unauthorized"
     >
       <li>
@@ -89,7 +89,7 @@ export default {
     }
   },
   methods: {
-    isEmpty(item) {
+    checkItemEmpty(item) {
       return _.isEmpty(item)
     },
     menuToggle() {
@@ -182,7 +182,7 @@ export interface Data {
 }
 
 export interface Methods {
-  isEmpty: () => boolean
+  checkItemEmpty(item: Personalize | Menu): boolean
   menuToggle(): void
   getScreenWidth(): void
   reloadHandler(): Function

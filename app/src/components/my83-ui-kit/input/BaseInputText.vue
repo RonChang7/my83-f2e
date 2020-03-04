@@ -8,7 +8,7 @@
       :disabled="disabled"
       :autocomplete="autocomplete"
       class="BaseInputText__input"
-      @input="update"
+      @input="input"
       @blur="$emit('blur')"
       @focus="$emit('focus')"
       @keyup.enter="$emit('enter')"
@@ -66,9 +66,10 @@ export default {
     },
   },
   methods: {
-    update(e) {
-      this.$emit('update:value', (e.target as HTMLInputElement).value)
-      this.$emit('update', (e.target as HTMLInputElement).value)
+    input(e) {
+      const el = e.target as HTMLInputElement
+      this.$emit('update:value', el.value)
+      this.$emit('update', el.value)
     },
   },
 } as ComponentOption
@@ -96,7 +97,7 @@ export interface Data {
 }
 
 export interface Methods {
-  update: (e: Event) => void
+  input(e: Event): void
 }
 
 export interface Computed {}
