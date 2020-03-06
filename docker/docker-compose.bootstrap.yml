@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  app:
+    tty: false
+    entrypoint: bash
+    command: >
+      -c "npm install &&
+      npm run build &&
+      npm run start"

@@ -70,6 +70,7 @@ const config: Configuration = {
         keys: [
           { key: 'NUXT_ENV_API_URL' }, // secret: Only inject the var server side
           { key: 'NUXT_ENV_JWT_TOKEN_NAME' },
+          { key: 'NUXT_ENV_HEALTH_CHECK_AGENT_STRING' },
           { key: 'FACEBOOK_APP_ID' },
           { key: 'ZENDESK_CHAT_ID' },
         ],

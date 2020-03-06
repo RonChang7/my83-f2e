@@ -1,0 +1,18 @@
+version: '3.7'
+
+networks:
+  my83-gateway:
+    name: ${GATEWAY_NETWORK_NAME}
+    external: true
+
+services:
+  app:
+    expose:
+      - ${APP_PORT_CONTAINER}
+    labels:
+      - ${GATEWAY_PROJECT_NAME}.enable=true
+      - traefik.enable=true
+      - traefik.docker.network=${GATEWAY_NETWORK_NAME}
+      - traefik.http.services.my83-f2e-app.loadbalancer.server.port=${APP_PORT_CONTAINER}
+    networks:
+      - my83-gateway
