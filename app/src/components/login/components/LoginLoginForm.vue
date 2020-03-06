@@ -122,6 +122,12 @@ export default {
       const user = User.getInstance()
       return user.landingUrl
     },
+    login(jwtToken, expiredTime) {
+      Auth.login({
+        jwtToken,
+        expiredTime,
+      })
+    },
     async validate(key, value) {
       const error = await Validator.validate(key, value)
       this.$set(this.errors, key, error[key])
@@ -141,12 +147,13 @@ export default {
       this.$set(this.errors, 'login', { message: '' })
 
       try {
-        await login.emailLogin({
+        const { token, expired_time } = await login.emailLogin({
           email: this.form.email,
           password: this.form.password,
           ...this.landingUrl(),
         })
 
+        this.login(token!, expired_time!)
         this.$emit('login-success')
       } catch (error) {
         this.state.email = ''
@@ -168,10 +175,7 @@ export default {
           ...this.landingUrl(),
         })
 
-        Auth.login({
-          jwtToken: token!,
-          expiredTime: expired_time!,
-        })
+        this.login(token!, expired_time!)
 
         this.newUserRedirect(role)
       } catch (error) {
@@ -194,10 +198,7 @@ export default {
           ...this.landingUrl(),
         })
 
-        Auth.login({
-          jwtToken: token!,
-          expiredTime: expired_time!,
-        })
+        this.login(token!, expired_time!)
 
         this.$emit('login-success')
       } catch (error) {
@@ -259,6 +260,7 @@ export interface Data {
 
 export interface Methods {
   landingUrl(): LandingUrlInfo
+  login(jwtToken: string, expiredTime: number): void
   validate(key: string, value: any): void
   submit(): void
   facebookSignUp(fbToken: string, role: 'sales' | 'client'): void
