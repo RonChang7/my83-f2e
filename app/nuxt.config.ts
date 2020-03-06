@@ -42,6 +42,7 @@ const config: Configuration = {
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
     '@/plugins/app-init',
+    '@/plugins/jwt',
   ],
   /*
    ** Nuxt.js dev-modules
