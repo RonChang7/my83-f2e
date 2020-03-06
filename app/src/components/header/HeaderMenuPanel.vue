@@ -217,7 +217,7 @@ export interface Props {
 
       @include max-media('xl') {
         min-height: 40px;
-        padding-bottom: 15px;
+        padding: 0 0 15px 10px;
         margin: 0;
       }
 
@@ -235,7 +235,7 @@ export interface Props {
     &__description {
       color: $gray-tertiary;
       font-size: 0.875rem;
-      margin-top: 8px;
+      margin-top: 4px;
     }
   }
 }
