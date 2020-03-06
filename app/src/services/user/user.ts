@@ -1,65 +1,92 @@
-import Cookies from 'js-cookie'
-import { jwtParser, Response } from '@/utils/jwt-parser'
-
-const tokenKey: string = process.env.NUXT_ENV_JWT_TOKEN_NAME!
+import { Auth } from '../auth/auth'
+import { Role, RoleCode } from '@/api/header/header.type'
+import { Suspect } from '@/services/user/suspect'
 
 export class User {
-  public static isValid: boolean = false
-
-  public static id: number = 0
-
-  public static role: Role = 'guest'
-
-  public static roleCode: number = -1
-
-  public static firstHttpReferrer: string = ''
-
-  public static firstUrl: string = ''
-
   private static instance: User
 
+  private role: UserRole = 'guest'
+
+  private roleCode: UserRoleCode = -1
+
+  private firstHttpReferrer: string = ''
+
+  private firstUrl: string = ''
+
+  private isValid: boolean = false
+
   private constructor() {
-    this.updateUser()
+    this.validateUser()
   }
 
   public static getInstance(): User {
     if (!User.instance) {
       User.instance = new User()
+      return User.instance
     }
 
+    User.instance.validateUser()
     return User.instance
   }
 
-  public updateUser() {
-    const jwtToken = Cookies.get(tokenKey)
-    const jwtDecode = jwtParser(jwtToken)
-    User.isValid = jwtDecode.success
+  public get userState(): UserState {
+    return {
+      role: this.role,
+      roleCode: this.roleCode,
+    }
+  }
 
-    if (User.isValid) {
-      const { role, role_code, sub } = jwtDecode as Response<true>
-      User.id = sub
-      User.role = role as Role
-      User.roleCode = role_code
+  public get landingUrl(): LandingUrlInfo {
+    return {
+      firstHttpReferrer: this.firstHttpReferrer,
+      firstUrl: this.firstUrl,
+    }
+  }
+
+  public isGuest() {
+    return !this.isValid
+  }
+
+  public validateUser() {
+    this.isValid = !!Auth.getToken()
+  }
+
+  public updateUserState(userState: UserState) {
+    this.validateUser()
+
+    if (this.isValid) {
+      this.setUser(userState)
+      Suspect.setRoleCode()
     } else {
       this.resetUser()
     }
   }
 
   public updateLandingUrl() {
-    User.firstHttpReferrer = document.referrer
-    User.firstUrl = window.location.href
+    this.firstHttpReferrer = document.referrer
+    this.firstUrl = window.location.href
   }
 
   private resetUser() {
-    User.id = 0
-    User.role = 'guest'
-    User.roleCode = -1
+    this.role = 'guest'
+    this.roleCode = -1
+  }
+
+  private setUser({ role, roleCode }: UserState) {
+    this.role = role
+    this.roleCode = roleCode
   }
 }
 
-type Role = 'guest' | 'client' | 'sales' | 'admin' | ''
+export type UserRole = Role | 'guest'
 
-export interface UrlInfo {
+export type UserRoleCode = RoleCode | -1
+
+export interface LandingUrlInfo {
   firstHttpReferrer: string
   firstUrl: string
+}
+export interface UserState {
+  role: UserRole
+  roleCode: UserRoleCode
 }

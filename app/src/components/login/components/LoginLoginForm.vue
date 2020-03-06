@@ -82,10 +82,11 @@ import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseCheckbox from '@/components/my83-ui-kit/input/BaseCheckbox.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
-import { User } from '@/services/user/user'
+import { User, LandingUrlInfo } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse } from '@/api/type'
+import { Auth } from '@/services/auth/auth'
 
 export default {
   components: {
@@ -117,6 +118,10 @@ export default {
     },
   },
   methods: {
+    landingUrl() {
+      const user = User.getInstance()
+      return user.landingUrl
+    },
     async validate(key, value) {
       const error = await Validator.validate(key, value)
       this.$set(this.errors, key, error[key])
@@ -132,7 +137,6 @@ export default {
       await this.emailLogin()
     },
     async emailLogin() {
-      const { firstHttpReferrer, firstUrl } = User
       this.state.email = 'loading'
       this.$set(this.errors, 'login', { message: '' })
 
@@ -140,15 +144,14 @@ export default {
         await login.emailLogin({
           email: this.form.email,
           password: this.form.password,
-          firstHttpReferrer,
-          firstUrl,
+          ...this.landingUrl(),
         })
 
         this.$emit('login-success')
       } catch (error) {
         this.state.email = ''
 
-        const { message } = error.response.data
+        const { message } = error.response.data as SimpleResponse
         this.$set(this.errors, 'login', {
           message,
           state: 'error',
@@ -158,13 +161,16 @@ export default {
       }
     },
     async facebookSignUp(fbToken, role) {
-      const { firstHttpReferrer, firstUrl } = User
       try {
-        await login.facebookSignUp({
+        const { token, expired_time } = await login.facebookSignUp({
           fbToken,
           role,
-          firstHttpReferrer,
-          firstUrl,
+          ...this.landingUrl(),
+        })
+
+        Auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
         })
 
         this.newUserRedirect(role)
@@ -180,14 +186,17 @@ export default {
       }
     },
     async facebookLogin(fbToken) {
-      const { firstHttpReferrer, firstUrl } = User
       this.state.facebook = 'loading'
 
       try {
-        await login.facebookLogin({
+        const { token, expired_time } = await login.facebookLogin({
           fbToken,
-          firstHttpReferrer,
-          firstUrl,
+          ...this.landingUrl(),
+        })
+
+        Auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
         })
 
         this.$emit('login-success')
@@ -249,6 +258,7 @@ export interface Data {
 }
 
 export interface Methods {
+  landingUrl(): LandingUrlInfo
   validate(key: string, value: any): void
   submit(): void
   facebookSignUp(fbToken: string, role: 'sales' | 'client'): void

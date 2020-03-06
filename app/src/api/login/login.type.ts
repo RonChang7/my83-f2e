@@ -1,16 +1,16 @@
 import { SimpleResponse } from '../type'
 
-export interface EmailLoginResponse extends SimpleResponse {
+export interface LoginResponse extends SimpleResponse {
   status?: number
+  token?: string
+  expired_time?: number
 }
 
-export interface FacebookSignUpResponse extends SimpleResponse {
-  status?: number
-}
+export interface EmailLoginResponse extends LoginResponse {}
 
-export interface FacebookLoginResponse extends SimpleResponse {
-  status?: number
-}
+export interface FacebookSignUpResponse extends LoginResponse {}
+
+export interface FacebookLoginResponse extends LoginResponse {}
 
 export interface ForgetPasswordResponse extends SimpleResponse {}
 

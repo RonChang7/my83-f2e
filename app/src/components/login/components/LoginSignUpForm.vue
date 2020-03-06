@@ -46,15 +46,14 @@ export default {
   },
   methods: {
     async facebookSignUp(fbToken) {
-      const { firstHttpReferrer, firstUrl } = User
+      const user = User.getInstance()
       this.state = 'loading'
 
       try {
         await facebookSignUp({
           fbToken,
           role: 'client',
-          firstHttpReferrer,
-          firstUrl,
+          ...user.landingUrl,
         })
 
         // @todo: Change path after migrate to Nuxt.js

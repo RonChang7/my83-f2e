@@ -28,4 +28,10 @@ export interface Personalize {
   nickname: string
   notification_count: number
   sales: SalesInfo
+  role: Role
+  role_code: RoleCode
 }
+
+export type Role = 'client' | 'sales'
+
+export type RoleCode = 0 | 1

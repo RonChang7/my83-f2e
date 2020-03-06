@@ -19,7 +19,6 @@ const storeModules = {
 
 export default (async ({ app, store }) => {
   const user = User.getInstance()
-  user.updateUser()
 
   _.forEach(storeModules, ({ createModule, moduleName }) => {
     app.$registerStore({
@@ -39,7 +38,7 @@ export default (async ({ app, store }) => {
   // Update user-agent
   store.dispatch(`${storeModules.global.moduleName}/${GET_USER_AGENT}`)
 
-  if (process.client && User.role === 'guest') {
+  if (process.client && user.isGuest()) {
     user.updateLandingUrl()
   }
 }) as NuxtPlugin

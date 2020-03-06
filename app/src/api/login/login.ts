@@ -6,7 +6,7 @@ import {
   ForgetPasswordResponse,
 } from './login.type'
 import request from '@/api/request'
-import { UrlInfo } from '@/services/user/user'
+import { LandingUrlInfo } from '@/services/user/user'
 
 /**
  * @description Facebook 註冊
@@ -104,21 +104,24 @@ export const forgetPassword = async (
   return data
 }
 
+/**
+ * @description 登出
+ */
 export const logout = async (): Promise<boolean> => {
   const { data } = await request.get<LogoutResponse>('/api/auth/logout')
   return data.success
 }
 
-export interface FacebookLoginPayload extends UrlInfo {
+export interface FacebookLoginPayload extends LandingUrlInfo {
   fbToken: string
 }
 
-export interface FacebookSignUpPayload extends UrlInfo {
+export interface FacebookSignUpPayload extends LandingUrlInfo {
   fbToken: string
   role: 'client' | 'sales'
 }
 
-export interface EmailLoginPayload extends UrlInfo {
+export interface EmailLoginPayload extends LandingUrlInfo {
   email: string
   password: string
 }
