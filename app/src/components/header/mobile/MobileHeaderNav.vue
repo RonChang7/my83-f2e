@@ -53,11 +53,6 @@ export default {
   methods: {
     menuToggle(index) {
       this.displayMenuIndex = this.shouldShowMenu(index) ? null : index
-      this.$nextTick(() => {
-        if (this.displayMenuIndex !== null) {
-          this.$refs.nav[this.displayMenuIndex].scrollIntoView()
-        }
-      })
     },
     shouldShowMenu(index) {
       return this.displayMenuIndex === index
