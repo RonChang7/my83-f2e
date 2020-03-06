@@ -35,6 +35,12 @@ module.exports = {
         htmlWhitespaceSensitivity: 'ignore'
       }
     ],
-    '@typescript-eslint/member-ordering': 'error'
+    '@typescript-eslint/member-ordering': 'error',
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": false
+    }]
   },
 }
