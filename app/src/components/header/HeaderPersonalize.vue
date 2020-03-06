@@ -74,6 +74,8 @@ import { logout } from '@/api/login/login'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import { Auth } from '@/services/auth/auth'
+import { Suspect } from '@/services/user/suspect'
 
 export default {
   mixins: [DeviceMixin],
@@ -117,8 +119,14 @@ export default {
       })
     },
     async logout() {
-      const result = await logout()
-      result && this.reloadHandler()
+      try {
+        await logout()
+      } catch (err) {
+      } finally {
+        Suspect.setRoleCode()
+        Auth.logout()
+        this.reloadHandler()
+      }
     },
   },
   computed: {
