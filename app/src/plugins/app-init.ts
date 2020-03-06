@@ -38,7 +38,7 @@ export default (async ({ app, store }) => {
   // Update user-agent
   store.dispatch(`${storeModules.global.moduleName}/${GET_USER_AGENT}`)
 
-  if (process.client && user.isGuest()) {
+  if (process.client && !user.isLogin()) {
     user.updateLandingUrl()
   }
 }) as NuxtPlugin

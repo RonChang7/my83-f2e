@@ -6,7 +6,7 @@ export default (({ app, store }) => {
   if (process.client) {
     app.router!.beforeEach((to, from, next) => {
       const user = User.getInstance()
-      if (!user.isGuest()) {
+      if (user.isLogin()) {
         store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
       }
       next()

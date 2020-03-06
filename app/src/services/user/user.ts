@@ -13,8 +13,6 @@ export class User {
 
   private firstUrl: string = ''
 
-  private isValid: boolean = false
-
   private constructor() {
     this.validateUser()
   }
@@ -43,18 +41,12 @@ export class User {
     }
   }
 
-  public isGuest() {
-    return !this.isValid
-  }
-
-  public validateUser() {
-    this.isValid = !!Auth.getToken()
+  public isLogin() {
+    return Auth.getToken()
   }
 
   public updateUserState(userState: UserState) {
-    this.validateUser()
-
-    if (this.isValid) {
+    if (this.isLogin()) {
       this.setUser(userState)
       Suspect.setRoleCode()
     } else {
