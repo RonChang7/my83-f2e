@@ -1,8 +1,12 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
+import { AxiosRequestConfig } from 'axios'
 import request from '@/api/request'
 import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
+
+const preventInterceptorsList = ['/api/auth/logout']
+const baseURL = process.env.NUXT_ENV_API_URL
 
 export default (() => {
   if (process.client) {
@@ -25,8 +29,14 @@ export default (() => {
           },
         } = err
 
-        const originalRequest = config
-        if (status === 401 && error === 'expired_token') {
+        const originalRequest = config as AxiosRequestConfig
+        if (
+          preventInterceptorsList.find(
+            (url) => baseURL + url === originalRequest.url
+          )
+        ) {
+          return Promise.reject(err)
+        } else if (status === 401 && error === 'expired_token') {
           return JWT.refreshToken()
             .then(() => {
               const jwtToken = Auth.getToken()
