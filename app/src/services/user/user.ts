@@ -13,17 +13,12 @@ export class User {
 
   private firstUrl: string = ''
 
-  private constructor() {
-    this.validateUser()
-  }
-
   public static getInstance(): User {
     if (!User.instance) {
       User.instance = new User()
       return User.instance
     }
 
-    User.instance.validateUser()
     return User.instance
   }
 
