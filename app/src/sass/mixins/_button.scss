@@ -1,0 +1,113 @@
+$button-height: (
+  's': 26px,
+  'm': 32px,
+  'l-a': 40px,
+  'l-b': 40px,
+  'xl': 50px
+) !default;
+
+$button-padding: (
+  's': 12px,
+  'm': 20px,
+  'l-a': 50px,
+  'l-b': 80px,
+  'xl': 80px
+) !default;
+
+$button-font: (
+  's': 0.875rem,
+  'm': 0.875rem,
+  'l-a': 0.875rem,
+  'l-b': 0.875rem,
+  'xl': 1.125rem
+) !default;
+
+@mixin button($size) {
+  $height: map-get($button-height, $size);
+  $padding: map-get($button-padding, $size);
+  $font-size: map-get($button-font, $size);
+
+  height: $height;
+  min-height: $height;
+  line-height: 1;
+  padding: 0 $padding;
+  border: 1px solid transparent;
+  border-radius: $border-radius;
+  font-weight: 500;
+  font-size: $font-size;
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:focus {
+    outline: 0;
+  }
+
+  &::v-deep svg > path {
+    transition: 0.3s;
+  }
+}
+
+@mixin button-full-width($size) {
+  @include button($size);
+  padding: 0;
+  width: 100%;
+}
+
+@mixin button-primary {
+  color: $primary-button-text-color;
+  background: $primary-color;
+  border-color: $primary-color;
+
+  &::v-deep svg > path {
+    fill: $primary-button-text-color;
+  }
+
+  &:hover:not([disabled]) {
+    background: $primary-hover-color;
+    border-color: $primary-hover-color;
+  }
+
+  &:disabled {
+    background: $primary-disabled-color;
+    border-color: $primary-disabled-color;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-secondary {
+  color: $secondary-button-text-color;
+  background: $default-bg;
+  border-color: $gray-tertiary;
+
+  &::v-deep svg > path {
+    fill: $gray-secondary;
+  }
+
+  &:hover:not([disabled]) {
+    color: $gray-primary;
+    border-color: $gray-secondary;
+
+    &::v-deep svg > path {
+      fill: $gray-primary;
+    }
+  }
+
+  &:active:not([disabled]) {
+    color: $primary-color;
+    border-color: $primary-color;
+
+    &::v-deep svg > path {
+      fill: $primary-color;
+    }
+  }
+
+  &:disabled {
+    color: $secondary-bg;
+    border-color: $secondary-bg;
+    cursor: not-allowed;
+
+    &::v-deep svg > path {
+      fill: $secondary-bg;
+    }
+  }
+}
