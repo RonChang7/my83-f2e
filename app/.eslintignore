@@ -1,0 +1,3 @@
+src/nuxt-modules/classic-store/plugin.js
+# Service worker
+sw.*

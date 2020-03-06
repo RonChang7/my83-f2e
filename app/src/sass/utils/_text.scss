@@ -1,0 +1,3 @@
+@each $color, $value in $text-colors {
+  .text-#{$color} { color: $value }
+}

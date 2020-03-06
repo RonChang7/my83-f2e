@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ./front-app-base
+      dockerfile: Dockerfile
+      args:
+        - TZ=${APP_TZ}
+        - PUID=${APP_PUID}
+        - PGID=${APP_PGID}
+        - APP_ROOT_PATH=${APP_CODE_PATH_CONTAINER}
