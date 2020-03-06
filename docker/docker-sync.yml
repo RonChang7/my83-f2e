@@ -1,0 +1,13 @@
+version: '2'
+
+options:
+  verbose: false
+
+syncs:
+  my83-f2e-app-sync:
+    compose-dev-file-path: docker-compose.sync.yml
+    src: ${APP_CODE_PATH_HOST}
+    sync_strategy: ${DOCKER_SYNC_STRATEGY}
+    sync_userid: ${APP_PUID}
+    sync_excludes:
+      - node_modules
