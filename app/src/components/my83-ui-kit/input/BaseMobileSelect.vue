@@ -25,10 +25,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import {
-  Props as BaseSelectProps,
-  Methods as BaseSelectMethods,
-} from './BaseSelect.vue'
+import { Props as BaseSelectProps } from './BaseSelect.vue'
 
 export default {
   props: {
@@ -86,7 +83,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods extends BaseSelectMethods {}
+export interface Methods {
+  input(e: Event): void
+}
 
 export interface Computed {}
 

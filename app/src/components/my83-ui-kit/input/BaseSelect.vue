@@ -2,10 +2,14 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 const BaseMobileSelect = () => import('./BaseMobileSelect.vue')
 const BaseDesktopSelect = () => import('./BaseDesktopSelect.vue')
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     BaseMobileSelect,
     BaseDesktopSelect,
@@ -39,7 +43,7 @@ export default {
     },
   },
   render(h) {
-    const selectComponent = this.$ua.isFromPc()
+    const selectComponent = this.isDesktop
       ? BaseDesktopSelect
       : BaseMobileSelect
 
@@ -79,10 +83,10 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  input(): void
+  input(e: string | number): void
 }
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {
   value: string | number

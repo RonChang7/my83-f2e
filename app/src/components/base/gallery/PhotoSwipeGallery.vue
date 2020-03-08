@@ -97,7 +97,7 @@ export default {
   methods: {
     photoSwipeInit() {
       const vm = this
-      const pswpElement = this.$el as HTMLElement
+      const pswpElement = this.$el
       const items = _.cloneDeep(this.images)
       const thumbnails = document.querySelectorAll(
         `.${this.thumbnailClassName}`
@@ -173,12 +173,14 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $el: HTMLElement
+}
 
 export interface Data {}
 
 export interface Methods {
-  photoSwipeInit: () => void
+  photoSwipeInit(): void
 }
 
 export interface Computed {}

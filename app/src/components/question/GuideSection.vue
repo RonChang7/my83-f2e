@@ -1,10 +1,10 @@
 <template>
   <div class="GuideSection">
-    <div v-if="$ua.isFromPc()" class="GuideSection__title">
+    <div v-if="isDesktop" class="GuideSection__title">
       <img src="@/assets/images/icon/comment.svg" alt="icon" class="mr-4" />
       MY83保險網 討論區
     </div>
-    <div v-if="$ua.isFromPc()" class="GuideSection__content">
+    <div v-if="isDesktop" class="GuideSection__content">
       想看看身上的保單需不需要補強或修改？投保有體況？理賠遇到問題怎麼辦？讓MY83討論區裡專業的業務員來幫你！
     </div>
     <div class="GuideSection__action">
@@ -36,8 +36,12 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseComment from '@/components/base/icon/24/BaseComment.vue'
 import BasePencil from '@/components/base/icon/24/BasePencil.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     BaseButton,
     BaseComment,
@@ -80,7 +84,7 @@ export interface Methods {
   newPost(): void
 }
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {}
 </script>

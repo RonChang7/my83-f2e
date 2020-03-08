@@ -28,22 +28,25 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { AvatarMap } from './helpers/reply-default-avatar'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { User, Role } from '@/services/user/user'
-import { State as HeaderState } from '@/store/header/index'
-import { State } from '@/store/question/index'
+import { User, UserRole } from '@/services/user/user'
+import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
 } from '@/store/global/global.type'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 const AnswerEditor = () => import('./answer/AnswerEditor.vue')
-
-const UserRole = User.role
+const user = User.getInstance()
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     BaseButton,
     AnswerEditor,
@@ -51,15 +54,10 @@ export default {
   data() {
     return {
       openEditor: false,
-      avatar: AvatarMap[UserRole],
       editorIsLoaded: false,
-      userRole: User.role,
     }
   },
   methods: {
-    isLogin() {
-      return User.role !== 'guest'
-    },
     showLoginPanel() {
       this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
@@ -67,7 +65,7 @@ export default {
       })
     },
     panelDisplayHandler(status) {
-      if (status && !this.isLogin()) {
+      if (status && !user.isLogin()) {
         this.showLoginPanel()
         return
       }
@@ -77,15 +75,22 @@ export default {
   },
   computed: {
     nickname() {
-      const { headerPersonalized } = this.$store.state.header as HeaderState
+      const { headerPersonalized } = this.$store.state.header
       return headerPersonalized ? headerPersonalized.personalize.nickname : ''
     },
     questionId() {
-      const { question } = this.$store.state.question as State
+      const { question } = this.$store.state.question
       return question ? question.question_id : 0
     },
     addAnswerButtonSize() {
-      return this.$ua.isFromPc() ? 'xl' : 'l-b'
+      return this.isDesktop ? 'xl' : 'l-b'
+    },
+    userRole() {
+      const { headerPersonalized } = this.$store.state.header
+      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+    },
+    avatar() {
+      return this.userRole ? AvatarMap[this.userRole] : ''
     },
   },
 } as ComponentOption
@@ -106,25 +111,26 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<QuestionVuexState>
+}
 
 export interface Data {
   openEditor: boolean
-  avatar: string
   editorIsLoaded: boolean
-  userRole: Role
 }
 
 export interface Methods {
-  isLogin: () => boolean
-  showLoginPanel: () => void
-  panelDisplayHandler: (status: boolean) => void
+  showLoginPanel(): void
+  panelDisplayHandler(status: boolean): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
   nickname: string
   questionId: number
   addAnswerButtonSize: string
+  userRole: UserRole
+  avatar: string
 }
 
 export interface Props {}

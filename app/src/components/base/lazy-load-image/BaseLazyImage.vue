@@ -186,9 +186,9 @@ export interface Data {
 }
 
 export interface Methods {
-  loadImage: () => void
-  handleLoad: (img: HTMLImageElement) => void
-  handleObserveVisibleViewport: (entry: IntersectionObserverEntry) => void
+  loadImage(): void
+  handleLoad(img: HTMLImageElement): void
+  handleObserveVisibleViewport(entry: IntersectionObserverEntry): void
 }
 
 export interface Computed {

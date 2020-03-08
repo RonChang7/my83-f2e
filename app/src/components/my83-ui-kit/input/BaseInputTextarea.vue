@@ -9,7 +9,7 @@
       :autofocus="autofocus"
       :style="{ height: height ? height : '' }"
       class="BaseInputTextarea__input"
-      @input="update"
+      @input="input"
       @blur="$emit('blur')"
       @focus="$emit('focus')"
       @keyup.enter="$emit('enter')"
@@ -63,7 +63,7 @@ export default {
     },
   },
   methods: {
-    update(e) {
+    input(e) {
       this.$emit('update:value', (e.target as HTMLInputElement).value)
       this.$emit('update', (e.target as HTMLInputElement).value)
       this.autoGrowHandler()
@@ -71,7 +71,7 @@ export default {
     autoGrowHandler() {
       if (!this.autoGrow) return
 
-      const el = this.$refs.textarea as HTMLTextAreaElement
+      const el = this.$refs.textarea
       this.$nextTick(() => {
         el.style.cssText = 'height:auto;'
         const textareaHeight =
@@ -101,13 +101,17 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    textarea: HTMLTextAreaElement
+  }
+}
 
 export interface Data {}
 
 export interface Methods {
-  update: (e: Event) => void
-  autoGrowHandler: () => void
+  input(e: Event): void
+  autoGrowHandler(): void
 }
 
 export interface Computed {}

@@ -56,7 +56,7 @@ import {
   QuestionPersonalize,
   AnswerPersonalize,
 } from '@/api/question/question.type'
-import { User, Role } from '@/services/user/user'
+import { User, UserRole } from '@/services/user/user'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseMore from '@/components/base/icon/24/BaseMore.vue'
 import {
@@ -84,12 +84,7 @@ import {
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse } from '@/api/type'
 
-enum RoleMap {
-  guest = -1,
-  client = 0,
-  sales = 1,
-  admin = 2,
-}
+const user = User.getInstance()
 
 export default {
   components: {
@@ -97,6 +92,10 @@ export default {
     BaseMore,
   },
   props: {
+    userRole: {
+      type: String,
+      required: true,
+    },
     sectionType: {
       type: String,
       required: true,
@@ -128,7 +127,6 @@ export default {
   },
   data() {
     return {
-      userRole: User.role,
       isMounted: false,
       temporarilyFollowStatus: null,
       state: {
@@ -138,7 +136,7 @@ export default {
   },
   computed: {
     sectionAuthorRole() {
-      return RoleMap[this.authorInfo.role]
+      return this.authorInfo.role
     },
     anchorString() {
       return `${this.sectionType}-${this.sectionId}`
@@ -240,9 +238,6 @@ export default {
       }
       window.location.href = `${path}?content=${query.content}&source=${query.source}`
     },
-    isLogin() {
-      return User.role !== 'guest'
-    },
     showLoginPanel() {
       this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
@@ -250,12 +245,12 @@ export default {
       })
     },
     showDropdownPanel(disableBlur = false) {
-      if (!this.isLogin()) {
+      if (!user.isLogin()) {
         this.showLoginPanel()
         return
       }
 
-      const el = this.$refs.more as HTMLElement
+      const el = this.$refs.more
       const paddingTop = 8
       const paddingLeft = 140
 
@@ -351,10 +346,13 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    more: HTMLElement
+  }
+}
 
 export interface Data {
-  userRole: Role
   isMounted: boolean
   temporarilyFollowStatus: boolean | null
   state: {
@@ -367,7 +365,6 @@ export interface Methods {
   followQuestion(): void
   setBestAnswer(): void
   consultSales(): void
-  isLogin(): boolean
   showLoginPanel(): void
   showDropdownPanel(disableBlur: boolean): void
   reportOption(): DropdownMenuOption
@@ -375,7 +372,7 @@ export interface Methods {
 }
 
 export interface Computed {
-  sectionAuthorRole: Role
+  sectionAuthorRole: UserRole
   anchorString: string
   shouldShowEditButton: boolean
   shouldShowFollowButton: boolean
@@ -387,6 +384,7 @@ export interface Computed {
 }
 
 export interface Props {
+  userRole: UserRole
   sectionType: PostType
   sectionId: number
   authorInfo: AuthorInfo

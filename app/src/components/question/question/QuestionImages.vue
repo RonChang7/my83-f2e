@@ -76,10 +76,19 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  galleryImages: GalleryImage[]
+}
 
 export interface Props {
   images: string[]
+}
+
+export interface GalleryImage {
+  src: string
+  msrc: string
+  h: number
+  w: number
 }
 </script>
 

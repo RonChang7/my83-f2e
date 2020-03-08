@@ -15,6 +15,7 @@
           :is-best-answer="isBestAnswer"
           :is-question-author="isQuestionAuthor"
           :question-id="questionId"
+          :user-role="userRole"
         />
       </div>
       <BaseContent :content="answer.content" />
@@ -29,7 +30,7 @@
         :like-status="likeStatus"
         @action="buttonActionHandler"
       />
-      <ResponsesSection :responses="answer.responses" />
+      <ResponsesSection :responses="answer.responses" :user-role="userRole" />
       <ResponseEditor
         v-if="displayResponsePanel"
         :avatar="avatar"
@@ -57,12 +58,9 @@ import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import AnswerInteraction from './AnswerInteraction.vue'
 import { Type } from './AnswerInteractionButton.vue'
 import { AnswerData } from '@/api/question/question.type'
-import { User } from '@/services/user/user'
-import { State } from '@/store/header/index'
+import { UserRole } from '@/services/user/user'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
 const ResponseEditor = () => import('../response/ResponseEditor.vue')
-
-const UserRole = User.role
 
 const enum LikeStatus {
   LIKE = 1,
@@ -105,23 +103,26 @@ export default {
       type: Number,
       default: 0,
     },
+    userRole: {
+      type: String,
+      required: true,
+    },
+    nickname: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
       openEditor: false,
       activeResponsePanel: false,
       isResponsePanelFocus: false,
-      avatar: AvatarMap[UserRole],
       temporarilyLikeCount: null,
       temporarilyDislikeCount: null,
       temporarilyLikeStatus: null,
     }
   },
   computed: {
-    nickname() {
-      const { headerPersonalized } = this.$store.state.header as State
-      return headerPersonalized ? headerPersonalized.personalize.nickname : ''
-    },
     hasResponse() {
       return !!this.answer.responses.length
     },
@@ -142,6 +143,9 @@ export default {
       return this.temporarilyLikeStatus !== null
         ? this.temporarilyLikeStatus
         : this.answer.personalize!.like_status
+    },
+    avatar() {
+      return AvatarMap[this.userRole]
     },
   },
   methods: {
@@ -222,25 +226,24 @@ export interface Data {
   openEditor: boolean
   activeResponsePanel: boolean
   isResponsePanelFocus: boolean
-  avatar: string
   temporarilyLikeCount: number | null
   temporarilyDislikeCount: number | null
   temporarilyLikeStatus: number | null
 }
 
 export interface Methods {
-  buttonActionHandler: (type: Type) => void
-  openResponsePanel: () => void
-  setLikeStatus: (status: LikeStatus) => void
+  buttonActionHandler(type: Type): void
+  openResponsePanel(): void
+  setLikeStatus(status: LikeStatus): void
 }
 
 export interface Computed {
-  nickname: string
   hasResponse: boolean
   displayResponsePanel: boolean
   likeCount: number
   dislikeCount: number
   likeStatus: number
+  avatar: string
 }
 
 export interface Props {
@@ -250,6 +253,8 @@ export interface Props {
   isBestAnswer: boolean
   isQuestionAuthor: boolean
   questionId: number
+  userRole: UserRole
+  nickname: string
 }
 </script>
 

@@ -34,12 +34,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { State } from '@/store/question/index'
+import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import { RecommendProduct } from '@/api/question/question.type'
 
 export default {
@@ -56,7 +57,7 @@ export default {
   },
   computed: {
     recommendProduct() {
-      const { question } = this.$store.state.question as State
+      const { question } = this.$store.state.question
       return question ? question.recommend_product : null
     },
   },
@@ -69,9 +70,7 @@ export default {
       })
     })
 
-    this.recommendProductObserver.observe(
-      this.$refs.recommendProduct as Element
-    )
+    this.recommendProductObserver.observe(this.$refs.recommendProduct)
   },
   destroyed() {
     if (this.recommendProductObserver) {
@@ -97,7 +96,12 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<QuestionVuexState>
+  $refs: {
+    recommendProduct: Element
+  }
+}
 
 export interface Data {
   recommendProductObserver: IntersectionObserver | null
@@ -106,11 +110,11 @@ export interface Data {
 
 export interface Methods {}
 
-export interface Computed {}
-
-export interface Props {
+export interface Computed {
   recommendProduct: RecommendProduct | null
 }
+
+export interface Props {}
 </script>
 
 <style lang="scss" scoped>

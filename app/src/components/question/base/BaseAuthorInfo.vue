@@ -11,7 +11,7 @@
       <div class="BaseAuthorInfo__name">
         {{ authorInfo.nickname }}
       </div>
-      <div v-if="authorInfo.role === 1" class="BaseAuthorInfo__medal">
+      <div v-if="authorInfo.role === 'sales'" class="BaseAuthorInfo__medal">
         <GlobalLink to="/medal" target="_blank">
           <Medal :level="authorInfo.role_meta.level" size="S" />
         </GlobalLink>
@@ -43,6 +43,7 @@ import { AuthorInfo } from '@/api/question/question.type'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import Medal from '@/components/base/medal/Medal.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { Role } from '@/api/type'
 
 export default {
   components: {
@@ -65,7 +66,7 @@ export default {
   },
   computed: {
     role() {
-      return this.authorInfo.role === 1 ? '保險業務員' : '保戶'
+      return this.authorInfo.role === 'sales' ? '保險業務員' : '保戶'
     },
   },
 } as ComponentOption
@@ -95,7 +96,7 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
-  role: string
+  role: Role
 }
 
 export interface Props {

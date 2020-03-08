@@ -11,9 +11,11 @@ import {
   FETCH_RELATED_QUESTIONS,
   FETCH_RELATED_BLOGS,
 } from '@/store/question/question.type'
+import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/index'
 import { User } from '@/services/user/user'
 const QuestionPage = () => import('./QuestionPage.vue')
+const user = User.getInstance()
 
 export default {
   async fetch({ store, route }) {
@@ -25,7 +27,7 @@ export default {
       store.dispatch(`question/${FETCH_RELATED_BLOGS}`, id),
     ])
 
-    const { question } = store.state.question as State
+    const { question } = (store.state as QuestionVuexState).question
 
     if (question && question.best_answer_id) {
       store.dispatch(
@@ -35,7 +37,7 @@ export default {
     }
   },
   mounted() {
-    if (User.role !== 'guest') {
+    if (user.isLogin()) {
       const id = this.$route.params.id
       this.$store.dispatch(`question/${FETCH_QUESTION_PERSONALIZE_DATA}`, id)
       this.$store.dispatch(`question/${FETCH_ANSWER_PERSONALIZE_DATA}`, id)
@@ -71,4 +73,8 @@ export interface Methods {}
 export interface Computed {}
 
 export interface Props {}
+
+export interface QuestionVuexState extends GlobalVuexState {
+  question: State
+}
 </script>
