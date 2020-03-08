@@ -85,7 +85,7 @@ import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputError
 import { User, LandingUrlInfo } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
-import { SimpleResponse } from '@/api/type'
+import { SimpleResponse, Role } from '@/api/type'
 import { Auth } from '@/services/auth/auth'
 
 export default {
@@ -263,10 +263,10 @@ export interface Methods {
   login(jwtToken: string, expiredTime: number): void
   validate(key: string, value: any): void
   submit(): void
-  facebookSignUp(fbToken: string, role: 'sales' | 'client'): void
+  facebookSignUp(fbToken: string, role: Role): void
   facebookLogin(fbToken: string): void
   emailLogin(): void
-  newUserRedirect(role: 'sales' | 'client'): void
+  newUserRedirect(role: Role): void
 }
 
 export interface Computed {}

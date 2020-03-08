@@ -1,3 +1,4 @@
+import { Role } from '../type'
 import {
   FacebookSignUpResponse,
   FacebookLoginResponse,
@@ -118,7 +119,7 @@ export interface FacebookLoginPayload extends LandingUrlInfo {
 
 export interface FacebookSignUpPayload extends LandingUrlInfo {
   fbToken: string
-  role: 'client' | 'sales'
+  role: Role
 }
 
 export interface EmailLoginPayload extends LandingUrlInfo {

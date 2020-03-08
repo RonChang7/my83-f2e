@@ -62,7 +62,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderMenuPanel from './HeaderMenuPanel.vue'
 import HeaderSalesDetail from './HeaderSalesDetail.vue'
-import { State } from '@/store/header/index'
+import { GlobalVuexState } from '@/store/global-state'
 import { HeaderNavItem, Personalize } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseNotification from '@/components/base/icon/24/BaseNotification.vue'
@@ -131,7 +131,8 @@ export default {
   },
   computed: {
     personalize() {
-      const { headerPersonalized } = this.$store.state.header as State
+      const { headerPersonalized } = (this.$store
+        .state as GlobalVuexState).header
       return headerPersonalized ? headerPersonalized.personalize : {}
     },
     notificationCount() {
@@ -142,7 +143,8 @@ export default {
       return count > 99 ? '99+' : count
     },
     menu() {
-      const { headerPersonalized } = this.$store.state.header as State
+      const { headerPersonalized } = (this.$store
+        .state as GlobalVuexState).header
       const menu = headerPersonalized ? headerPersonalized.menu : []
 
       if (_.isEmpty(menu)) {

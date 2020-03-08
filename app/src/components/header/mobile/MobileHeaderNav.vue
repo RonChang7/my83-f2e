@@ -3,7 +3,6 @@
     <li
       v-for="(item, index) in headerNavItems"
       :key="index"
-      ref="nav"
       @click="menuToggle(index)"
     >
       <component
@@ -79,11 +78,7 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
-  $refs: {
-    nav: HTMLElement[]
-  }
-}
+export interface Instance extends Vue {}
 
 export interface Data {
   displayMenuIndex: number | null
