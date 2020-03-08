@@ -38,10 +38,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import {
-  Props as BaseSelectProps,
-  Methods as BaseSelectMethods,
-} from './BaseSelect.vue'
+import { Props as BaseSelectProps } from './BaseSelect.vue'
 
 export default {
   props: {
@@ -97,7 +94,7 @@ export default {
         this.setMinWidth()
         this.setHeight()
         this.$nextTick(() => {
-          ;(this.$refs.panel as HTMLElement).focus()
+          this.$refs.panel.focus()
           this.scrollSelectedIntoView()
         })
       }
@@ -113,14 +110,14 @@ export default {
           this.minWidth = this.$el.clientWidth
         }
 
-        ;(this.$refs.panel as HTMLElement).style.minWidth = `${this.minWidth}px`
+        this.$refs.panel.style.minWidth = `${this.minWidth}px`
       })
     },
     setHeight() {
       const screenHeight = document.documentElement.scrollHeight
 
       this.$nextTick(() => {
-        const SelectEl = this.$refs.select as HTMLElement
+        const SelectEl = this.$refs.select
         const bottomPadding = SelectEl.getBoundingClientRect().top
         const defaultHeight = this.options.length * 40 + 26
         const maxHeight = 426
@@ -128,7 +125,7 @@ export default {
           Math.floor((screenHeight - bottomPadding - 26 - 40) / 40) * 40 + 26
 
         const height = Math.min(defaultHeight, maxHeight, adjustHeight)
-        ;(this.$refs.panel as HTMLElement).style.height = `${height}px`
+        this.$refs.panel.style.height = `${height}px`
       })
     },
     scrollSelectedIntoView() {
@@ -159,7 +156,12 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    panel: HTMLElement
+    select: HTMLElement
+  }
+}
 
 export interface Data {
   visible: boolean
@@ -167,7 +169,8 @@ export interface Data {
   disableBlur: boolean
 }
 
-export interface Methods extends BaseSelectMethods {
+export interface Methods {
+  input(value: string | number): void
   panelHandler(eventType: string, status: boolean): void
   setMinWidth(): void
   setHeight(): void

@@ -9,10 +9,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import RelatedSection from './related/RelatedSection.vue'
-import { State } from '@/store/question/index'
+import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import { RelatedBlog } from '@/api/question/question.type'
 
 export default {
@@ -27,7 +28,7 @@ export default {
   },
   computed: {
     relatedBlogs() {
-      const { relatedBlogs } = this.$store.state.question as State
+      const { relatedBlogs } = this.$store.state.question
       return relatedBlogs || []
     },
   },
@@ -49,7 +50,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<QuestionVuexState>
+}
 
 export interface Data {}
 

@@ -5,6 +5,7 @@
       :key="response.response_id"
       :response="response"
       :index="index"
+      :user-role="userRole"
     />
   </div>
 </template>
@@ -14,6 +15,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { ResponseData } from '@/api/question/question.type'
+import { UserRole } from '@/services/user/user'
 const ResponseSection = () => import('./response/ResponseSection.vue')
 
 export default {
@@ -23,6 +25,10 @@ export default {
   props: {
     responses: {
       type: Array,
+      required: true,
+    },
+    userRole: {
+      type: String,
       required: true,
     },
   },
@@ -54,6 +60,7 @@ export interface Computed {}
 
 export interface Props {
   responses: ResponseData[]
+  userRole: UserRole
 }
 </script>
 

@@ -73,6 +73,9 @@ import BaseButton, {
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { CLOSE_REPORT_PANEL, ADD_REPORT } from '@/store/question/question.type'
 import { SimpleResponse } from '@/api/type'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export const enum ValidateState {
   Success = 'success',
@@ -80,6 +83,7 @@ export const enum ValidateState {
 }
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     BaseModal,
     BaseClose,
@@ -120,7 +124,7 @@ export default {
   },
   computed: {
     buttonSize() {
-      return this.$ua.isFromPc() ? 'xl' : 'l-a'
+      return this.isDesktop ? 'xl' : 'l-a'
     },
   },
   methods: {
@@ -208,8 +212,8 @@ export interface Methods {
   submit(): void
 }
 
-export interface Computed {
-  buttonSize: Pick<BaseButtonProps, 'size'>
+export interface Computed extends DeviceMixinComputed {
+  buttonSize: BaseButtonProps['size']
 }
 
 export interface Props {

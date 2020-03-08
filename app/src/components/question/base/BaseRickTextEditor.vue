@@ -105,7 +105,7 @@ export interface Data {
 }
 
 export interface Methods {
-  focusHandler: (status: boolean) => void
+  focusHandler(status: boolean): void
 }
 
 export interface Computed {

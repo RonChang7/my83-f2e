@@ -74,7 +74,7 @@ export interface Data {
 }
 
 export interface Methods {
-  actionHandler: (type: Type) => void
+  actionHandler(type: Type): void
 }
 
 export interface Computed {

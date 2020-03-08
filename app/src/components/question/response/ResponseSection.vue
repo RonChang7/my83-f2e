@@ -10,6 +10,7 @@
         section-type="response"
         :section-id="response.response_id"
         :author-info="response.author_info"
+        :user-role="userRole"
       />
     </div>
     <BaseContent :content="content" />
@@ -27,6 +28,7 @@ import BaseContent from '../base/BaseContent.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import { ResponseData } from '@/api/question/question.type'
 import { textToUrl } from '@/utils/text-parser'
+import { UserRole } from '@/services/user/user'
 
 export default {
   components: {
@@ -42,6 +44,10 @@ export default {
     },
     index: {
       type: Number,
+      required: true,
+    },
+    userRole: {
+      type: String,
       required: true,
     },
   },
@@ -74,11 +80,14 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  content: string
+}
 
 export interface Props {
   response: ResponseData
   index: number
+  userRole: UserRole
 }
 </script>
 

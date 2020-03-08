@@ -66,7 +66,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  qaKing(): void
+}
 
 export interface Computed {}
 

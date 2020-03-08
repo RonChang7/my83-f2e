@@ -16,10 +16,11 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseDropdownOption from '../base/BaseDropdownOption.vue'
-import { State, DropdownMenu } from '@/store/question/index'
+import { QuestionVuexState } from '@/views/question/page/Index.vue'
 
 export default {
   components: {
@@ -33,7 +34,7 @@ export default {
   },
   computed: {
     options() {
-      const { dropdownMenu } = this.$store.state.question as State
+      const { dropdownMenu } = this.$store.state.question
       return dropdownMenu.options ? dropdownMenu.options : []
     },
   },
@@ -45,7 +46,7 @@ export default {
           if (process.server) return
 
           this.$nextTick(() => {
-            ;(this.$el as HTMLElement).focus()
+            this.$el.focus()
           })
         }
       },
@@ -69,14 +70,17 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<QuestionVuexState>
+  $el: HTMLElement
+}
 
 export interface Data {}
 
 export interface Methods {}
 
 export interface Computed {
-  options: Pick<DropdownMenu, 'options'>
+  options: QuestionVuexState['question']['dropdownMenu']
 }
 
 export interface Props {

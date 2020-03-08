@@ -9,7 +9,7 @@
     <div class="HotServiceCard__title">
       {{ item.title }}
     </div>
-    <template v-if="$ua.isFromPc()">
+    <template v-if="isDesktop">
       <div class="HotServiceCard__content">
         {{ item.content }}
       </div>
@@ -28,8 +28,12 @@ import { HotServiceContent } from './hot-service-content'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     BaseButton,
     GlobalLink,
@@ -65,7 +69,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {
   item: HotServiceContent

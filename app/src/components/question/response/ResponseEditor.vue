@@ -77,6 +77,7 @@ import { scrollTo } from '@/utils/element'
 import { nl2br } from '@/utils/text-parser'
 import { User } from '@/services/user/user'
 
+const user = User.getInstance()
 let ResponseFormData: PostDataFactory
 
 export default {
@@ -124,9 +125,6 @@ export default {
     }
   },
   methods: {
-    isLogin() {
-      return User.role !== 'guest'
-    },
     showLoginPanel() {
       this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
@@ -137,7 +135,7 @@ export default {
       this.$emit('close-editor')
     },
     activePanelHandler(status) {
-      if (status && !this.isLogin()) {
+      if (status && !user.isLogin()) {
         this.showLoginPanel()
         return
       }
@@ -185,7 +183,7 @@ export default {
     },
     autoFocusHelper() {
       this.$nextTick(() => {
-        ;(this.$refs.textarea as Vue).$el.querySelector('textarea')!.focus()
+        this.$refs.textarea.$el.querySelector('textarea')!.focus()
       })
     },
   },
@@ -235,7 +233,11 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    textarea: Vue
+  }
+}
 
 export interface Data {
   form: ResponsePostData
@@ -244,15 +246,14 @@ export interface Data {
 }
 
 export interface Methods {
-  isLogin: () => boolean
-  showLoginPanel: () => void
-  closePanel: () => void
-  activePanelHandler: (status: boolean) => void
-  submit: () => void
-  reset: () => void
-  scrollToNewPost: (id: number) => void
-  autoFocusHelper: () => void
-  focusHandler: () => void
+  showLoginPanel(): void
+  closePanel(): void
+  activePanelHandler(status: boolean): void
+  submit(): void
+  reset(): void
+  scrollToNewPost(id: number): void
+  autoFocusHelper(): void
+  focusHandler(): void
 }
 
 export interface Computed {

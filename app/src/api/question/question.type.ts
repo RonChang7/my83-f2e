@@ -1,4 +1,4 @@
-import { Link, SimpleResponse } from '../type'
+import { Link, SimpleResponse, Role } from '../type'
 
 export interface QuestionDataResponse {
   data: QuestionData
@@ -105,8 +105,6 @@ export interface AuthorInfo {
   role: Role
   role_meta: RoleMeta | null
 }
-
-export type Role = 0 | 1 | 2
 
 export interface RoleMeta {
   level: number

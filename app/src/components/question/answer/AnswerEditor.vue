@@ -59,7 +59,7 @@ import {
 } from '@/services/question/post-template-factory'
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollTo } from '@/utils/element'
-import { Role } from '@/services/user/user'
+import { UserRole } from '@/services/user/user'
 const BaseCheckbox = () =>
   import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
 const BaseInputText = () =>
@@ -187,10 +187,10 @@ export interface Data {
 }
 
 export interface Methods {
-  validate: () => boolean
-  submit: () => void
-  reset: () => void
-  scrollToNewPost: (id: number) => void
+  validate(): boolean
+  submit(): void
+  reset(): void
+  scrollToNewPost(id: number): void
 }
 
 export interface Computed {
@@ -200,7 +200,7 @@ export interface Computed {
 export interface Props {
   avatar: string
   nickname: string
-  userRole: Role
+  userRole: UserRole
   questionId: number
 }
 </script>

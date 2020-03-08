@@ -84,7 +84,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  clickHandler(): void
+}
 
 export interface Computed {
   icon: IconType

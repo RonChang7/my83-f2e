@@ -79,12 +79,12 @@ export interface Data {}
 export interface Methods {}
 
 export interface Computed {
-  filteredRelatedData: RelatedBlog[] | RelatedQuestion[]
+  filteredRelatedData: Props['relatedData']
 }
 
 export interface Props {
   title: string
-  relatedData: RelatedBlog[] | RelatedQuestion[]
+  relatedData: Array<RelatedBlog | RelatedQuestion>
   maxPost: number
 }
 </script>

@@ -13,30 +13,30 @@
     />
     <div class="QuestionPage__row">
       <div class="QuestionPage__column left">
-        <HotServiceSection v-if="!$ua.isFromPc() && shouldShowGuide" />
+        <HotServiceSection v-if="!isDesktop && shouldShowGuide" />
 
-        <GuideSection v-if="!$ua.isFromPc() && shouldShowGuide" />
+        <GuideSection v-if="!isDesktop && shouldShowGuide" />
 
         <QuestionSection />
 
         <MobileRecommendProductSection
-          v-if="!$ua.isFromPc() && shouldShowRecommendProduct"
+          v-if="!isDesktop && shouldShowRecommendProduct"
         />
 
         <div
           ref="mobileRelatedSection"
           class="QuestionPage__mobileRelatedSection"
         >
-          <RelatedQuestionSection v-if="!$ua.isFromPc()" :max-post="5" />
+          <RelatedQuestionSection v-if="!isDesktop" :max-post="5" />
 
           <RelatedBlogSection
-            v-if="!$ua.isFromPc() && shouldShowBlogSection"
+            v-if="!isDesktop && shouldShowBlogSection"
             :max-post="5"
           />
         </div>
 
         <BaseScrollToTopButton
-          v-if="!$ua.isFromPc() && shouldShowScrollToTop"
+          v-if="!isDesktop && shouldShowScrollToTop"
           class="scrollToTop"
           :class="{ hasProduct: shouldShowRecommendProduct }"
           @click.native="scrollToTop"
@@ -52,14 +52,14 @@
           <AddAnswerSection v-if="userRole !== 'sales'" />
         </client-only>
       </div>
-      <div v-if="$ua.isFromPc()" class="QuestionPage__column right">
+      <div v-if="isDesktop" class="QuestionPage__column right">
         <GuideSection v-if="shouldShowGuide" />
         <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
         <RelatedQuestionSection />
         <RelatedBlogSection v-if="shouldShowBlogSection" />
       </div>
     </div>
-    <div v-if="$ua.isFromPc()" class="QuestionPage__row">
+    <div v-if="isDesktop" class="QuestionPage__row">
       <HotServiceSection />
     </div>
   </div>
@@ -67,8 +67,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { QuestionVuexState } from './Index.vue'
 import QuestionSection from '@/components/question/QuestionSection.vue'
 import AnswersSection from '@/components/question/AnswersSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
@@ -77,10 +79,13 @@ import HotServiceSection from '@/components/question/HotServiceSection.vue'
 import RelatedQuestionSection from '@/components/question/RelatedQuestionSection.vue'
 import RelatedBlogSection from '@/components/question/RelatedBlogSection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
-import { User, Role } from '@/services/user/user'
-import { State, DropdownMenu } from '@/store/question/index'
+import { UserRole } from '@/services/user/user'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
 import { scrollTo } from '@/utils/element'
+
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 const DesktopRecommendProductSection = () =>
   import('@/components/question/DesktopRecommendProductSection.vue')
 const MobileRecommendProductSection = () =>
@@ -90,6 +95,7 @@ const QuestionDropdownPanel = () =>
 const ReportPanel = () => import('@/components/question/report/ReportPanel.vue')
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     QuestionSection,
     AnswersSection,
@@ -106,7 +112,6 @@ export default {
   },
   data() {
     return {
-      userRole: User.role,
       isMounted: false,
       scrollToTopObserver: null,
       shouldShowScrollToTop: false,
@@ -130,11 +135,11 @@ export default {
             disableBlur: false,
           }
         )
-        ;((this.$refs.dropdownPanel as Vue).$el as HTMLElement).focus()
+        ;(this.$refs.dropdownPanel.$el as HTMLElement).focus()
         return
       }
 
-      const payload: DropdownMenu = {
+      const payload: QuestionVuexState['question']['dropdownMenu'] = {
         visible: false,
         top: null,
         left: null,
@@ -153,6 +158,10 @@ export default {
     },
   },
   computed: {
+    userRole() {
+      const { headerPersonalized } = this.$store.state.header
+      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+    },
     shouldShowGuide() {
       if (process.server || !this.isMounted) return true
 
@@ -169,7 +178,7 @@ export default {
       return this.userRole !== 'sales'
     },
     shouldShowRecommendProduct() {
-      const { question } = this.$store.state.question as State
+      const { question } = this.$store.state.question
       const recommendProduct = question ? question.recommend_product : null
 
       if (!!recommendProduct && (process.server || !this.isMounted)) return true
@@ -177,11 +186,11 @@ export default {
       return this.userRole !== 'sales'
     },
     shouldShowReportPanel() {
-      const { report } = this.$store.state.question as State
+      const { report } = this.$store.state.question
       return report.visible
     },
     dropdownMenu() {
-      const { dropdownMenu } = this.$store.state.question as State
+      const { dropdownMenu } = this.$store.state.question
       return dropdownMenu
     },
     dropdownMenuStyle() {
@@ -204,7 +213,7 @@ export default {
       })
     })
 
-    this.scrollToTopObserver.observe(this.$refs.mobileRelatedSection as Element)
+    this.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
   },
   destroyed() {
     if (this.scrollToTopObserver) {
@@ -230,28 +239,34 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<QuestionVuexState>
+  $refs: {
+    dropdownPanel: Vue
+    mobileRelatedSection: Element
+  }
+}
 
 export interface Data {
-  userRole: Role
   isMounted: boolean
   scrollToTopObserver: IntersectionObserver | null
   shouldShowScrollToTop: boolean
 }
 
 export interface Methods {
-  scrollToAnchorPoint: (anchor: string) => void
+  scrollToAnchorPoint(anchor: string): void
   hidePanel(): void
   scrollToTop(): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
+  userRole: UserRole
   shouldShowGuide: boolean
   shouldShowHotService: boolean
   shouldShowBlogSection: boolean
   shouldShowRecommendProduct: boolean
   shouldShowReportPanel: boolean
-  dropdownMenu: DropdownMenu
+  dropdownMenu: QuestionVuexState['question']['dropdownMenu']
   dropdownMenuStyle: CSSStyleDeclaration
 }
 
