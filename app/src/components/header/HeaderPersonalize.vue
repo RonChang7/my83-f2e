@@ -57,6 +57,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import _ from 'lodash'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -131,8 +132,7 @@ export default {
   },
   computed: {
     personalize() {
-      const { headerPersonalized } = (this.$store
-        .state as GlobalVuexState).header
+      const { headerPersonalized } = this.$store.state.header
       return headerPersonalized ? headerPersonalized.personalize : {}
     },
     notificationCount() {
@@ -143,8 +143,7 @@ export default {
       return count > 99 ? '99+' : count
     },
     menu() {
-      const { headerPersonalized } = (this.$store
-        .state as GlobalVuexState).header
+      const { headerPersonalized } = this.$store.state.header
       const menu = headerPersonalized ? headerPersonalized.menu : []
 
       if (_.isEmpty(menu)) {
@@ -186,7 +185,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<GlobalVuexState>
+}
 
 export interface Data {
   shouldShowMenu: boolean
