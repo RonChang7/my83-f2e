@@ -181,6 +181,10 @@ export const likeAnswer = async ({
   return data
 }
 
+/**
+ * @description 取得 Question 相關問答
+ * @param {number} id Question id
+ */
 export const fetchRelatedQuestions = async (
   id: number
 ): Promise<RelatedQuestionsResponse> => {
@@ -190,6 +194,10 @@ export const fetchRelatedQuestions = async (
   return data
 }
 
+/**
+ * @description 取得 Question 相關文章
+ * @param {number} id Question id
+ */
 export const fetchRelatedBlogs = async (
   id: number
 ): Promise<RelatedBlogsResponse> => {
@@ -199,6 +207,10 @@ export const fetchRelatedBlogs = async (
   return data
 }
 
+/**
+ * @description 檢舉 Question
+ * @param {addReportPayload} payload
+ */
 export const addQuestionReport = async ({
   questionId,
   comment,
@@ -212,6 +224,10 @@ export const addQuestionReport = async ({
   return data
 }
 
+/**
+ * @description 取消檢舉 Question
+ * @param {cancelReportPayload} payload
+ */
 export const cancelQuestionReport = async ({
   questionId,
 }: cancelReportPayload): Promise<SimpleResponse> => {
@@ -221,6 +237,10 @@ export const cancelQuestionReport = async ({
   return data
 }
 
+/**
+ * @description 檢舉 Answer
+ * @param {addReportPayload} payload
+ */
 export const addAnswerReport = async ({
   questionId,
   answerId,
@@ -235,6 +255,10 @@ export const addAnswerReport = async ({
   return data
 }
 
+/**
+ * @description 取消檢舉 Answer
+ * @param {cancelReportPayload} payload
+ */
 export const cancelAnswerReport = async ({
   questionId,
   answerId,
