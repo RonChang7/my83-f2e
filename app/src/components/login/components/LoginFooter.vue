@@ -27,13 +27,12 @@ export default {
   },
   mounted() {
     if (this.isDesktop || window.innerWidth >= 1200) return
-    const el = this.$el as HTMLElement
-    const offsetTop = el.offsetTop
-    const offsetHeight = el.offsetHeight
+    const offsetTop = this.$el.offsetTop
+    const offsetHeight = this.$el.offsetHeight
 
     if (window.innerHeight < offsetTop + offsetHeight) return
 
-    el.style.marginTop = `calc(100vh - ${offsetTop}px - ${offsetHeight}px - 30px - 28px - 2px)`
+    this.$el.style.marginTop = `calc(100vh - ${offsetTop}px - ${offsetHeight}px - 30px - 28px - 2px)`
   },
 } as ComponentOption
 
@@ -53,7 +52,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $el: HTMLElement
+}
 
 export interface Data {}
 

@@ -14,7 +14,8 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import DesktopHeader from './desktop/DesktopHeader.vue'
 import MobileHeader from './mobile/MobileHeader.vue'
 import * as types from '@/store/header/header.type'
-import { User, UserState } from '@/services/user/user'
+import { GlobalVuexState } from '@/store/global-state'
+import { UserRole } from '@/services/user/user'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
@@ -25,18 +26,16 @@ export default {
     DesktopHeader,
     MobileHeader,
   },
-  data() {
-    return {
-      userState: null,
-    }
-  },
-  mounted() {
-    const user = User.getInstance()
-    this.userState = user.userState
+  computed: {
+    userRole() {
+      const { headerPersonalized } = (this.$store
+        .state as GlobalVuexState).header
+      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+    },
   },
   watch: {
-    userState(val: UserState) {
-      if (val.role === 'sales') {
+    userRole(val: UserRole) {
+      if (val === 'sales') {
         this.$store.dispatch(`header/${types.FETCH_HEADER_NAV_DATA}`)
       }
     },
@@ -61,13 +60,13 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {
-  userState: UserState
-}
+export interface Data {}
 
 export interface Methods {}
 
 export interface Computed extends DeviceMixinComputed {}
 
-export interface Props {}
+export interface Props {
+  userRole: UserRole
+}
 </script>

@@ -1,5 +1,5 @@
 import { Auth } from '../auth/auth'
-import { Role, RoleCode } from '@/api/header/header.type'
+import { Role, RoleCode } from '@/api/type'
 import { Suspect } from '@/services/user/suspect'
 
 export class User {
