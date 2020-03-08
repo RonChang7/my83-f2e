@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import DesktopHeader from './desktop/DesktopHeader.vue'
@@ -28,8 +29,7 @@ export default {
   },
   computed: {
     userRole() {
-      const { headerPersonalized } = (this.$store
-        .state as GlobalVuexState).header
+      const { headerPersonalized } = this.$store.state.header
       return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
     },
   },
@@ -58,7 +58,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<GlobalVuexState>
+}
 
 export interface Data {}
 
