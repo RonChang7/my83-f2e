@@ -131,7 +131,7 @@ steps:
     when:
       branch: master
       ref:
-        - refs/tags/release-*
+        - refs/tags/v*
       event: tag
 
   - name: deploy-production
@@ -161,7 +161,7 @@ steps:
     when:
       branch: master
       ref:
-        - refs/tags/release-*
+        - refs/tags/v*
       event: tag
 
   - name: notify-deploy-prod
@@ -190,7 +190,7 @@ steps:
         - failure
       branch: master
       ref:
-        - refs/tags/release-*
+        - refs/tags/v*
       event: tag
 
 volumes:
