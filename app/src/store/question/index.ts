@@ -21,6 +21,7 @@ import {
   LikeStatus,
   RelatedQuestion,
   RelatedBlog,
+  RecommendProduct,
 } from '@/api/question/question.type'
 import { SimpleResponse } from '@/api/type'
 
@@ -45,6 +46,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         answers: null,
         relatedQuestions: null,
         relatedBlogs: null,
+        recommendProduct: null,
         dropdownMenu: {
           visible: false,
           top: null,
@@ -341,6 +343,15 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
+      async [types.FETCH_RECOMMEND_PRODUCT]({ commit }, id: number) {
+        try {
+          const { recommend_product } = await api.fetchRecommendProduct(id)
+          commit(types.UPDATE_RECOMMEND_PRODUCT, recommend_product)
+        } catch (err) {
+          // @todo: error handler, e.g. question not exist.
+          console.log(err)
+        }
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
@@ -425,6 +436,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
           state.question!.personalize!.is_reporter = reportStatus
         }
       },
+      [types.UPDATE_RECOMMEND_PRODUCT](state, data: RecommendProduct | null) {
+        state.recommendProduct = data
+      },
     },
   }
 }
@@ -432,6 +446,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   question: QuestionData | null
   answers: AnswerData[] | null
+  recommendProduct: RecommendProduct | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   dropdownMenu: DropdownMenu

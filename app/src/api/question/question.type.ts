@@ -62,6 +62,10 @@ export interface RelatedQuestionsResponse {
   data: RelatedQuestion[]
 }
 
+export interface RecommendProductResponse {
+  recommend_product: RecommendProduct | null
+}
+
 export interface addReportPayload {
   questionId: number
   answerId?: number
@@ -96,7 +100,6 @@ export interface QuestionData {
   companies: Company[]
   personalize?: QuestionPersonalize
   best_answer_id: number | null
-  recommend_product: RecommendProduct | null
 }
 
 export interface AuthorInfo {

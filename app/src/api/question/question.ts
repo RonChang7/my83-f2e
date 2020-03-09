@@ -18,6 +18,7 @@ import {
   RelatedQuestionsResponse,
   addReportPayload,
   cancelReportPayload,
+  RecommendProductResponse,
 } from './question.type'
 import request from '@/api/request'
 
@@ -265,6 +266,19 @@ export const cancelAnswerReport = async ({
 }: cancelReportPayload): Promise<SimpleResponse> => {
   const { data } = await request.post<SimpleResponse>(
     `/api/v1/question/${questionId}/answer/${answerId}/cancel-report`
+  )
+  return data
+}
+
+/**
+ * @description 取得 Question 相關推薦商品
+ * @param {number} id Question id
+ */
+export const fetchRecommendProduct = async (
+  id: number
+): Promise<RecommendProductResponse> => {
+  const { data } = await request.get<RecommendProductResponse>(
+    `/api/v1/question/${id}/recommend-product`
   )
   return data
 }
