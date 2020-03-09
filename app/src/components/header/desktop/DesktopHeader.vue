@@ -74,6 +74,10 @@ export interface Props {
   height: 60px;
   padding: 0 30px;
 
+  @media (max-width: 1451px) {
+    font-size: 0.875rem;
+  }
+
   .logo {
     width: 148px;
     height: 34px;

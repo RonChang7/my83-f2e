@@ -97,6 +97,10 @@ export interface Props {
     padding: 0 15px;
     cursor: pointer;
 
+    @media (max-width: 1451px) {
+      padding: 0 19px 0 0;
+    }
+
     &:hover {
       color: $primary-color;
 
