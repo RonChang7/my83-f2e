@@ -1,0 +1,5 @@
+require('tinymce/tinymce')
+require('tinymce/themes/silver/theme')
+require('tinymce/plugins/table')
+require('tinymce/plugins/link')
+require('@/libs/tinymce/5.2.0/langs/zh_TW')
