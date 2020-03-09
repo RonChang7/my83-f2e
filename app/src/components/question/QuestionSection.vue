@@ -150,6 +150,7 @@ export interface Computed {
   avatar: AuthorInfo['avatar_url']
   author: AuthorInfo['nickname']
   authorInfo: AuthorInfo
+  personalize: QuestionData['personalize']
   targetTag: QuestionData['target_tag']
   images: QuestionData['images']
   tags: QuestionData['tags']

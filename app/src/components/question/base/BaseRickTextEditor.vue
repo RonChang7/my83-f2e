@@ -14,7 +14,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import 'tinymce/tinymce'
+import { Settings as tinymceSettings } from 'tinymce'
 import 'tinymce/themes/silver/theme'
 import 'tinymce/plugins/table'
 import 'tinymce/plugins/link'
@@ -101,7 +101,7 @@ export interface Instance extends Vue {}
 
 export interface Data {
   isFocus: boolean
-  init: Object
+  init: tinymceSettings
 }
 
 export interface Methods {

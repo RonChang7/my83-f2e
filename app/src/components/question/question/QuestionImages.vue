@@ -72,7 +72,9 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  currentImageIndex: number | null
+}
 
 export interface Methods {}
 

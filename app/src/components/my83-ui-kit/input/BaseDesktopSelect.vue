@@ -172,12 +172,15 @@ export interface Data {
 export interface Methods {
   input(value: string | number): void
   panelHandler(eventType: string, status: boolean): void
+  disableBlurHandler(): void
   setMinWidth(): void
   setHeight(): void
   scrollSelectedIntoView(): void
 }
 
-export interface Computed {}
+export interface Computed {
+  selectedText: string
+}
 
 export interface Props extends BaseSelectProps {}
 </script>
