@@ -1,0 +1,61 @@
+@import 'utils/variables';
+
+// Color
+$primary-color: #ef6e2e;
+$primary-light-color: #f7d6c7;
+$primary-dark-color: #b95523;
+
+$secondary-color: #344b97;
+$secondary-light-color: #e8ebf3;
+$secondary-dark-color: #223161;
+
+$gray-primary: #333;
+$gray-secondary: #6c6c6c;
+$gray-tertiary: #b4b4b4;
+$gray-quaternary: #e8e8e8;
+
+$error-color: #b00020;
+$info-color: #219bc5;
+
+// Interactive state
+$primary-hover-color: $primary-dark-color;
+$primary-disabled-color: $primary-light-color;
+
+$secondary-hover-color: $secondary-dark-color;
+$secondary-disabled-color: $secondary-light-color;
+
+// Text
+$text-default-color: $gray-secondary;
+
+// Input
+$input-field-default-bg: #f4f5f9;
+$input-field-disabled-bg: $gray-quaternary;
+
+// Color mapping (text)
+$text-colors: () !default;
+$text-colors: map-merge(
+  (
+    'default': $text-default-color,
+    'primary': $primary-color,
+    'secondary': $secondary-color,
+    'error': $error-color,
+    'info': $info-color,
+  )
+  ,$text-colors
+);
+
+// Background color
+$default-bg: #fff;
+$primary-bg: #f1f1f1;
+$secondary-bg: #e8e8e8;
+$mask-bg: rgba(0, 0, 0, 0.6);
+
+// Default font size
+$base-font-size: 16px;
+
+// Border radius
+$border-radius: 4px;
+
+// Button text
+$primary-button-text-color: $default-bg;
+$secondary-button-text-color: $gray-secondary;

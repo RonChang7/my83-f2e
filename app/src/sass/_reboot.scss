@@ -1,0 +1,29 @@
+@import 'normalize.css/normalize.css';
+
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+  color: $text-default-color;
+  font-size: $base-font-size;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: $primary-color;
+  text-decoration-line: none;
+
+  &:hover {
+    color: $primary-hover-color;
+    cursor: pointer;
+  }
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $secondary-bg;
+}

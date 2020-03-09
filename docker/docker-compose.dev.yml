@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  app:
+    tty: true
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    extra_hosts:
+      - local-api.my83.com.tw:${DOCKER_HOST_IP}
