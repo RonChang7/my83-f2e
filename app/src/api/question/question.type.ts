@@ -171,7 +171,7 @@ export interface RelatedQuestion extends RelatedBlog {
 export interface RecommendProduct {
   header: string
   title: string
-  image: string
+  image_url: string
   action_text: string
   link: Link
 }

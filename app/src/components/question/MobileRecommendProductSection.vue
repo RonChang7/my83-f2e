@@ -14,10 +14,10 @@
         :to="recommendProduct.link.path"
       >
         <div
-          v-if="recommendProduct.image"
+          v-if="recommendProduct.image_url"
           class="MobileRecommendProductSection__icon"
         >
-          <BaseLazyImage :image-url="recommendProduct.image" />
+          <BaseLazyImage :image-url="recommendProduct.image_url" />
         </div>
         <div class="MobileRecommendProductSection__title">
           {{ recommendProduct.title }}

@@ -4,10 +4,10 @@
     <GlobalLink :to="recommendProduct.link.path">
       <div class="DesktopRecommendProductSection__content">
         <div
-          v-if="recommendProduct.image"
+          v-if="recommendProduct.image_url"
           class="DesktopRecommendProductSection__icon"
         >
-          <BaseLazyImage :image-url="recommendProduct.image" />
+          <BaseLazyImage :image-url="recommendProduct.image_url" />
         </div>
         {{ recommendProduct.title }}
       </div>
@@ -87,6 +87,7 @@ export interface Props {}
     align-items: center;
     color: $gray-primary;
     font-size: 1.375rem;
+    font-weight: 500;
     padding: 16px 0 18px;
   }
 
