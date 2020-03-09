@@ -3,7 +3,7 @@ import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { createStoreModule as createGlobalStoreModule } from '@/store/global/index'
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
 import { FETCH_HEADER_NAV_DATA } from '@/store/header/header.type'
-import { GET_USER_AGENT } from '@/store/global/global.type'
+import { UPDATE_USER_AGENT } from '@/store/global/global.type'
 import { User } from '@/services/user/user'
 
 const storeModules = {
@@ -36,7 +36,11 @@ export default (async ({ app, store }) => {
   }
 
   // Update user-agent
-  store.dispatch(`${storeModules.global.moduleName}/${GET_USER_AGENT}`)
+  store.commit(`${storeModules.global.moduleName}/${UPDATE_USER_AGENT}`, {
+    isDesktop: app.$ua.isFromPc(),
+    isMobile: app.$ua.isFromSmartphone(),
+    isTablet: app.$ua.isFromTablet(),
+  })
 
   if (process.client && !user.isLogin()) {
     user.updateLandingUrl()

@@ -46,15 +46,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_GLOBAL_DIALOG]({ commit }, data: GlobalDialogContent) {
         commit(types.UPDATE_GLOBAL_DIALOG_CONTENT, data)
       },
-      [types.GET_USER_AGENT]({ commit }) {
-        const payload = {
-          isDesktop: this.$ua.isFromPc(),
-          isMobile: this.$ua.isFromSmartphone(),
-          isTablet: this.$ua.isFromTablet(),
-        } as UserAgent
-
-        commit(types.UPDATE_USER_AGENT, payload)
-      },
     },
     mutations: {
       [types.UPDATE_LOGIN_PANEL_STATUS](
