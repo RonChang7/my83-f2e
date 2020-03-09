@@ -131,7 +131,6 @@ export default {
         Object.assign(options, this.options)
       )
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       gallery.listen('gettingData', function(index, item) {
         if (_.isNil(item.w) || _.isNil(item.h) || item.w < 1 || item.h < 1) {
           // unknown size
@@ -143,7 +142,7 @@ export default {
             gallery.invalidateCurrItems() // reinit Items
             gallery.updateSize(true) // reinit Items
           }
-          img.src = item.src // let's download image
+          img.src = item.src! // let's download image
         }
       })
 
