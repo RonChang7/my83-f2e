@@ -87,7 +87,9 @@ export interface Methods {
   input(e: Event): void
 }
 
-export interface Computed {}
+export interface Computed {
+  isPlaceholder: boolean
+}
 
 export interface Props extends BaseSelectProps {}
 </script>

@@ -17,7 +17,7 @@
         </GlobalLink>
       </div>
       <div class="BaseAuthorInfo__role">
-        <span>{{ role }}</span>
+        <span>{{ roleName }}</span>
         <template v-if="authorInfo.role_meta">
           <span>
             <img src="@/assets/images/icon/location.svg" alt="location" />
@@ -43,7 +43,6 @@ import { AuthorInfo } from '@/api/question/question.type'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import Medal from '@/components/base/medal/Medal.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { Role } from '@/api/type'
 
 export default {
   components: {
@@ -65,7 +64,7 @@ export default {
     }
   },
   computed: {
-    role() {
+    roleName() {
       return this.authorInfo.role === 'sales' ? '保險業務員' : '保戶'
     },
   },
@@ -96,7 +95,7 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
-  role: Role
+  roleName: '保險業務員' | '保戶'
 }
 
 export interface Props {
