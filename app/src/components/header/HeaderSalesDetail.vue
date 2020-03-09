@@ -14,6 +14,7 @@
       to="/pricing"
     >
       限時優惠 VIP 只剩 {{ countdownDisplay.day }} 日
+      <br class="wrap" />
       <div class="digital">{{ countdownDisplay.hour }}</div>
       :
       <div class="digital">{{ countdownDisplay.min }}</div>
@@ -151,6 +152,8 @@ export interface Props {
 @import '@/sass/mixins.scss';
 
 .HeaderSalesDetail {
+  text-align: center;
+
   &__notVerify,
   &__vipCountdown {
     color: $primary-color;
@@ -162,6 +165,12 @@ export interface Props {
 
   &__vipCountdown {
     font-size: 0.875rem;
+
+    .wrap {
+      @media (min-width: 1450px) {
+        display: none;
+      }
+    }
   }
 
   &__reward {
