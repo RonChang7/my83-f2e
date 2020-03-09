@@ -178,8 +178,7 @@ export default {
       return this.userRole !== 'sales'
     },
     shouldShowRecommendProduct() {
-      const { question } = this.$store.state.question
-      const recommendProduct = question ? question.recommend_product : null
+      const recommendProduct = this.$store.state.question.recommendProduct
 
       if (!!recommendProduct && (process.server || !this.isMounted)) return true
 
@@ -320,7 +319,7 @@ export interface Props {}
   bottom: 20px;
   right: 20px;
 
-  .hasProduct {
+  &.hasProduct {
     bottom: 90px;
   }
 }

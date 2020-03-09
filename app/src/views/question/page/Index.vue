@@ -10,6 +10,7 @@ import {
   FETCH_ANSWER_PERSONALIZE_DATA,
   FETCH_RELATED_QUESTIONS,
   FETCH_RELATED_BLOGS,
+  FETCH_RECOMMEND_PRODUCT,
 } from '@/store/question/question.type'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/index'
@@ -25,6 +26,7 @@ export default {
       store.dispatch(`question/${FETCH_ANSWER_DATA}`, id),
       store.dispatch(`question/${FETCH_RELATED_QUESTIONS}`, id),
       store.dispatch(`question/${FETCH_RELATED_BLOGS}`, id),
+      store.dispatch(`question/${FETCH_RECOMMEND_PRODUCT}`, id),
     ])
 
     const { question } = (store.state as QuestionVuexState).question

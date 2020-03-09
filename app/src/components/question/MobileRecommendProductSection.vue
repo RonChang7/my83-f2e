@@ -57,8 +57,7 @@ export default {
   },
   computed: {
     recommendProduct() {
-      const { question } = this.$store.state.question
-      return question ? question.recommend_product : null
+      return this.$store.state.question.recommendProduct
     },
   },
   mounted() {
