@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my83-f2e-app-prod-deployment
+  namespace: my83-f2e
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 20
+  selector:
+    matchLabels:
+      app: my83-f2e-app
+      env: prod
+  template:
+    metadata:
+      labels:
+        app: my83-f2e-app
+        env: prod
+      namespace: my83-f2e
+    spec:
+      containers:
+        - name: my83-f2e
+          image: asia.gcr.io/my83-253509/my83-f2e:FRONT_APP_IMAGE_TAG
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: my83-f2e-app-env-prod
+          ports:
+            - name: nuxt-port
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: "800m"
+              memory: "1500Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: nuxt-port
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: nuxt-port
+            initialDelaySeconds: 15
+            periodSeconds: 20
