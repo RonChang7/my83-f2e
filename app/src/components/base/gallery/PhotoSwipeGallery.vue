@@ -212,8 +212,8 @@ export interface Props {
 
 .pswp__button--arrow--right:before,
 .pswp__button--arrow--left:before {
-  width: 46px;
-  height: 86px;
+  width: 76px;
+  height: 116px;
   top: 20px;
 }
 
