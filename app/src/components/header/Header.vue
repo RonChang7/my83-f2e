@@ -1,7 +1,7 @@
 <template>
   <header>
     <template v-if="isDesktop">
-      <DesktopHeader :enable-rwd="true" />
+      <DesktopHeader :enable-rwd="true" :user-role="userRole" />
     </template>
     <MobileHeader :enable-rwd="isDesktop" />
   </header>
