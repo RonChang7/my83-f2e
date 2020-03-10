@@ -299,7 +299,7 @@ export interface Props {
     margin: 30px 0 15px;
 
     @include max-media('xl') {
-      margin: 20px 0;
+      margin: 20px 0 12px;
     }
 
     @include max-media('sm') {

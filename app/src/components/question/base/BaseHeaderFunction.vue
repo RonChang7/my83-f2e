@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="BaseHeaderFunction"
-    :class="{ question: sectionType === 'question' }"
-  >
+  <div class="BaseHeaderFunction" :class="{ [`${sectionType}`]: true }">
     <BaseButton
       v-if="shouldShowEditButton"
       size="s"
@@ -395,13 +392,23 @@ export interface Props {
 
 .BaseHeaderFunction {
   display: flex;
+  flex: 0 0 auto;
 
   @include max-media('sm') {
-    margin-top: 10px;
     justify-content: flex-end;
 
     &.question {
       margin-top: 0;
+    }
+
+    &.answer {
+      margin-top: 10px;
+    }
+  }
+
+  @include max-media('xs') {
+    &.response {
+      margin-top: 10px;
     }
   }
 

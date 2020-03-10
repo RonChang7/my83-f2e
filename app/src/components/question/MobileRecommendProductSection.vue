@@ -168,6 +168,10 @@ export interface Props {}
     font-weight: 500;
     flex: 1 1 auto;
     margin-right: 8px;
+
+    @include max-media('xs') {
+      font-size: 1rem;
+    }
   }
 
   &__button {
