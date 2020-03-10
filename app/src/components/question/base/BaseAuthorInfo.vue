@@ -3,13 +3,13 @@
     <div class="BaseAuthorInfo__avatar">
       <BaseLazyImage
         :image-url="authorInfo.avatar_url"
-        :image-alt="authorInfo.nickname"
+        :image-alt="authorName"
         :image-loaded-style="avatarStyle"
       />
     </div>
     <div class="BaseAuthorInfo__detail">
       <div class="BaseAuthorInfo__name">
-        {{ authorInfo.nickname }}
+        {{ authorName }}
       </div>
       <div v-if="authorInfo.role === 'sales'" class="BaseAuthorInfo__medal">
         <GlobalLink to="/medal" target="_blank">
@@ -20,9 +20,11 @@
         <span>{{ roleName }}</span>
         <template v-if="authorInfo.role_meta">
           <span>
-            <img src="@/assets/images/icon/location.svg" alt="location" />
-          </span>
-          <span>
+            <img
+              src="@/assets/images/icon/location.svg"
+              alt="location"
+              class="mr-1"
+            />
             {{ authorInfo.role_meta.location }}
           </span>
         </template>
@@ -65,7 +67,16 @@ export default {
   },
   computed: {
     roleName() {
-      return this.authorInfo.role === 'sales' ? '保險業務員' : '保戶'
+      return this.authorInfo.role === 'sales'
+        ? this.authorInfo.role_meta!.is_verified
+          ? '保險業務員'
+          : 'MY83未認證業務員'
+        : '保戶'
+    },
+    authorName() {
+      return this.authorInfo.nickname
+        ? this.authorInfo.nickname
+        : this.authorInfo.username
     },
   },
 } as ComponentOption
@@ -95,7 +106,8 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
-  roleName: '保險業務員' | '保戶'
+  roleName: '保險業務員' | '保戶' | 'MY83未認證業務員'
+  authorName: string
 }
 
 export interface Props {
@@ -109,6 +121,7 @@ export interface Props {
 .BaseAuthorInfo {
   display: flex;
   font-size: 0.875rem;
+  flex: 0 1 auto;
 
   &__avatar {
     width: 60px;
@@ -125,10 +138,12 @@ export interface Props {
 
   &__role {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 
     > span {
-      margin-right: 5px;
+      display: flex;
+      margin-right: 4px;
     }
   }
 }

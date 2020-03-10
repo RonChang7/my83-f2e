@@ -9,7 +9,7 @@
       v-for="(option, index) in options"
       :key="index"
       :text="option.title"
-      @click="option.action"
+      @click="clickHandler(option.action)"
     />
   </div>
 </template>
@@ -21,6 +21,13 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseDropdownOption from '../base/BaseDropdownOption.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
+import { User } from '@/services/user/user'
+import {
+  OPEN_LOGIN_PANEL,
+  UPDATE_AFTER_LOGIN_EVENT,
+} from '@/store/global/global.type'
+
+const user = User.getInstance()
 
 export default {
   components: {
@@ -30,6 +37,22 @@ export default {
     visible: {
       type: Boolean,
       required: true,
+    },
+  },
+  methods: {
+    showLoginPanel() {
+      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        window.location.reload()
+      })
+    },
+    clickHandler(action) {
+      if (!user.isLogin()) {
+        this.showLoginPanel()
+        return
+      }
+
+      action()
     },
   },
   computed: {
@@ -77,7 +100,10 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  showLoginPanel(): void
+  clickHandler(action: Function): void
+}
 
 export interface Computed {
   options: QuestionVuexState['question']['dropdownMenu']
