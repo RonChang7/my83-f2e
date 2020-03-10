@@ -254,7 +254,6 @@ export interface Props {
     &__inputInfo {
       font-size: 0.875rem;
       color: $gray-secondary;
-      line-height: 1.5;
       margin-top: 4px;
     }
   }
