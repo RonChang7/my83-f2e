@@ -16,6 +16,9 @@ spec:
         env: staging
       namespace: my83-f2e
     spec:
+      nodeSelector: 
+        cpus: "2"
+        ram: "1.8"
       containers:
         - name: my83-f2e
           image: asia.gcr.io/my83-253509/my83-f2e:FRONT_APP_IMAGE_TAG
