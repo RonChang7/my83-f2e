@@ -113,7 +113,6 @@ export interface Props {}
 
   &__content {
     font-size: 0.875rem;
-    line-height: 1.5;
     margin-bottom: 20px;
   }
 

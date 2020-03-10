@@ -121,13 +121,11 @@ export interface Props {
     color: $gray-primary;
     font-size: 1.125rem;
     font-weight: 500;
-    line-height: 1.5;
   }
 
   &__role {
     display: flex;
     align-items: center;
-    line-height: 1.5;
 
     > span {
       margin-right: 5px;

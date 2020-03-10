@@ -100,7 +100,6 @@ export interface Props {
 .RelatedCard {
   display: flex;
   padding: 16px 0 20px;
-  line-height: 1.5;
   border-bottom: 1px solid $gray-quaternary;
 
   &.last {

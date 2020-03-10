@@ -121,7 +121,6 @@ export interface Props {
   &__content {
     margin: 12px 0 28px;
     text-align: center;
-    line-height: 1.5;
   }
 }
 </style>
