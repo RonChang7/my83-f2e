@@ -134,6 +134,8 @@ export interface Props {
     color: $gray-primary;
     font-size: 1.125rem;
     font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.33;
   }
 
   &__role {
