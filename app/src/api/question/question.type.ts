@@ -103,6 +103,8 @@ export interface QuestionData {
 }
 
 export interface AuthorInfo {
+  id: number | null
+  username: string
   nickname: string
   avatar_url: string
   role: Role
@@ -110,6 +112,7 @@ export interface AuthorInfo {
 }
 
 export interface RoleMeta {
+  is_verified: boolean
   level: number
   location: string
   reply_status: string

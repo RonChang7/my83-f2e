@@ -1,5 +1,8 @@
 <template>
-  <div class="BaseHeaderFunction">
+  <div
+    class="BaseHeaderFunction"
+    :class="{ question: sectionType === 'question' }"
+  >
     <BaseButton
       v-if="shouldShowEditButton"
       size="s"
@@ -56,7 +59,7 @@ import {
   QuestionPersonalize,
   AnswerPersonalize,
 } from '@/api/question/question.type'
-import { User, UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/user/user'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseMore from '@/components/base/icon/24/BaseMore.vue'
 import {
@@ -69,8 +72,6 @@ import {
   CANCEL_REPORT,
 } from '@/store/question/question.type'
 import {
-  OPEN_LOGIN_PANEL,
-  UPDATE_AFTER_LOGIN_EVENT,
   UPDATE_GLOBAL_DIALOG,
   OPEN_GLOBAL_DIALOG,
   CLOSE_GLOBAL_DIALOG,
@@ -83,8 +84,6 @@ import {
 } from '@/store/question/index'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse } from '@/api/type'
-
-const user = User.getInstance()
 
 export default {
   components: {
@@ -182,7 +181,11 @@ export default {
     shouldShowConsultSalesButton() {
       if (!this.isMounted) return false
 
-      return this.sectionAuthorRole === 'sales' && this.userRole !== 'sales'
+      return (
+        this.sectionAuthorRole === 'sales' &&
+        this.authorInfo.role_meta!.is_verified &&
+        this.userRole !== 'sales'
+      )
     },
     shouldShowMoreButton() {
       return this.sectionType !== 'response' && !this.personalize.is_owner
@@ -231,25 +234,18 @@ export default {
     },
     consultSales() {
       // @todo: Change path after migrate to Nuxt.js
-      const path = `/message/nicknameSales/nickname/${this.authorInfo.nickname}`
+      const path = this.authorInfo.nickname
+        ? `/message/nicknameSales/nickname/${this.authorInfo.nickname}`
+        : `/user/${this.authorInfo.id}`
       const query = {
-        content: `你好,\n\n我有看到你的留言\n${window.location.href}#${this.anchorString}`,
+        content: encodeURIComponent(
+          `你好,\n\n我有看到你的留言\n${window.location.href}#${this.anchorString}\n`
+        ),
         source: 'forum',
       }
       window.location.href = `${path}?content=${query.content}&source=${query.source}`
     },
-    showLoginPanel() {
-      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
-      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
-        window.location.reload()
-      })
-    },
     showDropdownPanel(disableBlur = false) {
-      if (!user.isLogin()) {
-        this.showLoginPanel()
-        return
-      }
-
       const el = this.$refs.more
       const paddingTop = 8
       const paddingLeft = 140
@@ -365,7 +361,6 @@ export interface Methods {
   followQuestion(): void
   setBestAnswer(): void
   consultSales(): void
-  showLoginPanel(): void
   showDropdownPanel(disableBlur: boolean): void
   reportOption(): DropdownMenuOption
   dropdownMenuOptions(): DropdownMenuOption[]
@@ -396,8 +391,19 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .BaseHeaderFunction {
   display: flex;
+
+  @include max-media('sm') {
+    margin-top: 10px;
+    justify-content: flex-end;
+
+    &.question {
+      margin-top: 0;
+    }
+  }
 
   &::v-deep button {
     margin-left: 10px;

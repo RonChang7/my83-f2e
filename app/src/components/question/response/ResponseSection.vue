@@ -93,6 +93,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .ResponseSection {
   padding: 20px 0;
@@ -105,6 +106,10 @@ export interface Props {
     display: flex;
     justify-content: space-between;
     margin-bottom: 12px;
+
+    @include max-media('xs') {
+      flex-direction: column;
+    }
   }
 }
 </style>

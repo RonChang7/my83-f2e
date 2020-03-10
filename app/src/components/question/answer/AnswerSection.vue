@@ -301,6 +301,10 @@ export interface Props {
     @include max-media('xl') {
       margin: 20px 0;
     }
+
+    @include max-media('sm') {
+      flex-direction: column;
+    }
   }
 
   &__bestAnswer {
