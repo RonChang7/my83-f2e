@@ -5,10 +5,10 @@ import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
 
-const preventInterceptorsList = ['/api/auth/logout']
-const baseURL = process.env.NUXT_ENV_API_URL
-
 export default (() => {
+  const preventInterceptorsList = ['/api/auth/logout']
+  const baseURL = process.env.NUXT_ENV_API_URL
+
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
     request.interceptors.request.use((config) => {

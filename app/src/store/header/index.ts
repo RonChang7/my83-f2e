@@ -3,7 +3,6 @@ import * as types from './header.type'
 import { HeaderNavItem, HeaderPersonalized } from '@/api/header/header.type'
 import * as api from '@/api/header/header'
 import { User } from '@/services/user/user'
-const user = User.getInstance()
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -26,6 +25,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         try {
           const data = await api.fetchPersonalizedHeaderData()
           commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
+
+          const user = User.getInstance()
 
           user.updateUserState({
             role: data.personalize.role,
