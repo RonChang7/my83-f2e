@@ -1,5 +1,5 @@
 <template>
-  <ul class="DesktopHeaderNav">
+  <ul class="DesktopHeaderNav" :class="{ sales: userRole === 'sales' }">
     <li v-for="(item, index) in headerNavItems" :key="index">
       <component
         :is="item.link ? 'GlobalLink' : 'span'"
@@ -29,12 +29,19 @@ import HeaderMenuPanel from '../HeaderMenuPanel.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { UserRole } from '@/services/user/user'
 
 export default {
   components: {
     BaseArrowDown,
     HeaderMenuPanel,
     GlobalLink,
+  },
+  props: {
+    userRole: {
+      type: String,
+      default: 'guest',
+    },
   },
   computed: {
     ...mapState('header', ['headerNavItems']),
@@ -63,10 +70,12 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  headerNavItems: HeaderNavItem[]
+}
 
 export interface Props {
-  headerNavItems: HeaderNavItem[]
+  userRole: UserRole
 }
 </script>
 
@@ -91,15 +100,19 @@ export interface Props {
     }
   }
 
+  &.sales {
+    @media (max-width: 1330px) {
+      li {
+        padding: 0 calc((((100vw - 1200px) / 1200) * 90) + 5px);
+      }
+    }
+  }
+
   li {
     display: flex;
     align-items: center;
     padding: 0 15px;
     cursor: pointer;
-
-    @media (max-width: 1451px) {
-      padding: 0 19px 0 0;
-    }
 
     &:hover {
       color: $primary-color;

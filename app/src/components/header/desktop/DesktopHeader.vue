@@ -4,7 +4,7 @@
       <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
     </GlobalLink>
     <nav>
-      <DesktopHeaderNav />
+      <DesktopHeaderNav :user-role="userRole" />
       <HeaderPersonalize />
     </nav>
   </div>
@@ -17,6 +17,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderPersonalize from '../HeaderPersonalize.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { UserRole } from '@/services/user/user'
 
 export default {
   components: {
@@ -28,6 +29,10 @@ export default {
     enableRwd: {
       type: Boolean,
       default: false,
+    },
+    userRole: {
+      type: String,
+      default: 'guest',
     },
   },
 } as ComponentOption
@@ -58,6 +63,7 @@ export interface Computed {}
 
 export interface Props {
   enableRwd: boolean
+  userRole: UserRole
 }
 </script>
 
@@ -73,10 +79,6 @@ export interface Props {
   align-items: center;
   height: 60px;
   padding: 0 30px;
-
-  @media (max-width: 1451px) {
-    font-size: 0.875rem;
-  }
 
   .logo {
     width: 148px;
