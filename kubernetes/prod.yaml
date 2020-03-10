@@ -22,6 +22,9 @@ spec:
         env: prod
       namespace: my83-f2e
     spec:
+      nodeSelector: 
+        cpus: "4"
+        ram: "3.6"
       containers:
         - name: my83-f2e
           image: asia.gcr.io/my83-253509/my83-f2e:FRONT_APP_IMAGE_TAG
@@ -34,11 +37,11 @@ spec:
               containerPort: 3000
           resources:
             requests:
-              cpu: "800m"
-              memory: "1500Mi"
+              cpu: "600m"
+              memory: "1000Mi"
             limits:
-              cpu: "1000m"
-              memory: "2Gi"
+              cpu: "800m"
+              memory: "1200Mi"
           readinessProbe:
             httpGet:
               path: /ping
