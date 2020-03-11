@@ -88,6 +88,8 @@ import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse, Role } from '@/api/type'
 import { Auth } from '@/services/auth/auth'
 
+const auth = Auth.getInstance()
+
 export default {
   components: {
     FacebookLoginButton,
@@ -123,7 +125,7 @@ export default {
       return user.landingUrl
     },
     login(jwtToken, expiredTime) {
-      Auth.login({
+      auth.login({
         jwtToken,
         expiredTime,
       })

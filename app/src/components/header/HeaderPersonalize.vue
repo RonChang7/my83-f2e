@@ -78,6 +78,8 @@ import DeviceMixin, {
 import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 
+const auth = Auth.getInstance()
+
 export default {
   mixins: [DeviceMixin],
   components: {
@@ -125,7 +127,7 @@ export default {
       } catch (err) {
       } finally {
         Suspect.setRoleCode()
-        Auth.logout()
+        auth.logout()
         this.reloadHandler()
       }
     },

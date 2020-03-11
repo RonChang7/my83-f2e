@@ -41,8 +41,8 @@ const config: Configuration = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
+    '@/plugins/axios-setup',
     '@/plugins/app-init',
-    '@/plugins/jwt',
     '@/plugins/personalized-header',
   ],
   /*

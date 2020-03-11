@@ -5,14 +5,17 @@ import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
 
-export default (() => {
+export default (({ app }) => {
   const preventInterceptorsList = ['/api/auth/logout']
-  const baseURL = process.env.NUXT_ENV_API_URL
+  const { NUXT_ENV_API_URL } = app.$env
+
+  request.defaults.baseURL = NUXT_ENV_API_URL
 
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
     request.interceptors.request.use((config) => {
-      const jwtToken = Auth.getToken()
+      const auth = Auth.getInstance()
+      const jwtToken = auth.getToken()
 
       config.headers.Authorization = `Bearer ${jwtToken}`
       return config
@@ -30,16 +33,18 @@ export default (() => {
         } = err
 
         const originalRequest = config as AxiosRequestConfig
+        const auth = Auth.getInstance()
+
         if (
           preventInterceptorsList.find(
-            (url) => baseURL + url === originalRequest.url
+            (url) => NUXT_ENV_API_URL + url === originalRequest.url
           )
         ) {
           return Promise.reject(err)
         } else if (status === 401 && error === 'expired_token') {
-          return JWT.refreshToken()
+          return JWT.refreshToken(NUXT_ENV_API_URL)
             .then(() => {
-              const jwtToken = Auth.getToken()
+              const jwtToken = auth.getToken()
               originalRequest.headers.Authorization = `Bearer ${jwtToken}`
               return request(originalRequest)
             })
@@ -48,7 +53,7 @@ export default (() => {
             })
         } else if (status === 401 && error === 'invalid_token') {
           Suspect.setRoleCode()
-          Auth.logout()
+          auth.logout()
           return Promise.reject(err)
         } else {
           return Promise.reject(err)

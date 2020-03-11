@@ -4,7 +4,6 @@ import { Auth } from './auth'
 import { LoginResponse } from '@/api/login/login.type'
 
 const request = axios.create({
-  baseURL: process.env.NUXT_ENV_API_URL,
   httpsAgent: new https.Agent({
     rejectUnauthorized: process.client,
   }),
@@ -12,13 +11,16 @@ const request = axios.create({
 })
 
 request.interceptors.request.use((config) => {
-  const jwtToken = Auth.getToken()
+  const auth = Auth.getInstance()
+  const jwtToken = auth.getToken()
 
   config.headers.Authorization = `Bearer ${jwtToken}`
   return config
 })
 
-const refreshJWTToken = async (): Promise<LoginResponse> => {
+const refreshJWTToken = async (baseURL: string): Promise<LoginResponse> => {
+  request.defaults.baseURL = baseURL
+
   const { data, status } = await request.get<LoginResponse>('/api/auth/refresh')
 
   return {
@@ -30,12 +32,14 @@ const refreshJWTToken = async (): Promise<LoginResponse> => {
 export class JWT {
   public static isRefreshing: Promise<void> | null
 
-  public static refreshToken = () => {
+  public static refreshToken = (baseURL: string) => {
+    const auth = Auth.getInstance()
+
     if (JWT.isRefreshing) {
       return JWT.isRefreshing
     }
 
-    if (Auth.expiredTime && Date.now() < Auth.expiredTime * 1000) {
+    if (auth.expiredTime && Date.now() < auth.expiredTime * 1000) {
       JWT.isRefreshing = new Promise((resolve) => {
         setTimeout(() => {
           JWT.isRefreshing = null
@@ -44,9 +48,9 @@ export class JWT {
       })
     } else {
       JWT.isRefreshing = new Promise((resolve, reject) => {
-        refreshJWTToken()
+        refreshJWTToken(baseURL)
           .then(({ token, expired_time }) => {
-            Auth.refresh({
+            auth.refresh({
               jwtToken: token!,
               expiredTime: expired_time!,
             })
