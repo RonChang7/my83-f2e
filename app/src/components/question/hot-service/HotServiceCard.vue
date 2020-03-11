@@ -9,7 +9,7 @@
     <div class="HotServiceCard__title">
       {{ item.title }}
     </div>
-    <template v-if="isDesktop">
+    <template v-if="!isMobile">
       <div class="HotServiceCard__content">
         {{ item.content }}
       </div>
