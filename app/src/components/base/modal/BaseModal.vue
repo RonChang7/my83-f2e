@@ -15,7 +15,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import PopupMixin from '@/mixins/base/popup-mixin'
+import PopupMixin from '@/mixins/popup/popup-mixin'
 
 export default {
   mixins: [PopupMixin],
@@ -78,7 +78,7 @@ export interface Data {
 }
 
 export interface Methods {
-  handleWrapperClick: () => void
+  handleWrapperClick(): void
 }
 
 export interface Computed {}

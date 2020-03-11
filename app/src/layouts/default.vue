@@ -85,6 +85,7 @@ export interface Methods {}
 
 export interface Computed {
   loginPanel: LoginPanelState
+  globalDialogVisible: boolean
 }
 
 export interface Props {}

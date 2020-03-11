@@ -8,12 +8,16 @@
       <div v-if="!isLoading" class="FacebookLoginButton__wrapper">
         <div class="FacebookLoginButton__icon" />
         <div
-          :class="{ 'ml-2': !user.avatar }"
+          :class="{ 'ml-2': user ? !user.avatar : false }"
           class="FacebookLoginButton__content"
         >
-          {{ buttonText(user.name) }}
+          {{ user ? buttonText(user.name) : buttonText() }}
         </div>
-        <img :src="user.avatar" alt="" class="FacebookLoginButton__avatar" />
+        <img
+          :src="user ? user.avatar : ''"
+          alt=""
+          class="FacebookLoginButton__avatar"
+        />
       </div>
       <div v-show="isLoading">
         <LoadingIcon size="18px" color="#fff" />
@@ -26,7 +30,9 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import FacebookLogin from '@/modules/facebook/FacebookLogin.vue'
+import FacebookLogin, {
+  Methods as FacebookLoginMethods,
+} from '@/modules/facebook/FacebookLogin.vue'
 import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
 
 export default {
@@ -101,9 +107,9 @@ export interface Data {
   isDisabled: boolean
 }
 
-export interface Methods {
-  login: (facebookLogin: Function) => void
-  buttonText: (name: string) => string
+export interface Methods extends FacebookLoginMethods {
+  login(facebookLogin: FacebookLoginMethods['facebookLogin']): void
+  buttonText(name: string): string
 }
 
 export interface Computed {}
