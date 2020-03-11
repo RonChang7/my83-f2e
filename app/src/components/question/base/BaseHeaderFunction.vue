@@ -47,6 +47,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -193,11 +194,21 @@ export default {
       // @todo: Change path after migrate to Nuxt.js
       window.location.href = `/question/asking/${this.sectionId}`
     },
-    async followQuestion() {
-      this.temporarilyFollowStatus = !(this.personalize as QuestionPersonalize)
-        .is_follower
+    followQuestion() {
+      this.temporarilyFollowStatus =
+        this.temporarilyFollowStatus === null
+          ? !(this.personalize as QuestionPersonalize).is_follower
+          : !this.temporarilyFollowStatus
 
-      if (this.temporarilyFollowStatus) {
+      this.updateFollowQuestionState(this.temporarilyFollowStatus)
+    },
+    updateFollowQuestionState: _.debounce(async function(state) {
+      if (state === (this.personalize as QuestionPersonalize).is_follower) {
+        this.resetTempState()
+        return
+      }
+
+      if (state) {
         await this.$store.dispatch(
           `question/${FOLLOW_QUESTION}`,
           this.sectionId
@@ -209,6 +220,9 @@ export default {
         )
       }
 
+      this.resetTempState()
+    }, 2000),
+    resetTempState() {
       this.temporarilyFollowStatus = null
     },
     async setBestAnswer() {
@@ -356,6 +370,11 @@ export interface Data {
 export interface Methods {
   editPost(): void
   followQuestion(): void
+  updateFollowQuestionState(
+    this: ComponentInstance,
+    state: boolean
+  ): Promise<void>
+  resetTempState(): void
   setBestAnswer(): void
   consultSales(): void
   showDropdownPanel(disableBlur: boolean): void

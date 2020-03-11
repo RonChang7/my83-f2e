@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -155,10 +156,10 @@ export default {
           this.openResponsePanel()
           break
         case 'like':
-          this.setLikeStatus(LikeStatus.LIKE)
+          this.toggleLikeStatus(LikeStatus.LIKE)
           break
         case 'dislike':
-          this.setLikeStatus(LikeStatus.UNLIKE)
+          this.toggleLikeStatus(LikeStatus.UNLIKE)
           break
       }
     },
@@ -167,12 +168,23 @@ export default {
       this.activeResponsePanel = true
       this.isResponsePanelFocus = true
     },
-    async setLikeStatus(status) {
-      const likeStatus =
-        status === this.answer.personalize!.like_status ? 0 : status
+    toggleLikeStatus(status) {
+      this.temporarilyLikeStatus =
+        this.temporarilyLikeStatus === null
+          ? this.answer.personalize!.like_status
+          : this.temporarilyLikeStatus
 
-      this.temporarilyLikeCount = this.answer.answer_meta.like_count
-      this.temporarilyDislikeCount = this.answer.answer_meta.dislike_count
+      this.temporarilyLikeCount =
+        this.temporarilyLikeCount === null
+          ? this.answer.answer_meta.like_count
+          : this.temporarilyLikeCount
+
+      this.temporarilyDislikeCount =
+        this.temporarilyDislikeCount === null
+          ? this.answer.answer_meta.dislike_count
+          : this.temporarilyDislikeCount
+
+      const likeStatus = status === this.temporarilyLikeStatus ? 0 : status
 
       if (status === 1) {
         this.temporarilyLikeCount += likeStatus === status ? 1 : -1
@@ -180,7 +192,7 @@ export default {
       if (status === -1) {
         this.temporarilyDislikeCount += likeStatus === status ? 1 : -1
       }
-      if (status + this.answer.personalize!.like_status === 0) {
+      if (status + this.temporarilyLikeStatus === 0) {
         if (status === 1) {
           this.temporarilyDislikeCount -= 1
         }
@@ -190,13 +202,23 @@ export default {
       }
 
       this.temporarilyLikeStatus = likeStatus
+      this.updateLikeStatus(likeStatus)
+    },
+    updateLikeStatus: _.debounce(async function(status) {
+      if (status === this.answer.personalize!.like_status) {
+        this.resetTempState()
+        return
+      }
 
       await this.$store.dispatch(`question/${SET_LIKE_STATUS}`, {
         questionId: this.questionId,
         answerId: this.answer.answer_id,
-        likeStatus,
+        likeStatus: status,
       })
 
+      this.resetTempState()
+    }, 2000),
+    resetTempState() {
       this.temporarilyLikeCount = null
       this.temporarilyDislikeCount = null
       this.temporarilyLikeStatus = null
@@ -234,7 +256,9 @@ export interface Data {
 export interface Methods {
   buttonActionHandler(type: Type): void
   openResponsePanel(): void
-  setLikeStatus(status: LikeStatus): void
+  toggleLikeStatus(status: LikeStatus): void
+  updateLikeStatus(this: ComponentInstance, status: LikeStatus): Promise<void>
+  resetTempState(): void
 }
 
 export interface Computed {

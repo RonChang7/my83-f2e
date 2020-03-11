@@ -107,6 +107,7 @@ export interface Props {
   display: flex;
   align-items: center;
   font-size: 0.875rem;
+  user-select: none;
   cursor: pointer;
 
   > svg {
