@@ -5,18 +5,24 @@ import { Suspect } from '@/services/user/suspect'
 export class User {
   private static instance: User
 
-  private role: UserRole = 'guest'
+  private role: UserRole
 
-  private roleCode: UserRoleCode = -1
+  private roleCode: UserRoleCode
 
-  private firstHttpReferrer: string = ''
+  private firstHttpReferrer: string
 
-  private firstUrl: string = ''
+  private firstUrl: string
+
+  private constructor() {
+    this.role = 'guest'
+    this.roleCode = -1
+    this.firstHttpReferrer = ''
+    this.firstUrl = ''
+  }
 
   public static getInstance(): User {
     if (!User.instance) {
       User.instance = new User()
-      return User.instance
     }
 
     return User.instance
