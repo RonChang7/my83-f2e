@@ -13,30 +13,30 @@
     />
     <div class="QuestionPage__row">
       <div class="QuestionPage__column left">
-        <HotServiceSection v-if="!isDesktop && shouldShowGuide" />
+        <HotServiceSection v-if="isMobile && shouldShowGuide" />
 
-        <GuideSection v-if="!isDesktop && shouldShowGuide" />
+        <GuideSection v-if="isMobile && shouldShowGuide" />
 
         <QuestionSection />
 
         <MobileRecommendProductSection
-          v-if="!isDesktop && shouldShowRecommendProduct"
+          v-if="isMobile && shouldShowRecommendProduct"
         />
 
         <div
           ref="mobileRelatedSection"
           class="QuestionPage__mobileRelatedSection"
         >
-          <RelatedQuestionSection v-if="!isDesktop" :max-post="5" />
+          <RelatedQuestionSection v-if="isMobile" :max-post="5" />
 
           <RelatedBlogSection
-            v-if="!isDesktop && shouldShowBlogSection"
+            v-if="isMobile && shouldShowBlogSection"
             :max-post="5"
           />
         </div>
 
         <BaseScrollToTopButton
-          v-if="!isDesktop && shouldShowScrollToTop"
+          v-if="isMobile && shouldShowScrollToTop"
           class="scrollToTop"
           :class="{ hasProduct: shouldShowRecommendProduct }"
           @click.native="scrollToTop"
@@ -52,14 +52,14 @@
           <AddAnswerSection v-if="userRole !== 'sales'" />
         </client-only>
       </div>
-      <div v-if="isDesktop" class="QuestionPage__column right">
+      <div v-if="!isMobile" class="QuestionPage__column right">
         <GuideSection v-if="shouldShowGuide" />
         <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
         <RelatedQuestionSection />
         <RelatedBlogSection v-if="shouldShowBlogSection" />
       </div>
     </div>
-    <div v-if="isDesktop" class="QuestionPage__row">
+    <div v-if="!isMobile" class="QuestionPage__row">
       <HotServiceSection />
     </div>
   </div>
@@ -289,6 +289,10 @@ export interface Props {}
   &__row {
     display: flex;
     justify-content: center;
+
+    @include max-media('xl') {
+      flex-direction: column;
+    }
   }
 
   &__column {
@@ -302,14 +306,17 @@ export interface Props {}
 
     &.left {
       width: 740px;
-
-      @include max-media('xl') {
-        width: 100%;
-      }
     }
 
     &.right {
       width: 360px;
+    }
+
+    &.left,
+    &.right {
+      @include max-media('xl') {
+        width: 100%;
+      }
     }
   }
 }

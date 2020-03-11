@@ -1,10 +1,10 @@
 <template>
   <div class="GuideSection">
-    <div v-if="isDesktop" class="GuideSection__title">
+    <div v-if="!isMobile" class="GuideSection__title">
       <img src="@/assets/images/icon/comment.svg" alt="icon" class="mr-4" />
       MY83保險網 討論區
     </div>
-    <div v-if="isDesktop" class="GuideSection__content">
+    <div v-if="!isMobile" class="GuideSection__content">
       想看看身上的保單需不需要補強或修改？投保有體況？理賠遇到問題怎麼辦？讓MY83討論區裡專業的業務員來幫你！
     </div>
     <div class="GuideSection__action">
