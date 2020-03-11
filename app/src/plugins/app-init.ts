@@ -5,6 +5,7 @@ import { createStoreModule as createHeaderStoreModule } from '@/store/header/ind
 import { FETCH_HEADER_NAV_DATA } from '@/store/header/header.type'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
 import { User } from '@/services/user/user'
+import { Auth } from '@/services/auth/auth'
 
 const storeModules = {
   global: {
@@ -18,6 +19,10 @@ const storeModules = {
 }
 
 export default (async ({ app, store }) => {
+  // 設定 my83 token name
+  const auth = Auth.getInstance()
+  auth.setTokenKey(app.$env.NUXT_ENV_JWT_TOKEN_NAME)
+
   const user = User.getInstance()
 
   _.forEach(storeModules, ({ createModule, moduleName }) => {

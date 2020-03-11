@@ -43,7 +43,8 @@ export class User {
   }
 
   public isLogin() {
-    return Auth.getToken()
+    const auth = Auth.getInstance()
+    return auth.getToken()
   }
 
   public updateUserState(userState: UserState) {
