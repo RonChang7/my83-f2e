@@ -1,19 +1,19 @@
 <template>
   <div ref="panel" class="HeaderMenuPanel">
     <!-- Panel with multi-column -->
-    <template v-if="HeaderMenuPanelWithMultiColumn">
+    <template v-if="headerMenuPanelWithMultiColumn">
       <div
-        v-for="(column, column_index) in headerNavItems"
+        v-for="(column, columnIndex) in headerNavItems"
         ref="column"
-        :key="column_index"
+        :key="columnIndex"
         class="HeaderMenuPanel__column"
       >
         <div v-if="column.children" class="HeaderMenuPanel__column__title">
           {{ column.name }}
         </div>
         <div
-          v-for="(item, item_index) in column.children"
-          :key="item_index"
+          v-for="(item, itemIndex) in column.children"
+          :key="itemIndex"
           class="HeaderMenuPanel__column__link wider"
         >
           <GlobalLink v-if="item.link" :to="item.link.path">
@@ -39,8 +39,8 @@
           {{ headerNavItems.name }}
         </div>
         <div
-          v-for="(item, item_index) in headerNavItems"
-          :key="item_index"
+          v-for="(item, itemIndex) in headerNavItems"
+          :key="itemIndex"
           class="HeaderMenuPanel__column__link"
         >
           <GlobalLink v-if="item.link" :to="item.link.path">
@@ -67,8 +67,12 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
   },
@@ -80,9 +84,9 @@ export default {
   },
   methods: {
     columnWidthHandler() {
-      if (!this.$ua.isFromPc() || !this.$refs.column) return
-      const columns = (this.$refs.column as Array<HTMLElement>).filter(Boolean)
-      const panel = this.$refs.panel as HTMLElement
+      if (!this.isDesktop || !this.$refs.column) return
+      const columns = this.$refs.column.filter(Boolean)
+      const panel = this.$refs.panel
       // 因為 display: none 的 DOM 無法取得寬度 (Child DOM 也是)
       panel.style.display = 'flex'
 
@@ -101,12 +105,12 @@ export default {
     },
   },
   computed: {
-    HeaderMenuPanelWithMultiColumn() {
+    headerMenuPanelWithMultiColumn() {
       return this.headerNavItems.filter((item) => item.children).length
     },
   },
   mounted() {
-    if (this.$ua.isFromPc()) {
+    if (this.isDesktop) {
       this.columnWidthHandler()
     }
   },
@@ -128,16 +132,21 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    column: HTMLElement[]
+    panel: HTMLElement
+  }
+}
 
 export interface Data {}
 
 export interface Methods {
-  columnWidthHandler: () => void
+  columnWidthHandler(): void
 }
 
-export interface Computed {
-  HeaderMenuPanelWithMultiColumn: boolean
+export interface Computed extends DeviceMixinComputed {
+  headerMenuPanelWithMultiColumn: boolean
 }
 
 export interface Props {
@@ -208,7 +217,7 @@ export interface Props {
 
       @include max-media('xl') {
         min-height: 40px;
-        padding-bottom: 15px;
+        padding: 0 0 15px 10px;
         margin: 0;
       }
 
@@ -226,7 +235,7 @@ export interface Props {
     &__description {
       color: $gray-tertiary;
       font-size: 0.875rem;
-      margin-top: 8px;
+      margin-top: 4px;
     }
   }
 }

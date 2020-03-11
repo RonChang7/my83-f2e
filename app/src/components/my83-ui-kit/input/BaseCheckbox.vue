@@ -4,7 +4,7 @@
       :checked="checked"
       :disabled="disabled"
       type="checkbox"
-      @change="update"
+      @change="change"
     />
     <span class="icon"></span>
     <span class="label">{{ label }}</span>
@@ -32,9 +32,10 @@ export default {
     },
   },
   methods: {
-    update(e) {
-      this.$emit('update:checked', (e.target as HTMLInputElement).checked)
-      this.$emit('update', (e.target as HTMLInputElement).checked)
+    change(e) {
+      const el = e.target as HTMLInputElement
+      this.$emit('update:checked', el.checked)
+      this.$emit('update', el.checked)
     },
   },
 } as ComponentOption
@@ -60,7 +61,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  update: (e: Event) => void
+  change(e: Event): void
 }
 
 export interface Computed {}
@@ -122,7 +123,7 @@ export interface Props {
   .icon {
     height: 18px;
     width: 18px;
-    border: 2px solid $gray-secondary;
+    border: 1px solid $gray-secondary;
     border-radius: $border-radius;
     margin: 3px;
     transition: background-color 0.3s;

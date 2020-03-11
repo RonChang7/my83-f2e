@@ -106,10 +106,10 @@ export interface Data {
 }
 
 export interface Methods {
-  closePanel: () => void
-  toPanel: (panelName: TargetPanel) => void
-  afterLogin: (callback: Function) => void
-  sendForgetPasswordSuccess: () => void
+  closePanel(): void
+  toPanel(panelName: TargetPanel): void
+  afterLogin(): void
+  sendForgetPasswordSuccess(): void
 }
 
 export interface Computed {
@@ -136,7 +136,7 @@ export interface Props {
 
   @include max-media('lg') {
     width: calc(100vw - 24px);
-    height: calc(100vh - 28px);
+    height: calc(100% - 14px);
     padding: 15px;
   }
 

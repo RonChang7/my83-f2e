@@ -16,7 +16,7 @@ export default {
       default: () => {
         return {
           backgroundColor: '#000',
-          opacity: '0.8',
+          opacity: '0.6',
         } as Partial<CSSStyleDeclaration>
       },
     },
@@ -97,8 +97,8 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export interface Methods {
-  open: () => void
-  close: () => void
+  open(): void
+  close(): void
 }
 
 export interface Computed {}

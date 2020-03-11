@@ -5,7 +5,7 @@
       :checked="value === currentSelectedValue"
       :disabled="disabled"
       type="radio"
-      @change="update"
+      @change="change"
     />
     <span class="icon"></span>
     <span class="label">{{ label }}</span>
@@ -20,11 +20,11 @@ import { CombinedVueInstance } from 'vue/types/vue'
 export default {
   props: {
     currentSelectedValue: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     value: {
-      type: String,
+      type: [String, Number],
       required: true,
     },
     label: {
@@ -37,12 +37,10 @@ export default {
     },
   },
   methods: {
-    update(e) {
-      this.$emit(
-        'update:currentSelectedValue',
-        (e.target as HTMLInputElement).value
-      )
-      this.$emit('update', (e.target as HTMLInputElement).value)
+    change(e) {
+      const el = e.target as HTMLInputElement
+      this.$emit('update:currentSelectedValue', el.value)
+      this.$emit('update', el.value)
     },
   },
 } as ComponentOption
@@ -68,14 +66,14 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  update: (e: Event) => void
+  change(e: Event): void
 }
 
 export interface Computed {}
 
 export interface Props {
-  currentSelectedValue: string
-  value: string
+  currentSelectedValue: string | number
+  value: string | number
   label: string
   disabled: Boolean
 }
@@ -106,9 +104,9 @@ export interface Props {
         position: relative;
         left: 3px;
         top: 3px;
-        width: 10px;
-        height: 10px;
-        border-radius: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 6px;
         background-color: $secondary-color;
       }
     }
@@ -141,7 +139,7 @@ export interface Props {
   .icon {
     height: 20px;
     width: 20px;
-    border: 2px solid $gray-secondary;
+    border: 1px solid $gray-secondary;
     border-radius: 10px;
     margin: 2px;
     transition-duration: 0.3s;

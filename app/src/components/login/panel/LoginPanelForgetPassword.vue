@@ -32,7 +32,10 @@
       寄送密碼重設信
     </BaseButton>
 
-    <BaseInputErrorMessage :msg="errors.api ? errors.api.message : ''" />
+    <BaseInputErrorMessage
+      text-align="center"
+      :msg="errors.api ? errors.api.message : ''"
+    />
 
     <LoginFooter @to-panel="(name) => $emit('to-panel', name)" />
   </div>
@@ -127,9 +130,9 @@ export interface Data {
 }
 
 export interface Methods {
-  validate: () => void
-  submit: () => void
-  sendForgetPassword: () => void
+  validate(): void
+  submit(): void
+  sendForgetPassword(): void
 }
 
 export interface Computed {}
@@ -155,7 +158,6 @@ interface Form {
   width: 320px;
   margin: 0 60px;
   color: $gray-primary;
-  line-height: 1.5;
 
   @include max-media('lg') {
     width: 100%;

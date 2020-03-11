@@ -15,7 +15,7 @@
     "build-storybook": "build-storybook"
   },
   "lint-staged": {
-    "*.{ts,js,vue}": "eslint"
+    "*.{ts,js,vue}": "npm run lint"
   },
   "husky": {
     "hooks": {

@@ -6,9 +6,9 @@
     <FacebookLoginButton
       :state="state"
       text="以 Facebook 註冊"
-      @login="facebookLogin"
+      @login="facebookSignUp"
     />
-    <BaseInputErrorMessage :msg="message" />
+    <BaseInputErrorMessage text-align="center" :msg="message" />
 
     <div class="LoginSignUpForm__info">
       為確保用戶真實性，僅提供 Facebook 註冊
@@ -29,7 +29,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import FacebookLoginButton from './FacebookLoginButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
-import { facebookLogin } from '@/api/login/login'
+import { facebookSignUp } from '@/api/login/login'
 import { User } from '@/services/user/user'
 
 export default {
@@ -45,16 +45,15 @@ export default {
     }
   },
   methods: {
-    async facebookLogin(fbToken) {
-      const { firstHttpReferrer, firstUrl } = User
+    async facebookSignUp(fbToken) {
+      const user = User.getInstance()
       this.state = 'loading'
 
       try {
-        await facebookLogin({
+        await facebookSignUp({
           fbToken,
           role: 'client',
-          firstHttpReferrer,
-          firstUrl,
+          ...user.landingUrl,
         })
 
         // @todo: Change path after migrate to Nuxt.js
@@ -95,7 +94,7 @@ export interface Data {
 }
 
 export interface Methods {
-  facebookLogin: (fbToken: string) => void
+  facebookSignUp(fbToken: string): void
 }
 
 export interface Computed {}
@@ -140,7 +139,6 @@ export interface Props {}
 
   a {
     font-weight: 500;
-    line-height: 1.5;
   }
 }
 </style>

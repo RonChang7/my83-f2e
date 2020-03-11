@@ -107,7 +107,7 @@ export default {
     visible(val) {
       if (val) {
         this.$nextTick(() => {
-          ;(this.$refs.dialog as HTMLElement).focus()
+          this.$refs.dialog.focus()
         })
       }
     },
@@ -130,13 +130,17 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    dialog: HTMLElement
+  }
+}
 
 export interface Data {}
 
 export interface Methods {
-  closePanel: () => void
-  enterToConfirm: () => void
+  closePanel(): void
+  enterToConfirm(): void
 }
 
 export interface Computed {}

@@ -1,5 +1,5 @@
 import { addClass, removeClass, setStyle } from '@/utils/dom'
-import { ComponentInstance as PopupMixinInstance } from '@/mixins/base/popup-mixin'
+import { ComponentInstance as PopupMixinInstance } from '@/mixins/popup/popup-mixin'
 
 export class PopupManager {
   static idSeed = 0

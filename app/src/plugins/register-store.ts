@@ -1,3 +1,5 @@
+import { Plugin as NuxtPlugin } from '@nuxt/types'
+
 export function registerStore({ module, moduleName, store }) {
   const moduleIsRegistered =
     store._modules.root._children[moduleName] !== undefined
@@ -7,7 +9,6 @@ export function registerStore({ module, moduleName, store }) {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default ({ app }, inject) => {
+export default ((context, inject) => {
   inject('registerStore', registerStore)
-}
+}) as NuxtPlugin

@@ -10,9 +10,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
           display: false,
           targetPanel: 'login',
         },
-        actionAfterLogin: {},
+        actionAfterLogin: null,
         globalDialogVisible: false,
-        globalDialogContent: {},
+        globalDialogContent: null,
+        userAgent: null,
       }
     },
     getters: {},
@@ -66,15 +67,19 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_GLOBAL_DIALOG_CONTENT](state, data: GlobalDialogContent) {
         state.globalDialogContent = data
       },
+      [types.UPDATE_USER_AGENT](state, data: UserAgent) {
+        state.userAgent = data
+      },
     },
   }
 }
 
-interface State {
+export interface State {
   loginPanel: LoginPanelState
-  actionAfterLogin: Function | {}
+  actionAfterLogin: Function | null
   globalDialogVisible: boolean
-  globalDialogContent: GlobalDialogContent | {}
+  globalDialogContent: GlobalDialogContent | null
+  userAgent: UserAgent | null
 }
 
 export interface LoginPanelState {
@@ -96,4 +101,10 @@ export interface GlobalDialogContent {
   leftConfirmFn?: Function
   rightConfirmFn?: Function
   closeFn?: Function
+}
+
+export interface UserAgent {
+  isDesktop: boolean
+  isMobile: boolean
+  isTablet: boolean
 }

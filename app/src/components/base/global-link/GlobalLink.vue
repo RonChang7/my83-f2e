@@ -86,8 +86,8 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  checkRouteMatched: () => boolean
-  checkAbsoluteLink: () => boolean
+  checkRouteMatched(): boolean
+  checkAbsoluteLink(): boolean
 }
 
 export interface Computed {

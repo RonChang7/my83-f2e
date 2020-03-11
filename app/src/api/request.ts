@@ -1,6 +1,5 @@
 import https from 'https'
 import axios from 'axios'
-import Cookies from 'js-cookie'
 
 const request = axios.create({
   baseURL: process.env.NUXT_ENV_API_URL,
@@ -9,14 +8,6 @@ const request = axios.create({
   }),
   withCredentials: true,
 })
-
-// Client side add Authorization header in order to valid JWT Token
-if (process.client) {
-  const tokenKey: string = process.env.NUXT_ENV_JWT_TOKEN_NAME!
-  const jwtToken = Cookies.get(tokenKey)
-
-  request.defaults.headers.common.Authorization = `Bearer ${jwtToken}`
-}
 
 if (process.env.NUXT_ENV_APP_ENV === 'development') {
   request.interceptors.request.use((v) => {
