@@ -1,4 +1,8 @@
-import { Link } from '../type'
+import { Link, Role, RoleCode } from '../type'
+
+export interface HeaderDataResponse {
+  header: HeaderNavItem[]
+}
 
 export interface HeaderNavItem {
   name: string
@@ -24,4 +28,6 @@ export interface Personalize {
   nickname: string
   notification_count: number
   sales: SalesInfo
+  role: Role
+  role_code: RoleCode
 }

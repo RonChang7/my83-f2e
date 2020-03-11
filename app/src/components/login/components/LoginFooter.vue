@@ -16,20 +16,23 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
   },
   mounted() {
-    if (this.$ua.isFromPc() || window.innerWidth >= 1200) return
-    const el = this.$el as HTMLElement
-    const offsetTop = el.offsetTop
-    const offsetHeight = el.offsetHeight
+    if (this.isDesktop || window.innerWidth >= 1200) return
+    const offsetTop = this.$el.offsetTop
+    const offsetHeight = this.$el.offsetHeight
 
     if (window.innerHeight < offsetTop + offsetHeight) return
 
-    el.style.marginTop = `calc(100vh - ${offsetTop}px - ${offsetHeight}px - 30px - 28px - 2px)`
+    this.$el.style.marginTop = `calc(100vh - ${offsetTop}px - ${offsetHeight}px - 30px - 28px - 2px)`
   },
 } as ComponentOption
 
@@ -49,13 +52,15 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $el: HTMLElement
+}
 
 export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed extends DeviceMixinComputed {}
 
 export interface Props {}
 </script>
@@ -66,7 +71,6 @@ export interface Props {}
 .LoginFooter {
   font-weight: 500;
   text-align: center;
-  line-height: 1.5;
 
   &__content {
     color: $gray-primary;

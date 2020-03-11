@@ -29,7 +29,7 @@ export type ComponentInstance = CombinedVueInstance<Instance, {}, {}, {}, Props>
 export interface Instance extends Vue {}
 
 export interface Props {
-  fontSize: string
+  size: string
   color: string
 }
 </script>

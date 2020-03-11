@@ -22,22 +22,25 @@
             class="logo"
             href="https://www.cw.com.tw/article/article.action?id=5064306"
             target="_blank"
+            rel="noopener"
           >
             <img src="@/assets/images/footer/cw.png" />
           </a>
           <a
             class="logo"
-            href="https://www.youtube.com/watch?v=XVqFOSUUBgw"
+            href="https://news.cnyes.com/news/id/3547407"
             target="_blank"
+            rel="noopener"
           >
-            <img src="@/assets/images/footer/HIT_FM.jpg" />
+            <img src="@/assets/images/footer/cnyes.png" />
           </a>
           <a
             class="logo"
-            href="https://news.cnyes.com/news/id/3547407"
+            href="https://www.youtube.com/watch?v=XVqFOSUUBgw"
             target="_blank"
+            rel="noopener"
           >
-            <img src="@/assets/images/footer/cnyes.png" />
+            <img src="@/assets/images/footer/HIT_FM.jpg" />
           </a>
         </div>
       </section>
@@ -84,7 +87,11 @@
               alt="facebook-icon"
               class="icon mr-2"
             />
-            <a href="https://facebook.com/my83.com.tw/" target="_blank">
+            <a
+              href="https://facebook.com/my83.com.tw/"
+              target="_blank"
+              rel="noopener"
+            >
               小資族聰明買保險
             </a>
           </p>
@@ -161,7 +168,7 @@ export interface Data {
 }
 
 export interface Methods {
-  openZendeskChat: () => void
+  openZendeskChat(): void
 }
 
 export interface Computed {}
@@ -259,10 +266,11 @@ footer {
 
         .content {
           p {
-            margin-bottom: 5px;
+            margin: 5px 0px;
           }
 
           .tips {
+            margin-top: 10px;
             font-size: 0.75rem;
             font-weight: 500;
           }

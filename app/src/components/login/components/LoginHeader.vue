@@ -66,12 +66,13 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
 .LoginHeader {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 26px;
+  margin-bottom: 24px;
 
   @include max-media('lg') {
     margin-bottom: 0;
@@ -95,11 +96,25 @@ export interface Props {
       font-weight: 400;
       font-size: 0.875rem;
       cursor: pointer;
+
+      &:hover {
+        color: $gray-primary;
+
+        &::v-deep svg > path {
+          fill: $gray-primary;
+        }
+      }
     }
   }
 
   &__close {
     text-align: right;
+
+    &:hover {
+      &::v-deep svg > path {
+        fill: $gray-primary;
+      }
+    }
   }
 }
 </style>

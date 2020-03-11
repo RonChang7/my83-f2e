@@ -14,6 +14,7 @@
       to="/pricing"
     >
       限時優惠 VIP 只剩 {{ countdownDisplay.day }} 日
+      <br class="wrap" />
       <div class="digital">{{ countdownDisplay.hour }}</div>
       :
       <div class="digital">{{ countdownDisplay.min }}</div>
@@ -91,7 +92,7 @@ export default {
   },
   computed: {
     shouldShowCountdown() {
-      return this.salesInfo.vip_countdown >= Date.now()
+      return this.salesInfo.vip_countdown * 1000 >= Date.now()
     },
   },
   mounted() {
@@ -133,8 +134,8 @@ export interface Data {
 }
 
 export interface Methods {
-  setCountdown: () => void
-  countdownTransformer: (sec: number) => void
+  setCountdown(): void
+  countdownTransformer(sec: number): void
 }
 
 export interface Computed {
@@ -149,8 +150,11 @@ export interface Props {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .HeaderSalesDetail {
+  text-align: center;
+
   &__notVerify,
   &__vipCountdown {
     color: $primary-color;
@@ -162,6 +166,12 @@ export interface Props {
 
   &__vipCountdown {
     font-size: 0.875rem;
+
+    @include max-media('xl') {
+      .wrap {
+        display: none;
+      }
+    }
   }
 
   &__reward {

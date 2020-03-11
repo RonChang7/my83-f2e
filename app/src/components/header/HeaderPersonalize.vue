@@ -1,7 +1,7 @@
 <template>
   <div class="HeaderPersonalize">
     <ul
-      v-if="isEmpty(menu) && isEmpty(personalize)"
+      v-if="checkItemEmpty(menu) && checkItemEmpty(personalize)"
       class="HeaderPersonalize__unauthorized"
     >
       <li>
@@ -17,11 +17,8 @@
     </ul>
 
     <ul v-else class="HeaderPersonalize__authorized">
-      <li>
-        <HeaderSalesDetail
-          v-if="personalize.sales"
-          :sales-info="personalize.sales"
-        />
+      <li v-if="personalize.sales">
+        <HeaderSalesDetail :sales-info="personalize.sales" />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -60,12 +57,13 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import _ from 'lodash'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderMenuPanel from './HeaderMenuPanel.vue'
 import HeaderSalesDetail from './HeaderSalesDetail.vue'
-import { State } from '@/store/header/index'
+import { GlobalVuexState } from '@/store/global-state'
 import { HeaderNavItem, Personalize } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseNotification from '@/components/base/icon/24/BaseNotification.vue'
@@ -74,8 +72,14 @@ import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
 import * as types from '@/store/global/global.type'
 import { logout } from '@/api/login/login'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
+import { Auth } from '@/services/auth/auth'
+import { Suspect } from '@/services/user/suspect'
 
 export default {
+  mixins: [DeviceMixin],
   components: {
     GlobalLink,
     HeaderSalesDetail,
@@ -92,7 +96,7 @@ export default {
     }
   },
   methods: {
-    isEmpty(item) {
+    checkItemEmpty(item) {
       return _.isEmpty(item)
     },
     menuToggle() {
@@ -104,20 +108,31 @@ export default {
     getScreenWidth() {
       this.screenWidth = window.innerWidth
     },
+    reloadHandler() {
+      return this.isDesktop
+        ? window.location.reload()
+        : (window.location.href = this.$route.meta.perviousPath)
+    },
     showLoginPanel() {
       this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
       this.$store.dispatch(`global/${types.UPDATE_AFTER_LOGIN_EVENT}`, () => {
-        location.reload()
+        this.reloadHandler()
       })
     },
     async logout() {
-      const result = await logout()
-      result && location.reload()
+      try {
+        await logout()
+      } catch (err) {
+      } finally {
+        Suspect.setRoleCode()
+        Auth.logout()
+        this.reloadHandler()
+      }
     },
   },
   computed: {
     personalize() {
-      const { headerPersonalized } = this.$store.state.header as State
+      const { headerPersonalized } = this.$store.state.header
       return headerPersonalized ? headerPersonalized.personalize : {}
     },
     notificationCount() {
@@ -128,7 +143,7 @@ export default {
       return count > 99 ? '99+' : count
     },
     menu() {
-      const { headerPersonalized } = this.$store.state.header as State
+      const { headerPersonalized } = this.$store.state.header
       const menu = headerPersonalized ? headerPersonalized.menu : []
 
       if (_.isEmpty(menu)) {
@@ -147,12 +162,10 @@ export default {
   },
   mounted() {
     this.getScreenWidth()
-    this.$ua.isFromPc() &&
-      window.addEventListener('resize', this.getScreenWidth)
+    this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
   },
   beforeDestroy() {
-    this.$ua.isFromPc() &&
-      window.removeEventListener('resize', this.getScreenWidth)
+    this.isDesktop && window.removeEventListener('resize', this.getScreenWidth)
   },
 } as ComponentOption
 
@@ -172,7 +185,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<GlobalVuexState>
+}
 
 export interface Data {
   shouldShowMenu: boolean
@@ -180,13 +195,15 @@ export interface Data {
 }
 
 export interface Methods {
-  isEmpty: () => boolean
-  menuToggle: () => void
-  getScreenWidth: () => void
-  logout: () => void
+  checkItemEmpty(item: Personalize | Menu): boolean
+  menuToggle(): void
+  getScreenWidth(): void
+  reloadHandler(): Function
+  showLoginPanel(): void
+  logout(): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
   personalize: Personalize
   notificationCount: number | string
   menu: Menu

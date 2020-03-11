@@ -8,7 +8,7 @@
       :disabled="disabled"
       :autocomplete="autocomplete"
       class="BaseInputText__input"
-      @input="update"
+      @input="input"
       @blur="$emit('blur')"
       @focus="$emit('focus')"
       @keyup.enter="$emit('enter')"
@@ -16,10 +16,10 @@
     <div
       v-if="type === 'password'"
       class="BaseInputText__showPasswordButton"
+      :class="{ displayPassword }"
       @click="displayPassword = !displayPassword"
     >
-      <BaseEyeFill v-if="displayPassword" />
-      <BaseEyeOutline v-else />
+      <BaseEyeOutline />
     </div>
   </div>
 </template>
@@ -29,12 +29,10 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseEyeOutline from '@/components/base/icon/24/BaseEyeOutline.vue'
-import BaseEyeFill from '@/components/base/icon/24/BaseEyeFill.vue'
 
 export default {
   components: {
     BaseEyeOutline,
-    BaseEyeFill,
   },
   data() {
     return {
@@ -68,9 +66,10 @@ export default {
     },
   },
   methods: {
-    update(e) {
-      this.$emit('update:value', (e.target as HTMLInputElement).value)
-      this.$emit('update', (e.target as HTMLInputElement).value)
+    input(e) {
+      const el = e.target as HTMLInputElement
+      this.$emit('update:value', el.value)
+      this.$emit('update', el.value)
     },
   },
 } as ComponentOption
@@ -98,7 +97,7 @@ export interface Data {
 }
 
 export interface Methods {
-  update: (e: Event) => void
+  input(e: Event): void
 }
 
 export interface Computed {}
@@ -114,6 +113,7 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
 
 .BaseInputText {
@@ -131,10 +131,27 @@ export interface Props {
 
   &__showPasswordButton {
     display: flex;
-    justify-content: flex-end;
-    margin-top: -32px;
-    padding: 0 12px 8px 0;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -40px;
+    left: calc(100% - 40px);
+    margin-bottom: -40px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
+
+    &:hover {
+      &::v-deep svg > path {
+        fill: $gray-primary;
+      }
+    }
+
+    &.displayPassword {
+      &::v-deep svg > path {
+        fill: $primary-color;
+      }
+    }
   }
 
   &__message {

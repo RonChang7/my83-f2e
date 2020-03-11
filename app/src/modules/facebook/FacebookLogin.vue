@@ -3,7 +3,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Facebook } from './facebook'
-import { FaceBookStatus } from './facebook.type'
+import { FaceBookStatus, FacebookUser } from './facebook.type'
 
 // Manual refresh token when (current time - token expire time) is less than REFRESH_TIME_THRESHOLD
 const REFRESH_TIME_THRESHOLD = 60 * 1000
@@ -29,12 +29,12 @@ export default {
   },
   mounted() {
     this.facebook = Facebook.getInstance(this.$env.FACEBOOK_APP_ID)
-    this.facebookStatus = Facebook.state
+    this.facebookStatus = this.facebook.facebookState
   },
   computed: {
     slot() {
       return {
-        user: this.facebookStatus ? this.facebookStatus.user : {},
+        user: this.facebookStatus ? this.facebookStatus.user : null,
         isLoaded: this.facebookStatus ? this.facebookStatus.isLoaded : false,
         facebookLogin: this.facebookLogin,
       }
@@ -63,22 +63,23 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  facebook: Facebook
+}
 
 export interface Data {
-  facebook: Facebook
   facebookStatus: FaceBookStatus
 }
 
 export interface Methods {
-  facebookLogin: () => void
+  facebookLogin(): void
 }
 
 export interface Computed {
   slot: {
-    user: object
+    user: FacebookUser | null
     isLoaded: boolean
-    facebookLogin: Function
+    facebookLogin: Methods['facebookLogin']
   }
 }
 

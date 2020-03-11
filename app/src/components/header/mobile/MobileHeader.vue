@@ -77,8 +77,8 @@ export interface Data {
 }
 
 export interface Methods {
-  closeMenuHandler: () => void
-  openMenuHandler: () => void
+  closeMenuHandler(): void
+  openMenuHandler(): void
 }
 
 export interface Computed {}

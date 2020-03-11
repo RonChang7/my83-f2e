@@ -60,7 +60,10 @@
     >
       登入
     </BaseButton>
-    <BaseInputErrorMessage :msg="errors.login ? errors.login.message : ''" />
+    <BaseInputErrorMessage
+      text-align="center"
+      :msg="errors.login ? errors.login.message : ''"
+    />
 
     <LoginFooter @to-panel="(name) => $emit('to-panel', name)" />
   </div>
@@ -79,9 +82,11 @@ import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseCheckbox from '@/components/my83-ui-kit/input/BaseCheckbox.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
-import { User } from '@/services/user/user'
+import { User, LandingUrlInfo } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
+import { SimpleResponse, Role } from '@/api/type'
+import { Auth } from '@/services/auth/auth'
 
 export default {
   components: {
@@ -113,6 +118,16 @@ export default {
     },
   },
   methods: {
+    landingUrl() {
+      const user = User.getInstance()
+      return user.landingUrl
+    },
+    login(jwtToken, expiredTime) {
+      Auth.login({
+        jwtToken,
+        expiredTime,
+      })
+    },
     async validate(key, value) {
       const error = await Validator.validate(key, value)
       this.$set(this.errors, key, error[key])
@@ -128,23 +143,22 @@ export default {
       await this.emailLogin()
     },
     async emailLogin() {
-      const { firstHttpReferrer, firstUrl } = User
       this.state.email = 'loading'
       this.$set(this.errors, 'login', { message: '' })
 
       try {
-        await login.emailLogin({
+        const { token, expired_time } = await login.emailLogin({
           email: this.form.email,
           password: this.form.password,
-          firstHttpReferrer,
-          firstUrl,
+          ...this.landingUrl(),
         })
 
+        this.login(token!, expired_time!)
         this.$emit('login-success')
       } catch (error) {
         this.state.email = ''
 
-        const { message } = error.response.data
+        const { message } = error.response.data as SimpleResponse
         this.$set(this.errors, 'login', {
           message,
           state: 'error',
@@ -153,38 +167,55 @@ export default {
         this.$set(this.errors, 'password', { state: 'error' })
       }
     },
-    async facebookLogin(fbToken, role) {
-      const { firstHttpReferrer, firstUrl } = User
+    async facebookSignUp(fbToken, role) {
+      try {
+        const { token, expired_time } = await login.facebookSignUp({
+          fbToken,
+          role,
+          ...this.landingUrl(),
+        })
+
+        this.login(token!, expired_time!)
+
+        this.newUserRedirect(role)
+      } catch (error) {
+        this.state.facebook = ''
+
+        const { message } = error.response.data as SimpleResponse
+
+        this.$set(this.errors, 'facebook', {
+          message,
+          state: 'error',
+        })
+      }
+    },
+    async facebookLogin(fbToken) {
       this.state.facebook = 'loading'
 
       try {
-        await login.facebookLogin({
+        const { token, expired_time } = await login.facebookLogin({
           fbToken,
-          role,
-          firstHttpReferrer,
-          firstUrl,
+          ...this.landingUrl(),
         })
 
-        if (role) {
-          this.newUserRedirect(role)
-          return
-        }
+        this.login(token!, expired_time!)
+
         this.$emit('login-success')
       } catch (error) {
         this.state.facebook = ''
 
-        const { success, is_my83_user, message } = error.response.data
+        const { message } = error.response.data as SimpleResponse
         const status = error.response.status
 
-        if (status === 401 && !success && !is_my83_user) {
+        if (status === 401) {
           this.$store.dispatch(`global/${types.UPDATE_GLOBAL_DIALOG}`, {
             ...FacebookLoginNotMy83User,
-            leftConfirmFn: () => this.facebookLogin(fbToken, 'client'),
-            rightConfirmFn: () => this.facebookLogin(fbToken, 'sales'),
+            leftConfirmFn: () => this.facebookSignUp(fbToken, 'client'),
+            rightConfirmFn: () => this.facebookSignUp(fbToken, 'sales'),
           } as GlobalDialogContent)
 
           this.$store.dispatch(`global/${types.OPEN_GLOBAL_DIALOG}`)
-        } else if (!success && message) {
+        } else if (message) {
           this.$set(this.errors, 'facebook', {
             message,
             state: 'error',
@@ -194,11 +225,7 @@ export default {
     },
     newUserRedirect(role) {
       // @todo: Change path after migrate to Nuxt.js
-      if (role === 'sales') {
-        window.location.href = '/salesCenter'
-      } else if (role === 'client') {
-        window.location.href = '/clientCenter'
-      }
+      window.location.href = role === 'sales' ? '/salesCenter' : '/clientCenter'
     },
   },
 } as ComponentOption
@@ -232,11 +259,14 @@ export interface Data {
 }
 
 export interface Methods {
-  validate: (key: string, value: any) => void
-  submit: () => void
-  facebookLogin: (fbToken: string, role: 'sales' | 'client' | undefined) => void
-  emailLogin: () => void
-  newUserRedirect: (role: 'sales' | 'client') => void
+  landingUrl(): LandingUrlInfo
+  login(jwtToken: string, expiredTime: number): void
+  validate(key: string, value: any): void
+  submit(): void
+  facebookSignUp(fbToken: string, role: Role): void
+  facebookLogin(fbToken: string): void
+  emailLogin(): void
+  newUserRedirect(role: Role): void
 }
 
 export interface Computed {}
@@ -290,7 +320,6 @@ interface Form {
   label {
     color: $gray-primary;
     margin-bottom: 5px;
-    line-height: 1.5;
   }
 
   hr {
