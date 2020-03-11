@@ -98,12 +98,20 @@ export interface Props {
 @import '@/sass/rwd.scss';
 
 .RelatedCard {
+  $self: &;
+
   display: flex;
   padding: 16px 0 20px;
   border-bottom: 1px solid $gray-quaternary;
 
   &.last {
     border-bottom: 0;
+  }
+
+  &:hover {
+    #{$self}__title {
+      color: $primary-color;
+    }
   }
 
   @include max-media('xl') {
