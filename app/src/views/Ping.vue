@@ -5,7 +5,7 @@
 <script>
 export default {
   asyncData({ app, req, redirect }) {
-    const targetAgents = app.$env.NUXT_ENV_HEALTH_CHECK_AGENT_STRING || ''
+    const targetAgents = app.$env.HEALTH_CHECK_AGENT_STRING || ''
 
     if (process.client || typeof targetAgents !== 'string') {
       redirect('/')
