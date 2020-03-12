@@ -78,11 +78,6 @@ const config: Configuration = {
     ],
     'nuxt-user-agent',
   ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
   router: {
     middleware: 'index',
   },
