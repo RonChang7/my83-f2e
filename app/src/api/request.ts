@@ -8,6 +8,7 @@ const request: RequestInstance = axios.create({
   withCredentials: true,
 })
 
+// TODO: need to construct a class or change to nuxt-module
 request.initApiUrlLogger = false
 
 interface RequestInstance extends AxiosInstance {
