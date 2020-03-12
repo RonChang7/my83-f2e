@@ -7,9 +7,23 @@ import { JWT } from '@/services/auth/jwt'
 
 export default (({ app }) => {
   const preventInterceptorsList = ['/api/auth/logout']
-  const { API_URL } = app.$env
+  const { APP_ENV, API_URL } = app.$env
 
   request.defaults.baseURL = API_URL
+
+  if (APP_ENV === 'development' && !request.initApiUrlLogger) {
+    request.interceptors.request.use((v) => {
+      const tagStyle =
+        'background: #7bd6ff; border-radius: 1em; color: #fff; padding: 2px 6px; font-weight: bold;'
+      const contentStyle = 'padding: 2px 6px;'
+      // eslint-disable-next-line no-console
+      console.log(`%cAPI Request:%c${v.url}`, tagStyle, contentStyle)
+
+      return v
+    })
+
+    request.initApiUrlLogger = true
+  }
 
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
