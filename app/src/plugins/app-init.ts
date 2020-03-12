@@ -21,7 +21,7 @@ const storeModules = {
 export default (async ({ app, store }) => {
   // 設定 my83 token name
   const auth = Auth.getInstance()
-  auth.setTokenKey(app.$env.NUXT_ENV_JWT_TOKEN_NAME)
+  auth.setTokenKey(app.$env.JWT_TOKEN_NAME)
 
   const user = User.getInstance()
 

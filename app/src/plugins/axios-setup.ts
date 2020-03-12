@@ -7,9 +7,9 @@ import { JWT } from '@/services/auth/jwt'
 
 export default (({ app }) => {
   const preventInterceptorsList = ['/api/auth/logout']
-  const { NUXT_ENV_API_URL } = app.$env
+  const { API_URL } = app.$env
 
-  request.defaults.baseURL = NUXT_ENV_API_URL
+  request.defaults.baseURL = API_URL
 
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
@@ -37,12 +37,12 @@ export default (({ app }) => {
 
         if (
           preventInterceptorsList.find(
-            (url) => NUXT_ENV_API_URL + url === originalRequest.url
+            (url) => API_URL + url === originalRequest.url
           )
         ) {
           return Promise.reject(err)
         } else if (status === 401 && error === 'expired_token') {
-          return JWT.refreshToken(NUXT_ENV_API_URL)
+          return JWT.refreshToken(API_URL)
             .then(() => {
               const jwtToken = auth.getToken()
               originalRequest.headers.Authorization = `Bearer ${jwtToken}`
