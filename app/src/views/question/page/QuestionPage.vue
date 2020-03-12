@@ -46,17 +46,23 @@
           <AddAnswerSection v-if="userRole === 'sales'" />
         </client-only>
 
-        <AnswersSection />
+        <AnswersSection ref="answersSection" />
 
         <client-only>
           <AddAnswerSection v-if="userRole !== 'sales'" />
         </client-only>
       </div>
       <div v-if="!isMobile" class="QuestionPage__column right">
-        <GuideSection v-if="shouldShowGuide" />
-        <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
-        <RelatedQuestionSection />
-        <RelatedBlogSection v-if="shouldShowBlogSection" />
+        <div
+          ref="wrapper"
+          class="wrapper"
+          :class="{ fixed: shouldFixedColumn }"
+        >
+          <GuideSection v-if="shouldShowGuide" />
+          <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
+          <RelatedQuestionSection />
+          <RelatedBlogSection v-if="shouldShowBlogSection" />
+        </div>
       </div>
     </div>
     <div v-if="!isMobile" class="QuestionPage__row">
@@ -66,6 +72,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -113,8 +120,18 @@ export default {
   data() {
     return {
       isMounted: false,
-      scrollToTopObserver: null,
+      observer: {
+        scrollToTopObserver: null,
+        fixedColumnObserver: null,
+      },
       shouldShowScrollToTop: false,
+      shouldFixedColumn: false,
+      screenWidth: 0,
+      scrollHeightBottom: 0,
+      fixedColumn: {
+        start: 0,
+        end: 0,
+      },
     }
   },
   methods: {
@@ -155,6 +172,13 @@ export default {
     scrollToTop() {
       const header = document.querySelector('header')
       scrollTo(header!, window)
+    },
+    createScrollToTopIntersectionObserver() {
+      return new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          this.shouldShowScrollToTop = entry.boundingClientRect.bottom <= 0
+        })
+      })
     },
   },
   computed: {
@@ -199,26 +223,74 @@ export default {
       }
     },
   },
+  beforeMount() {
+    this.getScreenWidth = _.throttle(() => {
+      this.screenWidth = window.innerWidth
+    }, 200)
+
+    this.getScrollHeightBottom = _.throttle(() => {
+      this.scrollHeightBottom = window.scrollY + window.innerHeight
+    }, 200)
+  },
   mounted() {
     this.isMounted = true
+
+    this.getScreenWidth()
+    this.getScrollHeightBottom()
+
+    this.fixedColumn.start =
+      this.$refs.wrapper.offsetTop + this.$refs.wrapper.offsetHeight + 60
 
     if (this.$route.hash) {
       this.scrollToAnchorPoint(this.$route.hash)
     }
 
-    this.scrollToTopObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        this.shouldShowScrollToTop = entry.boundingClientRect.bottom <= 0
-      })
-    })
-
-    this.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
-  },
-  destroyed() {
-    if (this.scrollToTopObserver) {
-      ;(this.scrollToTopObserver as IntersectionObserver).disconnect()
-      this.scrollToTopObserver = null
+    if (this.$refs.mobileRelatedSection) {
+      this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
+      this.observer.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
     }
+
+    this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
+    this.isDesktop &&
+      window.addEventListener('scroll', this.getScrollHeightBottom)
+  },
+  watch: {
+    scrollHeightBottom(val: number) {
+      if (!this.isDesktop || this.screenWidth < 1200) {
+        this.$refs.wrapper.style.cssText = ''
+        this.shouldFixedColumn = false
+        return
+      }
+
+      this.fixedColumn.end =
+        (this.$refs.answersSection.$el as HTMLElement).offsetTop +
+        (this.$refs.answersSection.$el as HTMLElement).offsetHeight +
+        60
+
+      if (val < this.fixedColumn.start) {
+        this.$refs.wrapper.style.cssText = ''
+        this.shouldFixedColumn = false
+      } else if (val > this.fixedColumn.start && val < this.fixedColumn.end) {
+        this.$refs.wrapper.style.cssText = ''
+        this.shouldFixedColumn = true
+      } else {
+        const paddingTop = this.fixedColumn.end - this.fixedColumn.start
+        this.shouldFixedColumn = false
+        this.$refs.wrapper.style.paddingTop = `${paddingTop}px`
+      }
+    },
+  },
+  beforeDestroy() {
+    this.isDesktop && window.removeEventListener('resize', this.getScreenWidth)
+    this.isDesktop &&
+      window.removeEventListener('scroll', this.getScrollHeightBottom)
+
+    _.forEach(this.observer, (observer) => {
+      if (observer) {
+        observer.disconnect()
+        observer = null
+      }
+    })
   },
 } as ComponentOption
 
@@ -243,19 +315,35 @@ export interface Instance extends Vue {
   $refs: {
     dropdownPanel: Vue
     mobileRelatedSection: Element
+    wrapper: HTMLElement
+    answersSection: Vue
+    anchor: HTMLElement
   }
+  getScreenWidth(this: ComponentInstance): void
+  getScrollHeightBottom(this: ComponentInstance): void
 }
 
 export interface Data {
   isMounted: boolean
-  scrollToTopObserver: IntersectionObserver | null
+  observer: {
+    scrollToTopObserver: IntersectionObserver | null
+    fixedColumnObserver: IntersectionObserver | null
+  }
   shouldShowScrollToTop: boolean
+  shouldFixedColumn: boolean
+  screenWidth: number
+  scrollHeightBottom: number
+  fixedColumn: {
+    start: number
+    end: number
+  }
 }
 
 export interface Methods {
   scrollToAnchorPoint(anchor: string): void
   hidePanel(): void
   scrollToTop(): void
+  createScrollToTopIntersectionObserver(): IntersectionObserver
 }
 
 export interface Computed extends DeviceMixinComputed {
@@ -310,6 +398,15 @@ export interface Props {}
 
     &.right {
       width: 360px;
+
+      .wrapper {
+        width: inherit;
+
+        &.fixed {
+          position: fixed;
+          bottom: 60px;
+        }
+      }
     }
 
     &.left,
@@ -329,5 +426,10 @@ export interface Props {}
   &.hasProduct {
     bottom: 90px;
   }
+}
+
+.anchor {
+  width: 0px;
+  height: 0px;
 }
 </style>
