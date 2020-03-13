@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const config: Configuration = {
   server: {
-    port: process.env.NUXT_ENV_PORT,
+    port: process.env.PORT,
   },
   mode: 'universal',
   srcDir: './src',
@@ -41,8 +41,8 @@ const config: Configuration = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
+    '@/plugins/axios-setup',
     '@/plugins/app-init',
-    '@/plugins/jwt',
     '@/plugins/personalized-header',
   ],
   /*
@@ -68,9 +68,10 @@ const config: Configuration = {
       'nuxt-env',
       {
         keys: [
-          { key: 'NUXT_ENV_API_URL' }, // secret: Only inject the var server side
-          { key: 'NUXT_ENV_JWT_TOKEN_NAME' },
-          { key: 'NUXT_ENV_HEALTH_CHECK_AGENT_STRING' },
+          { key: 'APP_ENV' },
+          { key: 'API_URL' }, // secret: Only inject the var server side
+          { key: 'JWT_TOKEN_NAME' },
+          { key: 'HEALTH_CHECK_AGENT_STRING' },
           { key: 'FACEBOOK_APP_ID' },
           { key: 'ZENDESK_CHAT_ID' },
         ],
@@ -78,11 +79,6 @@ const config: Configuration = {
     ],
     'nuxt-user-agent',
   ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
   router: {
     middleware: 'index',
   },
