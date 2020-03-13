@@ -1,47 +1,65 @@
 import Cookies, { CookieAttributes } from 'js-cookie'
 import { jwtParser, Response } from '@/utils/jwt-parser'
 
-const jwtTokenKey: string = process.env.NUXT_ENV_JWT_TOKEN_NAME!
-
 export class Auth {
-  private static cookieAttributes: CookieAttributes = {
-    path: '/',
-    secure: true,
+  private static instance: Auth
+
+  private jwtTokenKey: string
+
+  private cookieAttributes: CookieAttributes
+
+  private constructor() {
+    this.cookieAttributes = {
+      path: '/',
+      secure: true,
+    }
   }
 
-  public static login(payload: payload) {
-    Auth.setToken(payload)
+  public static getInstance(): Auth {
+    if (!Auth.instance) {
+      Auth.instance = new Auth()
+    }
+
+    return Auth.instance
   }
 
-  public static logout() {
-    Auth.removeToken()
+  public login(payload: payload) {
+    this.setToken(payload)
   }
 
-  public static refresh(payload: payload) {
-    Auth.setToken(payload)
+  public logout() {
+    this.removeToken()
   }
 
-  public static getToken() {
-    return Cookies.get(jwtTokenKey)
+  public refresh(payload: payload) {
+    this.setToken(payload)
   }
 
-  public static get expiredTime() {
-    const result = jwtParser(Auth.getToken())
+  public setTokenKey(key: string) {
+    this.jwtTokenKey = key
+  }
+
+  public getToken() {
+    return Cookies.get(this.jwtTokenKey)
+  }
+
+  public get expiredTime() {
+    const result = jwtParser(this.getToken())
     if (result.success) {
       return (result as Response<true>).exp
     }
     return null
   }
 
-  private static setToken({ jwtToken, expiredTime }: payload) {
-    Cookies.set(jwtTokenKey, jwtToken, {
+  private setToken({ jwtToken, expiredTime }: payload) {
+    Cookies.set(this.jwtTokenKey, jwtToken, {
       expires: new Date(expiredTime * 1000),
-      ...Auth.cookieAttributes,
+      ...this.cookieAttributes,
     })
   }
 
-  private static removeToken() {
-    Cookies.remove(jwtTokenKey, Auth.cookieAttributes)
+  private removeToken() {
+    Cookies.remove(this.jwtTokenKey, this.cookieAttributes)
   }
 }
 
