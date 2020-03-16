@@ -22,6 +22,8 @@ import {
   RelatedQuestion,
   RelatedBlog,
   RecommendProduct,
+  QuestionDataResponse,
+  QuestionPersonalizeResponse,
 } from '@/api/question/question.type'
 import { SimpleResponse } from '@/api/type'
 
@@ -63,23 +65,59 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     getters: {},
     actions: {
-      async [types.FETCH_QUESTION_DATA]({ commit }, id: number) {
-        try {
-          const { data } = await api.fetchQuestionData(id)
-          commit(types.UPDATE_QUESTION_DATA, data)
-        } catch (err) {
-          // @todo: error handler, e.g. question not exist.
-          console.log(err)
-        }
+      [types.FETCH_PAGE_DATA]({ dispatch, commit }, id: number) {
+        return new Promise((resolve, reject) => {
+          Promise.all([
+            dispatch(types.FETCH_QUESTION_DATA, id),
+            dispatch(types.FETCH_ANSWER_DATA, id),
+            dispatch(types.FETCH_RELATED_QUESTIONS, id),
+            dispatch(types.FETCH_RELATED_BLOGS, id),
+            dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
+          ])
+            .then((res) => {
+              const [
+                question,
+                answers,
+                relatedQuestion,
+                relatedBlogs,
+                recommendProducts,
+              ] = res
+              commit(types.UPDATE_QUESTION_DATA, question)
+              commit(types.UPDATE_ANSWER_DATA, answers)
+              commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestion)
+              commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
+              commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProducts)
+              resolve()
+            })
+            .catch((err) => reject(err))
+        })
       },
-      async [types.FETCH_ANSWER_DATA]({ commit }, id: number) {
-        try {
-          const { data } = await api.fetchAnswerData(id)
-          commit(types.UPDATE_ANSWER_DATA, data)
-        } catch (err) {
-          // @todo: error handler
-          console.log(err)
-        }
+      [types.FETCH_QUESTION_DATA](context, id: number) {
+        return new Promise((resolve, reject) => {
+          api
+            .fetchQuestionData(id)
+            .then((res) => {
+              if ((res as SimpleResponse).success === false) {
+                throw new Error((res as SimpleResponse).message)
+              }
+              resolve((res as QuestionDataResponse).data)
+            })
+            .catch((err) => {
+              console.error(err)
+              reject(err)
+            })
+        })
+      },
+      [types.FETCH_ANSWER_DATA](context, id: number) {
+        return new Promise((resolve) => {
+          api
+            .fetchAnswerData(id)
+            .then(({ data }) => resolve(data))
+            .catch((err) => {
+              console.error(err)
+              resolve(null)
+            })
+        })
       },
       [types.HIGHLIGHT_BEST_ANSWER]({ commit, state }, bestAnswerId: number) {
         const bestAnswerIndex = _.findIndex(
@@ -93,11 +131,16 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       async [types.FETCH_QUESTION_PERSONALIZE_DATA]({ commit }, id: number) {
         try {
-          const { personalize } = await api.fetchQuestionPersonalizeData(id)
-          commit(types.UPDATE_QUESTION_PERSONALIZE_DATA, personalize)
+          const res = await api.fetchQuestionPersonalizeData(id)
+          if ((res as SimpleResponse).success === false) {
+            throw new Error((res as SimpleResponse).message)
+          }
+          commit(
+            types.UPDATE_QUESTION_PERSONALIZE_DATA,
+            (res as QuestionPersonalizeResponse).personalize
+          )
         } catch (err) {
-          // @todo: error handler
-          console.log(err)
+          console.error(err)
         }
       },
       async [types.FETCH_ANSWER_PERSONALIZE_DATA](
@@ -123,8 +166,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 
           commit(types.UPDATE_ANSWER_PERSONALIZE_DATA, answers)
         } catch (err) {
-          // @todo: error handler
-          console.log(err)
+          console.error(err)
         }
       },
       async [types.FOLLOW_QUESTION]({ commit }, id: number) {
@@ -132,9 +174,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const { success } = await api.followQuestion(id)
           if (success) {
             commit(types.UPDATE_QUESTION_FOLLOW_STATE, true)
+          } else {
+            return success
           }
           return success
         } catch (err) {
+          console.error(err)
           const { success } = err.response.data as FollowQuestionResponse
           return success
         }
@@ -144,9 +189,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const { success } = await api.unFollowQuestion(id)
           if (success) {
             commit(types.UPDATE_QUESTION_FOLLOW_STATE, false)
+          } else {
+            return success
           }
           return success
         } catch (err) {
+          console.error(err)
           const { success } = err.response.data as UnFollowQuestionResponse
           return success
         }
@@ -160,9 +208,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const { success } = await api.setBestAnswer(questionId, answerId)
           if (success) {
             commit(types.UPDATE_QUESTION_BEST_ANSWER, answerId)
+          } else {
+            return success
           }
           return success
         } catch (err) {
+          console.error(err)
           const { success } = err.response.data as SetBestAnswerResponse
           return success
         }
@@ -172,21 +223,28 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const { success } = await api.unsetBestAnswer(id)
           if (success) {
             commit(types.UPDATE_QUESTION_BEST_ANSWER, null)
+          } else {
+            return success
           }
           return success
         } catch (err) {
+          console.error(err)
           const { success } = err.response.data as UnsetBestAnswerResponse
           return success
         }
       },
       async [types.ADD_ANSWER]({ commit }, payload: AddAnswerPayload) {
         try {
-          const { success, data } = await api.addAnswer(payload)
+          const res = await api.addAnswer(payload)
+          const { success, data } = res
           if (success) {
             commit(types.UPDATE_NEW_ANSWER, data)
+            return data!.answer_id
+          } else {
+            return res
           }
-          return data!.answer_id
         } catch (err) {
+          console.error(err)
           const res = err.response.data as AddAnswerResponse
           return res
         }
@@ -196,7 +254,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         payload: AddResponsePayload
       ) {
         try {
-          const { success, data } = await api.addResponse(payload)
+          const res = await api.addResponse(payload)
+          const { success, data } = res
           if (success) {
             const answerIndex = _.findIndex(
               state.answers,
@@ -207,9 +266,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
               answerIndex,
               data,
             })
+            return data!.response_id
+          } else {
+            return res
           }
-          return data!.response_id
         } catch (err) {
+          console.error(err)
           const res = err.response.data as AddResponseResponse
           return res
         }
@@ -219,11 +281,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         payload: UpdateLikeStatuePayload
       ) {
         try {
-          const {
-            success,
-            answer_meta: data,
-            like_status: likeStatus,
-          } = await api.likeAnswer(payload)
+          const res = await api.likeAnswer(payload)
+          const { success, answer_meta: data, like_status: likeStatus } = res
           if (success) {
             const answerIndex = _.findIndex(
               state.answers,
@@ -235,29 +294,36 @@ export const createStoreModule = <R>(): Module<State, R> => {
               data,
               likeStatus,
             })
+          } else {
+            return res
           }
         } catch (err) {
-          // @todo: error handler
-          console.log(err)
+          console.error(err)
+          const res = err.response.data as AddResponseResponse
+          return res
         }
       },
-      async [types.FETCH_RELATED_QUESTIONS]({ commit }, id: number) {
-        try {
-          const { data } = await api.fetchRelatedQuestions(id)
-          commit(types.UPDATE_RELATED_QUESTIONS, data)
-        } catch (err) {
-          // @todo: error handler, e.g. question not exist.
-          console.log(err)
-        }
+      [types.FETCH_RELATED_QUESTIONS](context, id: number) {
+        return new Promise((resolve) => {
+          api
+            .fetchRelatedQuestions(id)
+            .then(({ data }) => resolve(data))
+            .catch((err) => {
+              console.error(err)
+              resolve(null)
+            })
+        })
       },
-      async [types.FETCH_RELATED_BLOGS]({ commit }, id: number) {
-        try {
-          const { data } = await api.fetchRelatedBlogs(id)
-          commit(types.UPDATE_RELATED_BLOGS, data)
-        } catch (err) {
-          // @todo: error handler, e.g. question not exist.
-          console.log(err)
-        }
+      [types.FETCH_RELATED_BLOGS](context, id: number) {
+        return new Promise((resolve) => {
+          api
+            .fetchRelatedBlogs(id)
+            .then(({ data }) => resolve(data))
+            .catch((err) => {
+              console.error(err)
+              resolve(null)
+            })
+        })
       },
       [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](
         { commit },
@@ -280,31 +346,44 @@ export const createStoreModule = <R>(): Module<State, R> => {
         const { questionId, answerId } = state.report
         try {
           if (answerId) {
-            const { success } = await api.addAnswerReport({
+            const res = await api.addAnswerReport({
               questionId: questionId!,
               answerId,
               comment,
             })
-            const answerIndex = _.findIndex(
-              state.answers,
-              (answer) => answer.answer_id === answerId
-            )
-            commit(types.UPDATE_REPORT_STATUS, {
-              answerIndex,
-              reportStatus: true,
-            })
-            return success
+            const { success } = res
+
+            if (success) {
+              const answerIndex = _.findIndex(
+                state.answers,
+                (answer) => answer.answer_id === answerId
+              )
+              commit(types.UPDATE_REPORT_STATUS, {
+                answerIndex,
+                reportStatus: true,
+              })
+              return success
+            } else {
+              return res
+            }
           } else {
-            const { success } = await api.addQuestionReport({
+            const res = await api.addQuestionReport({
               questionId: questionId!,
               comment,
             })
-            commit(types.UPDATE_REPORT_STATUS, {
-              reportStatus: true,
-            })
-            return success
+            const { success } = res
+
+            if (success) {
+              commit(types.UPDATE_REPORT_STATUS, {
+                reportStatus: true,
+              })
+              return success
+            } else {
+              return res
+            }
           }
         } catch (err) {
+          console.error(err)
           const res = err.response.data as SimpleResponse
           return res
         }
@@ -316,41 +395,56 @@ export const createStoreModule = <R>(): Module<State, R> => {
         const { questionId, answerId } = payload
         try {
           if (answerId) {
-            const { success } = await api.cancelAnswerReport({
+            const res = await api.cancelAnswerReport({
               questionId: questionId!,
               answerId,
             })
-            const answerIndex = _.findIndex(
-              state.answers,
-              (answer) => answer.answer_id === answerId
-            )
-            commit(types.UPDATE_REPORT_STATUS, {
-              answerIndex,
-              reportStatus: false,
-            })
-            return success
+            const { success } = res
+
+            if (success) {
+              const answerIndex = _.findIndex(
+                state.answers,
+                (answer) => answer.answer_id === answerId
+              )
+              commit(types.UPDATE_REPORT_STATUS, {
+                answerIndex,
+                reportStatus: false,
+              })
+              return success
+            } else {
+              return res
+            }
           } else {
-            const { success } = await api.cancelQuestionReport({
+            const res = await api.cancelQuestionReport({
               questionId: questionId!,
             })
-            commit(types.UPDATE_REPORT_STATUS, {
-              reportStatus: false,
-            })
-            return success
+            const { success } = res
+
+            if (success) {
+              commit(types.UPDATE_REPORT_STATUS, {
+                reportStatus: false,
+              })
+              return success
+            } else {
+              return res
+            }
           }
         } catch (err) {
+          console.error(err)
           const res = err.response.data as SimpleResponse
           return res
         }
       },
-      async [types.FETCH_RECOMMEND_PRODUCT]({ commit }, id: number) {
-        try {
-          const { recommend_product } = await api.fetchRecommendProduct(id)
-          commit(types.UPDATE_RECOMMEND_PRODUCT, recommend_product)
-        } catch (err) {
-          // @todo: error handler, e.g. question not exist.
-          console.log(err)
-        }
+      [types.FETCH_RECOMMEND_PRODUCT](context, id: number) {
+        return new Promise((resolve) => {
+          api
+            .fetchRecommendProduct(id)
+            .then(({ recommend_product }) => resolve(recommend_product))
+            .catch((err) => {
+              console.error(err)
+              resolve(null)
+            })
+        })
       },
     },
     mutations: {
