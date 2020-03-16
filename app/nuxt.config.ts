@@ -22,7 +22,7 @@ const config: Configuration = {
           'MY83 把保險變簡單，幫助你讓生活更有保障。保險其實是很好的概念，能減輕遭遇風險時的負擔。MY83 不是保險業務員，也和任何保險公司無關，保戶在這裡使用任何資源都是免費的。我們從保戶的立場成立保險媒合平台，希望讓大家有能力可以分辨適合自己的保險。幫助消費者保險買對不買貴，也讓專業的業務員服務更多的消費者！',
       },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }],
     bodyAttrs: {
       ontouchstart: '',
     },
