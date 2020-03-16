@@ -28,8 +28,8 @@ import request from '@/api/request'
  */
 export const fetchQuestionData = async (
   id: number
-): Promise<QuestionDataResponse> => {
-  const { data } = await request.get<QuestionDataResponse>(
+): Promise<QuestionDataResponse | SimpleResponse> => {
+  const { data } = await request.get<QuestionDataResponse | SimpleResponse>(
     `/api/v1/question/${id}`
   )
   return data
@@ -54,10 +54,10 @@ export const fetchAnswerData = async (
  */
 export const fetchQuestionPersonalizeData = async (
   id: number
-): Promise<QuestionPersonalizeResponse> => {
-  const { data } = await request.get<QuestionPersonalizeResponse>(
-    `/api/v1/question/${id}/personalize`
-  )
+): Promise<QuestionPersonalizeResponse | SimpleResponse> => {
+  const { data } = await request.get<
+    QuestionPersonalizeResponse | SimpleResponse
+  >(`/api/v1/question/${id}/personalize`)
   return data
 }
 
