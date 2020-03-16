@@ -1,16 +1,13 @@
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import {
-  FETCH_QUESTION_DATA,
-  FETCH_ANSWER_DATA,
   HIGHLIGHT_BEST_ANSWER,
   FETCH_QUESTION_PERSONALIZE_DATA,
   FETCH_ANSWER_PERSONALIZE_DATA,
-  FETCH_RELATED_QUESTIONS,
-  FETCH_RELATED_BLOGS,
-  FETCH_RECOMMEND_PRODUCT,
+  FETCH_PAGE_DATA,
 } from '@/store/question/question.type'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/index'
@@ -19,15 +16,20 @@ const QuestionPage = () => import('./QuestionPage.vue')
 const user = User.getInstance()
 
 export default {
-  async fetch({ store, route }) {
-    const id = route.params.id
-    await Promise.all([
-      store.dispatch(`question/${FETCH_QUESTION_DATA}`, id),
-      store.dispatch(`question/${FETCH_ANSWER_DATA}`, id),
-      store.dispatch(`question/${FETCH_RELATED_QUESTIONS}`, id),
-      store.dispatch(`question/${FETCH_RELATED_BLOGS}`, id),
-      store.dispatch(`question/${FETCH_RECOMMEND_PRODUCT}`, id),
-    ])
+  async fetch({ store, route, error }) {
+    const id = Number(route.params.id)
+    if (_.isNaN(id)) {
+      return error({ statusCode: 404 })
+    }
+
+    try {
+      await store.dispatch(`question/${FETCH_PAGE_DATA}`, id)
+    } catch (err) {
+      return error({
+        statusCode: 404,
+        message: 'question',
+      })
+    }
 
     const { question } = (store.state as QuestionVuexState).question
 

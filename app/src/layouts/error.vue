@@ -123,7 +123,7 @@ export interface Props {
   padding: 47px 0;
 
   @include max-media('xl') {
-    padding: 60px 0;
+    padding: 60px 20px;
   }
 
   &__image {
@@ -141,6 +141,12 @@ export interface Props {
   &__title {
     font-size: 1.375rem;
     font-weight: 500;
+  }
+
+  &__content {
+    @include max-media('xl') {
+      font-size: 0.875rem;
+    }
   }
 
   &__function {
