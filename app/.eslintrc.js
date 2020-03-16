@@ -41,6 +41,7 @@ module.exports = {
       "vars": "all",
       "args": "after-used",
       "ignoreRestSiblings": false
-    }]
+    }],
+    "no-console": ["warn", { allow: ["warn", "error"] }]
   },
 }
