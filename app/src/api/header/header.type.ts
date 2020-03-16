@@ -23,6 +23,7 @@ export interface SalesInfo {
 }
 
 export interface Personalize {
+  id: number
   avatar: string
   username: string
   nickname: string
