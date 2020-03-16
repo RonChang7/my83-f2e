@@ -31,7 +31,9 @@ export default (({ app }) => {
       const auth = Auth.getInstance()
       const jwtToken = auth.getToken()
 
-      config.headers.Authorization = `Bearer ${jwtToken}`
+      if (jwtToken) {
+        config.headers.Authorization = `Bearer ${jwtToken}`
+      }
       return config
     })
 
