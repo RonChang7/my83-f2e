@@ -22,6 +22,9 @@ import DeviceMixin, {
 } from '@/mixins/device/device-mixins'
 
 export default {
+  serverPrefetch() {
+    return this.$store.dispatch(`header/${types.FETCH_HEADER_NAV_DATA}`)
+  },
   mixins: [DeviceMixin],
   components: {
     DesktopHeader,
