@@ -8,14 +8,15 @@
       />
     </div>
     {{ name }}
-    <span v-if="target !== null">·</span>
-    <GlobalLink v-if="target !== null" :to="target.link.path">
+    <span v-if="!checkItemEmpty(target)">·</span>
+    <GlobalLink v-if="!checkItemEmpty(target)" :to="target.link.path">
       {{ target.name }}
     </GlobalLink>
   </div>
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -49,6 +50,11 @@ export default {
       },
     }
   },
+  methods: {
+    checkItemEmpty(item) {
+      return _.isEmpty(item)
+    },
+  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -73,14 +79,16 @@ export interface Data {
   avatarStyle: CSSStyleDeclaration
 }
 
-export interface Methods {}
+export interface Methods {
+  checkItemEmpty(item: Props['target']): boolean
+}
 
 export interface Computed {}
 
 export interface Props {
   avatar: string
   name: string
-  target: Tag
+  target: Tag | {}
 }
 </script>
 
