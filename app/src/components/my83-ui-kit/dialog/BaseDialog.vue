@@ -73,7 +73,7 @@ export default {
     },
     leftButtonType: {
       type: String,
-      default: 'primary',
+      default: 'secondary',
     },
     rightButtonText: {
       type: String,
@@ -81,11 +81,11 @@ export default {
     },
     rightButtonType: {
       type: String,
-      default: 'secondary',
+      default: 'primary',
     },
     defaultActionButton: {
       type: String,
-      default: 'left',
+      default: 'right',
     },
     errMsg: {
       type: String,
@@ -111,12 +111,15 @@ export default {
     },
   },
   watch: {
-    visible(val) {
-      if (val) {
-        this.$nextTick(() => {
-          this.$refs.dialog.focus()
-        })
-      }
+    visible: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.$nextTick(() => {
+            this.$refs.dialog.focus()
+          })
+        }
+      },
     },
   },
 } as ComponentOption
@@ -161,7 +164,7 @@ export interface Props {
   leftButtonType: string
   rightButtonText: string
   rightButtonType: string
-  defaultActionButton: 'left' | 'right'
+  defaultActionButton: 'left' | 'right' | ''
   errMsg: string
 }
 </script>
