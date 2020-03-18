@@ -16,7 +16,7 @@ const QuestionPage = () => import('./QuestionPage.vue')
 const user = User.getInstance()
 
 export default {
-  async fetch({ store, route, error }) {
+  async middleware({ store, route, error }) {
     const id = Number(route.params.id)
     if (_.isNaN(id)) {
       return error({ statusCode: 404 })
