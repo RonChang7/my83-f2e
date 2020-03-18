@@ -111,9 +111,7 @@ export default {
       this.screenWidth = window.innerWidth
     },
     reloadHandler() {
-      return this.isDesktop
-        ? window.location.reload()
-        : (window.location.href = this.$route.meta.perviousPath)
+      return this.isDesktop ? window.location.reload() : this.$emit('reload')
     },
     showLoginPanel() {
       this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
