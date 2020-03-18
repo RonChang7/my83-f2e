@@ -238,8 +238,10 @@ export default {
     this.getScreenWidth()
     this.getScrollHeightBottom()
 
-    this.fixedColumn.start =
-      this.$refs.wrapper.offsetTop + this.$refs.wrapper.offsetHeight + 60
+    if (this.$refs.wrapper) {
+      this.fixedColumn.start =
+        this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
+    }
 
     if (this.$route.hash) {
       this.scrollToAnchorPoint(this.$route.hash)
@@ -256,6 +258,8 @@ export default {
   },
   watch: {
     scrollHeightBottom(val: number) {
+      if (!this.$refs.wrapper) return
+
       if (!this.isDesktop || this.screenWidth < 1200) {
         this.$refs.wrapper.style.cssText = ''
         this.shouldFixedColumn = false
@@ -317,7 +321,6 @@ export interface Instance extends Vue {
     mobileRelatedSection: Element
     wrapper: HTMLElement
     answersSection: Vue
-    anchor: HTMLElement
   }
   getScreenWidth(this: ComponentInstance): void
   getScrollHeightBottom(this: ComponentInstance): void
@@ -426,10 +429,5 @@ export interface Props {}
   &.hasProduct {
     bottom: 90px;
   }
-}
-
-.anchor {
-  width: 0px;
-  height: 0px;
 }
 </style>

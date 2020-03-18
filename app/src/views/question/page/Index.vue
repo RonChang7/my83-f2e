@@ -22,6 +22,13 @@ export default {
       return error({ statusCode: 404 })
     }
 
+    // 如果回到同一篇 Question (相同 id)，則不重新打 API
+    if (
+      id === (store.state as QuestionVuexState).question.question?.question_id
+    ) {
+      return
+    }
+
     try {
       await store.dispatch(`question/${FETCH_PAGE_DATA}`, id)
     } catch (err) {

@@ -250,7 +250,7 @@ export default {
         : `/user/${this.authorInfo.id}`
       const query = {
         content: encodeURIComponent(
-          `你好,\n\n我有看到你的留言\n${window.location.href}#${this.anchorString}\n`
+          `你好,\n\n我有看到你的留言\n${this.$env.HOST_URL}${this.$route.path}#${this.anchorString}\n`
         ),
         source: 'forum',
       }
