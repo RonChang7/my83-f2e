@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { Module } from 'vuex'
 import * as types from './question.type'
+import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/question/question'
 import {
   QuestionData,
@@ -22,7 +23,6 @@ import {
   RelatedQuestion,
   RelatedBlog,
   RecommendProduct,
-  QuestionDataResponse,
   QuestionPersonalizeResponse,
 } from '@/api/question/question.type'
 import { SimpleResponse } from '@/api/type'
@@ -82,11 +82,16 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 relatedBlogs,
                 recommendProducts,
               ] = res
-              commit(types.UPDATE_QUESTION_DATA, question)
+              const { data: questionData, page_meta, json_ld } = question
+
+              commit(types.UPDATE_QUESTION_DATA, questionData)
               commit(types.UPDATE_ANSWER_DATA, answers)
               commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestion)
               commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
               commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProducts)
+
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, { root: true })
+              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
               resolve()
             })
             .catch((err) => reject(err))
@@ -100,7 +105,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
               if ((res as SimpleResponse).success === false) {
                 throw new Error((res as SimpleResponse).message)
               }
-              resolve((res as QuestionDataResponse).data)
+              resolve(res)
             })
             .catch((err) => {
               console.error(err)
