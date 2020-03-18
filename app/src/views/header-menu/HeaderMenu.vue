@@ -1,7 +1,7 @@
 <template>
   <nav class="HeaderMenu">
     <MobileHeaderNav />
-    <HeaderPersonalize @reload="reloadHandler" />
+    <HeaderPersonalize :from-header-menu="true" @reload="reloadHandler" />
   </nav>
 </template>
 
