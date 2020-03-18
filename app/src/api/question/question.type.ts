@@ -1,7 +1,9 @@
-import { Link, SimpleResponse, Role } from '../type'
+import { Link, SimpleResponse, Role, PageMeta } from '../type'
 
 export interface QuestionDataResponse {
   data: QuestionData
+  page_meta?: PageMeta
+  json_ld?: []
 }
 
 export interface AnswerDataResponse {

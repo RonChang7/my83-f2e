@@ -2,11 +2,13 @@ import _ from 'lodash'
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { createStoreModule as createGlobalStoreModule } from '@/store/global/index'
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
+import { createStoreModule as createPageMetaStoreModule } from '@/store/seo/page-meta'
+import { createStoreModule as createJsonLdStoreModule } from '@/store/seo/json-ld'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
 import { User } from '@/services/user/user'
 import { Auth } from '@/services/auth/auth'
 
-const storeModules = {
+const storeModules: Record<string, StoreModule> = {
   global: {
     moduleName: 'global',
     createModule: () => createGlobalStoreModule(),
@@ -14,6 +16,14 @@ const storeModules = {
   header: {
     moduleName: 'header',
     createModule: () => createHeaderStoreModule(),
+  },
+  pageMeta: {
+    moduleName: 'pageMeta',
+    createModule: () => createPageMetaStoreModule(),
+  },
+  jsonLd: {
+    moduleName: 'jsonLd',
+    createModule: () => createJsonLdStoreModule(),
   },
 }
 
@@ -43,3 +53,8 @@ export default (({ app, store }) => {
     user.updateLandingUrl()
   }
 }) as NuxtPlugin
+
+interface StoreModule {
+  moduleName: string
+  createModule: Function
+}
