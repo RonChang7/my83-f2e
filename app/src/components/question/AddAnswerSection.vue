@@ -8,7 +8,7 @@
   >
     <transition mode="out-in">
       <BaseButton
-        v-if="!openEditor & editorIsLoaded"
+        v-if="!openEditor"
         :size="addAnswerButtonSize"
         @click.native="panelDisplayHandler(true)"
       >
