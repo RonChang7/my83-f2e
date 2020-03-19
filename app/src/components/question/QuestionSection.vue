@@ -81,7 +81,9 @@ export default {
     },
     author() {
       const { question } = this.$store.state.question
-      return question ? question.author_info.nickname : ''
+      return question
+        ? question?.author_info.nickname || question?.author_info.username
+        : ''
     },
     authorInfo() {
       const { question } = this.$store.state.question
