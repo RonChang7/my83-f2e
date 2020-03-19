@@ -49,7 +49,10 @@ const config: Configuration = {
     '@/plugins/sync-page-module-register-middleware',
     '@/plugins/axios-setup',
     '@/plugins/app-init',
-    '@/plugins/personalized-header',
+    {
+      src: '@/plugins/personalized-header',
+      mode: 'client',
+    },
     {
       src: '@/plugins/polyfill',
       mode: 'client',
