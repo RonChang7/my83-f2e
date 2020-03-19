@@ -1,5 +1,5 @@
 <template>
-  <div v-if="responses.length" class="ResponsesSection">
+  <div v-if="responses.length" class="ResponsesListSection">
     <ResponseSection
       v-for="(response, index) in responses"
       :key="response.response_id"
@@ -68,7 +68,7 @@ export interface Props {
 @import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
-.ResponsesSection {
+.ResponsesListSection {
   padding-left: 40px;
   border-top: 1px solid $gray-quaternary;
 

@@ -46,7 +46,7 @@
           <AddAnswerSection v-if="userRole === 'sales'" />
         </client-only>
 
-        <AnswersSection ref="answersSection" />
+        <AnswersListSection ref="answersListSection" />
 
         <client-only>
           <AddAnswerSection v-if="userRole !== 'sales'" />
@@ -79,7 +79,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { QuestionVuexState } from './Index.vue'
 import QuestionSection from '@/components/question/QuestionSection.vue'
-import AnswersSection from '@/components/question/AnswersSection.vue'
+import AnswersListSection from '@/components/question/AnswersListSection.vue'
 import AddAnswerSection from '@/components/question/AddAnswerSection.vue'
 import GuideSection from '@/components/question/GuideSection.vue'
 import HotServiceSection from '@/components/question/HotServiceSection.vue'
@@ -105,7 +105,7 @@ export default {
   mixins: [DeviceMixin],
   components: {
     QuestionSection,
-    AnswersSection,
+    AnswersListSection,
     AddAnswerSection,
     GuideSection,
     HotServiceSection,
@@ -267,8 +267,8 @@ export default {
       }
 
       this.fixedColumn.end =
-        (this.$refs.answersSection.$el as HTMLElement).offsetTop +
-        (this.$refs.answersSection.$el as HTMLElement).offsetHeight +
+        (this.$refs.answersListSection.$el as HTMLElement).offsetTop +
+        (this.$refs.answersListSection.$el as HTMLElement).offsetHeight +
         60
 
       if (val < this.fixedColumn.start) {
@@ -320,7 +320,7 @@ export interface Instance extends Vue {
     dropdownPanel: Vue
     mobileRelatedSection: Element
     wrapper: HTMLElement
-    answersSection: Vue
+    answersListSection: Vue
   }
   getScreenWidth(this: ComponentInstance): void
   getScrollHeightBottom(this: ComponentInstance): void

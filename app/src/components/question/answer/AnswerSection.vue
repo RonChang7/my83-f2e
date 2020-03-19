@@ -30,7 +30,10 @@
         :like-status="likeStatus"
         @action="buttonActionHandler"
       />
-      <ResponsesSection :responses="answer.responses" :user-role="userRole" />
+      <ResponsesListSection
+        :responses="answer.responses"
+        :user-role="userRole"
+      />
       <ResponseEditor
         v-if="displayResponsePanel"
         :avatar="avatar"
@@ -51,7 +54,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { AvatarMap } from '../helpers/reply-default-avatar'
-import ResponsesSection from '../ResponsesSection.vue'
+import ResponsesListSection from '../ResponsesListSection.vue'
 import BaseContent from '../base/BaseContent.vue'
 import BaseMeta from '../base/BaseMeta.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
@@ -80,7 +83,7 @@ export default {
     BaseContent,
     BaseMeta,
     AnswerInteraction,
-    ResponsesSection,
+    ResponsesListSection,
     ResponseEditor,
     BaseHeaderFunction,
   },
