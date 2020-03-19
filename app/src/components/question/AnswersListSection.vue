@@ -1,5 +1,5 @@
 <template>
-  <div v-if="answers.length" class="AnswersSection">
+  <div v-if="answers.length" class="AnswersListSection">
     <AnswerSection
       v-for="(answer, index) in answers"
       :key="answer.answer_id"
@@ -99,7 +99,7 @@ export interface Props {}
 </script>
 
 <style lang="scss" scoped>
-.AnswersSection {
+.AnswersListSection {
   flex: 0 0 auto;
 }
 </style>
