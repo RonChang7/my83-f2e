@@ -4,17 +4,6 @@ import { trackingWrapper } from '../../helper/tracking-wrapper'
 
 export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
   return new Promise((resolve) => {
-    if (window.ga) {
-      resolve(function() {
-        trackingWrapper(
-          window.ga,
-          trackingLogEnable,
-          '[Google Analytics]',
-          arguments
-        )
-      })
-    }
-
     if (trackingEnable) {
       ;(function(i, s, o, g, r, a, m) {
         // eslint-disable-next-line dot-notation
@@ -31,12 +20,12 @@ export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
         m.parentNode.insertBefore(a, m)
 
         a.onload = () =>
-          resolve(function() {
+          resolve((...args) => {
             trackingWrapper(
               window.ga,
               trackingLogEnable,
               '[Google Analytics]',
-              arguments
+              args
             )
           })
       })(
@@ -49,12 +38,12 @@ export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
     } else {
       window.ga = function() {}
 
-      resolve(function() {
+      resolve((...args) => {
         trackingWrapper(
           window.ga,
           trackingLogEnable,
           '[Google Analytics]',
-          arguments
+          args
         )
       })
     }
