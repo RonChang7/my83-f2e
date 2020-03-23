@@ -3,8 +3,9 @@ import {
   AnalyticsEventManager,
   EventProviderEnv,
 } from '@/analytics/event-manager/analytics-event-manager'
+import { PAGE_VIEW } from '@/analytics/event-manager/event-key'
 
-export default (({ app }) => {
+export default (({ app }, inject) => {
   const {
     APP_ENV,
     TRACKING_ENABLE,
@@ -31,7 +32,11 @@ export default (({ app }) => {
     env,
   })
 
+  inject('analytics', <P>(eventName, payload?: P) =>
+    AEM.trigger(eventName, payload)
+  )
+
   app.router!.afterEach(() => {
-    AEM.trigger('PAGE_VIEW')
+    app.$analytics(PAGE_VIEW)
   })
 }) as NuxtPlugin
