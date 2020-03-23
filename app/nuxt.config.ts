@@ -50,11 +50,15 @@ const config: Configuration = {
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {
+      src: '@/plugins/polyfill',
+      mode: 'client',
+    },
+    {
       src: '@/plugins/personalized-header',
       mode: 'client',
     },
     {
-      src: '@/plugins/polyfill',
+      src: '@/plugins/analytics',
       mode: 'client',
     },
   ],
