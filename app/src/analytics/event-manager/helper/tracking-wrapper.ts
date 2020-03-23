@@ -8,6 +8,6 @@ export const trackingWrapper = (
 ) => {
   trackingFn(...args)
   if (trackingLogEnable) {
-    logger(logPrefix, [].slice.call(args).join(' '))
+    logger(logPrefix, args.join(' '))
   }
 }

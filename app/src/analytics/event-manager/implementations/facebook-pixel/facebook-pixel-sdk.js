@@ -23,13 +23,8 @@ export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
         s.parentNode.insertBefore(t, s)
 
         t.onload = () =>
-          resolve(function() {
-            trackingWrapper(
-              f.fbq,
-              trackingLogEnable,
-              '[Facebook Pixel]',
-              arguments
-            )
+          resolve((...args) => {
+            trackingWrapper(f.fbq, trackingLogEnable, '[Facebook Pixel]', args)
           })
       })(
         window,
@@ -40,13 +35,8 @@ export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
     } else {
       window.fbq = function() {}
 
-      resolve(function() {
-        trackingWrapper(
-          window.fbq,
-          trackingLogEnable,
-          '[Facebook Pixel]',
-          arguments
-        )
+      resolve((...args) => {
+        trackingWrapper(window.fbq, trackingLogEnable, '[Facebook Pixel]', args)
       })
     }
   })
