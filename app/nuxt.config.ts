@@ -54,11 +54,11 @@ const config: Configuration = {
       mode: 'client',
     },
     {
-      src: '@/plugins/personalized-header',
+      src: '@/plugins/analytics',
       mode: 'client',
     },
     {
-      src: '@/plugins/analytics',
+      src: '@/plugins/personalized-header',
       mode: 'client',
     },
   ],

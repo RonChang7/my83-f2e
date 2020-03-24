@@ -1,6 +1,7 @@
 import 'autotrack'
 import * as eventTypes from '../../event-key'
 import { googleAnalyticsSetup } from '../google-analytics/google-analytics-sdk'
+import { GoogleTrackingSetPayload } from '../../event-payload-interface'
 
 export class GoogleAnalytics {
   private static instance: GoogleAnalytics
@@ -42,6 +43,15 @@ export class GoogleAnalytics {
       'pageview',
       window.location.pathname + window.location.search + window.location.hash
     )
+  }
+
+  public async [eventTypes.GOOGLE_TRACKING_SET](
+    payload: GoogleTrackingSetPayload
+  ) {
+    const ga = await this.getGa()
+    const { key, value } = payload
+
+    ga('set', key, value)
   }
 
   private async getGa() {
