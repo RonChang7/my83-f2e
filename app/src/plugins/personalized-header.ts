@@ -18,8 +18,8 @@ export default (({ app, store }) => {
         .personalize.id
 
       app.$analytics<GoogleTrackingSetPayload>(GOOGLE_TRACKING_SET, {
-        key: 'userId',
-        value: userId?.toString() || '',
+        fieldName: 'userId',
+        fieldValue: userId?.toString() || '',
       })
     }
 
@@ -27,8 +27,8 @@ export default (({ app, store }) => {
     const role = roleCode === -1 ? '訪客' : roleCode // MY83-rt 舊有邏輯
 
     app.$analytics<GoogleTrackingSetPayload>(GOOGLE_TRACKING_SET, {
-      key: 'dimension1',
-      value: role.toString(),
+      fieldName: 'dimension1',
+      fieldValue: role.toString(),
     })
 
     app.$analytics(PAGE_VIEW)

@@ -49,9 +49,9 @@ export class GoogleAnalytics {
     payload: GoogleTrackingSetPayload
   ) {
     const ga = await this.getGa()
-    const { key, value } = payload
+    const { fieldName, fieldValue } = payload
 
-    ga('set', key, value)
+    ga('set', fieldName, fieldValue)
   }
 
   private async getGa() {
