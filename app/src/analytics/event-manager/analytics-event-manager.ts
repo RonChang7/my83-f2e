@@ -53,10 +53,14 @@ export class AnalyticsEventManager {
     _.forIn(
       this.eventProvidersInstance as EventProviderEnv,
       async (eventProviderInstance) => {
-        try {
-          await eventProviderInstance[eventTypes[eventName]](payload)
-        } catch (e) {
-          console.warn('AEM trigger error: ', e)
+        if (
+          typeof eventProviderInstance[eventTypes[eventName]] === 'function'
+        ) {
+          try {
+            await eventProviderInstance[eventTypes[eventName]](payload)
+          } catch (e) {
+            console.warn('AEM trigger error: ', e)
+          }
         }
       }
     )
