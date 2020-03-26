@@ -1,7 +1,9 @@
 <template>
   <div class="HotServiceSection">
     <div class="HotServiceSection__header">
+      <div class="decoration left"></div>
       <span>MY83 熱門服務</span>
+      <div class="decoration right"></div>
     </div>
     <div class="HotServiceSection__title">
       幫你解決保險問題的好幫手
@@ -76,6 +78,7 @@ export interface Props {}
 
 .HotServiceSection {
   width: 1120px;
+  padding-top: 80px;
   color: $gray-primary;
 
   &__header {
@@ -99,10 +102,10 @@ export interface Props {}
 
   &__card {
     flex: 0 0 auto;
-    width: calc(25% - 14px);
+    width: calc(25% - 15px);
 
     &:not(:last-child) {
-      margin-right: 14px;
+      margin-right: 20px;
     }
   }
 
@@ -113,25 +116,39 @@ export interface Props {}
     padding: 12px 26px;
 
     &__header {
-      display: block;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      span:before,
-      span:after {
-        content: '';
-        border-bottom: 2px dashed $primary-color;
-        width: 15px;
-        display: inline-block;
-        position: relative;
-        top: -6px;
+      .decoration {
+        height: 2px;
+        width: 14px;
+        border-radius: 1px;
+        border: 1px solid $primary-color;
+
+        &.left:before,
+        &.right:after {
+          content: '';
+          display: block;
+          height: 2px;
+          width: 4px;
+          border-radius: 1px;
+          border: 1px solid $primary-color;
+          position: relative;
+          top: -1px;
+        }
+
+        &.left:before {
+          left: -10px;
+        }
+
+        &.right:after {
+          right: -18px;
+        }
       }
 
-      span:before {
-        left: -10px;
-      }
-
-      span:after {
-        right: -10px;
+      > span {
+        margin: 0 10px;
       }
     }
 
@@ -141,7 +158,7 @@ export interface Props {}
     }
 
     &__card {
-      width: calc(25% - 23px);
+      width: calc(25% - 22.5px);
 
       &:not(:last-child) {
         margin-right: 30px;

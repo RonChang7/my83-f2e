@@ -91,6 +91,7 @@ export interface Props {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   color: $gray-primary;
   padding-top: 12px;
 
@@ -121,6 +122,7 @@ export interface Props {
   &__content {
     margin: 12px 0 28px;
     text-align: center;
+    height: 100%;
   }
 }
 </style>
