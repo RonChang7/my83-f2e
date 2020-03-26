@@ -8,7 +8,7 @@
       />
     </div>
     {{ name }}
-    <span v-if="!checkItemEmpty(target)">·</span>
+    <span v-if="!checkItemEmpty(target)">•</span>
     <GlobalLink v-if="!checkItemEmpty(target)" :to="target.link.path">
       {{ target.name }}
     </GlobalLink>
@@ -110,7 +110,7 @@ export interface Props {
     color: $gray-secondary;
 
     &:hover {
-      color: $primary-hover-color;
+      color: $primary-color;
     }
   }
 }
