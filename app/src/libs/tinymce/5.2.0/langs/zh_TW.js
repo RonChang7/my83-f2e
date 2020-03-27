@@ -217,7 +217,7 @@ tinymce.addI18n('zh_TW',{
 "Rows": "\u5217",
 "Width": "\u5bec\u5ea6",
 "Height": "\u9ad8\u5ea6",
-"Cell spacing": "\u5132\u5b58\u683c\u5f97\u9593\u8ddd",
+"Cell spacing": "\u5132\u5b58\u683c\u7684\u9593\u8ddd",
 "Cell padding": "\u5132\u5b58\u683c\u7684\u908a\u8ddd",
 "Show caption": "\u986f\u793a\u6a19\u984c",
 "Left": "\u5de6\u908a",
