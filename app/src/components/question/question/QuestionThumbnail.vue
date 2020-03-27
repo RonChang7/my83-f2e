@@ -1,6 +1,7 @@
 <template>
   <figure class="QuestionThumbnail">
     <BaseLazyImage
+      class="QuestionThumbnail__image"
       :image-url="imageUrl"
       :image-alt="imageAlt"
       :ignore-placeholder="true"
@@ -74,6 +75,15 @@ figure {
   border: solid 2px $gray-quaternary;
   margin-bottom: 10px;
   margin-right: 10px;
+  line-height: 0;
+
+  &__image {
+    transition: 0.3s;
+  }
+
+  &__image:hover {
+    opacity: 0.3;
+  }
 
   &:last-child {
     margin-right: 0;

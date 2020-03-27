@@ -193,7 +193,7 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
-.pswp__top-bar {
+.pswp__ui .pswp__top-bar {
   background: none;
   margin-top: 10px;
   padding-right: 20px;
@@ -212,16 +212,18 @@ export interface Props {
 
 .pswp__button--arrow--right:before,
 .pswp__button--arrow--left:before {
-  width: 76px;
-  height: 116px;
+  width: 40px;
+  height: 60px;
   top: 20px;
 }
 
 .pswp__button--arrow--right:before {
-  background: url('~assets/images/icon/arrow-next.svg');
+  background: url('~assets/images/icon/arrow-next.svg') !important;
+  right: 40px;
 }
 
 .pswp__button--arrow--left:before {
-  background: url('~assets/images/icon/arrow-previous.svg');
+  background: url('~assets/images/icon/arrow-previous.svg') !important;
+  left: 40px;
 }
 </style>
