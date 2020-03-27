@@ -186,7 +186,7 @@ export default {
       )
     },
     shouldShowMoreButton() {
-      return this.sectionType !== 'response' && !this.personalize.is_owner
+      return this.sectionType !== 'response'
     },
   },
   methods: {
