@@ -19,6 +19,10 @@
 
         <QuestionSection />
 
+        <client-only>
+          <AddAnswerSection v-if="userRole === 'sales'" />
+        </client-only>
+
         <MobileRecommendProductSection
           v-if="isMobile && shouldShowRecommendProduct"
         />
@@ -35,22 +39,18 @@
           />
         </div>
 
+        <AnswersListSection ref="answersListSection" />
+
+        <client-only>
+          <AddAnswerSection v-if="userRole !== 'sales'" />
+        </client-only>
+
         <BaseScrollToTopButton
           v-if="isMobile && shouldShowScrollToTop"
           class="scrollToTop"
           :class="{ hasProduct: shouldShowRecommendProduct }"
           @click.native="scrollToTop"
         />
-
-        <client-only>
-          <AddAnswerSection v-if="userRole === 'sales'" />
-        </client-only>
-
-        <AnswersListSection ref="answersListSection" />
-
-        <client-only>
-          <AddAnswerSection v-if="userRole !== 'sales'" />
-        </client-only>
       </div>
       <div v-if="!isMobile" class="QuestionPage__column right">
         <div
