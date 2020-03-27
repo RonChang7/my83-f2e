@@ -53,6 +53,7 @@ import BaseRickTextEditor from '../base/BaseRickTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { ADD_ANSWER } from '@/store/question/question.type'
+import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
 import {
   PostDataFactory,
   AnswerPostData,
@@ -132,6 +133,11 @@ export default {
         this.$nextTick(() => {
           this.scrollToNewPost(response)
         })
+
+        if (!this.nickname) {
+          this.$store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
+        }
+
         this.reset()
       } else {
         const { success, message } = response as AddAnswerResponse
