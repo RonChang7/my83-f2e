@@ -3,7 +3,6 @@
     <Editor
       v-model="editorContent"
       :init="init"
-      placeholder="留下你的想法與意見..."
       @onFocus="focusHandler(true)"
       @onBlur="focusHandler(false)"
     />
@@ -27,27 +26,46 @@ export default {
       type: String,
       required: true,
     },
+    minHeight: {
+      type: Number,
+      default: 200,
+    },
   },
   data() {
+    const plugins = ['table', 'link']
+
     return {
       isFocus: false,
       init: {
         content_css:
           '/static/tinymce/5.2.0/skins/content/default/content.min.css',
         skin_url: '/static/tinymce/5.2.0/skins/ui/oxide',
+
+        // 調整 placeholder 樣式 與 編輯器字型
         content_style:
           '.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before { color: #b4b4b4; }' +
           '.mce-content-body { font-family: "Noto Sans TC", sans-serif; }',
         language: 'zh_TW',
-        plugins: 'table link',
+        plugins,
         menubar: '',
         toolbar: 'bold italic underline forecolor backcolor table link',
+        elementpath: false,
+        branding: false,
+        min_height: this.minHeight,
+        placeholder: '留下你的想法與意見...',
+
+        // link plugin setting
         default_link_target: '_blank',
         link_assume_external_targets: true,
         link_context_toolbar: true,
-        elementpath: false,
-        branding: false,
-        min_height: 200,
+        link_title: false,
+        target_list: false,
+
+        mobile: {
+          plugins: [...plugins, 'autoresize'],
+          autoresize_bottom_margin: 0,
+          max_height: 450,
+        },
       },
     }
   },
@@ -111,6 +129,7 @@ export interface Computed {
 
 export interface Props {
   content: string
+  minHeight: number
 }
 </script>
 
