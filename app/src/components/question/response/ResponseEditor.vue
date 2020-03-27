@@ -65,6 +65,7 @@ import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { AddResponseResponse } from '@/api/question/question.type'
 import { ADD_RESPONSE } from '@/store/question/question.type'
+import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
 import {
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
@@ -161,6 +162,11 @@ export default {
         this.$nextTick(() => {
           this.scrollToNewPost(response)
         })
+
+        if (!this.nickname) {
+          this.$store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
+        }
+
         this.reset()
       } else {
         const { success, message } = response as AddResponseResponse
