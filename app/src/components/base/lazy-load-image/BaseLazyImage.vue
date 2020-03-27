@@ -3,7 +3,9 @@
     :class="{
       'placeholder-img': ignorePlaceholder ? false : hasPlaceholderImage,
     }"
-    :style="{ 'padding-top': ignorePlaceholder ? '1px' : imageRatio }"
+    :style="{
+      'padding-top': ignorePlaceholder ? (visible ? 0 : '1px') : imageRatio,
+    }"
     class="BaseLazyImage"
   >
     <img
