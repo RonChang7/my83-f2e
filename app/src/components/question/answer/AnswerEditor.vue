@@ -13,6 +13,7 @@
           v-else
           placeholder="設定你的暱稱"
           :value.sync="form.nickname"
+          :state="{ error: nicknameError }"
         />
         <div v-if="!nickname" class="AnswerEditor__nickname__inputInfo">
           暱稱設定後不可修改
@@ -102,6 +103,7 @@ export default {
       errMsg: '',
       submitState: '',
       acceptRule: false,
+      nicknameError: false,
     }
   },
   methods: {
@@ -142,6 +144,10 @@ export default {
       } else {
         const { success, message } = response as AddAnswerResponse
         this.errMsg = success ? '' : message
+
+        if (this.errMsg === '此匿名已被使用') {
+          this.nicknameError = true
+        }
       }
 
       this.submitState = ''
@@ -190,6 +196,7 @@ export interface Data {
   errMsg: string
   submitState: string
   acceptRule: boolean
+  nicknameError: boolean
 }
 
 export interface Methods {
