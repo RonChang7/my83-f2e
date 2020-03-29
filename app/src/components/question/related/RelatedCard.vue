@@ -101,7 +101,7 @@ export interface Props {
   $self: &;
 
   display: flex;
-  padding: 16px 0 20px;
+  padding: 16px 0;
   border-bottom: 1px solid $gray-quaternary;
 
   &.last {
@@ -120,13 +120,13 @@ export interface Props {
 
   &__index {
     color: $primary-color;
-    font-size: 1.25em;
+    font-size: 1.25rem;
     font-weight: 500;
     padding-right: 22px;
     max-width: 33px;
 
     @include max-media('xl') {
-      font-size: 1em;
+      font-size: 1rem;
       max-width: 25px;
       padding-right: 15px;
     }

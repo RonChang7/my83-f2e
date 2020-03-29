@@ -333,7 +333,7 @@ export interface Props {
       color: $text-default-color;
       padding: 0 20px;
       border-bottom: 4px solid $primary-bg;
-      font-size: 0.875em;
+      font-size: 0.875rem;
     }
   }
 
@@ -367,7 +367,7 @@ export interface Props {
       margin: 0 -18px;
       padding: 0 18px;
       border-radius: 0;
-      font-size: 0.875em;
+      font-size: 0.875rem;
     }
   }
 
