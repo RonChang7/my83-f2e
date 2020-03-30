@@ -25,7 +25,7 @@
     </div>
     <div class="AnswerEditor__function">
       <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
-      <BaseButton size="m" type="secondary" @click.native="reset">
+      <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
       <BaseButton
@@ -51,10 +51,16 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseRickTextEditor from '../base/BaseRickTextEditor.vue'
+import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { ADD_ANSWER } from '@/store/question/question.type'
+import { GlobalDialogContent } from '@/store/global/index'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
+import {
+  OPEN_GLOBAL_DIALOG,
+  UPDATE_GLOBAL_DIALOG,
+} from '@/store/global/global.type'
 import {
   PostDataFactory,
   AnswerPostData,
@@ -118,6 +124,12 @@ export default {
     async submit() {
       if (!this.validate()) return
 
+      // 在 url 的 ref 上加上 nofollow ugc (SEO)
+      this.form.content = this.form.content.replace(
+        /"noopener"/gm,
+        '"noopener nofollow ugc"'
+      )
+
       const payload = {
         questionId: this.questionId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
@@ -132,15 +144,17 @@ export default {
       )
 
       if (typeof response === 'number') {
-        this.$nextTick(() => {
+        this.reset()
+        this.$emit('close')
+
+        // Scroll to new post after answer editor closed
+        setTimeout(() => {
           this.scrollToNewPost(response)
-        })
+        }, 50)
 
         if (!this.nickname) {
           this.$store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
         }
-
-        this.reset()
       } else {
         const { success, message } = response as AddAnswerResponse
         this.errMsg = success ? '' : message
@@ -156,6 +170,25 @@ export default {
       AnswerFormData.reset()
       this.acceptRule = false
       this.form = AnswerFormData.form as AnswerPostData
+    },
+    cancel() {
+      const cancelFn = () => {
+        this.reset()
+        this.$emit('close')
+      }
+
+      if (this.form.content.length) {
+        const payload: GlobalDialogContent = {
+          ...CancelAnswerDialogContent,
+          rightConfirmFn: cancelFn,
+        }
+
+        this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
+        this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
+        return
+      }
+
+      cancelFn()
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
@@ -203,6 +236,7 @@ export interface Methods {
   validate(): boolean
   submit(): void
   reset(): void
+  cancel(): void
   scrollToNewPost(id: number): void
 }
 

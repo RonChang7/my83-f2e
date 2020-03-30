@@ -1,8 +1,10 @@
 <template>
   <div class="BaseRickTextEditor">
     <Editor
+      ref="editor"
       v-model="editorContent"
       :init="init"
+      model-events="change keyup input undo redo"
       @onFocus="focusHandler(true)"
       @onBlur="focusHandler(false)"
     />
@@ -13,7 +15,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Settings as TinymceSettings } from 'tinymce'
+import { Settings as TinymceSettings, Editor as TinymceEditor } from 'tinymce'
 import './tinymce'
 import Editor from '@tinymce/tinymce-vue'
 
@@ -61,6 +63,11 @@ export default {
         link_title: false,
         target_list: false,
 
+        // newline setting
+        forced_root_block: '',
+        force_br_newlines: true,
+        force_p_newlines: false,
+
         mobile: {
           plugins: [...plugins, 'autoresize'],
           autoresize_bottom_margin: 0,
@@ -94,6 +101,14 @@ export default {
       }
     },
   },
+  mounted() {
+    const editor: TinymceEditor = this.$refs.editor.editor
+    /**
+     * https://www.tiny.cloud/docs/api/tinymce/tinymce.editor/#focus
+     * 設定 autofocus
+     */
+    editor.focus(false)
+  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -112,7 +127,11 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $refs: {
+    editor: Vue
+  }
+}
 
 export interface Data {
   isFocus: boolean
