@@ -171,6 +171,13 @@ export default {
         })
       })
     },
+    getFixedColumnStart() {
+      this.getScrollHeightBottom()
+      if (this.$refs.wrapper) {
+        this.fixedColumn.start =
+          this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
+      }
+    },
   },
   computed: {
     userRole() {
@@ -226,25 +233,20 @@ export default {
   mounted() {
     this.isMounted = true
 
+    this.getScreenWidth()
+
     this.$nextTick(() => {
-      this.getScreenWidth()
-      this.getScrollHeightBottom()
-      if (this.$refs.wrapper) {
-        this.fixedColumn.start =
-          this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
-      }
-
-      if (this.$route.hash) {
-        this.scrollToAnchorPoint(this.$route.hash)
-      }
-
-      if (this.$refs.mobileRelatedSection) {
-        this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
-        this.observer.scrollToTopObserver.observe(
-          this.$refs.mobileRelatedSection
-        )
-      }
+      this.getFixedColumnStart()
     })
+
+    if (this.$route.hash) {
+      this.scrollToAnchorPoint(this.$route.hash)
+    }
+
+    if (this.$refs.mobileRelatedSection) {
+      this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
+      this.observer.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
+    }
 
     this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
     this.isDesktop &&
@@ -276,6 +278,11 @@ export default {
         this.shouldFixedColumn = false
         this.$refs.wrapper.style.paddingTop = `${paddingTop}px`
       }
+    },
+    '$store.state.question.answers'() {
+      this.$nextTick(() => {
+        this.getScrollHeightBottom()
+      })
     },
   },
   beforeDestroy() {
@@ -341,6 +348,7 @@ export interface Methods {
   hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
+  getFixedColumnStart(): void
 }
 
 export interface Computed extends DeviceMixinComputed {

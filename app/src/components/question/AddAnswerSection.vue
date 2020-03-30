@@ -21,6 +21,7 @@
         :user-role="userRole"
         :question-id="questionId"
         @is-loaded="editorIsLoaded = true"
+        @close="panelDisplayHandler(false)"
       />
     </transition>
   </div>
