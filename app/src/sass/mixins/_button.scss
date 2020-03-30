@@ -63,9 +63,11 @@ $button-font: (
     fill: $primary-button-text-color;
   }
 
-  &:hover:not([disabled]) {
-    background: $primary-hover-color;
-    border-color: $primary-hover-color;
+  @media (hover: hover) {
+    &:hover:not([disabled]) {
+      background: $primary-hover-color;
+      border-color: $primary-hover-color;
+    }
   }
 
   &:disabled {
@@ -91,14 +93,27 @@ $button-font: (
     &::v-deep svg > path {
       fill: $primary-color;
     }
+
+    @media (hover: hover) {
+      &:hover:not([disabled]) {
+        color: $primary-hover-color;
+        border-color: $primary-hover-color;
+
+        &::v-deep svg > path {
+          fill: $primary-hover-color;
+        }
+      }
+    }
   }
 
-  &:hover:not([disabled]) {
-    color: $gray-primary;
-    border-color: $gray-secondary;
+  @media (hover: hover) {
+    &:hover:not([disabled]) {
+      color: $gray-primary;
+      border-color: $gray-secondary;
 
-    &::v-deep svg > path {
-      fill: $gray-primary;
+      &::v-deep svg > path {
+        fill: $gray-primary;
+      }
     }
   }
 
