@@ -1,10 +1,5 @@
 <template>
-  <div
-    v-if="options.length"
-    class="QuestionDropdownPanel"
-    tabindex="-1"
-    @blur="$emit('blur')"
-  >
+  <div v-if="options.length" class="QuestionDropdownPanel">
     <BaseDropdownOption
       v-for="(option, index) in options"
       :key="index"

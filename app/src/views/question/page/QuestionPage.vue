@@ -1,11 +1,10 @@
 <template>
-  <div class="QuestionPage">
+  <div class="QuestionPage" @click.capture="hideDropdownPanel">
     <QuestionDropdownPanel
       v-if="dropdownMenu.visible"
       ref="dropdownPanel"
       :style="dropdownMenuStyle"
       :visible="dropdownMenu.visible"
-      @blur="hidePanel"
     />
     <ReportPanel
       v-if="shouldShowReportPanel"
@@ -143,16 +142,11 @@ export default {
       const el = document.querySelector(anchor) as HTMLElement
       el && el.scrollIntoView()
     },
-    hidePanel() {
-      if (this.dropdownMenu.disableBlur) {
-        this.$store.dispatch(
-          `question/${UPDATE_QUESTION_DROPDOWN_MENU_STATUS}`,
-          {
-            ...this.dropdownMenu,
-            disableBlur: false,
-          }
-        )
-        ;(this.$refs.dropdownPanel.$el as HTMLElement).focus()
+    hideDropdownPanel() {
+      if (
+        !this.$refs.dropdownPanel ||
+        !this.$store.state.question.dropdownMenu.visible
+      ) {
         return
       }
 
@@ -160,7 +154,6 @@ export default {
         visible: false,
         top: null,
         left: null,
-        disableBlur: false,
         options: [],
       }
 
@@ -344,7 +337,7 @@ export interface Data {
 
 export interface Methods {
   scrollToAnchorPoint(anchor: string): void
-  hidePanel(): void
+  hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
 }

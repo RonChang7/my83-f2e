@@ -38,8 +38,7 @@
       v-if="shouldShowMoreButton"
       ref="more"
       class="BaseHeaderFunction__more"
-      @click="showDropdownPanel(false)"
-      @mousedown="showDropdownPanel(true)"
+      @click="showDropdownPanel"
     >
       <BaseMore />
     </div>
@@ -256,7 +255,7 @@ export default {
       }
       window.location.href = `${path}?content=${query.content}&source=${query.source}`
     },
-    showDropdownPanel(disableBlur = false) {
+    showDropdownPanel() {
       const el = this.$refs.more
       const paddingTop = 8
       const paddingLeft = 140
@@ -265,7 +264,6 @@ export default {
         visible: true,
         top: el.offsetTop + el.clientHeight + paddingTop,
         left: el.offsetLeft + el.clientWidth - paddingLeft,
-        disableBlur,
         options: this.dropdownMenuOptions(),
       }
 
@@ -377,7 +375,7 @@ export interface Methods {
   resetTempState(): void
   setBestAnswer(): void
   consultSales(): void
-  showDropdownPanel(disableBlur: boolean): void
+  showDropdownPanel(): void
   reportOption(): DropdownMenuOption
   dropdownMenuOptions(): DropdownMenuOption[]
 }
