@@ -53,7 +53,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           visible: false,
           top: null,
           left: null,
-          disableBlur: false,
           options: null,
         },
         report: {
@@ -579,7 +578,6 @@ export interface DropdownMenu {
   visible: boolean
   top: number | null
   left: number | null
-  disableBlur: boolean
   options: DropdownMenuOption[] | null
 }
 
