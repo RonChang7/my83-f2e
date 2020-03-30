@@ -85,6 +85,8 @@ import HotServiceSection from '@/components/question/HotServiceSection.vue'
 import RelatedQuestionSection from '@/components/question/RelatedQuestionSection.vue'
 import RelatedBlogSection from '@/components/question/RelatedBlogSection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
+import DesktopRecommendProductSection from '@/components/question/DesktopRecommendProductSection.vue'
+import MobileRecommendProductSection from '@/components/question/MobileRecommendProductSection.vue'
 import { UserRole } from '@/services/user/user'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
 import { scrollTo } from '@/utils/element'
@@ -92,10 +94,6 @@ import { scrollTo } from '@/utils/element'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
-const DesktopRecommendProductSection = () =>
-  import('@/components/question/DesktopRecommendProductSection.vue')
-const MobileRecommendProductSection = () =>
-  import('@/components/question/MobileRecommendProductSection.vue')
 const QuestionDropdownPanel = () =>
   import('@/components/question/panel/QuestionDropdownPanel.vue')
 const ReportPanel = () => import('@/components/question/report/ReportPanel.vue')
@@ -228,22 +226,25 @@ export default {
   mounted() {
     this.isMounted = true
 
-    this.getScreenWidth()
-    this.getScrollHeightBottom()
+    this.$nextTick(() => {
+      this.getScreenWidth()
+      this.getScrollHeightBottom()
+      if (this.$refs.wrapper) {
+        this.fixedColumn.start =
+          this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
+      }
 
-    if (this.$refs.wrapper) {
-      this.fixedColumn.start =
-        this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
-    }
+      if (this.$route.hash) {
+        this.scrollToAnchorPoint(this.$route.hash)
+      }
 
-    if (this.$route.hash) {
-      this.scrollToAnchorPoint(this.$route.hash)
-    }
-
-    if (this.$refs.mobileRelatedSection) {
-      this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
-      this.observer.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
-    }
+      if (this.$refs.mobileRelatedSection) {
+        this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
+        this.observer.scrollToTopObserver.observe(
+          this.$refs.mobileRelatedSection
+        )
+      }
+    })
 
     this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
     this.isDesktop &&
