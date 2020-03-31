@@ -64,7 +64,7 @@ import {
 import {
   PostDataFactory,
   AnswerPostData,
-} from '@/services/question/post-template-factory'
+} from '@/services/question/PostDataFactory'
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollTo } from '@/utils/element'
 import { UserRole } from '@/services/user/user'

@@ -74,7 +74,7 @@ import {
 import {
   PostDataFactory,
   ResponsePostData,
-} from '@/services/question/post-template-factory'
+} from '@/services/question/PostDataFactory'
 import { scrollTo } from '@/utils/element'
 import { nl2br } from '@/utils/text-parser'
 import { User } from '@/services/user/user'
