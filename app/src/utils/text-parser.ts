@@ -16,3 +16,6 @@ export const textToUrl = (content: string) => {
 }
 
 export const nl2br = (content: string) => content.replace(/\n|\r\n?/g, '<br />')
+
+export const br2nl = (content: string) =>
+  content.replace(/<br \/>|<br >|<br>?/g, '\n')

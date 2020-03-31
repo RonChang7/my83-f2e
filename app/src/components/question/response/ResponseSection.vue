@@ -27,7 +27,7 @@ import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import BaseContent from '../base/BaseContent.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import { ResponseData } from '@/api/question/question.type'
-import { textToUrl } from '@/utils/text-parser'
+import { textToUrl, br2nl } from '@/utils/text-parser'
 import { UserRole } from '@/services/user/user'
 
 export default {
@@ -53,7 +53,8 @@ export default {
   },
   computed: {
     content() {
-      return textToUrl(this.response.content)
+      // TODO: 之後 response 後端移除 HTML tag 之後要另外處理
+      return textToUrl(br2nl(this.response.content))
     },
   },
 } as ComponentOption
