@@ -76,19 +76,20 @@ export default {
   },
   computed: {
     nickname() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.nickname : ''
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
+      )
     },
     questionId() {
-      const { question } = this.$store.state.question
-      return question ? question.question_id : 0
+      return this.$store.state.question.question?.question_id
     },
     addAnswerButtonSize() {
       return this.isDesktop ? 'xl' : 'l-b'
     },
     userRole() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
+      )
     },
     avatar() {
       return this.userRole ? AvatarMap[this.userRole] : ''

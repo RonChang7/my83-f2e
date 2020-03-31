@@ -28,8 +28,7 @@ export default {
   },
   computed: {
     relatedQuestions() {
-      const { relatedQuestions } = this.$store.state.question
-      return relatedQuestions || []
+      return this.$store.state.question.relatedQuestions || []
     },
   },
 } as ComponentOption

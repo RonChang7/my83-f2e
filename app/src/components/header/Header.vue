@@ -32,8 +32,9 @@ export default {
   },
   computed: {
     userRole() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
+      )
     },
   },
   watch: {

@@ -60,62 +60,52 @@ export default {
   },
   computed: {
     userRole() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
+      )
     },
     id() {
-      const { question } = this.$store.state.question
-      return question ? question.question_id : 0
+      return this.$store.state.question.question?.question_id
     },
     subject() {
-      const { question } = this.$store.state.question
-      return question ? question.subject : ''
+      return this.$store.state.question.question?.subject
     },
     content() {
-      const { question } = this.$store.state.question
-      return question ? textToUrl(question.content) : ''
+      const content = this.$store.state.question.question?.content
+      return content ? textToUrl(content) : ''
     },
     avatar() {
-      const { question } = this.$store.state.question
-      return question ? question.author_info.avatar_url : ''
+      return this.$store.state.question.question?.author_info.avatar_url
     },
     author() {
-      const { question } = this.$store.state.question
-      return question
-        ? question?.author_info.nickname || question?.author_info.username
-        : ''
+      return (
+        this.$store.state.question.question?.author_info.nickname ||
+        this.$store.state.question.question?.author_info.username
+      )
     },
     authorInfo() {
-      const { question } = this.$store.state.question
-      return question ? question.author_info : {}
+      return this.$store.state.question.question?.author_info || {}
     },
     personalize() {
-      const { question } = this.$store.state.question
-      return question ? question.personalize : {}
+      return this.$store.state.question.question?.personalize || {}
     },
     targetTag() {
-      const { question } = this.$store.state.question
-      return question ? question.target_tag : {}
+      return this.$store.state.question.question?.target_tag || {}
     },
     images() {
-      const { question } = this.$store.state.question
-      return question ? question.images : []
+      return this.$store.state.question.question?.images
     },
     tags() {
-      const { question } = this.$store.state.question
-      return question ? question.tags : []
+      return this.$store.state.question.question?.tags
     },
     companies() {
-      const { question } = this.$store.state.question
-      return question ? question.companies : []
+      return this.$store.state.question.question?.companies
     },
     answerCount() {
-      const { question } = this.$store.state.question
-      return question ? question.question_meta.answer_count : 0
+      return this.$store.state.question.question?.question_meta.answer_count
     },
     createdAt() {
-      const { question } = this.$store.state.question
-      return question ? question.created_at : 0
+      return this.$store.state.question.question?.created_at
     },
   },
 } as ComponentOption
