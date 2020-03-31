@@ -31,32 +31,29 @@ export default {
   },
   computed: {
     userRole() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
+      )
     },
     nickname() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.nickname : ''
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
+      )
     },
     answerCount() {
-      const { question } = this.$store.state.question
-      return question ? question.question_meta.answer_count : 0
+      return this.$store.state.question.question?.question_meta.answer_count
     },
     answers() {
-      const { answers } = this.$store.state.question
-      return answers || []
+      return this.$store.state.question.answers || []
     },
     bestAnswerId() {
-      const { question } = this.$store.state.question
-      return question ? question.best_answer_id : null
+      return this.$store.state.question.question?.best_answer_id
     },
     isQuestionAuthor() {
-      const { question } = this.$store.state.question
-      return question ? question.personalize?.is_owner : false
+      return this.$store.state.question.question?.personalize?.is_owner || false
     },
     questionId() {
-      const { question } = this.$store.state.question
-      return question ? question.question_id : 0
+      return this.$store.state.question.question?.question_id
     },
   },
 } as ComponentOption

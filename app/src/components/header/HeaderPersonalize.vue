@@ -134,8 +134,7 @@ export default {
   },
   computed: {
     personalize() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize : {}
+      return this.$store.state.header.headerPersonalized?.personalize
     },
     notificationCount() {
       const count = _.isEmpty(this.personalize)
@@ -145,8 +144,7 @@ export default {
       return count > 99 ? '99+' : count
     },
     menu() {
-      const { headerPersonalized } = this.$store.state.header
-      const menu = headerPersonalized ? headerPersonalized.menu : []
+      const menu = this.$store.state.header.headerPersonalized?.menu || []
 
       if (_.isEmpty(menu)) {
         return menu
