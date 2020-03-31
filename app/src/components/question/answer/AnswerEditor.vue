@@ -144,13 +144,12 @@ export default {
       )
 
       if (typeof response === 'number') {
-        this.reset()
         this.$emit('close')
 
         // Scroll to new post after answer editor closed
         setTimeout(() => {
           this.scrollToNewPost(response)
-        }, 50)
+        }, 200)
 
         if (!this.nickname) {
           this.$store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
@@ -172,15 +171,10 @@ export default {
       this.form = AnswerFormData.form as AnswerPostData
     },
     cancel() {
-      const cancelFn = () => {
-        this.reset()
-        this.$emit('close')
-      }
-
       if (this.form.content.length) {
         const payload: GlobalDialogContent = {
           ...CancelAnswerDialogContent,
-          rightConfirmFn: cancelFn,
+          rightConfirmFn: () => this.$emit('close'),
         }
 
         this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
@@ -188,7 +182,7 @@ export default {
         return
       }
 
-      cancelFn()
+      this.$emit('close')
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
@@ -202,6 +196,7 @@ export default {
     },
   },
   mounted() {
+    this.reset()
     this.$emit('is-loaded')
   },
 } as ComponentOption

@@ -4,7 +4,7 @@
       ref="editor"
       v-model="editorContent"
       :init="init"
-      model-events="change keyup input undo redo"
+      model-events="change keyup input undo redo cut paste blur"
       @onFocus="focusHandler(true)"
       @onBlur="focusHandler(false)"
     />
