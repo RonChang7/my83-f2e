@@ -277,6 +277,16 @@ interface Menu extends HeaderNavItem {
     li {
       padding: 0 10px;
 
+      @include min-media('xl') {
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+
       @include max-media('xl') {
         padding: 0 25px;
       }
