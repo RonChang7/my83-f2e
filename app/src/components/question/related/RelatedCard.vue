@@ -23,6 +23,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseView from '@/components/base/icon/18/BaseView.vue'
 import BaseComment from '@/components/base/icon/18/BaseComment.vue'
+import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 export default {
   components: {
@@ -53,7 +54,7 @@ export default {
   },
   methods: {
     numberTransform(number) {
-      return number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+      return delimitIntegerWithSymbol(number)
     },
   },
 } as ComponentOption
