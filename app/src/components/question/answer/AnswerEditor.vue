@@ -13,7 +13,7 @@
           v-else
           placeholder="設定你的暱稱"
           :value.sync="form.nickname"
-          :state="{ error: nicknameError }"
+          :state="nicknameError ? 'error' : ''"
         />
         <div v-if="!nickname" class="AnswerEditor__nickname__inputInfo">
           暱稱設定後不可修改
