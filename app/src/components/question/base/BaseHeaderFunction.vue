@@ -314,7 +314,7 @@ export default {
           visible: true,
           questionId,
           answerId,
-        } as Partial<Report>
+        } as Report
 
         action = () => {
           this.$store.dispatch(`question/${OPEN_REPORT_PANEL}`, payload)
