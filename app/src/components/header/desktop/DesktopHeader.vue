@@ -73,6 +73,8 @@ export interface Props {
 @import '@/sass/rwd.scss';
 
 .DesktopHeader {
+  $header-resize-cut-point: 1360px;
+
   @include shadow-02;
   background: $default-bg;
   display: flex;
@@ -84,6 +86,12 @@ export interface Props {
     width: 148px;
     height: 34px;
     margin-right: 30px;
+
+    @media (max-width: $header-resize-cut-point) {
+      $base: ($header-resize-cut-point - map-get($grid-breakpoints, 'xl')) / 1px;
+
+      margin-right: calc((((100vw - 1200px) / #{$base}) * 20) + 10px);
+    }
   }
 
   nav {
