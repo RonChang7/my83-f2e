@@ -343,7 +343,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           visible: false,
           questionId: null,
           answerId: null,
-          comment: '',
         })
       },
       async [types.ADD_REPORT]({ state, commit }, comment: string) {
@@ -518,17 +517,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](state, data: DropdownMenu) {
         state.dropdownMenu = data
       },
-      [types.UPDATE_REPORT_PANEL_VISIBLE](state, data: Partial<Report>) {
-        state.report = {
-          ...state.report,
-          ...data,
-        }
+      [types.UPDATE_REPORT_PANEL_VISIBLE](state, data: Report) {
+        state.report = data
       },
       [types.UPDATE_REPORT_STATUS](
         state,
         { answerIndex, reportStatus }: MutateReportPayload
       ) {
-        if (answerIndex) {
+        if (typeof answerIndex !== 'undefined') {
           state.answers![answerIndex].personalize!.is_reporter = reportStatus
         } else {
           state.question!.personalize!.is_reporter = reportStatus
