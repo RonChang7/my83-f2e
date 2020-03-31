@@ -73,7 +73,7 @@ import {
   OPEN_GLOBAL_DIALOG,
   CLOSE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
-import { PostType } from '@/services/question/post-template-factory'
+import { PostType } from '@/services/question/PostDataFactory'
 import {
   DropdownMenu,
   DropdownMenuOption,
