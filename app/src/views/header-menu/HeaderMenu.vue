@@ -1,7 +1,7 @@
 <template>
   <nav class="HeaderMenu">
     <MobileHeaderNav />
-    <HeaderPersonalize />
+    <HeaderPersonalize :from-header-menu="true" @reload="reloadHandler" />
   </nav>
 </template>
 
@@ -13,10 +13,26 @@ import MobileHeaderNav from '@/components/header/mobile/MobileHeaderNav.vue'
 import HeaderPersonalize from '@/components/header/HeaderPersonalize.vue'
 
 export default {
-  beforeRouteEnter(to, from, next) {
-    // 如果 client 點選登出，mobile 要回到上一頁並重新整理 (因為 mobile 的選單是獨立 route)
-    to.meta.perviousPath = from.path
-    return next()
+  asyncData({ from }) {
+    return {
+      // 如果 client 點選登出，mobile 要回到上一頁並重新整理 (因為 mobile 的選單是獨立 route)
+      perviousPath: from?.path || '/',
+    }
+  },
+  head() {
+    return {
+      meta: [{ hid: 'robots', name: 'robots', content: 'noindex' }],
+    }
+  },
+  data() {
+    return {
+      perviousPath: '',
+    }
+  },
+  methods: {
+    reloadHandler() {
+      window.location.href = this.perviousPath
+    },
   },
   components: {
     MobileHeaderNav,
@@ -42,9 +58,13 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  perviousPath: string
+}
 
-export interface Methods {}
+export interface Methods {
+  reloadHandler(): void
+}
 
 export interface Computed {}
 

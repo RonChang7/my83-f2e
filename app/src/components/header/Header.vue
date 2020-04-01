@@ -22,6 +22,9 @@ import DeviceMixin, {
 } from '@/mixins/device/device-mixins'
 
 export default {
+  serverPrefetch() {
+    return this.$store.dispatch(`header/${types.FETCH_HEADER_NAV_DATA}`)
+  },
   mixins: [DeviceMixin],
   components: {
     DesktopHeader,
@@ -29,8 +32,9 @@ export default {
   },
   computed: {
     userRole() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize.role : 'guest'
+      return (
+        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
+      )
     },
   },
   watch: {

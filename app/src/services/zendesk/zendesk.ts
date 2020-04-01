@@ -39,6 +39,10 @@ export class Zendesk {
     return window.$zopim.livechat.window.hide()
   }
 
+  public static say(message: string) {
+    window.$zopim.livechat.say(message)
+  }
+
   public onLoad(callback: (() => void) | undefined = undefined) {
     if (Zendesk.isLoaded) {
       callback && callback()

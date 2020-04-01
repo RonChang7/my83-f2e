@@ -82,6 +82,7 @@ export interface Props {
   cursor: pointer;
   position: relative;
   width: fit-content;
+  user-select: none;
 
   > input {
     position: absolute;

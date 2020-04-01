@@ -91,6 +91,12 @@ export default {
     BaseArrowRight,
     HeaderMenuPanel,
   },
+  props: {
+    fromHeaderMenu: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       shouldShowMenu: false,
@@ -111,9 +117,9 @@ export default {
       this.screenWidth = window.innerWidth
     },
     reloadHandler() {
-      return this.isDesktop
-        ? window.location.reload()
-        : (window.location.href = this.$route.meta.perviousPath)
+      return this.fromHeaderMenu
+        ? this.$emit('reload')
+        : window.location.reload()
     },
     showLoginPanel() {
       this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
@@ -134,8 +140,7 @@ export default {
   },
   computed: {
     personalize() {
-      const { headerPersonalized } = this.$store.state.header
-      return headerPersonalized ? headerPersonalized.personalize : {}
+      return this.$store.state.header.headerPersonalized?.personalize
     },
     notificationCount() {
       const count = _.isEmpty(this.personalize)
@@ -145,8 +150,7 @@ export default {
       return count > 99 ? '99+' : count
     },
     menu() {
-      const { headerPersonalized } = this.$store.state.header
-      const menu = headerPersonalized ? headerPersonalized.menu : []
+      const menu = this.$store.state.header.headerPersonalized?.menu || []
 
       if (_.isEmpty(menu)) {
         return menu
@@ -211,7 +215,9 @@ export interface Computed extends DeviceMixinComputed {
   menu: Menu
 }
 
-export interface Props {}
+export interface Props {
+  fromHeaderMenu: boolean
+}
 
 interface Menu extends HeaderNavItem {
   clickEvent?: string
@@ -278,6 +284,16 @@ interface Menu extends HeaderNavItem {
   &__authorized {
     li {
       padding: 0 10px;
+
+      @include min-media('xl') {
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
 
       @include max-media('xl') {
         padding: 0 25px;
