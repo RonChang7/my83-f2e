@@ -33,7 +33,7 @@
       </div>
       <div class="ResponseEditor__function">
         <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
-        <BaseButton size="m" type="secondary" @click.native="reset">
+        <BaseButton size="m" type="secondary" @click.native="cancel">
           取消
         </BaseButton>
         <BaseButton
@@ -60,16 +60,20 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { CancelResponseDialogContent } from './cancel-response-dialog-info'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 import { AddResponseResponse } from '@/api/question/question.type'
 import { ADD_RESPONSE } from '@/store/question/question.type'
+import { GlobalDialogContent } from '@/store/global/index'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
 import {
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
+  OPEN_GLOBAL_DIALOG,
+  UPDATE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
 import {
   PostDataFactory,
@@ -150,7 +154,7 @@ export default {
         questionId: this.questionId,
         answerId: this.answerId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: nl2br(this.form.content), // 相容舊版，所以新增 response 要補上 <br />
+        content: nl2br(this.form.content), // @TODO: 相容舊版，所以新增 response 要補上 <br />
       }
 
       this.submitState = 'loading'
@@ -184,7 +188,22 @@ export default {
     reset() {
       ResponseFormData.reset()
       this.form = ResponseFormData.form as ResponsePostData
+      this.errMsg = ''
       this.activePanelHandler(false)
+    },
+    cancel() {
+      if (this.form.content.length) {
+        const payload: GlobalDialogContent = {
+          ...CancelResponseDialogContent,
+          rightConfirmFn: () => this.reset(),
+        }
+
+        this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
+        this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
+        return
+      }
+
+      this.reset()
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#response-${id}`) as HTMLElement
@@ -264,6 +283,7 @@ export interface Methods {
   activePanelHandler(status: boolean): void
   submit(): void
   reset(): void
+  cancel(): void
   scrollToNewPost(id: number): void
   autoFocusHelper(): void
   focusHandler(): void
