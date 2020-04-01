@@ -1,0 +1,2 @@
+export const UPDATE_PAGE_META = 'UPDATE_PAGE_META'
+export const UPDATE_JSON_LD = 'UPDATE_JSON_LD'

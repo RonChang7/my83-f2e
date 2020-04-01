@@ -58,7 +58,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         'status' in data && (state.loginPanel.display = data.status!)
         data.targetPanel && (state.loginPanel.targetPanel = data.targetPanel)
       },
-      [types.UPDATE_AFTER_LOGIN_EVENT](state, data) {
+      [types.UPDATE_AFTER_LOGIN_EVENT](state, data: Function) {
         state.actionAfterLogin = data
       },
       [types.UPDATE_GLOBAL_DIALOG_DISPLAY](state, visible: boolean) {
@@ -95,9 +95,12 @@ export interface GlobalDialogContent {
   content?: string
   leftButtonText: string
   leftButtonType?: string
+  leftButtonCloseDialogAfterClick?: boolean
   rightButtonText?: string
   rightButtonType?: string
+  rightButtonCloseDialogAfterClick?: boolean
   defaultActionButton?: 'left' | 'right'
+  errMsg?: string
   leftConfirmFn?: Function
   rightConfirmFn?: Function
   closeFn?: Function

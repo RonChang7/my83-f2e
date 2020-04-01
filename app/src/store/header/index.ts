@@ -38,10 +38,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
     },
     mutations: {
-      [types.UPDATE_HEADER_NAV_DATA](state, data) {
+      [types.UPDATE_HEADER_NAV_DATA](state, data: HeaderNavItem[]) {
         state.headerNavItems = data
       },
-      [types.UPDATE_HEADER_PERSONALIZED_DATA](state, data) {
+      [types.UPDATE_HEADER_PERSONALIZED_DATA](state, data: HeaderPersonalized) {
         state.headerPersonalized = data
       },
     },

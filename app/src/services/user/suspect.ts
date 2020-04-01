@@ -6,6 +6,8 @@ const RoleTokenKey = 'role'
 export class Suspect {
   public static setRoleCode() {
     const user = User.getInstance()
-    Cookies.set(RoleTokenKey, user.userState.roleCode.toString())
+    if (!Cookies.get(RoleTokenKey)) {
+      Cookies.set(RoleTokenKey, user.userState.roleCode.toString())
+    }
   }
 }

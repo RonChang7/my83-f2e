@@ -13,11 +13,8 @@ export default (({ app }) => {
 
   if (APP_ENV === 'development' && !request.initApiUrlLogger) {
     request.interceptors.request.use((v) => {
-      const tagStyle =
-        'background: #7bd6ff; border-radius: 1em; color: #fff; padding: 2px 6px; font-weight: bold;'
-      const contentStyle = 'padding: 2px 6px;'
       // eslint-disable-next-line no-console
-      console.log(`%cAPI Request:%c${v.url}`, tagStyle, contentStyle)
+      console.log(`\x1B[34mAPI Request:\x1B[0m`, v.url)
 
       return v
     })
@@ -31,45 +28,65 @@ export default (({ app }) => {
       const auth = Auth.getInstance()
       const jwtToken = auth.getToken()
 
-      config.headers.Authorization = `Bearer ${jwtToken}`
+      if (jwtToken) {
+        config.headers.Authorization = `Bearer ${jwtToken}`
+      }
       return config
     })
 
+    /**
+     * Axios error handler
+     * https://gist.github.com/fgilio/230ccd514e9381fafa51608fcf137253
+     */
     request.interceptors.response.use(
       (res) => res,
       (err) => {
-        const {
-          config,
-          response: {
-            status,
-            data: { error },
-          },
-        } = err
+        if (err.response) {
+          const {
+            config,
+            response: {
+              status,
+              data: { error },
+            },
+          } = err
 
-        const originalRequest = config as AxiosRequestConfig
-        const auth = Auth.getInstance()
+          const originalRequest = config as AxiosRequestConfig
+          const auth = Auth.getInstance()
 
-        if (
-          preventInterceptorsList.find(
-            (url) => API_URL + url === originalRequest.url
-          )
-        ) {
-          return Promise.reject(err)
-        } else if (status === 401 && error === 'expired_token') {
-          return JWT.refreshToken(API_URL)
-            .then(() => {
-              const jwtToken = auth.getToken()
-              originalRequest.headers.Authorization = `Bearer ${jwtToken}`
-              return request(originalRequest)
-            })
-            .catch((err) => {
-              return Promise.reject(err)
-            })
-        } else if (status === 401 && error === 'invalid_token') {
-          Suspect.setRoleCode()
-          auth.logout()
-          return Promise.reject(err)
+          if (
+            preventInterceptorsList.find(
+              (url) => API_URL + url === originalRequest.url
+            )
+          ) {
+            return Promise.reject(err)
+          } else if (status === 401 && error === 'expired_token') {
+            return JWT.refreshToken(API_URL)
+              .then(() => {
+                const jwtToken = auth.getToken()
+                originalRequest.headers.Authorization = `Bearer ${jwtToken}`
+                return request(originalRequest)
+              })
+              .catch((err) => {
+                return Promise.reject(err)
+              })
+          } else if (status === 401 && error === 'invalid_token') {
+            Suspect.setRoleCode()
+            auth.logout()
+            return Promise.reject(err)
+          } else {
+            return Promise.reject(err)
+          }
         } else {
+          err = {
+            ...err,
+            response: {
+              status: 0,
+              data: {
+                success: false,
+                message: '發生問題，請稍後再試',
+              },
+            },
+          }
           return Promise.reject(err)
         }
       }

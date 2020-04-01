@@ -82,9 +82,11 @@ export interface Props {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .DesktopHeaderNav {
   $self: &;
+  $header-resize-cut-point: 1360px;
 
   font-weight: 500;
   margin: 0;
@@ -101,9 +103,11 @@ export interface Props {
   }
 
   &.sales {
-    @media (max-width: 1330px) {
+    @media (max-width: $header-resize-cut-point) {
+      $base: ($header-resize-cut-point - map-get($grid-breakpoints, 'xl')) / 1px;
+
       li {
-        padding: 0 calc((((100vw - 1200px) / 1200) * 90) + 5px);
+        padding: 0 calc((((100vw - 1200px) / #{$base}) * 8) + 7px);
       }
     }
   }

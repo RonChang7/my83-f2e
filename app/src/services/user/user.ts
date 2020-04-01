@@ -76,6 +76,12 @@ export type UserRole = Role | 'guest'
 
 export type UserRoleCode = RoleCode | -1
 
+export const UserRoleMap: Record<UserRole, string> = {
+  client: '保戶',
+  sales: '業務員',
+  guest: '訪客',
+}
+
 export interface LandingUrlInfo {
   firstHttpReferrer: string
   firstUrl: string
