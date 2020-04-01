@@ -29,6 +29,7 @@
           {{ rightButtonText }}
         </BaseButton>
       </div>
+      <BaseInputErrorMessage :msg="errMsg" text-align="center" />
     </div>
   </BaseModal>
 </template>
@@ -40,12 +41,14 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
 
 export default {
   components: {
     BaseModal,
     BaseClose,
     BaseButton,
+    BaseInputErrorMessage,
   },
   props: {
     visible: {
@@ -70,7 +73,7 @@ export default {
     },
     leftButtonType: {
       type: String,
-      default: 'primary',
+      default: 'secondary',
     },
     rightButtonText: {
       type: String,
@@ -78,11 +81,15 @@ export default {
     },
     rightButtonType: {
       type: String,
-      default: 'secondary',
+      default: 'primary',
     },
     defaultActionButton: {
       type: String,
-      default: 'left',
+      default: 'right',
+    },
+    errMsg: {
+      type: String,
+      default: '',
     },
   },
   methods: {
@@ -104,12 +111,15 @@ export default {
     },
   },
   watch: {
-    visible(val) {
-      if (val) {
-        this.$nextTick(() => {
-          this.$refs.dialog.focus()
-        })
-      }
+    visible: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.$nextTick(() => {
+            this.$refs.dialog.focus()
+          })
+        }
+      },
     },
   },
 } as ComponentOption
@@ -154,7 +164,8 @@ export interface Props {
   leftButtonType: string
   rightButtonText: string
   rightButtonType: string
-  defaultActionButton: 'left' | 'right'
+  defaultActionButton: 'left' | 'right' | ''
+  errMsg: string
 }
 </script>
 

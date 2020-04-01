@@ -21,7 +21,6 @@ module.exports = {
   // add your custom rules here
   rules: {
     camelcase: 'off',
-    indent: ['error', 2, { SwitchCase: 1 }],
     semi: ['error', 'never'],
     'standard/no-callback-literal': 0,
     'prettier/prettier': [
@@ -41,6 +40,7 @@ module.exports = {
       "vars": "all",
       "args": "after-used",
       "ignoreRestSiblings": false
-    }]
+    }],
+    "no-console": ["warn", { allow: ["warn", "error"] }]
   },
 }

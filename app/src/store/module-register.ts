@@ -1,6 +1,4 @@
-const moduleMap = {
-  example: () => import('@/store/example'),
-}
+import moduleMap from './module-map'
 
 export async function registerModule(
   app,

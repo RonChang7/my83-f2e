@@ -24,7 +24,12 @@
             target="_blank"
             rel="noopener"
           >
-            <img src="@/assets/images/footer/cw.png" />
+            <BaseLazyImage
+              :image-url="require('@/assets/images/footer/cw.png')"
+              image-alt="天下雜誌"
+              :ignore-placeholder="true"
+              :image-loaded-style="footerImageStyle"
+            />
           </a>
           <a
             class="logo"
@@ -32,7 +37,12 @@
             target="_blank"
             rel="noopener"
           >
-            <img src="@/assets/images/footer/cnyes.png" />
+            <BaseLazyImage
+              :image-url="require('@/assets/images/footer/cnyes.png')"
+              image-alt="鉅亨網"
+              :ignore-placeholder="true"
+              :image-loaded-style="footerImageStyle"
+            />
           </a>
           <a
             class="logo"
@@ -40,7 +50,12 @@
             target="_blank"
             rel="noopener"
           >
-            <img src="@/assets/images/footer/HIT_FM.jpg" />
+            <BaseLazyImage
+              :image-url="require('@/assets/images/footer/HIT_FM.jpg')"
+              image-alt="HIT_FM"
+              :ignore-placeholder="true"
+              :image-loaded-style="footerImageStyle"
+            />
           </a>
         </div>
       </section>
@@ -114,16 +129,24 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
 import { Zendesk } from '@/services/zendesk/zendesk'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 
 export default {
   components: {
     LoadingIcon,
     GlobalLink,
+    BaseLazyImage,
   },
   data() {
     return {
       currentYear: new Date().getFullYear(),
       zendeskLoading: false,
+      footerImageStyle: {
+        height: '45px',
+        width: 'auto',
+        marginRight: '10px',
+        marginBottom: '10px',
+      },
     }
   },
   methods: {
@@ -165,6 +188,7 @@ export interface Instance extends Vue {}
 export interface Data {
   currentYear: number
   zendeskLoading: boolean
+  footerImageStyle: CSSStyleDeclaration
 }
 
 export interface Methods {
@@ -238,15 +262,12 @@ footer {
 
       &.report {
         .content {
+          display: flex;
+          flex-wrap: wrap;
+
           .logo {
             &:last-child {
               margin-right: 0;
-            }
-
-            img {
-              height: 45px;
-              margin-right: 10px;
-              margin-bottom: 10px;
             }
           }
         }
