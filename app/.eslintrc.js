@@ -41,6 +41,7 @@ module.exports = {
       "args": "after-used",
       "ignoreRestSiblings": false
     }],
-    "no-console": ["warn", { allow: ["warn", "error"] }]
+    "no-console": ["warn", { allow: ["warn", "error"] }],
+    'no-useless-constructor': 'off',
   },
 }

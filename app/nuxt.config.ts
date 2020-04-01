@@ -53,11 +53,15 @@ const config: Configuration = {
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {
-      src: '@/plugins/personalized-header',
+      src: '@/plugins/polyfill',
       mode: 'client',
     },
     {
-      src: '@/plugins/polyfill',
+      src: '@/plugins/analytics',
+      mode: 'client',
+    },
+    {
+      src: '@/plugins/personalized-header',
       mode: 'client',
     },
   ],
@@ -92,6 +96,10 @@ const config: Configuration = {
           { key: 'HEALTH_CHECK_AGENT_STRING' },
           { key: 'FACEBOOK_APP_ID' },
           { key: 'ZENDESK_CHAT_ID' },
+          { key: 'TRACKING_ENABLE' },
+          { key: 'TRACKING_DEV_LOG_ENABLE' },
+          { key: 'FACEBOOK_PIXEL_ID' },
+          { key: 'GOOGLE_ANALYTICS_ID' },
         ],
       },
     ],
