@@ -158,8 +158,17 @@ export interface Props {}
     }
 
     &__card {
+      flex: 1 0 auto;
       width: calc(25% - 22.5px);
 
+      &:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  @include min-media('xs') {
+    &__card {
       &:not(:last-child) {
         margin-right: 30px;
       }
