@@ -11,7 +11,7 @@
       :visible="shouldShowReportPanel"
     />
     <div class="QuestionPage__row">
-      <div class="QuestionPage__column left">
+      <div ref="leftColumn" class="QuestionPage__column left">
         <HotServiceSection v-if="isMobile && shouldShowGuide" />
 
         <GuideSection v-if="isMobile && shouldShowGuide" />
@@ -38,10 +38,13 @@
           />
         </div>
 
-        <AnswersListSection ref="answersListSection" />
+        <AnswersListSection />
 
         <client-only>
-          <AddAnswerSection v-if="userRole !== 'sales'" />
+          <AddAnswerSection
+            v-if="userRole !== 'sales'"
+            ref="salesAddAnswerSection"
+          />
         </client-only>
 
         <BaseScrollToTopButton
@@ -264,9 +267,18 @@ export default {
       }
 
       this.fixedColumn.end =
-        (this.$refs.answersListSection.$el as HTMLElement).offsetTop +
-        (this.$refs.answersListSection.$el as HTMLElement).offsetHeight +
+        this.$refs.leftColumn.offsetTop +
+        this.$refs.leftColumn.offsetHeight +
         60
+
+      if (this.$refs.salesAddAnswerSection) {
+        const addAnswerEl = this.$refs.salesAddAnswerSection.$el as HTMLElement
+        const verticalMargin =
+          parseFloat(window.getComputedStyle(addAnswerEl).marginTop) +
+          parseFloat(window.getComputedStyle(addAnswerEl).marginBottom)
+
+        this.fixedColumn.end -= addAnswerEl.offsetHeight + verticalMargin
+      }
 
       if (val < this.fixedColumn.start) {
         this.$refs.wrapper.style.cssText = ''
@@ -322,7 +334,8 @@ export interface Instance extends Vue {
     dropdownPanel: Vue
     mobileRelatedSection: Element
     wrapper: HTMLElement
-    answersListSection: Vue
+    leftColumn: HTMLElement
+    salesAddAnswerSection: Vue
   }
   getScreenWidth(this: ComponentInstance): void
   getScrollHeightBottom(this: ComponentInstance): void
