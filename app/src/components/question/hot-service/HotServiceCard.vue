@@ -6,9 +6,8 @@
         image-alt="icon"
       />
     </div>
-    <div class="HotServiceCard__title">
-      {{ item.title }}
-    </div>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <div class="HotServiceCard__title" v-html="title" />
     <template v-if="!isMobile">
       <div class="HotServiceCard__content">
         {{ item.content }}
@@ -31,6 +30,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import { nl2br } from '@/utils/text-parser'
 
 export default {
   mixins: [DeviceMixin],
@@ -43,6 +43,13 @@ export default {
     item: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    title() {
+      return this.isMobile
+        ? nl2br(this.item.title)
+        : this.item.title.replace('\n', '')
     },
   },
 } as ComponentOption
@@ -69,7 +76,9 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed extends DeviceMixinComputed {}
+export interface Computed extends DeviceMixinComputed {
+  title: string
+}
 
 export interface Props {
   item: HotServiceContent
@@ -111,7 +120,6 @@ export interface Props {
     margin-top: 16px;
 
     @include max-media('xl') {
-      width: 48px;
       font-size: 0.75rem;
       font-weight: 400;
       margin-top: 8px;
