@@ -34,7 +34,7 @@ export default {
     },
   },
   data() {
-    const plugins = ['table', 'link']
+    const plugins = ['table', 'link', 'paste']
 
     return {
       isFocus: false,
@@ -67,6 +67,13 @@ export default {
         forced_root_block: '',
         force_br_newlines: true,
         force_p_newlines: false,
+
+        /**
+         * valid HTML element
+         * https://www.tiny.cloud/docs/configure/content-filtering/#valid_elements
+         */
+        valid_elements:
+          '@[style],br,strong,em,span,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
 
         mobile: {
           plugins: [...plugins, 'autoresize'],
