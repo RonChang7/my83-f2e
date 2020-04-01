@@ -124,12 +124,6 @@ export default {
     async submit() {
       if (!this.validate()) return
 
-      // 在 url 的 ref 上加上 nofollow ugc (SEO)
-      this.form.content = this.form.content.replace(
-        /"noopener"/gm,
-        '"noopener nofollow ugc"'
-      )
-
       const payload = {
         questionId: this.questionId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
