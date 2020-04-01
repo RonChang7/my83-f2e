@@ -15,7 +15,10 @@ const config: Configuration = {
     title: 'MY83 保險網－把保險變簡單',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1, user-scalable=0',
+      },
       {
         hid: 'description',
         name: 'description',
