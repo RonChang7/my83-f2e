@@ -91,6 +91,12 @@ export default {
     BaseArrowRight,
     HeaderMenuPanel,
   },
+  props: {
+    fromHeaderMenu: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       shouldShowMenu: false,
@@ -111,9 +117,9 @@ export default {
       this.screenWidth = window.innerWidth
     },
     reloadHandler() {
-      return this.isDesktop
-        ? window.location.reload()
-        : (window.location.href = this.$route.meta.perviousPath)
+      return this.fromHeaderMenu
+        ? this.$emit('reload')
+        : window.location.reload()
     },
     showLoginPanel() {
       this.$store.dispatch(`global/${types.OPEN_LOGIN_PANEL}`, 'login')
@@ -209,7 +215,9 @@ export interface Computed extends DeviceMixinComputed {
   menu: Menu
 }
 
-export interface Props {}
+export interface Props {
+  fromHeaderMenu: boolean
+}
 
 interface Menu extends HeaderNavItem {
   clickEvent?: string
