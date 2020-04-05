@@ -122,12 +122,13 @@ export default {
       isMounted: false,
       observer: {
         scrollToTopObserver: null,
-        fixedColumnObserver: null,
+        rightColumnSizeObserver: null,
       },
       shouldShowScrollToTop: false,
       shouldFixedColumn: false,
       screenWidth: 0,
       scrollHeightBottom: 0,
+      rightColumnHeight: 0,
       fixedColumn: {
         start: 0,
         end: 0,
@@ -174,11 +175,26 @@ export default {
         })
       })
     },
+    createRightColumnSizeObserver() {
+      return new MutationObserver((entries) => {
+        entries.forEach((entry) => {
+          this.rightColumnHeight =
+            parseInt(
+              window.getComputedStyle(entry.target as HTMLElement).height
+            ) -
+            parseInt(
+              window.getComputedStyle(entry.target as HTMLElement).paddingTop
+            )
+        })
+      })
+    },
     getFixedColumnStart() {
-      this.getScrollHeightBottom()
       if (this.$refs.wrapper) {
         this.fixedColumn.start =
-          this.$refs.wrapper.offsetTop + this.$refs.wrapper?.offsetHeight + 60
+          (document.querySelector('.QuestionPage__column.right') as HTMLElement)
+            ?.offsetTop +
+          this.$refs.wrapper?.offsetHeight +
+          60
       }
     },
   },
@@ -239,6 +255,14 @@ export default {
 
     this.getScreenWidth()
 
+    if (this.$refs.wrapper) {
+      this.observer.rightColumnSizeObserver = this.createRightColumnSizeObserver()
+      this.observer.rightColumnSizeObserver.observe(this.$refs.wrapper, {
+        attributes: true,
+        attributeFilter: ['style'],
+      })
+    }
+
     this.$nextTick(() => {
       this.getFixedColumnStart()
     })
@@ -292,6 +316,11 @@ export default {
         this.$refs.wrapper.style.paddingTop = `${paddingTop}px`
       }
     },
+    rightColumnHeight() {
+      this.$nextTick(() => {
+        this.getFixedColumnStart()
+      })
+    },
     '$store.state.question.answers'() {
       this.$nextTick(() => {
         this.getScrollHeightBottom()
@@ -303,10 +332,10 @@ export default {
     this.isDesktop &&
       window.removeEventListener('scroll', this.getScrollHeightBottom)
 
-    _.forEach(this.observer, (observer) => {
+    _.forEach(this.observer, (observer, key) => {
       if (observer) {
-        observer.disconnect()
-        observer = null
+        this.observer[key].disconnect()
+        this.observer[key] = null
       }
     })
   },
@@ -345,12 +374,13 @@ export interface Data {
   isMounted: boolean
   observer: {
     scrollToTopObserver: IntersectionObserver | null
-    fixedColumnObserver: IntersectionObserver | null
+    rightColumnSizeObserver: MutationObserver | null
   }
   shouldShowScrollToTop: boolean
   shouldFixedColumn: boolean
   screenWidth: number
   scrollHeightBottom: number
+  rightColumnHeight: number
   fixedColumn: {
     start: number
     end: number
@@ -362,6 +392,7 @@ export interface Methods {
   hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
+  createRightColumnSizeObserver(): MutationObserver
   getFixedColumnStart(): void
 }
 
