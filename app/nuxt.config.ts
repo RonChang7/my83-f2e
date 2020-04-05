@@ -46,7 +46,7 @@ const config: Configuration = {
   /*
    ** Global CSS
    */
-  css: ['@/sass/main.scss', '@/sass/fonts.scss'],
+  css: ['@/sass/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -107,7 +107,15 @@ const config: Configuration = {
       },
     ],
     'nuxt-user-agent',
+    'nuxt-webfontloader',
   ],
+  webfontloader: {
+    google: {
+      families: [
+        'Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional',
+      ],
+    },
+  },
   router: {
     middleware: 'index',
   },
