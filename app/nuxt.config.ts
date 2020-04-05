@@ -32,6 +32,9 @@ const config: Configuration = {
       { property: 'fb:admins', content: '217752' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }],
+    htmlAttrs: {
+      lang: 'zh-TW',
+    },
     bodyAttrs: {
       ontouchstart: '',
     },
