@@ -32,6 +32,9 @@ const config: Configuration = {
       { property: 'fb:admins', content: '217752' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }],
+    htmlAttrs: {
+      lang: 'zh-TW',
+    },
     bodyAttrs: {
       ontouchstart: '',
     },
@@ -43,7 +46,7 @@ const config: Configuration = {
   /*
    ** Global CSS
    */
-  css: ['@/sass/main.scss', '@/sass/fonts.scss'],
+  css: ['@/sass/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -104,7 +107,15 @@ const config: Configuration = {
       },
     ],
     'nuxt-user-agent',
+    'nuxt-webfontloader',
   ],
+  webfontloader: {
+    google: {
+      families: [
+        'Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional',
+      ],
+    },
+  },
   router: {
     middleware: 'index',
   },
