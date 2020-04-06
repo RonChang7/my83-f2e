@@ -122,7 +122,6 @@ export default {
       isMounted: false,
       observer: {
         scrollToTopObserver: null,
-        rightColumnSizeObserver: null,
       },
       shouldShowScrollToTop: false,
       shouldFixedColumn: false,
@@ -175,18 +174,10 @@ export default {
         })
       })
     },
-    createRightColumnSizeObserver() {
-      return new MutationObserver((entries) => {
-        entries.forEach((entry) => {
-          this.rightColumnHeight =
-            parseInt(
-              window.getComputedStyle(entry.target as HTMLElement).height
-            ) -
-            parseInt(
-              window.getComputedStyle(entry.target as HTMLElement).paddingTop
-            )
-        })
-      })
+    calcRightColumnHeight() {
+      this.rightColumnHeight =
+        parseInt(window.getComputedStyle(this.$refs.wrapper).height) -
+        parseInt(window.getComputedStyle(this.$refs.wrapper).paddingTop)
     },
     getFixedColumnStart() {
       if (this.$refs.wrapper) {
@@ -256,11 +247,7 @@ export default {
     this.getScreenWidth()
 
     if (this.$refs.wrapper) {
-      this.observer.rightColumnSizeObserver = this.createRightColumnSizeObserver()
-      this.observer.rightColumnSizeObserver.observe(this.$refs.wrapper, {
-        attributes: true,
-        attributeFilter: ['style'],
-      })
+      this.calcRightColumnHeight()
     }
 
     this.$nextTick(() => {
@@ -321,6 +308,14 @@ export default {
         this.getFixedColumnStart()
       })
     },
+    userRole(val) {
+      // 登入角色如果為業務員，重新計算右側 column 高度
+      if (val === 'sales') {
+        this.$nextTick(() => {
+          this.calcRightColumnHeight()
+        })
+      }
+    },
     '$store.state.question.answers'() {
       this.$nextTick(() => {
         this.getScrollHeightBottom()
@@ -374,7 +369,6 @@ export interface Data {
   isMounted: boolean
   observer: {
     scrollToTopObserver: IntersectionObserver | null
-    rightColumnSizeObserver: MutationObserver | null
   }
   shouldShowScrollToTop: boolean
   shouldFixedColumn: boolean
@@ -392,7 +386,7 @@ export interface Methods {
   hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
-  createRightColumnSizeObserver(): MutationObserver
+  calcRightColumnHeight(): void
   getFixedColumnStart(): void
 }
 
