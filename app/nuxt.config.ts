@@ -84,8 +84,6 @@ const config: Configuration = {
    ** Nuxt.js modules
    */
   modules: [
-    // '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
     [
       // ref: https://github.com/samtgarson/nuxt-env
       'nuxt-env',
