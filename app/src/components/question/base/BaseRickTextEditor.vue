@@ -65,7 +65,6 @@ export default {
 
         // newline setting
         forced_root_block: '',
-        force_br_newlines: true,
         force_p_newlines: false,
 
         /**
