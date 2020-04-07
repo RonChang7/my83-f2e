@@ -12,7 +12,7 @@
           :title="item.title"
           :view-count="item.view_count"
           :answer-count="item.answer_count"
-          :last="maxPost === index + 1"
+          :last="filteredRelatedData.length === index + 1"
         />
       </GlobalLink>
     </div>
