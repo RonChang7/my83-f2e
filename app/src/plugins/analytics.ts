@@ -1,8 +1,7 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
-import {
-  AnalyticsEventManager,
-  EventProviderEnv,
-} from '@/analytics/event-manager/analytics-event-manager'
+import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventManager'
+import { FacebookPixel } from '@/analytics/implementations/facebook-pixel'
+import { GoogleAnalytics } from '@/analytics/implementations/google-analytics'
 
 export default (({ app }, inject) => {
   const {
@@ -13,25 +12,26 @@ export default (({ app }, inject) => {
     GOOGLE_ANALYTICS_ID,
   } = app.$env
 
-  const env: EventProviderEnv = {
-    facebookPixel: {
-      id: FACEBOOK_PIXEL_ID,
-    },
-    googleAnalytics: {
-      id: GOOGLE_ANALYTICS_ID,
-    },
-  }
+  const facebook = FacebookPixel.getInstance()
+  const googleAnalytics = GoogleAnalytics.getInstance()
 
   const trackingLogEnable =
     TRACKING_DEV_LOG_ENABLE === 'true' && APP_ENV !== 'production'
+  const trackingEnable = TRACKING_ENABLE === 'true'
 
-  const AEM = AnalyticsEventManager.getInstance({
-    trackingEnable: TRACKING_ENABLE === 'true',
+  facebook.init({
     trackingLogEnable,
-    env,
+    trackingEnable,
+    id: FACEBOOK_PIXEL_ID,
   })
 
-  inject('analytics', <P>(eventName, payload?: P) =>
-    AEM.trigger(eventName, payload)
-  )
+  googleAnalytics.init({
+    trackingLogEnable,
+    trackingEnable,
+    id: GOOGLE_ANALYTICS_ID,
+  })
+
+  const AEM = AnalyticsEventManager.getInstance()
+
+  inject('analytics', AEM)
 }) as NuxtPlugin
