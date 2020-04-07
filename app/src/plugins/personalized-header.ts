@@ -1,11 +1,7 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
 import { User } from '@/services/user/user'
-import { GoogleTrackingSetPayload } from '@/analytics/event-manager/event-payload-interface'
-import {
-  PAGE_VIEW,
-  GOOGLE_TRACKING_SET,
-} from '@/analytics/event-manager/event-key'
+import * as EventTypes from '@/analytics/event-listeners/event-key'
 import { GlobalVuexState } from '@/store/global-state'
 
 export default (({ app, store }) => {
@@ -17,20 +13,14 @@ export default (({ app, store }) => {
       const userId = (store.state as GlobalVuexState).header.headerPersonalized!
         .personalize.id
 
-      app.$analytics<GoogleTrackingSetPayload>(GOOGLE_TRACKING_SET, {
-        fieldName: 'userId',
-        fieldValue: userId?.toString() || '',
-      })
+      app.$analytics.dispatch(EventTypes.SET_USER_ID, userId)
     }
 
     const { roleCode } = user.userState
     const role = roleCode === -1 ? '訪客' : roleCode // MY83-rt 舊有邏輯
 
-    app.$analytics<GoogleTrackingSetPayload>(GOOGLE_TRACKING_SET, {
-      fieldName: 'dimension1',
-      fieldValue: role.toString(),
-    })
+    app.$analytics.dispatch(EventTypes.SET_ROLE, role.toString())
 
-    app.$analytics(PAGE_VIEW)
+    app.$analytics.dispatch(EventTypes.PAGE_VIEW)
   })
 }) as NuxtPlugin

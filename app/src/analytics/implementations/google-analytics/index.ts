@@ -1,7 +1,9 @@
 import 'autotrack'
-import * as eventTypes from '../../event-key'
-import { googleAnalyticsSetup } from '../google-analytics/google-analytics-sdk'
-import { GoogleTrackingSetPayload } from '../../event-payload-interface'
+import * as listeners from '../../event-listeners/google-analytics'
+import { AnalyticsEventManager } from '../../event-manager/AnalyticsEventManager'
+import * as EventTypes from '../../event-listeners/event-key'
+import { googleAnalyticsSetup } from './google-analytics-sdk'
+import { RoleCode } from '@/api/type'
 
 export class GoogleAnalytics {
   private static instance: GoogleAnalytics
@@ -16,26 +18,30 @@ export class GoogleAnalytics {
 
   private gaPromise: Promise<any>
 
-  private constructor(payload: InstantPayload) {
-    const { trackingEnable, trackingLogEnable, id } = payload
-    this.trackingEnable = trackingEnable
-    this.trackingLogEnable = trackingLogEnable
-    this.id = id
-  }
+  private constructor() {}
 
-  public static getInstance(payload: InstantPayload) {
-    if (payload.trackingEnable && !payload.id) {
-      throw new Error('GoogleAnalytics error: No Facebook Pixel id')
-    }
-
+  public static getInstance() {
     if (!GoogleAnalytics.instance) {
-      GoogleAnalytics.instance = new GoogleAnalytics(payload)
+      GoogleAnalytics.instance = new GoogleAnalytics()
     }
 
     return GoogleAnalytics.instance
   }
 
-  public async [eventTypes.PAGE_VIEW]() {
+  public init(payload: InitPayload) {
+    if (payload.trackingEnable && !payload.id) {
+      throw new Error('GoogleAnalytics error: No Facebook Pixel id')
+    }
+
+    const { trackingEnable, trackingLogEnable, id } = payload
+    this.trackingEnable = trackingEnable
+    this.trackingLogEnable = trackingLogEnable
+    this.id = id
+
+    this.setup()
+  }
+
+  public async pageView() {
     const ga = await this.getGa()
 
     ga(
@@ -45,9 +51,7 @@ export class GoogleAnalytics {
     )
   }
 
-  public async [eventTypes.GOOGLE_TRACKING_SET](
-    payload: GoogleTrackingSetPayload
-  ) {
+  public async set(payload: SetPayload) {
     const ga = await this.getGa()
     const { fieldName, fieldValue } = payload
 
@@ -79,10 +83,24 @@ export class GoogleAnalytics {
 
     return this.ga
   }
+
+  private setup() {
+    const AEM = AnalyticsEventManager.getInstance()
+
+    AEM.subscribe<RoleCode | '訪客'>(EventTypes.SET_ROLE, listeners.setRole)
+    AEM.subscribe<number>(EventTypes.SET_USER_ID, listeners.setUserId)
+    AEM.subscribe(EventTypes.PAGE_VIEW, listeners.pageView)
+  }
 }
 
-interface InstantPayload {
+interface InitPayload {
   trackingEnable: boolean
   trackingLogEnable: boolean
   id: string
+}
+
+// Ref: https://developers.google.com/analytics/devguides/collection/analyticsjs/command-queue-reference#set
+interface SetPayload {
+  fieldName: string
+  fieldValue: string
 }
