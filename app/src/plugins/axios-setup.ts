@@ -67,6 +67,10 @@ export default (({ app }) => {
                 return request(originalRequest)
               })
               .catch((err) => {
+                if (status === 401 && error === 'invalid_token') {
+                  Suspect.setRoleCode()
+                  auth.logout()
+                }
                 return Promise.reject(err)
               })
           } else if (status === 401 && error === 'invalid_token') {
