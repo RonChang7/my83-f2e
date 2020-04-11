@@ -13,6 +13,8 @@ export default {
     seoData() {
       const hostname = this.$env.HOST_URL
       const jsonLds = this.$store.state.jsonLd.content
+      const fbAppId = this.$env.FACEBOOK_APP_ID
+      const fbAdminId = this.$env.FACEBOOK_ADMIN_ID || ''
 
       return {
         title: this.$store.getters['pageMeta/title'],
@@ -26,6 +28,16 @@ export default {
             hid: 'keywords',
             name: 'keywords',
             content: this.$store.getters['pageMeta/keywords'],
+          },
+          {
+            hid: 'fb:app_id',
+            property: 'fb:app_id',
+            content: fbAppId,
+          },
+          {
+            hid: 'fb:admins',
+            property: 'fb:admins',
+            content: fbAdminId,
           },
           {
             hid: 'og:title',
