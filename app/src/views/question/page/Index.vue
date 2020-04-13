@@ -32,8 +32,11 @@ export default {
     try {
       await store.dispatch(`question/${FETCH_PAGE_DATA}`, id)
     } catch (err) {
+      // @TODO: 補上 500 的 error page
+      const statusCode = err.response.status === 404 ? err.response.status : 500
+
       return error({
-        statusCode: 404,
+        statusCode,
         message: 'question',
       })
     }
