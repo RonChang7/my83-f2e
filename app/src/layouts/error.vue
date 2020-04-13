@@ -69,7 +69,7 @@ export default {
   computed: {
     errorContent() {
       const { message } = this.error
-      return errorPageContent[message!] || errorPageContent.default
+      return message ? errorPageContent[message] : errorPageContent.default
     },
   },
 } as ComponentOption
