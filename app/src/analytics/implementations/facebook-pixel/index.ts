@@ -1,6 +1,6 @@
 import * as listeners from '../../event-listeners/facebook-pixel'
 import { AnalyticsEventManager } from '../../event-manager/AnalyticsEventManager'
-import * as EventTypes from '../../event-listeners/event-key'
+import { EventTypes } from '../../event-listeners/event.type'
 import { facebookPixelSetup } from './facebook-pixel-sdk'
 
 export class FacebookPixel {
@@ -61,7 +61,7 @@ export class FacebookPixel {
   private setup() {
     const AEM = AnalyticsEventManager.getInstance()
 
-    AEM.subscribe(EventTypes.PAGE_VIEW, listeners.pageView)
+    AEM.subscribe<EventTypes.PageView>(EventTypes.PageView, listeners.pageView)
   }
 }
 
