@@ -23,6 +23,6 @@ export default (({ app, store }) => {
 
     app.$analytics.dispatch<EventTypes.SetRole>(EventTypes.SetRole, { role })
 
-    app.$analytics.dispatch<EventTypes.PageView>(EventTypes.PageView)
+    app.$analytics.dispatch<EventTypes.PageView>(EventTypes.PageView, null)
   })
 }) as NuxtPlugin

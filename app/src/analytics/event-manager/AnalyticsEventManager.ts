@@ -21,7 +21,7 @@ export class AnalyticsEventManager {
     this.observer.on(event, handler)
   }
 
-  public dispatch<P extends EventTypes>(event: string, payload?: Payloads[P]) {
+  public dispatch<P extends EventTypes>(event: string, payload: Payloads[P]) {
     this.observer.emit(event, payload)
   }
 }
