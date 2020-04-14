@@ -1,9 +1,8 @@
 import 'autotrack'
 import * as listeners from '../../event-listeners/google-analytics'
 import { AnalyticsEventManager } from '../../event-manager/AnalyticsEventManager'
-import * as EventTypes from '../../event-listeners/event-key'
+import { EventTypes } from '../../event-listeners/event.type'
 import { googleAnalyticsSetup } from './google-analytics-sdk'
-import { RoleCode } from '@/api/type'
 
 export class GoogleAnalytics {
   private static instance: GoogleAnalytics
@@ -87,9 +86,12 @@ export class GoogleAnalytics {
   private setup() {
     const AEM = AnalyticsEventManager.getInstance()
 
-    AEM.subscribe<RoleCode | '訪客'>(EventTypes.SET_ROLE, listeners.setRole)
-    AEM.subscribe<number>(EventTypes.SET_USER_ID, listeners.setUserId)
-    AEM.subscribe(EventTypes.PAGE_VIEW, listeners.pageView)
+    AEM.subscribe<EventTypes.SetRole>(EventTypes.SetRole, listeners.setRole)
+    AEM.subscribe<EventTypes.SetUserId>(
+      EventTypes.SetUserId,
+      listeners.setUserId
+    )
+    AEM.subscribe<EventTypes.PageView>(EventTypes.PageView, listeners.pageView)
   }
 }
 

@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3'
+import { Payloads, Handlers, EventTypes } from '../event-listeners/event.type'
 
 export class AnalyticsEventManager {
   private static instance: AnalyticsEventManager
@@ -16,13 +17,11 @@ export class AnalyticsEventManager {
     return AnalyticsEventManager.instance
   }
 
-  public subscribe<P>(event: string, handler: Handler<P>) {
+  public subscribe<P extends EventTypes>(event: string, handler: Handlers[P]) {
     this.observer.on(event, handler)
   }
 
-  public dispatch<P>(event: string, payload?: P) {
+  public dispatch<P extends EventTypes>(event: string, payload?: Payloads[P]) {
     this.observer.emit(event, payload)
   }
 }
-
-type Handler<P> = (payload: P) => void
