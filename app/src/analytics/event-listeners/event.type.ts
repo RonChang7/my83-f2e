@@ -7,7 +7,7 @@ export const enum EventTypes {
 }
 
 export type Payloads = {
-  [EventTypes.PageView]: undefined
+  [EventTypes.PageView]: null
   [EventTypes.SetRole]: {
     role: RoleCode | '訪客'
   }
