@@ -75,7 +75,6 @@ figure {
   border: solid 2px $gray-quaternary;
   margin-bottom: 10px;
   margin-right: 10px;
-  line-height: 0;
 
   &__image {
     transition: 0.3s;

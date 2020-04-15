@@ -28,3 +28,8 @@ hr {
   border: 0;
   border-top: 1px solid $secondary-bg;
 }
+
+img,
+svg {
+  vertical-align: middle;
+}
