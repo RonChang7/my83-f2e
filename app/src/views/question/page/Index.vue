@@ -9,6 +9,7 @@ import {
   FETCH_ANSWER_PERSONALIZE_DATA,
   FETCH_PAGE_DATA,
 } from '@/store/question/question.type'
+import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/index'
 import { User } from '@/services/user/user'
@@ -32,12 +33,15 @@ export default {
     try {
       await store.dispatch(`question/${FETCH_PAGE_DATA}`, id)
     } catch (err) {
-      // @TODO: 補上 500 的 error page
       const statusCode = err.response.status === 404 ? err.response.status : 500
+      const message =
+        err.response.status === 404
+          ? ErrorPageType.QUESTION
+          : ErrorPageType.SERVER
 
       return error({
         statusCode,
-        message: 'question',
+        message,
       })
     }
 
