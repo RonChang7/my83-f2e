@@ -26,6 +26,7 @@
           ref="textarea"
           :value.sync="form.content"
           placeholder="回覆..."
+          height="60px"
           :auto-grow="true"
           :auto-grow-max-height="200"
           @blur="focusHandler(false)"
@@ -328,11 +329,6 @@ export interface Props {
 
   &__content {
     margin-top: 10px;
-
-    &::v-deep textarea {
-      min-height: 60px;
-      line-height: 1.5;
-    }
   }
 
   &__function {
