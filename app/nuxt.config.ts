@@ -116,6 +116,7 @@ const config: Configuration = {
   router: {
     middleware: 'index',
   },
+  serverMiddleware: ['~/server/middleware/logger.ts'],
   /*
    ** Build configuration
    */
