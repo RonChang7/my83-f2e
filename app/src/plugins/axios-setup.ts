@@ -5,7 +5,7 @@ import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
 
-export default (({ app }) => {
+export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
   const { APP_ENV, API_URL } = app.$env
 
@@ -20,6 +20,16 @@ export default (({ app }) => {
     })
 
     request.initApiUrlLogger = true
+  }
+
+  if (process.server) {
+    request.defaults.headers.common =
+      req && req.headers ? Object.assign({}, req.headers) : {}
+
+    delete request.defaults.headers.common.host
+
+    // Don't accept brotli encoding because Node can't parse it
+    request.defaults.headers.common['accept-encoding'] = 'gzip, deflate'
   }
 
   if (process.client) {
