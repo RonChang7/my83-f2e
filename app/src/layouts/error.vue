@@ -33,7 +33,11 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { NuxtError } from '@nuxt/types/index'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { errorPageContent, ErrorContent } from '@/config/error-page.config.ts'
+import {
+  errorPageContent,
+  ErrorContent,
+  ErrorPageType,
+} from '@/config/error-page.config.ts'
 import { Zendesk } from '@/services/zendesk/zendesk'
 import { UserRoleMap } from '@/services/user/user'
 import { GlobalVuexState } from '@/store/global-state'
@@ -45,7 +49,11 @@ export default {
   props: ['error'],
   methods: {
     redirectTo(url) {
-      window.location.href = url
+      if (url) {
+        window.location.href = url
+        return
+      }
+      window.location.reload()
     },
     feedback() {
       const zendeskInstance = Zendesk.getInstance(this.$env.ZENDESK_CHAT_ID)
@@ -69,7 +77,9 @@ export default {
   computed: {
     errorContent() {
       const { message } = this.error
-      return errorPageContent[message!] || errorPageContent.default
+      return message && message in ErrorPageType
+        ? errorPageContent[ErrorPageType[message]]
+        : errorPageContent[ErrorPageType.DEFAULT]
     },
   },
 } as ComponentOption
@@ -97,7 +107,7 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export interface Methods {
-  redirectTo(url: string): void
+  redirectTo(url?: string): void
   feedback(): void
 }
 
