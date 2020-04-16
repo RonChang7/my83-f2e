@@ -7,7 +7,6 @@
       :class="state"
       :disabled="disabled"
       :autofocus="autofocus"
-      :style="{ height: height ? height : '' }"
       class="BaseInputTextarea__input"
       @input="input"
       @blur="$emit('blur')"
@@ -73,15 +72,20 @@ export default {
 
       const el = this.$refs.textarea
       this.$nextTick(() => {
-        el.style.cssText = 'height:auto;'
+        el.style.height = 'auto'
         const textareaHeight =
-          this.autoGrowMaxHeight !== null &&
+          this.autoGrowMaxHeight === null ||
           el.scrollHeight < this.autoGrowMaxHeight
             ? el.scrollHeight
             : this.autoGrowMaxHeight
         el.style.height = textareaHeight + 'px'
       })
     },
+  },
+  mounted() {
+    if (this.height) {
+      this.$refs.textarea.style.minHeight = this.height
+    }
   },
 } as ComponentOption
 
@@ -130,11 +134,13 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
 
 .BaseInputTextarea {
   &__input {
     @include input;
+    line-height: $line-height;
     resize: none;
   }
 }
