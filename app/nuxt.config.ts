@@ -28,8 +28,6 @@ const config: Configuration = {
       { property: 'og:site_property', content: 'MY83 保險網' },
       { property: 'og:type', content: 'website' },
       { property: 'og:locale', content: 'zh_TW' },
-      { property: 'fb:app_id', content: process.env.FACEBOOK_APP_ID! },
-      { property: 'fb:admins', content: '217752' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }],
     htmlAttrs: {
@@ -84,8 +82,6 @@ const config: Configuration = {
    ** Nuxt.js modules
    */
   modules: [
-    // '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
     [
       // ref: https://github.com/samtgarson/nuxt-env
       'nuxt-env',
@@ -98,6 +94,7 @@ const config: Configuration = {
           { key: 'JWT_TOKEN_NAME' },
           { key: 'HEALTH_CHECK_AGENT_STRING' },
           { key: 'FACEBOOK_APP_ID' },
+          { key: 'FACEBOOK_ADMIN_ID' },
           { key: 'ZENDESK_CHAT_ID' },
           { key: 'TRACKING_ENABLE' },
           { key: 'TRACKING_DEV_LOG_ENABLE' },
