@@ -154,7 +154,7 @@ export default {
         questionId: this.questionId,
         answerId: this.answerId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: nl2br(this.form.content), // @TODO: 相容舊版，所以新增 response 要補上 <br />
+        content: nl2br(this.form.content.trim()), // @TODO: 相容舊版，所以新增 response 要補上 <br />
       }
 
       this.submitState = 'loading'
@@ -221,7 +221,7 @@ export default {
   computed: {
     disableSubmit() {
       const nickname = this.nickname || this.form.nickname
-      return !(nickname && this.form.content)
+      return !(nickname && this.form.content.trim())
     },
   },
   watch: {

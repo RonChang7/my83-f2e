@@ -1,7 +1,13 @@
 const DEFAULT_IMAGE = 'error-page@2x.png'
 
+export const ErrorPageType = {
+  QUESTION: 'QUESTION',
+  SERVER: 'SERVER',
+  DEFAULT: 'DEFAULT',
+}
+
 export const errorPageContent: Record<string, ErrorContent> = {
-  default: {
+  [ErrorPageType.DEFAULT]: {
     image: DEFAULT_IMAGE,
     title: '我們找不到你尋找的頁面喔',
     content:
@@ -10,7 +16,16 @@ export const errorPageContent: Record<string, ErrorContent> = {
     redirectUrl: '/',
     enableZendesk: true,
   },
-  question: {
+  [ErrorPageType.SERVER]: {
+    image: DEFAULT_IMAGE,
+    title: '伺服器發生問題，請稍後再試',
+    content:
+      '可能發生了什麼問題\n告訴 MY83管理員發生問題的使用過程，一起讓MY83變得更好',
+    buttonText: '重新整理',
+    redirectUrl: '',
+    enableZendesk: true,
+  },
+  [ErrorPageType.QUESTION]: {
     image: DEFAULT_IMAGE,
     title: '這篇討論不存在喔',
     content: '有保險問題嗎？快到討論區發問，讓專業的業務員來幫你吧！',

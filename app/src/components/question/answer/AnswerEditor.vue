@@ -67,6 +67,7 @@ import {
 } from '@/services/question/PostDataFactory'
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollTo } from '@/utils/element'
+import { nl2br, br2nl } from '@/utils/text-parser'
 import { UserRole } from '@/services/user/user'
 const BaseCheckbox = () =>
   import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
@@ -127,7 +128,7 @@ export default {
       const payload = {
         questionId: this.questionId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: this.form.content,
+        content: this.contentTransform(this.form.content),
       }
 
       this.submitState = 'loading'
@@ -182,11 +183,14 @@ export default {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
       el && scrollTo(el, window)
     },
+    contentTransform(content: string) {
+      return nl2br(br2nl(content.replace(/&nbsp;/g, ' ')).trim())
+    },
   },
   computed: {
     disableSubmit() {
       const nickname = this.nickname || this.form.nickname
-      return !(nickname && this.form.content)
+      return !(nickname && this.contentTransform(this.form.content))
     },
   },
   mounted() {
@@ -227,6 +231,7 @@ export interface Methods {
   reset(): void
   cancel(): void
   scrollToNewPost(id: number): void
+  contentTransform(content: string): string
 }
 
 export interface Computed {
