@@ -7,7 +7,9 @@
       <div class="AskingPage__column left">
         <AskingNotifySection />
       </div>
-      <div class="AskingPage__column right"></div>
+      <div class="AskingPage__column right">
+        <AskingFormSection />
+      </div>
     </div>
   </div>
 </template>
@@ -17,10 +19,12 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import AskingNotifySection from '@/components/question/AskingNotifySection.vue'
+import AskingFormSection from '@/components/question/AskingFormSection.vue'
 
 const options: ComponentOption = {
   components: {
     AskingNotifySection,
+    AskingFormSection,
   },
 }
 
@@ -87,6 +91,7 @@ export default options
     @include max-media('xl') {
       width: auto;
       margin: 0;
+      padding: 20px 0;
       text-align: center;
     }
   }
@@ -107,6 +112,7 @@ export default options
     &.left {
       width: 360px;
       margin-top: -52px;
+      margin-bottom: 10px;
     }
 
     &.left,
