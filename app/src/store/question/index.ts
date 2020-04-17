@@ -101,9 +101,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchQuestionData(id)
             .then((res) => {
-              if ((res as SimpleResponse).success === false) {
-                throw new Error((res as SimpleResponse).message)
-              }
               resolve(res)
             })
             .catch((err) => {
@@ -136,9 +133,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
       async [types.FETCH_QUESTION_PERSONALIZE_DATA]({ commit }, id: number) {
         try {
           const res = await api.fetchQuestionPersonalizeData(id)
-          if ((res as SimpleResponse).success === false) {
-            throw new Error((res as SimpleResponse).message)
-          }
           commit(
             types.UPDATE_QUESTION_PERSONALIZE_DATA,
             (res as QuestionPersonalizeResponse).personalize
