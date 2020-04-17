@@ -66,7 +66,7 @@ export default {
       default: false,
     },
     autocomplete: {
-      type: String,
+      type: String as () => Props['autocomplete'],
       default: 'on',
     },
   },
