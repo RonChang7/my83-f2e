@@ -9,8 +9,8 @@
         :disabled="disabled"
         @update="update"
       />
-      <BaseInputErrorMessage v-if="errMsg" :msg="errMsg" />
-      <BaseInputLegendMessage v-if="legend && !errMsg" :msg="legend" />
+      <BaseInputMessage v-if="errMsg" :msg="errMsg" />
+      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
     </AskingFormBaseField>
   </div>
 </template>
@@ -25,15 +25,13 @@ import AskingFormBaseField, {
 import BaseSelect, {
   Props as BaseSelectProps,
 } from '@/components/my83-ui-kit/input/BaseSelect.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
-import BaseInputLegendMessage from '@/components/my83-ui-kit/input/BaseInputLegendMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 
 const options: ComponentOption = {
   components: {
     AskingFormBaseField,
     BaseSelect,
-    BaseInputErrorMessage,
-    BaseInputLegendMessage,
+    BaseInputMessage,
   },
   props: {
     legend: {

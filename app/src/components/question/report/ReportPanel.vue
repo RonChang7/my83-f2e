@@ -26,7 +26,7 @@
             placeholder="說明原因"
             :state="errors.comment ? errors.comment.state : ''"
           />
-          <BaseInputErrorMessage
+          <BaseInputMessage
             :msg="errors.comment ? errors.comment.message : ''"
           />
         </div>
@@ -49,7 +49,7 @@
           送出
         </BaseButton>
       </div>
-      <BaseInputErrorMessage
+      <BaseInputMessage
         :msg="errors.submit ? errors.submit.message : ''"
         text-align="center"
       />
@@ -70,7 +70,7 @@ import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.
 import BaseButton, {
   Props as BaseButtonProps,
 } from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { CLOSE_REPORT_PANEL, ADD_REPORT } from '@/store/question/question.type'
 import { SimpleResponse } from '@/api/type'
 import DeviceMixin, {
@@ -90,7 +90,7 @@ export default {
     BaseSelect,
     BaseButton,
     BaseInputTextarea,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   props: {
     visible: {

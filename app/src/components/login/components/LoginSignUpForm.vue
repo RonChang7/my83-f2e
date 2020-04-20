@@ -8,7 +8,7 @@
       text="以 Facebook 註冊"
       @login="facebookSignUp"
     />
-    <BaseInputErrorMessage text-align="center" :msg="message" />
+    <BaseInputMessage text-align="center" :msg="message" />
 
     <div class="LoginSignUpForm__info">
       為確保用戶真實性，僅提供 Facebook 註冊
@@ -28,7 +28,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import FacebookLoginButton from './FacebookLoginButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { facebookSignUp } from '@/api/login/login'
 import { User } from '@/services/user/user'
 import { Auth } from '@/services/auth/auth'
@@ -39,7 +39,7 @@ export default {
   components: {
     FacebookLoginButton,
     GlobalLink,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   data() {
     return {

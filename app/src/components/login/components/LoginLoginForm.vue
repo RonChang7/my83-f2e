@@ -1,9 +1,7 @@
 <template>
   <div class="LoginLoginForm">
     <FacebookLoginButton :state="state.facebook" @login="facebookLogin" />
-    <BaseInputErrorMessage
-      :msg="errors.facebook ? errors.facebook.message : ''"
-    />
+    <BaseInputMessage :msg="errors.facebook ? errors.facebook.message : ''" />
 
     <hr class="or" />
     <div
@@ -25,7 +23,7 @@
       placeholder="hello@my83.com.tw"
       @blur="validate('email', form.email)"
     />
-    <BaseInputErrorMessage :msg="errors.email ? errors.email.message : ''" />
+    <BaseInputMessage :msg="errors.email ? errors.email.message : ''" />
 
     <div class="LoginLoginForm__password">
       <label for="password">
@@ -43,9 +41,7 @@
       @blur="validate('password', form.password)"
       @enter="submit"
     />
-    <BaseInputErrorMessage
-      :msg="errors.password ? errors.password.message : ''"
-    />
+    <BaseInputMessage :msg="errors.password ? errors.password.message : ''" />
 
     <BaseCheckbox
       :checked.sync="autocomplete"
@@ -60,7 +56,7 @@
     >
       登入
     </BaseButton>
-    <BaseInputErrorMessage
+    <BaseInputMessage
       text-align="center"
       :msg="errors.login ? errors.login.message : ''"
     />
@@ -81,7 +77,7 @@ import { login } from '@/api/login/login'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseCheckbox from '@/components/my83-ui-kit/input/BaseCheckbox.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { User, LandingUrlInfo } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
@@ -97,7 +93,7 @@ export default {
     BaseCheckbox,
     BaseButton,
     LoginFooter,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   data() {
     return {
