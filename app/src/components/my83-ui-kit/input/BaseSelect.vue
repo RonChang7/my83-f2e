@@ -5,8 +5,8 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
-const BaseMobileSelect = () => import('./BaseMobileSelect.vue')
-const BaseDesktopSelect = () => import('./BaseDesktopSelect.vue')
+const BaseMobileSelect = () => import('./BaseSelect/BaseMobileSelect.vue')
+const BaseDesktopSelect = () => import('./BaseSelect/BaseDesktopSelect.vue')
 
 export default {
   mixins: [DeviceMixin],
