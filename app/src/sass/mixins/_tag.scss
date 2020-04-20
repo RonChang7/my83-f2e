@@ -1,0 +1,31 @@
+@mixin tag {
+  display: inline-block;
+  line-height: 22px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@mixin tag-default {
+  background-color: $primary-bg;
+  color: $gray-secondary;
+
+  &.active {
+    background-color: $primary-bright-color;
+    color: $primary-color;
+    font-weight: 500;
+
+    @media (hover: hover) {
+      &:hover {
+        background: $primary-hover-color;
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background: $secondary-hover-color;
+    }
+  }
+}
