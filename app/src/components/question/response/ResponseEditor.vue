@@ -33,7 +33,7 @@
         />
       </div>
       <div class="ResponseEditor__function">
-        <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
+        <BaseInputMessage :msg="errMsg" class="mr-4" />
         <BaseButton size="m" type="secondary" @click.native="cancel">
           取消
         </BaseButton>
@@ -65,7 +65,7 @@ import { CancelResponseDialogContent } from './cancel-response-dialog-info'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { AddResponseResponse } from '@/api/question/question.type'
 import { ADD_RESPONSE } from '@/store/question/question.type'
 import { GlobalDialogContent } from '@/store/global/index'
@@ -92,7 +92,7 @@ export default {
     BaseInputText,
     BaseInputTextarea,
     BaseButton,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   props: {
     avatar: {

@@ -29,7 +29,7 @@
           {{ rightButtonText }}
         </BaseButton>
       </div>
-      <BaseInputErrorMessage :msg="errMsg" text-align="center" />
+      <BaseInputMessage :msg="errMsg" text-align="center" />
     </div>
   </BaseModal>
 </template>
@@ -41,14 +41,14 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 
 export default {
   components: {
     BaseModal,
     BaseClose,
     BaseButton,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   props: {
     visible: {

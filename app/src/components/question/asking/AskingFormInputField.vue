@@ -11,8 +11,8 @@
         :autocomplete="autocomplete"
         @update="update"
       />
-      <BaseInputErrorMessage v-if="errMsg" :msg="errMsg" />
-      <BaseInputLegendMessage v-if="legend && !errMsg" :msg="legend" />
+      <BaseInputMessage v-if="errMsg" :msg="errMsg" />
+      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
     </AskingFormBaseField>
   </div>
 </template>
@@ -27,15 +27,13 @@ import AskingFormBaseField, {
 import BaseInputText, {
   Props as BaseInputTextProps,
 } from '@/components/my83-ui-kit/input/BaseInputText.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
-import BaseInputLegendMessage from '@/components/my83-ui-kit/input/BaseInputLegendMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 
 const options: ComponentOption = {
   components: {
     AskingFormBaseField,
     BaseInputText,
-    BaseInputErrorMessage,
-    BaseInputLegendMessage,
+    BaseInputMessage,
   },
   props: {
     legend: {

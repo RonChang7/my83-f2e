@@ -20,7 +20,7 @@
       placeholder="hello@my83.com.tw"
       @blur="validate('email', form.email)"
     />
-    <BaseInputErrorMessage :msg="errors.email ? errors.email.message : ''" />
+    <BaseInputMessage :msg="errors.email ? errors.email.message : ''" />
 
     <BaseButton
       :is-full-width="true"
@@ -32,7 +32,7 @@
       寄送密碼重設信
     </BaseButton>
 
-    <BaseInputErrorMessage
+    <BaseInputMessage
       text-align="center"
       :msg="errors.api ? errors.api.message : ''"
     />
@@ -49,7 +49,7 @@ import { Validator, ValidateMessage } from '../validate'
 import LoginFooter from '../components/LoginFooter.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { forgetPassword } from '@/api/login/login'
 
 export default {
@@ -57,7 +57,7 @@ export default {
     LoginFooter,
     BaseInputText,
     BaseButton,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   data() {
     return {
