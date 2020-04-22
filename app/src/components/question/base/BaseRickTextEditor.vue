@@ -65,7 +65,7 @@ export default {
 
         // newline setting
         forced_root_block: '',
-        force_p_newlines: false,
+        entity_encoding: 'raw',
 
         /**
          * valid HTML element
@@ -78,6 +78,18 @@ export default {
           plugins: [...plugins, 'autoresize'],
           autoresize_bottom_margin: 0,
           max_height: 450,
+        },
+        setup(editor) {
+          /**
+           * 複寫 Shift + Enter 的行為
+           * 當使用者透過 Shift + Enter 進行換行，將其改寫為 Enter only
+           * Ref: https://stackoverflow.com/questions/57957512/how-to-disable-tinymces-shiftenter-behavior#comment102377266_57976157
+           */
+          editor.on('keydown', function(event) {
+            if (event.keyCode === 13 && event.shiftKey) {
+              event.shiftKey = false
+            }
+          })
         },
       },
     }
