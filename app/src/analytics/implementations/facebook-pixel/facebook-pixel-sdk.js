@@ -1,4 +1,4 @@
-import { trackingWrapper } from '../../helper/tracking-wrapper'
+import { logger } from '../../helper/logger'
 
 export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
   return new Promise((resolve) => {
@@ -24,7 +24,10 @@ export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
 
         t.onload = () =>
           resolve((...args) => {
-            trackingWrapper(f.fbq, trackingLogEnable, '[Facebook Pixel]', args)
+            f.fbq(...args)
+            if (trackingLogEnable) {
+              logger('[Facebook Pixel]', args.join(' '))
+            }
           })
       })(
         window,
@@ -33,10 +36,10 @@ export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
         'https://connect.facebook.net/en_US/fbevents.js'
       )
     } else {
-      window.fbq = function() {}
-
       resolve((...args) => {
-        trackingWrapper(window.fbq, trackingLogEnable, '[Facebook Pixel]', args)
+        if (trackingLogEnable) {
+          logger('[Facebook Pixel]', args.join(' '))
+        }
       })
     }
   })

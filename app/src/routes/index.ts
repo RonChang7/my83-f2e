@@ -8,13 +8,6 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       component: resolve('@/views/Ping.vue'),
     },
     {
-      path: '/example-page',
-      component: resolve('@/views/example/Index.vue'),
-      meta: {
-        requiredStoreModules: ['example'],
-      },
-    },
-    {
       path: '/header-menu',
       component: resolve('@/views/header-menu/HeaderMenu.vue'),
       meta: {
@@ -22,7 +15,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
-      path: '/question/:id',
+      path: '/question/:id(\\d+)',
       component: resolve('@/views/question/page/Index.vue'),
       meta: {
         requiredStoreModules: ['question'],
