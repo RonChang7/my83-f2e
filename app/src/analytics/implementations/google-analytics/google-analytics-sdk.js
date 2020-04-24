@@ -1,6 +1,6 @@
 /* eslint-disable no-sequences */
 /* eslint-disable no-unused-expressions */
-import { trackingWrapper } from '../../helper/tracking-wrapper'
+import { logger } from '../../helper/logger'
 
 export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
   return new Promise((resolve) => {
@@ -21,12 +21,10 @@ export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
 
         a.onload = () =>
           resolve((...args) => {
-            trackingWrapper(
-              window.ga,
-              trackingLogEnable,
-              '[Google Analytics]',
-              args
-            )
+            window.ga(...args)
+            if (trackingLogEnable) {
+              logger('[Google Analytics]', args.join(' '))
+            }
           })
       })(
         window,
@@ -36,15 +34,10 @@ export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
         'ga'
       )
     } else {
-      window.ga = function() {}
-
       resolve((...args) => {
-        trackingWrapper(
-          window.ga,
-          trackingLogEnable,
-          '[Google Analytics]',
-          args
-        )
+        if (trackingLogEnable) {
+          logger('[Google Analytics]', args.join(' '))
+        }
       })
     }
   })
