@@ -170,7 +170,7 @@ export default {
     createScrollToTopIntersectionObserver() {
       return new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-          this.shouldShowScrollToTop = entry.boundingClientRect.bottom <= 0
+          this.shouldShowScrollToTop = entry.boundingClientRect.bottom < 0
         })
       })
     },
@@ -215,7 +215,7 @@ export default {
 
       if (!!recommendProduct && (process.server || !this.isMounted)) return true
 
-      return this.userRole !== 'sales'
+      return !!recommendProduct && this.userRole !== 'sales'
     },
     shouldShowReportPanel() {
       const { report } = this.$store.state.question
