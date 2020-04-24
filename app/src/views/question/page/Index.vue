@@ -39,7 +39,6 @@ export default {
           ? ErrorPageType.QUESTION
           : ErrorPageType.SERVER
 
-      console.error('Request question ID:', id)
       return error({
         statusCode,
         message,
