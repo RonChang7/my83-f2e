@@ -77,7 +77,14 @@ export default (({ app, req }) => {
                 return request(originalRequest)
               })
               .catch((err) => {
-                if (status === 401 && error === 'invalid_token') {
+                const refreshTokenStatus = err?.response?.status
+                const refreshTokenError = err?.response?.data?.error
+
+                // refresh token 失敗，則刪除 cookies 所存的 token
+                if (
+                  refreshTokenStatus === 401 &&
+                  refreshTokenError === 'invalid_token'
+                ) {
                   Suspect.setRoleCode()
                   auth.logout()
                 }
