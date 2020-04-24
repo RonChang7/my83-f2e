@@ -77,12 +77,8 @@ export default (({ app, req }) => {
                 return request(originalRequest)
               })
               .catch((err) => {
-                const {
-                  response: {
-                    status: refreshTokenStatus,
-                    data: { error: refreshTokenError },
-                  },
-                } = err
+                const refreshTokenStatus = err?.response?.status
+                const refreshTokenError = err?.response?.data?.error
 
                 // refresh token 失敗，則刪除 cookies 所存的 token
                 if (
