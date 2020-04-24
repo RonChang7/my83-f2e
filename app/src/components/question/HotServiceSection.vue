@@ -166,13 +166,5 @@ export interface Props {}
       }
     }
   }
-
-  @include min-media('xs') {
-    &__card {
-      &:not(:last-child) {
-        margin-right: 30px;
-      }
-    }
-  }
 }
 </style>
