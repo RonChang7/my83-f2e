@@ -1,5 +1,4 @@
 const moduleMap = {
-  example: () => import('@/store/example'),
   question: () => import('@/store/question'),
 }
 
