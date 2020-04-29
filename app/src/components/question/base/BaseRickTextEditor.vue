@@ -7,6 +7,7 @@
       model-events="change keyup input undo redo cut paste blur"
       @onFocus="focusHandler(true)"
       @onBlur="focusHandler(false)"
+      @onPaste="$emit('paste')"
     />
   </div>
 </template>
