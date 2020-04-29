@@ -67,6 +67,10 @@ export default {
         forced_root_block: '',
         entity_encoding: 'raw',
 
+        // paste
+        paste_webkit_styles: 'color text-decoration',
+        paste_retain_style_properties: 'color text-decoration',
+
         /**
          * valid HTML element
          * https://www.tiny.cloud/docs/configure/content-filtering/#valid_elements
