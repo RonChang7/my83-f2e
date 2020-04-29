@@ -34,7 +34,7 @@ export default {
     },
   },
   data() {
-    const plugins = ['table', 'link', 'paste']
+    const plugins = ['table', 'link', 'paste', 'fullscreen']
 
     return {
       isFocus: false,
@@ -50,7 +50,8 @@ export default {
         language: 'zh_TW',
         plugins,
         menubar: '',
-        toolbar: 'bold italic underline forecolor backcolor table link',
+        toolbar:
+          'undo redo | bold italic underline forecolor backcolor table link | fullscreen',
         elementpath: false,
         branding: false,
         min_height: this.minHeight,
