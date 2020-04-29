@@ -21,10 +21,10 @@
       </div>
     </div>
     <div class="AnswerEditor__content">
-      <BaseRickTextEditor :content.sync="form.content" />
+      <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
+      <BaseInputErrorMessage :msg="errMsg" text-align="right" class="mr-4" />
       <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
@@ -114,6 +114,9 @@ export default {
     }
   },
   methods: {
+    paste() {
+      this.errMsg = '請檢查從外部貼上的文字，確認格式正常再送出喔！'
+    },
     validate() {
       if (this.userRole === 'sales' && !this.acceptRule) {
         this.errMsg = '請同意遵守版規'
@@ -226,6 +229,7 @@ export interface Data {
 }
 
 export interface Methods {
+  paste(): void
   validate(): boolean
   submit(): void
   reset(): void
@@ -256,6 +260,10 @@ export interface Props {
   width: 100%;
   padding: 30px;
 
+  @include max-media('xl') {
+    padding: 20px;
+  }
+
   &__header {
     display: flex;
   }
@@ -269,6 +277,10 @@ export interface Props {
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+
+    > button {
+      white-space: nowrap;
+    }
 
     > button:not(:last-child) {
       margin-right: 10px;
