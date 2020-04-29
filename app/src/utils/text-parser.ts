@@ -19,3 +19,6 @@ export const nl2br = (content: string) => content.replace(/\n|\r\n?/g, '<br />')
 
 export const br2nl = (content: string) =>
   content.replace(/<\s*\/?br\s*[/]?>/gi, '\n')
+
+export const htmlStrip = (content: string) =>
+  content.replace(/(<([^>]+)>)/gi, '')
