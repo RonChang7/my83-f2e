@@ -52,7 +52,8 @@ export default {
         plugins,
         menubar: '',
         toolbar:
-          'undo redo | bold italic underline forecolor backcolor table link | fullscreen',
+          'undo redo | fullscreen | bold italic underline forecolor backcolor table link',
+        toolbar_mode: 'wrap',
         elementpath: false,
         branding: false,
         min_height: this.minHeight,
