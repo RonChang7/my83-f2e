@@ -7,6 +7,7 @@
       model-events="change keyup input undo redo cut paste blur"
       @onFocus="focusHandler(true)"
       @onBlur="focusHandler(false)"
+      @onPaste="$emit('paste')"
     />
   </div>
 </template>
@@ -34,7 +35,7 @@ export default {
     },
   },
   data() {
-    const plugins = ['table', 'link', 'paste']
+    const plugins = ['table', 'link', 'paste', 'fullscreen']
 
     return {
       isFocus: false,
@@ -50,7 +51,9 @@ export default {
         language: 'zh_TW',
         plugins,
         menubar: '',
-        toolbar: 'bold italic underline forecolor backcolor table link',
+        toolbar:
+          'undo redo | fullscreen | bold italic underline forecolor backcolor table link',
+        toolbar_mode: 'wrap',
         elementpath: false,
         branding: false,
         min_height: this.minHeight,
@@ -64,32 +67,24 @@ export default {
         target_list: false,
 
         // newline setting
-        forced_root_block: '',
+        forced_root_block: false,
         entity_encoding: 'raw',
+
+        // paste
+        paste_webkit_styles: 'color text-decoration',
+        paste_retain_style_properties: 'color text-decoration',
 
         /**
          * valid HTML element
          * https://www.tiny.cloud/docs/configure/content-filtering/#valid_elements
          */
         valid_elements:
-          '@[style],br,strong,em,span,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
+          'br,@[style],strong,em,span,p,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
 
         mobile: {
           plugins: [...plugins, 'autoresize'],
           autoresize_bottom_margin: 0,
           max_height: 450,
-        },
-        setup(editor) {
-          /**
-           * 複寫 Shift + Enter 的行為
-           * 當使用者透過 Shift + Enter 進行換行，將其改寫為 Enter only
-           * Ref: https://stackoverflow.com/questions/57957512/how-to-disable-tinymces-shiftenter-behavior#comment102377266_57976157
-           */
-          editor.on('keydown', function(event) {
-            if (event.keyCode === 13 && event.shiftKey) {
-              event.shiftKey = false
-            }
-          })
         },
       },
     }
