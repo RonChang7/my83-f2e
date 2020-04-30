@@ -21,10 +21,10 @@
       </div>
     </div>
     <div class="AnswerEditor__content">
-      <BaseRickTextEditor :content.sync="form.content" />
+      <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseInputErrorMessage :msg="errMsg" class="mr-4" />
+      <BaseInputErrorMessage :msg="errMsg" text-align="right" class="mr-4" />
       <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
@@ -67,7 +67,7 @@ import {
 } from '@/services/question/PostDataFactory'
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollTo } from '@/utils/element'
-import { nl2br, br2nl } from '@/utils/text-parser'
+import { htmlStrip } from '@/utils/text-parser'
 import { UserRole } from '@/services/user/user'
 const BaseCheckbox = () =>
   import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
@@ -114,6 +114,9 @@ export default {
     }
   },
   methods: {
+    paste() {
+      this.errMsg = '請檢查從外部貼上的文字，確認格式正常再送出喔！'
+    },
     validate() {
       if (this.userRole === 'sales' && !this.acceptRule) {
         this.errMsg = '請同意遵守版規'
@@ -128,7 +131,7 @@ export default {
       const payload = {
         questionId: this.questionId,
         nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: this.contentTransform(this.form.content),
+        content: this.form.content,
       }
 
       this.submitState = 'loading'
@@ -183,14 +186,22 @@ export default {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
       el && scrollTo(el, window)
     },
-    contentTransform(content: string) {
-      return nl2br(br2nl(content.replace(/&nbsp;/g, ' ')).trim())
+    isContentEmpty(content: string) {
+      /**
+       * 移除 HTML tag
+       * 移除換行
+       * 移除空白
+       */
+      return !!htmlStrip(content)
+        .replace(/\n|\r\n?/g, '')
+        .replace(/&nbsp;/g, '')
+        .trim()
     },
   },
   computed: {
     disableSubmit() {
       const nickname = this.nickname || this.form.nickname
-      return !(nickname && this.contentTransform(this.form.content))
+      return !(nickname && this.isContentEmpty(this.form.content))
     },
   },
   mounted() {
@@ -226,12 +237,13 @@ export interface Data {
 }
 
 export interface Methods {
+  paste(): void
   validate(): boolean
   submit(): void
   reset(): void
   cancel(): void
   scrollToNewPost(id: number): void
-  contentTransform(content: string): string
+  isContentEmpty(content: string): boolean
 }
 
 export interface Computed {
@@ -256,6 +268,10 @@ export interface Props {
   width: 100%;
   padding: 30px;
 
+  @include max-media('xl') {
+    padding: 20px;
+  }
+
   &__header {
     display: flex;
   }
@@ -269,6 +285,10 @@ export interface Props {
     display: flex;
     justify-content: flex-end;
     margin-top: 10px;
+
+    > button {
+      white-space: nowrap;
+    }
 
     > button:not(:last-child) {
       margin-right: 10px;
