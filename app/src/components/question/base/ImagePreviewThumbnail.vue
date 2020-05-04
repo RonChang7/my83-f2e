@@ -1,7 +1,7 @@
 <template>
-  <figure class="QuestionThumbnail">
+  <figure class="ImagePreviewThumbnail">
     <BaseLazyImage
-      class="QuestionThumbnail__image"
+      class="ImagePreviewThumbnail__image"
       :image-url="imageUrl"
       :image-alt="imageAlt"
       :ignore-placeholder="true"
@@ -68,7 +68,7 @@ figure {
   margin: 0;
 }
 
-.QuestionThumbnail {
+.ImagePreviewThumbnail {
   flex: 0 0 auto;
   width: 100px;
   height: 100%;
