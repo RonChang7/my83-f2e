@@ -3,7 +3,7 @@
     <div
       ref="select"
       class="BaseDesktopSelect"
-      :class="{ placeholder: selectedText === placeholder }"
+      :class="{ placeholder: selectedText === placeholder, disabled }"
       @click="(e) => panelHandler(e.type, true)"
       @mousedown="disableBlurHandler"
     >
@@ -18,6 +18,7 @@
     >
       <div
         v-for="(option, index) in options"
+        ref="option"
         :key="index"
         class="BaseDesktopSelect__option"
         :class="{ selected: value === option.value }"
@@ -39,6 +40,8 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Props as BaseSelectProps } from '../BaseSelect.vue'
+import { getOffsetTop } from '@/utils/element'
+import { hasClass } from '@/utils/dom'
 
 export default {
   props: {
@@ -84,6 +87,8 @@ export default {
       this.$emit('input', value)
     },
     panelHandler(eventType, status) {
+      if (this.disabled) return
+
       if (this.disableBlur && eventType === 'blur') {
         this.disableBlur = false
         return
@@ -129,12 +134,13 @@ export default {
       })
     },
     scrollSelectedIntoView() {
-      const selectedOptionEl = document.querySelector(
-        '.BaseDesktopSelect__option.selected'
+      const selectedOptionEl = this.$refs.option.find((el) =>
+        hasClass(el, 'selected')
       )
 
       if (selectedOptionEl) {
-        selectedOptionEl.scrollIntoView()
+        const offsetTop = getOffsetTop(selectedOptionEl, this.$refs.panel)
+        this.$refs.panel.scrollTop = offsetTop
       }
     },
   },
@@ -160,6 +166,7 @@ export interface Instance extends Vue {
   $refs: {
     panel: HTMLElement
     select: HTMLElement
+    option: HTMLElement[]
   }
 }
 
