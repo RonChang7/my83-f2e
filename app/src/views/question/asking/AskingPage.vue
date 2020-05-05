@@ -8,23 +8,76 @@
         <AskingNotifySection />
       </div>
       <div class="AskingPage__column right">
-        <AskingFormSection />
+        <AskingFormSection :form-option="transformFormOption" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import AskingNotifySection from '@/components/question/AskingNotifySection.vue'
 import AskingFormSection from '@/components/question/AskingFormSection.vue'
+import { AskingFormOptionResponse } from '@/api/question/asking.type'
+import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 
 const options: ComponentOption = {
   components: {
     AskingNotifySection,
     AskingFormSection,
+  },
+  props: {
+    formOption: {
+      type: Object as PropType<Props['formOption']>,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isMounted: false,
+    }
+  },
+  computed: {
+    transformFormOption() {
+      const option: transformFormOption = {
+        purpose: [],
+        target: {},
+      }
+
+      if (_.isEmpty(this.formOption) || !this.isMounted) return option
+
+      option.purpose = this.formOption.purpose_tag_ids.map((tagId) => {
+        return {
+          text: this.formOption.tag_list[tagId],
+          value: tagId,
+        }
+      })
+
+      option.target = _.reduce(
+        this.formOption.purpose_mapping_target_tag_ids,
+        (result, value, key) => {
+          result[key] = value.map((tagId) => {
+            return {
+              text: this.formOption.tag_list[tagId],
+              value: tagId,
+            }
+          })
+          return result
+        },
+        {}
+      )
+
+      return option
+    },
+  },
+  mounted() {
+    this.isMounted = true
   },
 }
 
@@ -46,13 +99,24 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  isMounted: boolean
+}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  transformFormOption: transformFormOption
+}
 
-export interface Props {}
+export interface Props {
+  formOption: AskingFormOptionResponse
+}
+
+export interface transformFormOption {
+  purpose: SelectOption[]
+  target: Record<string, SelectOption[]>
+}
 
 export default options
 </script>
