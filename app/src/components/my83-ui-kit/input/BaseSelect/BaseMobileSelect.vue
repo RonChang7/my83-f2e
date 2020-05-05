@@ -8,15 +8,19 @@
       :disabled="disabled"
       @input="input"
     >
-      <option value="" disabled selected hidden>{{ placeholder }}</option>
-      <option
-        v-for="(option, index) in options"
-        :key="index"
-        :value="option.value"
-        :select="value === option.value"
-      >
-        {{ option.text }}
+      <option value="" disabled :selected="isPlaceholder" hidden>
+        {{ placeholder }}
       </option>
+      <template v-if="options.length">
+        <option
+          v-for="(option, index) in options"
+          :key="index"
+          :value="option.value"
+          :selected="value === option.value"
+        >
+          {{ option.text }}
+        </option>
+      </template>
     </select>
   </div>
 </template>
@@ -57,9 +61,16 @@ export default {
   },
   methods: {
     input(e) {
-      this.$emit('update:value', (e.target as HTMLInputElement).value)
-      this.$emit('input', (e.target as HTMLInputElement).value)
+      const value =
+        this.valueType === 'number'
+          ? parseInt((e.target as HTMLInputElement).value)
+          : (e.target as HTMLInputElement).value
+      this.$emit('update:value', value)
+      this.$emit('input', value)
     },
+  },
+  mounted() {
+    this.valueType = typeof this.value
   },
 } as ComponentOption
 
@@ -79,7 +90,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  valueType: string
+}
 
 export interface Data {}
 
