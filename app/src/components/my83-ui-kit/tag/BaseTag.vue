@@ -19,12 +19,17 @@ const options: ComponentOption = {
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     classObject() {
       return {
         [`BaseTag__${this.type}`]: true,
         active: this.active,
+        disabled: this.disabled,
       }
     },
   },
@@ -59,6 +64,7 @@ export interface Computed {
 export interface Props {
   type: 'default'
   active: boolean
+  disabled: boolean
 }
 
 export default options
