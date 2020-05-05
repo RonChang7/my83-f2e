@@ -7,7 +7,7 @@
         :placeholder="placeholder"
         :state="errMsg ? 'error' : state"
         :disabled="disabled"
-        @update="update"
+        @input="input"
       />
       <BaseInputMessage v-if="errMsg" :msg="errMsg" />
       <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
@@ -74,9 +74,9 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    update(value) {
+    input(value) {
       this.$emit('update:value', value)
-      this.$emit('update', value)
+      this.$emit('input', value)
     },
   },
 }
@@ -102,7 +102,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  update(value: string): void
+  input(value: string): void
 }
 
 export interface Computed {}
