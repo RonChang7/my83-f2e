@@ -1,44 +1,53 @@
 export class PostDataFactory {
   public form: PostData
 
-  private type: PostType
+  private _type: PostType
 
   public constructor(type: PostType) {
-    this.type = type
-    this.form = this.createFormData()
+    this._type = type
+    this.form = this._createFormData()
   }
 
   public reset() {
-    this.form = this.createFormData()
+    this.form = this._createFormData()
   }
 
-  private createFormData(): PostData {
-    switch (this.type) {
+  private _createFormData(): PostData {
+    switch (this._type) {
+      // @TODO: 改為常數
       case 'question':
-        return this.createQuestionPostData()
+        return this._createQuestionPostData()
       case 'answer':
-        return this.createAnswerPostData()
+        return this._createAnswerPostData()
       case 'response':
-        return this.createResponsePostData()
+        return this._createResponsePostData()
     }
   }
 
-  private createAnswerPostData(): AnswerPostData {
+  private _createAnswerPostData(): AnswerPostData {
     return {
       nickname: '',
       content: '',
     }
   }
 
-  private createResponsePostData(): ResponsePostData {
+  private _createResponsePostData(): ResponsePostData {
     return {
       nickname: '',
       content: '',
     }
   }
 
-  private createQuestionPostData(): QuestionPostData {
-    return {}
+  private _createQuestionPostData(): QuestionPostData {
+    return {
+      purpose: 0,
+      target: 0,
+      title: '',
+      content: '',
+      images: [],
+      insurance: [],
+      nickname: '',
+    }
   }
 }
 
@@ -54,6 +63,14 @@ export interface ResponsePostData {
   content: string
 }
 
-export interface QuestionPostData {}
+export interface QuestionPostData {
+  purpose: number
+  target: number
+  title: string
+  content: string
+  images: string[]
+  insurance: number[]
+  nickname: string
+}
 
 type PostData = AnswerPostData | ResponsePostData | QuestionPostData
