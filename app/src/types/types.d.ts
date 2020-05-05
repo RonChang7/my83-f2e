@@ -30,3 +30,25 @@ declare module 'vuex/types/index' {
     readonly $ua: UA
   }
 }
+
+/**
+ * @TODO: 暫時修正新版 Nuxt 沒有 fetch type 的 issue
+ * https://github.com/nuxt/typescript/blob/master/packages/types/app/vue.d.ts
+ */
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends Vue> {
+    fetchDelay?: number
+    fetchOnServer?: boolean | (() => boolean)
+  }
+}
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $fetchState: {
+      error: Error | null
+      pending: boolean
+      timestamp: number
+    }
+    $fetch(): void
+  }
+}
