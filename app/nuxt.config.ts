@@ -105,6 +105,7 @@ const config: Configuration = {
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
+    '@/nuxt-modules/recaptcha/module',
   ],
   webfontloader: {
     google: {

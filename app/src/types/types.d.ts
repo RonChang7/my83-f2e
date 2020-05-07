@@ -1,5 +1,7 @@
 import { UA } from 'nuxt-user-agent/lib/plugin.template'
 import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventManager'
+import '@nuxtjs/recaptcha'
+
 /**
  * Extends types in Vue and Nuxt
  */
