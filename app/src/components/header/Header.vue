@@ -70,9 +70,9 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed extends DeviceMixinComputed {}
-
-export interface Props {
+export interface Computed extends DeviceMixinComputed {
   userRole: UserRole
 }
+
+export interface Props {}
 </script>
