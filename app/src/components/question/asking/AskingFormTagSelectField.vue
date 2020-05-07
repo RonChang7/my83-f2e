@@ -1,17 +1,20 @@
 <template>
-  <div class="AskingFormSelectField">
+  <div class="AskingFormTagSelectField">
     <AskingFormBaseField :title="title" :required="required">
+      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
       <BaseTagSelect
         v-for="(tagOption, index) in options"
         :key="index"
+        class="AskingFormTagSelectField__panel"
+        :class="{ first: index === 0 }"
         :label="tagOption.label"
         :options="tagOption.options"
         :selected="value"
-        :is-expanded="tagOption.isExpanded"
+        :enable-fold="tagOption.enableFold"
+        :is-expanded.sync="panelExpandState[index]"
         @update="update"
       />
       <BaseInputMessage v-if="errMsg" :msg="errMsg" />
-      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
     </AskingFormBaseField>
   </div>
 </template>
@@ -62,10 +65,25 @@ const options: ComponentOption = {
       required: true,
     },
   },
+  data() {
+    return {
+      panelExpandState: [],
+    }
+  },
   methods: {
     update(value) {
       this.$emit('update:value', value)
-      this.$emit('update', value)
+      this.$emit('input', value)
+    },
+  },
+  watch: {
+    options: {
+      immediate: true,
+      handler(val: Props['options']) {
+        if (val.length) {
+          this.panelExpandState = val.map((option) => option.isExpanded)
+        }
+      },
     },
   },
 }
@@ -88,7 +106,9 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {}
 
-export interface Data {}
+export interface Data {
+  panelExpandState: boolean[]
+}
 
 export interface Methods {
   update(value: Props['value']): void
@@ -99,9 +119,23 @@ export interface Computed {}
 export interface Props extends FieldProps {
   legend: string
   errMsg: string
-  options: BaseTagSelectProps[]
+  options: Omit<BaseTagSelectProps, 'selected'>[]
   value: (string | number)[]
 }
 
 export default options
 </script>
+<style lang="scss" scoped>
+@import '@/sass/variables.scss';
+
+.AskingFormTagSelectField {
+  &__panel {
+    border-bottom: 1px solid $gray-quaternary;
+
+    &.first {
+      border-top: 1px solid $gray-quaternary;
+      margin-top: 12px;
+    }
+  }
+}
+</style>

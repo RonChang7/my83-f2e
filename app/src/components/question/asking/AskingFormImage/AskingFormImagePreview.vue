@@ -1,9 +1,9 @@
 <template>
-  <div class="AskingFormImagePreviewField">
+  <div class="AskingFormImagePreview">
     <ImagePreviewThumbnail
       v-for="image in images"
       :key="image.id"
-      class="AskingFormImagePreviewField__preview"
+      class="AskingFormImagePreview__preview"
       :class="{ error: !!error[image.id] }"
       :image-url="image.src"
       :enable-hover="false"
@@ -77,13 +77,12 @@ export default options
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 
-.AskingFormImagePreviewField {
+.AskingFormImagePreview {
   display: flex;
   flex-wrap: wrap;
   margin-top: 25px;
 
   &__preview {
-    margin-right: 14px;
     user-select: none;
 
     &.error {

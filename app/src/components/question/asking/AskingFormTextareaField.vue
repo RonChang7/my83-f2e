@@ -95,7 +95,7 @@ const options: ComponentOption = {
   methods: {
     update(value) {
       this.$emit('update:value', value)
-      this.$emit('update', value)
+      this.$emit('input', value)
     },
   },
 }
