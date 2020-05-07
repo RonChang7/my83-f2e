@@ -44,7 +44,9 @@ import {
   QuestionMeta,
 } from '@/api/question/question.type'
 import { textToUrl } from '@/utils/text-parser'
-import { UserRole } from '@/services/user/user'
+import UserMetaMixin, {
+  Computed as UserMetaMixinComputed,
+} from '@/mixins/user/user-meta'
 const QuestionImages = () => import('./question/QuestionImages.vue')
 const QuestionTags = () => import('./question/QuestionTags.vue')
 
@@ -58,12 +60,8 @@ export default {
     BaseMeta,
     BaseHeaderFunction,
   },
+  mixins: [UserMetaMixin],
   computed: {
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
     id() {
       return this.$store.state.question.question?.question_id
     },
@@ -135,8 +133,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {
-  userRole: UserRole
+export interface Computed extends UserMetaMixinComputed {
   id: QuestionData['question_id']
   subject: QuestionData['subject']
   content: QuestionData['content']
