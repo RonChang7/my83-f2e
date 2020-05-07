@@ -1,5 +1,5 @@
 <template>
-  <div class="AskingFormUploadImageField">
+  <div class="AskingFormUploadImage">
     <AskingFormBaseField :title="title" :required="required">
       <BaseInputMessage
         :msg="
@@ -121,7 +121,7 @@ export default options
 </script>
 
 <style lang="scss" scoped>
-.AskingFormUploadImageField {
+.AskingFormUploadImage {
   input[type='file'] {
     display: none;
   }
