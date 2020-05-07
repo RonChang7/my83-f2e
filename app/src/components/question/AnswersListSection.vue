@@ -22,24 +22,17 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import { QuestionMeta, AnswerData } from '@/api/question/question.type'
-import { UserRole } from '@/services/user/user'
+import UserMetaMixin, {
+  Computed as UserMetaMixinComputed,
+} from '@/mixins/user/user-meta'
 const AnswerSection = () => import('./answer/AnswerSection.vue')
 
 export default {
   components: {
     AnswerSection,
   },
+  mixins: [UserMetaMixin],
   computed: {
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
-    nickname() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
-      )
-    },
     answerCount() {
       return this.$store.state.question.question?.question_meta.answer_count
     },
@@ -82,9 +75,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {
-  userRole: UserRole
-  nickname: string
+export interface Computed extends UserMetaMixinComputed {
   answerCount: QuestionMeta['answer_count']
   answers: AnswerData[]
   bestAnswerId: boolean

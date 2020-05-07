@@ -97,12 +97,15 @@ import { scrollTo } from '@/utils/element'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import UserMetaMixin, {
+  Computed as UserMetaMixinComputed,
+} from '@/mixins/user/user-meta'
 const QuestionDropdownPanel = () =>
   import('@/components/question/panel/QuestionDropdownPanel.vue')
 const ReportPanel = () => import('@/components/question/report/ReportPanel.vue')
 
 export default {
-  mixins: [DeviceMixin],
+  mixins: [DeviceMixin, UserMetaMixin],
   components: {
     QuestionSection,
     AnswersListSection,
@@ -190,11 +193,6 @@ export default {
     },
   },
   computed: {
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
     shouldShowGuide() {
       if (process.server || !this.isMounted) return true
 
@@ -308,7 +306,7 @@ export default {
         this.getFixedColumnStart()
       })
     },
-    userRole(val) {
+    userRole(val: UserRole) {
       // 登入角色如果為業務員，重新計算右側 column 高度
       if (val === 'sales') {
         this.$nextTick(() => {
@@ -390,8 +388,7 @@ export interface Methods {
   getFixedColumnStart(): void
 }
 
-export interface Computed extends DeviceMixinComputed {
-  userRole: UserRole
+export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {
   shouldShowGuide: boolean
   shouldShowHotService: boolean
   shouldShowBlogSection: boolean

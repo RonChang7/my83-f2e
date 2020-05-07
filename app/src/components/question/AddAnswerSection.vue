@@ -34,7 +34,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { AvatarMap } from './helpers/reply-default-avatar'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { User, UserRole } from '@/services/user/user'
+import { User } from '@/services/user/user'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   OPEN_LOGIN_PANEL,
@@ -43,11 +43,14 @@ import {
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import UserMetaMixin, {
+  Computed as UserMetaMixinComputed,
+} from '@/mixins/user/user-meta'
 const AnswerEditor = () => import('./answer/AnswerEditor.vue')
 const user = User.getInstance()
 
 export default {
-  mixins: [DeviceMixin],
+  mixins: [DeviceMixin, UserMetaMixin],
   components: {
     BaseButton,
     AnswerEditor,
@@ -75,21 +78,11 @@ export default {
     },
   },
   computed: {
-    nickname() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
-      )
-    },
     questionId() {
       return this.$store.state.question.question?.question_id
     },
     addAnswerButtonSize() {
       return this.isDesktop ? 'xl' : 'l-b'
-    },
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
     },
     avatar() {
       return this.userRole ? AvatarMap[this.userRole] : ''
@@ -127,11 +120,9 @@ export interface Methods {
   panelDisplayHandler(status: boolean): void
 }
 
-export interface Computed extends DeviceMixinComputed {
-  nickname: string
+export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {
   questionId: number
   addAnswerButtonSize: string
-  userRole: UserRole
   avatar: string
 }
 
