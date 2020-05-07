@@ -4,7 +4,7 @@ export interface AskingFormOptionResponse {
   purpose_mapping_target_tag_ids: Record<string, TagId[]>
   mapping_insurance_tag_ids: Record<
     keyof AskingFormOptionResponse['purpose_mapping_target_tag_ids'],
-    Record<string, InsuranceTagOption[]>
+    Record<string, InsuranceTagOption[]> | InsuranceTagOption[]
   >
 }
 
