@@ -16,12 +16,12 @@
     <div v-if="shouldDisplayOptions" class="BaseTagSelect__options">
       <BaseTag
         v-for="option in options"
-        :key="option.key"
+        :key="option.value"
         class="tag"
-        :class="{ active: isSelected(option.key) }"
-        @click.native="clickTagHandler(option.key)"
+        :class="{ active: isSelected(option.value) }"
+        @click.native="clickTagHandler(option.value)"
       >
-        {{ option.value }}
+        {{ option.text }}
       </BaseTag>
     </div>
   </div>
@@ -33,6 +33,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseTag from '../tag/BaseTag.vue'
+import { Option } from './BaseSelect.vue'
 const BaseArrowDown = () =>
   import('@/components/base/icon/18/BaseArrowDown.vue')
 const BaseArrowUp = () => import('@/components/base/icon/18/BaseArrowUp.vue')
@@ -66,16 +67,16 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    isSelected(key) {
-      return _.includes(this.selected, key)
+    isSelected(value) {
+      return _.includes(this.selected, value)
     },
-    clickTagHandler(key) {
-      if (this.isSelected(key)) {
-        this.$emit('update:selected', _.without(this.selected, key))
-        this.$emit('update', _.without(this.selected, key))
+    clickTagHandler(value) {
+      if (this.isSelected(value)) {
+        this.$emit('update:selected', _.without(this.selected, value))
+        this.$emit('update', _.without(this.selected, value))
       } else {
-        this.$emit('update:selected', this.selected.concat(key))
-        this.$emit('update', this.selected.concat(key))
+        this.$emit('update:selected', this.selected.concat(value))
+        this.$emit('update', this.selected.concat(value))
       }
     },
     clickHeaderHandler() {
@@ -112,8 +113,8 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  isSelected(key: Option['key']): boolean
-  clickTagHandler(key: Option['key']): void
+  isSelected(value: Option['value']): boolean
+  clickTagHandler(value: Option['value']): void
   clickHeaderHandler(): void
 }
 
@@ -127,11 +128,6 @@ export interface Props {
   selected: (string | number)[]
   enableFold: boolean
   isExpanded: boolean
-}
-
-export interface Option {
-  key: string | number
-  value: string
 }
 
 export default options
