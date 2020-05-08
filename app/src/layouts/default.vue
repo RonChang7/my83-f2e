@@ -26,7 +26,7 @@ import { LoginPanelState } from '@/store/global/index'
 import PageMetaMixin, {
   Computed as PageMetaMixinComputed,
 } from '@/mixins/seo/page-meta'
-const LoginPanel = () => import('@/components/login/LoginPanel.vue')
+const LoginPanel = () => import('@/modules/login/LoginPanel.vue')
 const BaseDialog = () => import('@/components/base/dialog/BaseDialog.vue')
 
 export default {
