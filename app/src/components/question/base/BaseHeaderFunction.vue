@@ -51,6 +51,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { CancelReportDialogContent } from '../report/cancel-report-dialog-info'
+import { PostType } from '../helpers/type'
 import {
   AuthorInfo,
   QuestionPersonalize,
@@ -73,7 +74,6 @@ import {
   OPEN_GLOBAL_DIALOG,
   CLOSE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
-import { PostType } from '@/services/question/PostDataFactory'
 import {
   DropdownMenu,
   DropdownMenuOption,

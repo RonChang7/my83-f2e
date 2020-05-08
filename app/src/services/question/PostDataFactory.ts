@@ -15,8 +15,6 @@ export class PostDataFactory {
   private _createFormData(): PostData {
     switch (this._type) {
       // @TODO: 改為常數
-      case 'question':
-        return this._createQuestionPostData()
       case 'answer':
         return this._createAnswerPostData()
       case 'response':
@@ -37,21 +35,9 @@ export class PostDataFactory {
       content: '',
     }
   }
-
-  private _createQuestionPostData(): QuestionPostData {
-    return {
-      purpose: 0,
-      target: 0,
-      title: '',
-      content: '',
-      images: [],
-      insurance: [],
-      nickname: '',
-    }
-  }
 }
 
-export type PostType = 'question' | 'answer' | 'response'
+export type PostType = 'answer' | 'response'
 
 export interface AnswerPostData {
   nickname: string
@@ -63,14 +49,4 @@ export interface ResponsePostData {
   content: string
 }
 
-export interface QuestionPostData {
-  purpose: number
-  target: number
-  title: string
-  content: string
-  images: string[]
-  insurance: number[]
-  nickname: string
-}
-
-type PostData = AnswerPostData | ResponsePostData | QuestionPostData
+type PostData = AnswerPostData | ResponsePostData
