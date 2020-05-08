@@ -45,8 +45,9 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Validator, ValidateMessage } from '../validate'
+import { rule } from '../validate-rule'
 import LoginFooter from '../components/LoginFooter.vue'
+import { Validator, ValidateMessage } from '@/services/validator/Validator'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
@@ -70,12 +71,12 @@ export default {
   },
   methods: {
     async validate(key, value) {
-      const error = await Validator.validate(key, value)
+      const error = await this.validator.validate(key, value)
       this.$set(this.errors, key, error[key])
     },
     async submit() {
       try {
-        await Validator.validateAll(this.form)
+        await this.validator.validateAll(this.form)
       } catch (error) {
         this.$set(this, 'errors', error)
         return
@@ -103,6 +104,9 @@ export default {
       this.$emit('send-forget-password-success')
     },
   },
+  mounted() {
+    this.validator = new Validator(rule)
+  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -121,7 +125,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  validator: Validator
+}
 
 export interface Data {
   form: Form

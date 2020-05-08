@@ -7,9 +7,15 @@ export const enum ValidateState {
 }
 
 export class Validator {
-  public static validate(key: string, value: any) {
+  private _rule: Rule
+
+  public constructor(rule: Rule) {
+    this._rule = Object.assign({}, rule)
+  }
+
+  public validate(key: string, value: any) {
     return new Promise<Record<string, ValidateMessage>>((resolve) => {
-      const rule = _.pick(this.rules(), key)
+      const rule = _.pick(this._rule, key)
       const validator = new AsyncValidator(rule)
       const messages: Record<string, ValidateMessage> = {}
 
@@ -33,9 +39,9 @@ export class Validator {
     })
   }
 
-  public static validateAll(form: Record<string, any>) {
+  public validateAll(form: Record<string, any>) {
     return new Promise<Record<string, ValidateMessage>>((resolve, reject) => {
-      const rules = _.pick(this.rules(), _.keys(form))
+      const rules = _.pick(this._rule, _.keys(form))
       const validator = new AsyncValidator(rules)
       const messages: Record<string, ValidateMessage> = {}
 
@@ -57,30 +63,11 @@ export class Validator {
       })
     })
   }
-
-  private static rules(): Record<string, RuleItem | RuleItem[]> {
-    return {
-      email: [
-        {
-          required: true,
-          message: '此欄不可為空白',
-        },
-        {
-          type: 'email',
-          message: '請輸入正確的信箱格式',
-        },
-      ],
-      password: [
-        {
-          required: true,
-          message: '此欄不可為空白',
-        },
-      ],
-    }
-  }
 }
 
 export interface ValidateMessage {
   state: ValidateState
   message: string
 }
+
+export type Rule = Record<string, RuleItem | RuleItem[]>
