@@ -1,6 +1,6 @@
 import { Rule } from '@/services/validator/Validator'
 
-export const rule: Rule = {
+export const rule: Rule<'email' | 'password'> = {
   email: [
     {
       required: true,

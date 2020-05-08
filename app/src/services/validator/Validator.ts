@@ -1,21 +1,21 @@
 import _ from 'lodash'
-import AsyncValidator, { RuleItem } from 'async-validator'
+import AsyncValidator, { RuleItem, Rules } from 'async-validator'
 
 export const enum ValidateState {
   Success = 'success',
   Error = 'error',
 }
 
-export class Validator {
-  private _rule: Rule
+export class Validator<T> {
+  private _rules: Rule<keyof T>
 
-  public constructor(rule: Rule) {
-    this._rule = Object.assign({}, rule)
+  public constructor(rules: Rule<keyof T>) {
+    this._rules = Object.assign({}, rules)
   }
 
   public validate(key: string, value: any) {
     return new Promise<Record<string, ValidateMessage>>((resolve) => {
-      const rule = _.pick(this._rule, key)
+      const rule = _.pick(this._rules, key) as Rules
       const validator = new AsyncValidator(rule)
       const messages: Record<string, ValidateMessage> = {}
 
@@ -41,7 +41,7 @@ export class Validator {
 
   public validateAll(form: Record<string, any>) {
     return new Promise<Record<string, ValidateMessage>>((resolve, reject) => {
-      const rules = _.pick(this._rule, _.keys(form))
+      const rules = _.pick(this._rules, _.keys(form)) as Rules
       const validator = new AsyncValidator(rules)
       const messages: Record<string, ValidateMessage> = {}
 
@@ -70,4 +70,7 @@ export interface ValidateMessage {
   message: string
 }
 
-export type Rule = Record<string, RuleItem | RuleItem[]>
+export type Rule<T extends string | number | symbol> = Record<
+  T,
+  RuleItem | RuleItem[]
+>
