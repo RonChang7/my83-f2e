@@ -48,6 +48,7 @@ const options: ComponentOption = {
       const option: transformFormOption = {
         purpose: [],
         target: {},
+        insurance: {},
       }
 
       if (_.isEmpty(this.formOption) || !this.isMounted) return option
@@ -68,6 +69,48 @@ const options: ComponentOption = {
               value: tagId,
             }
           })
+          return result
+        },
+        {}
+      )
+
+      option.insurance = _.reduce(
+        this.formOption.mapping_insurance_tag_ids,
+        (result, value, key) => {
+          if (_.isArray(value)) {
+            result[key] = value.map((item) => {
+              return {
+                name: item.tag_type_name,
+                isOpen: item.is_open,
+                options: item.tag_ids.map((tagId) => {
+                  return {
+                    text: this.formOption.tag_list[tagId],
+                    value: tagId,
+                  }
+                }),
+              }
+            })
+          } else {
+            result[key] = _.reduce(
+              value,
+              (option, optionValue, optionKey) => {
+                option[optionKey] = optionValue.map((item) => {
+                  return {
+                    name: item.tag_type_name,
+                    isOpen: item.is_open,
+                    options: item.tag_ids.map((tagId) => {
+                      return {
+                        text: this.formOption.tag_list[tagId],
+                        value: tagId,
+                      }
+                    }),
+                  }
+                })
+                return option
+              },
+              {}
+            )
+          }
           return result
         },
         {}
@@ -113,9 +156,19 @@ export interface Props {
   formOption: AskingFormOptionResponse
 }
 
+export interface InsuranceTagOption {
+  name: string
+  isOpen: boolean
+  options: SelectOption[]
+}
+
 export interface transformFormOption {
   purpose: SelectOption[]
   target: Record<string, SelectOption[]>
+  insurance: Record<
+    string,
+    Record<string, InsuranceTagOption[]> | InsuranceTagOption[]
+  >
 }
 
 export default options
