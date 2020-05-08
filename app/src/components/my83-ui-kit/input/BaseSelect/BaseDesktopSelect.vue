@@ -3,7 +3,7 @@
     <div
       ref="select"
       class="BaseDesktopSelect"
-      :class="{ placeholder: selectedText === placeholder, disabled }"
+      :class="classObject"
       @click="(e) => panelHandler(e.type, true)"
       @mousedown="disableBlurHandler"
     >
@@ -79,6 +79,13 @@ export default {
         (option) => option.value === this.value
       )
       return selected ? selected.text : this.placeholder
+    },
+    classObject() {
+      return {
+        [`placeholder`]: this.selectedText === this.placeholder,
+        [`disabled`]: this.disabled,
+        [`${this.state}`]: this.state,
+      }
     },
   },
   methods: {
@@ -187,6 +194,7 @@ export interface Methods {
 
 export interface Computed {
   selectedText: string
+  classObject: Record<string, boolean>
 }
 
 export interface Props extends BaseSelectProps {}

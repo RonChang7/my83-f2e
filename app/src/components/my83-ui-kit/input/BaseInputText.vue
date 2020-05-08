@@ -8,6 +8,7 @@
       :disabled="disabled"
       :autocomplete="autocomplete"
       :autofocus="autofocus"
+      :maxlength="maxlength || ''"
       class="BaseInputText__input"
       @input="input"
       @blur="$emit('blur')"
@@ -69,6 +70,9 @@ export default {
       type: String as () => Props['autocomplete'],
       default: 'on',
     },
+    maxlength: {
+      type: Number,
+    },
   },
   methods: {
     input(e) {
@@ -115,6 +119,7 @@ export interface Props {
   disabled: boolean
   autofocus: boolean
   autocomplete: 'on' | 'off'
+  maxlength: number
 }
 </script>
 
