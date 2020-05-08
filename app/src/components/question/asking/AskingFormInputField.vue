@@ -9,10 +9,11 @@
         :disabled="disabled"
         :autofocus="autofocus"
         :autocomplete="autocomplete"
+        :maxlength="maxlength"
         @update="update"
       />
+      <BaseInputMessage v-if="legend" :msg="legend" type="legend" />
       <BaseInputMessage v-if="errMsg" :msg="errMsg" />
-      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
     </AskingFormBaseField>
   </div>
 </template>
@@ -81,6 +82,10 @@ const options: ComponentOption = {
     autocomplete: {
       type: String as () => Props['autocomplete'],
       default: 'on',
+    },
+    maxlength: {
+      type: Number,
+      default: -1,
     },
   },
   methods: {
