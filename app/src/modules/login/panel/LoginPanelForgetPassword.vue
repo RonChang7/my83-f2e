@@ -126,7 +126,7 @@ export type ComponentInstance = CombinedVueInstance<
 >
 
 export interface Instance extends Vue {
-  validator: Validator
+  validator: Validator<Form>
 }
 
 export interface Data {
