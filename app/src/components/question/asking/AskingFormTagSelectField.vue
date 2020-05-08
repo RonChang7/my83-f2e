@@ -1,7 +1,7 @@
 <template>
   <div class="AskingFormTagSelectField">
     <AskingFormBaseField :title="title" :required="required">
-      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
+      <BaseInputMessage v-if="legend" :msg="legend" type="legend" />
       <BaseTagSelect
         v-for="(tagOption, index) in options"
         :key="index"

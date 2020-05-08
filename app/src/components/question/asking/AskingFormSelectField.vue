@@ -9,8 +9,8 @@
         :disabled="disabled"
         @input="input"
       />
+      <BaseInputMessage v-if="legend" :msg="legend" type="legend" />
       <BaseInputMessage v-if="errMsg" :msg="errMsg" />
-      <BaseInputMessage v-if="legend && !errMsg" :msg="legend" type="legend" />
     </AskingFormBaseField>
   </div>
 </template>
