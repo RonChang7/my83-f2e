@@ -11,10 +11,7 @@
       },
     ]"
   >
-    <template v-for="(msg, index) in props.msg.split('\n')">
-      <span :key="index">{{ msg }}</span>
-      <br v-if="index < props.msg.split('\n').length - 1" :key="index" />
-    </template>
+    <span>{{ props.msg }}</span>
   </div>
 </template>
 
@@ -54,6 +51,10 @@ export interface Props {
 
   &.legend {
     color: $gray-secondary;
+  }
+
+  span {
+    white-space: pre-line;
   }
 }
 </style>
