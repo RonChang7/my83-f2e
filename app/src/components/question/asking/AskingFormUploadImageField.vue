@@ -1,6 +1,10 @@
 <script lang="ts">
+import _ from 'lodash'
 import Vue, { VNode } from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import AskingFormUploadImage from './AskingFormImage/AskingFormUploadImage.vue'
 import AskingFormImagePreview from './AskingFormImage/AskingFormImagePreview.vue'
@@ -15,6 +19,22 @@ const options: ComponentOption = {
     title: {
       type: String,
       required: true,
+    },
+    editPostImages: {
+      type: Array as PropType<Props['editPostImages']>,
+      default: () => [],
+    },
+    initId: {
+      type: Number,
+      default: 0,
+    },
+    sizeLimit: {
+      type: Number,
+      required: true,
+    },
+    countLimit: {
+      type: Number,
+      default: 30,
     },
   },
   data() {
@@ -31,17 +51,25 @@ const options: ComponentOption = {
       this.error = this.uploadImageService.error
     },
     removeImageHandler(id) {
-      this.uploadImageService.remove(id)
+      if (id < this.initId) {
+        this.$emit('remove-edit-post-image', id)
+      } else {
+        this.uploadImageService.remove(id)
+      }
+    },
+    async convert() {
+      const compressImages = await this.uploadImageService.base64Images()
+      return compressImages
     },
   },
   computed: {
     $imagePreview() {
       const h = this.$createElement
 
-      return this.previewImages.length
+      return this.previewImages.length || this.editPostImages.length
         ? h(AskingFormImagePreview, {
             props: {
-              images: this.previewImages,
+              images: [...this.editPostImages, ...this.previewImages],
               error: this.error,
             },
             on: {
@@ -49,6 +77,27 @@ const options: ComponentOption = {
             },
           })
         : h()
+    },
+    errMsg() {
+      let errMsg = ''
+      if (
+        this.editPostImages.length + this.previewImages.length >
+        this.countLimit
+      ) {
+        errMsg = `超過 ${this.countLimit} 張不能上傳喔！`
+        this.$emit('validate', errMsg)
+        return errMsg
+      }
+
+      const errorMessages = _.values(this.error)
+      errMsg = errorMessages.length ? errorMessages[0].message : ''
+      this.$emit('validate', errMsg)
+      return errMsg
+    },
+  },
+  watch: {
+    initId(val: number) {
+      this.uploadImageService.setInitId(val)
     },
   },
   mounted() {
@@ -65,6 +114,8 @@ const options: ComponentOption = {
         h(AskingFormUploadImage, {
           props: {
             title: this.title,
+            legend: `照片包含「商品名稱、保額、保費、年期」，方便業務員為您分析保單\n請遮蔽照片中的重要個資，確保個資不外洩\n每張照片最大尺寸為 ${this.sizeLimit} MB`,
+            errMsg: this.errMsg,
           },
           on: {
             change: this.uploadImageHandler,
@@ -104,14 +155,20 @@ export interface Data {
 export interface Methods {
   uploadImageHandler(files: FileList | null): void
   removeImageHandler(id: number): void
+  convert(): Promise<string[] | undefined>
 }
 
 export interface Computed {
   $imagePreview: VNode
+  errMsg: string
 }
 
 export interface Props {
   title: string
+  editPostImages: PreviewImage[]
+  initId: number
+  sizeLimit: number
+  countLimit: number
 }
 
 export default options

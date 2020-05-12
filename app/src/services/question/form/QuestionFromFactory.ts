@@ -1,10 +1,19 @@
 import { Rule } from '@/services/validator/Validator'
+import { submitNewQuestion, submitEditQuestion } from '@/api/question/asking'
+import { SubmitQuestionPayload } from '@/api/question/asking.type'
 
 export class QuestionFromFactory {
   public form: QuestionFormData
 
+  private _formType: FormType
+
   public constructor(type: FormType) {
+    this._formType = type
     this.form = this._createFormData(type)
+  }
+
+  public get formType() {
+    return this._formType
   }
 
   public get validateRule(): Rule<keyof QuestionFormData> {
@@ -48,7 +57,6 @@ export class QuestionFromFactory {
       images: [
         {
           type: 'array',
-          max: 30,
         },
       ],
       insurance: [
@@ -79,11 +87,41 @@ export class QuestionFromFactory {
           },
         },
       ],
-      remove_images: [
+      removeImages: [
         {
           type: 'array',
         },
       ],
+    }
+  }
+
+  public async submit() {
+    const payload: SubmitQuestionPayload = {
+      title: this.form.title,
+      content: this.form.content,
+      purpose_tag_id: this.form.purpose,
+      target_tag_id: this.form.target,
+      insurance_type_tag_ids: this.form.insurance,
+      nickname: this.form.nickname,
+      images: this.form.images,
+      remove_images: this.form.removeImages,
+      google_recaptcha: this.form.googleReCaptcha,
+    }
+
+    if (this._formType === 'new') {
+      try {
+        const result = await submitNewQuestion(payload)
+        console.log(result)
+      } catch (error) {
+        console.error(error)
+      }
+    } else if (this._formType === 'edit') {
+      try {
+        const result = await submitEditQuestion(this.form.questionId!, payload)
+        console.log(result)
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 
@@ -101,7 +139,7 @@ export class QuestionFromFactory {
 
     if (type === 'edit') {
       form.questionId = 0
-      form.remove_images = []
+      form.removeImages = []
     }
 
     return form
@@ -117,7 +155,7 @@ export interface QuestionFormData {
   title: string
   content: string
   images: string[]
-  remove_images?: string[]
+  removeImages?: string[]
   insurance: number[]
   nickname: string
   googleReCaptcha: string

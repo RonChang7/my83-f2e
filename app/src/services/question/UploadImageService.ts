@@ -10,6 +10,7 @@ export class UploadImageService {
 
   private _previewImages: PreviewImage[]
 
+  // 單位：MB
   private _imageSizeLimit: number
 
   constructor(imageSizeLimit: number = SINGLE_IMAGE_MAX_SIZE) {
@@ -40,6 +41,8 @@ export class UploadImageService {
 
   public remove(id: number) {
     const index = _.findIndex(this._uploadImages, (image) => image.id === id)
+    if (index === -1) return
+
     this._uploadImages.splice(index, 1)
     this._previewImages.splice(index, 1)
     delete this.error[id]
@@ -47,6 +50,10 @@ export class UploadImageService {
 
   public get previewImages() {
     return this._previewImages
+  }
+
+  public get sizeLimit() {
+    return this._imageSizeLimit
   }
 
   public async base64Images() {
@@ -93,9 +100,9 @@ export class UploadImageService {
 
   private _validate() {
     this._uploadImages.forEach(({ id, file }) => {
-      if (file.size > this._imageSizeLimit) {
+      if (file.size > this._imageSizeLimit * MEGABYTE) {
         this.error[id] = {
-          message: 'Image file size too large.',
+          message: `有照片超過最大尺寸 ${this._imageSizeLimit} MB 喔！`,
         }
       }
     })
@@ -106,7 +113,9 @@ export class UploadImageService {
   }
 }
 
-export const SINGLE_IMAGE_MAX_SIZE = 5 * 1024 * 1024
+export const SINGLE_IMAGE_MAX_SIZE = 7
+
+const MEGABYTE = 1024 * 1024
 
 export const PREVIEW_FAILED = 'Image file cannot preview.'
 

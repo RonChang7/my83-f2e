@@ -1,13 +1,8 @@
 <template>
   <div class="AskingFormUploadImage">
     <AskingFormBaseField :title="title" :required="required">
-      <BaseInputMessage
-        :msg="
-          '照片包含「商品名稱、保額、保費、年期」，方便業務員為您分析保單\n請遮蔽照片中的重要個資，確保個資不外洩'
-        "
-        type="legend"
-      />
-      <BaseInputMessage msg="每張照片最大尺寸為 5 MB" type="legend" />
+      <BaseInputMessage v-if="legend" :msg="legend" type="legend" />
+      <BaseInputMessage v-if="errMsg" :msg="errMsg" />
       <BaseButton
         size="m"
         type="secondary"
