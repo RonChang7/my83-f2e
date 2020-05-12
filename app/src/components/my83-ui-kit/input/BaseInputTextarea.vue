@@ -65,7 +65,6 @@ export default {
     input(e) {
       this.$emit('update:value', (e.target as HTMLInputElement).value)
       this.$emit('update', (e.target as HTMLInputElement).value)
-      this.autoGrowHandler()
     },
     autoGrowHandler() {
       if (!this.autoGrow) return
@@ -80,6 +79,11 @@ export default {
             : this.autoGrowMaxHeight
         el.style.height = textareaHeight + 'px'
       })
+    },
+  },
+  watch: {
+    value() {
+      this.autoGrowHandler()
     },
   },
   mounted() {
