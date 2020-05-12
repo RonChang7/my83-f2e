@@ -106,9 +106,9 @@ import AskingFormTagSelectField, {
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import {
-  QuestionFromFactory,
+  QuestionFromService,
   QuestionFormData,
-} from '@/services/question/form/QuestionFromFactory'
+} from '@/services/question/form/QuestionFromService'
 import { PreviewImage } from '@/services/question/UploadImageService'
 import {
   TransformFormOption,
@@ -356,7 +356,7 @@ const options: ComponentOption = {
     const { id } = this.$route.params
     const formType = id ? 'edit' : 'new'
 
-    this.questionForm = new QuestionFromFactory(formType)
+    this.questionForm = new QuestionFromService(formType)
     this.form = this.questionForm.form as QuestionFormData
   },
   async mounted() {
@@ -389,7 +389,7 @@ export interface Instance
   extends Vue,
     Omit<DeviceMixinComponentInstance, keyof Vue>,
     Omit<UserMetaMixinComponentInstance, keyof Vue> {
-  questionForm: QuestionFromFactory
+  questionForm: QuestionFromService
   validator: Validator<QuestionFormData>
   $refs: {
     uploadImageField: AskingFormUploadImageFieldComponentInstance

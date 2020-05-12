@@ -2,7 +2,7 @@ import { Rule } from '@/services/validator/Validator'
 import { submitNewQuestion, submitEditQuestion } from '@/api/question/asking'
 import { SubmitQuestionPayload } from '@/api/question/asking.type'
 
-export class QuestionFromFactory {
+export class QuestionFromService {
   public form: QuestionFormData
 
   private _formType: FormType
@@ -52,6 +52,9 @@ export class QuestionFromFactory {
         {
           required: true,
           message: '請輸入內文',
+          transform(value) {
+            return value.trim()
+          },
         },
       ],
       images: [
