@@ -13,7 +13,9 @@
         發文後，您可以挑選回覆優質的業務員，進一步「諮詢」該業務員，獲得更多幫助！
       </li>
     </ol>
-    <img src="https://my83.com.tw/images/feature3.png" alt="asking" />
+    <div class="AskingNotifySection__image">
+      <img src="https://my83.com.tw/images/feature3.png" alt="asking" />
+    </div>
   </BaseCard>
 </template>
 
@@ -62,6 +64,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .AskingNotifySection {
   color: $gray-primary;
@@ -71,6 +74,17 @@ export default options
 
     > li {
       margin-bottom: 1rem;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    text-align: center;
+
+    @include max-media('xl') {
+      img {
+        width: 210px;
+      }
     }
   }
 }
