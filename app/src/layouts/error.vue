@@ -43,6 +43,7 @@ import { UserRoleMap } from '@/services/user/user'
 import { GlobalVuexState } from '@/store/global-state'
 
 export default {
+  name: 'ErrorLayout',
   components: {
     BaseButton,
   },
