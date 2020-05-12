@@ -80,8 +80,15 @@
       {{ nickname }}
     </AskingFormBaseField>
     <div class="AskingFormSection__row">
-      <BaseButton :size="buttonSize" @click.native="submit">送出</BaseButton>
+      <BaseButton
+        :size="buttonSize"
+        :state="submitState"
+        @click.native="submit"
+      >
+        送出
+      </BaseButton>
     </div>
+    <BaseInputMessage :msg="formErrMsg" text-align="center" />
   </BaseCard>
 </template>
 
@@ -105,6 +112,7 @@ import AskingFormTagSelectField, {
 } from './asking/AskingFormTagSelectField.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import {
   QuestionFromService,
   QuestionFormData,
@@ -114,7 +122,20 @@ import {
   TransformFormOption,
   InsuranceTagOption,
 } from '@/views/question/asking/AskingPage.vue'
-import { EditQuestionContent } from '@/api/question/asking.type'
+import {
+  EditQuestionContent,
+  ErrorResponse,
+  SubmitQuestionPayload,
+} from '@/api/question/asking.type'
+import {
+  UPDATE_GLOBAL_DIALOG,
+  OPEN_GLOBAL_DIALOG,
+} from '@/store/global/global.type'
+import { GlobalDialogContent } from '@/store/global/index'
+import {
+  IsUserSuspectDialogContent,
+  IsDuplicatedPostDialogContent,
+} from '@/config/question-asking-dialog-info'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
@@ -128,6 +149,7 @@ const options: ComponentOption = {
   components: {
     BaseCard,
     BaseButton,
+    BaseInputMessage,
     AskingFormBaseField,
     AskingFormInputField,
     AskingFormTextareaField,
@@ -154,6 +176,8 @@ const options: ComponentOption = {
       uploadImageInitId: 0,
       form: null,
       errors: {},
+      submitErrMsg: '',
+      submitState: '',
     }
   },
   computed: {
@@ -223,6 +247,11 @@ const options: ComponentOption = {
     buttonSize() {
       return this.isDesktop ? 'xl' : 'l-b'
     },
+    formErrMsg() {
+      return this.errors.googleReCaptcha && _.keys(this.errors).length === 1
+        ? this.errors.googleReCaptcha.message
+        : this.submitErrMsg
+    },
   },
   methods: {
     setInitContent() {
@@ -268,15 +297,92 @@ const options: ComponentOption = {
     async submit() {
       if (!this.form) return
 
+      this.submitState = 'loading'
+
       this.form.googleReCaptcha = await this.getGoogleReCaptcha()
       if (!this.form.nickname && this.nickname) {
         this.form.nickname = this.nickname
       }
       const validateResult = await this.validate(this.form)
       this.form.images = (await this.$refs.uploadImageField.convert()) || []
+
       if (validateResult) {
-        this.questionForm.submit()
+        this.submitErrMsg = ''
+        try {
+          const {
+            data: { question_id: questionId },
+          } = await this.questionForm.submit()
+          this.$router.push(`/question/${questionId}`)
+        } catch (error) {
+          this.submitErrorHandler(error)
+        }
       }
+      this.submitState = ''
+    },
+    submitErrorHandler(error: any) {
+      const status = error.response.status
+      const err = error.response.data as ErrorResponse
+      if (status === 422) {
+        const validateError: Partial<Record<
+          keyof SubmitQuestionPayload,
+          ValidateMessage
+        >> = _.mapValues(err.data!.validator, (value) => {
+          return {
+            state: 'error',
+            message: value[0],
+          } as ValidateMessage
+        })
+        const convertValidateError: Partial<Record<
+          keyof QuestionFormData,
+          ValidateMessage
+        >> = {
+          title: validateError.title,
+          content: validateError.content,
+          purpose: validateError.purpose_tag_id,
+          target: validateError.target_tag_id,
+          insurance: validateError.insurance_type_tag_ids,
+          nickname: validateError.nickname,
+          images: validateError.images,
+          googleReCaptcha: validateError.google_recaptcha,
+        }
+        this.$set(this, 'errors', convertValidateError)
+      } else if (status === 413) {
+        this.submitErrMsg = '整份檔案超過尺寸限制，請再精簡一下喔！'
+      } else if (err.user_meta) {
+        this.updateGlobalDialogContent({
+          isSuspect: err.user_meta.is_suspect,
+          isDuplicatedPost: err.user_meta.is_duplicated_post,
+        })
+        this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
+      } else if (err.error_message) {
+        this.submitErrMsg = err.error_message
+      } else {
+        this.submitErrMsg =
+          '資料送出失敗，請再試一次。\n若問題持續發生，請聯繫客服。'
+        console.error(error)
+      }
+    },
+    updateGlobalDialogContent({ isSuspect, isDuplicatedPost }) {
+      let payload = {}
+
+      // @TODO: Change path after migrate to Nuxt.js
+      if (isSuspect) {
+        payload = {
+          ...IsUserSuspectDialogContent,
+          rightConfirmFn: () => {
+            window.location.href = '/question'
+          },
+          closeFn: () => {
+            window.location.href = '/question'
+          },
+        } as GlobalDialogContent
+      } else if (isDuplicatedPost) {
+        payload = {
+          ...IsDuplicatedPostDialogContent,
+        } as GlobalDialogContent
+      }
+
+      this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
     },
     async getGoogleReCaptcha() {
       let token = ''
@@ -389,9 +495,9 @@ export interface Data {
   editPostImages: PreviewImage[]
   uploadImageInitId: number
   form: QuestionFormData | null
-  errors: Partial<
-    Record<keyof QuestionFormData, Record<string, ValidateMessage>>
-  >
+  errors: Partial<Record<keyof QuestionFormData, ValidateMessage>>
+  submitErrMsg: string
+  submitState: string
 }
 
 export interface Methods {
@@ -399,6 +505,11 @@ export interface Methods {
   removeEditPostImage(id: number): void
   imageUploadValidate(msg: string): void
   submit(): void
+  submitErrorHandler(error: any): void
+  updateGlobalDialogContent(payload: {
+    isSuspect?: boolean
+    isDuplicatedPost?: boolean
+  }): void
   getGoogleReCaptcha(): Promise<string>
   validate(form: QuestionFormData): Promise<boolean>
 }
@@ -410,6 +521,7 @@ export interface Computed {
   targetOption: SelectOption[]
   insuranceOption: InsuranceOption['options']
   buttonSize: 'xl' | 'l-b'
+  formErrMsg: string
 }
 
 export interface Props {
