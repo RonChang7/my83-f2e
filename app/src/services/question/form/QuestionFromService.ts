@@ -1,6 +1,9 @@
 import { Rule } from '@/services/validator/Validator'
 import { submitNewQuestion, submitEditQuestion } from '@/api/question/asking'
-import { SubmitQuestionPayload } from '@/api/question/asking.type'
+import {
+  SubmitQuestionPayload,
+  EditQuestionContent,
+} from '@/api/question/asking.type'
 
 export class QuestionFromService {
   public form: QuestionFormData
@@ -96,6 +99,18 @@ export class QuestionFromService {
         },
       ],
     }
+  }
+
+  public setInitContent(data: Partial<EditQuestionContent>) {
+    if (this._formType === 'edit') {
+      this.form.questionId = data.question_id
+    }
+
+    this.form.title = data.title || ''
+    this.form.content = data.content || ''
+    this.form.purpose = data.purpose_tag_id || 0
+    this.form.target = data.target_tag_id || 0
+    this.form.insurance = data.insurance_type_tag_ids || []
   }
 
   public async submit() {
