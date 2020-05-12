@@ -30,6 +30,7 @@ const LoginPanel = () => import('@/modules/login/LoginPanel.vue')
 const BaseDialog = () => import('@/components/base/dialog/BaseDialog.vue')
 
 export default {
+  name: 'DefaultLayout',
   mixins: [PageMetaMixin],
   components: {
     Header,
