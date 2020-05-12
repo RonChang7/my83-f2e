@@ -63,7 +63,7 @@
     />
     <AskingFormInputField
       v-if="!nickname || !isMounted"
-      class="AskingFormSection__field restrict"
+      class="AskingFormSection__field restrict nickname"
       title="暱稱"
       :required="true"
       :value.sync="form.nickname"
@@ -73,7 +73,7 @@
     />
     <AskingFormBaseField
       v-else
-      class="AskingFormSection__field restrict"
+      class="AskingFormSection__field"
       title="暱稱"
       :required="true"
     >
@@ -546,6 +546,12 @@ export default options
 
       @include max-media('xl') {
         width: 100%;
+      }
+    }
+
+    &.nickname {
+      @include max-media('xl') {
+        width: 220px;
       }
     }
   }
