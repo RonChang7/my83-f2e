@@ -43,8 +43,14 @@
       :err-msg="errors.content ? errors.content.message : ''"
     />
     <AskingFormUploadImageField
+      ref="uploadImageField"
       class="AskingFormSection__field"
       title="保單照片"
+      :edit-post-images="editPostPreviewImages"
+      :init-id="uploadImageInitId"
+      :size-limit="7"
+      @validate="imageUploadValidate"
+      @remove-edit-post-image="removeEditPostImage"
     />
     <AskingFormTagSelectField
       class="AskingFormSection__field"
@@ -80,6 +86,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import {
   ThisTypedComponentOptionsWithRecordProps,
@@ -90,7 +97,9 @@ import AskingFormBaseField from './asking/AskingFormBaseField.vue'
 import AskingFormInputField from './asking/AskingFormInputField.vue'
 import AskingFormTextareaField from './asking/AskingFormTextareaField.vue'
 import AskingFormSelectField from './asking/AskingFormSelectField.vue'
-import AskingFormUploadImageField from './asking/AskingFormUploadImageField.vue'
+import AskingFormUploadImageField, {
+  ComponentInstance as AskingFormUploadImageFieldComponentInstance,
+} from './asking/AskingFormUploadImageField.vue'
 import AskingFormTagSelectField, {
   Props as InsuranceOption,
 } from './asking/AskingFormTagSelectField.vue'
@@ -100,10 +109,12 @@ import {
   QuestionFromFactory,
   QuestionFormData,
 } from '@/services/question/form/QuestionFromFactory'
+import { PreviewImage } from '@/services/question/UploadImageService'
 import {
-  transformFormOption,
+  TransformFormOption,
   InsuranceTagOption,
 } from '@/views/question/asking/AskingPage.vue'
+import { EditQuestionContent } from '@/api/question/asking.type'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
@@ -111,9 +122,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
-import { Validator } from '@/services/validator/Validator'
-
-const QuestionForm = new QuestionFromFactory('new')
+import { Validator, ValidateMessage } from '@/services/validator/Validator'
 
 const options: ComponentOption = {
   components: {
@@ -132,15 +141,34 @@ const options: ComponentOption = {
       type: Object as PropType<Props['formOption']>,
       required: true,
     },
+    initContent: {
+      type: Object as PropType<Props['initContent']>,
+      default: () => {},
+    },
   },
   data() {
     return {
       isMounted: false,
+      isInitContentUpdated: false,
+      editPostImages: [],
+      uploadImageInitId: 0,
       form: null,
       errors: {},
     }
   },
   computed: {
+    editPostPreviewImages() {
+      return _.isArray((this.form as QuestionFormData).removeImages)
+        ? _.filter(
+            this.editPostImages,
+            (image) =>
+              !_.includes(
+                (this.form as QuestionFormData).removeImages,
+                image.src
+              )
+          )
+        : this.editPostImages
+    },
     targetOptionPlaceholder() {
       if (!this.form?.purpose) {
         return '請先選擇發問目的'
@@ -157,6 +185,7 @@ const options: ComponentOption = {
     },
     insuranceOption() {
       const options: InsuranceOption['options'] = []
+      const expandAllPanel = this.questionForm.formType === 'edit'
 
       if (this.form && this.form.purpose > 0) {
         if (this.form && this.form.target === -1) {
@@ -168,7 +197,7 @@ const options: ComponentOption = {
                 label: option.name,
                 options: option.options,
                 enableFold: true,
-                isExpanded: option.isOpen,
+                isExpanded: expandAllPanel || option.isOpen,
               }
             })
           )
@@ -182,7 +211,7 @@ const options: ComponentOption = {
                 label: option.name,
                 options: option.options,
                 enableFold: true,
-                isExpanded: option.isOpen,
+                isExpanded: expandAllPanel || option.isOpen,
               }
             })
           )
@@ -196,6 +225,59 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    appendInitContent() {
+      if (!_.isEmpty(this.initContent)) {
+        if (this.questionForm.formType === 'edit') {
+          ;(this.form as QuestionFormData).questionId = (this
+            .initContent as EditQuestionContent).question_id
+        }
+
+        ;(this.form as QuestionFormData).title =
+          (this.initContent as EditQuestionContent).title || ''
+        ;(this.form as QuestionFormData).content =
+          (this.initContent as EditQuestionContent).content || ''
+        ;(this.form as QuestionFormData).purpose =
+          (this.initContent as EditQuestionContent).purpose_tag_id || 0
+        ;(this.form as QuestionFormData).target =
+          (this.initContent as EditQuestionContent).target_tag_id || 0
+        ;(this.form as QuestionFormData).insurance =
+          (this.initContent as EditQuestionContent).insurance_type_tag_ids || []
+
+        if ((this.initContent as EditQuestionContent).title) {
+          this.editPostImages = (this
+            .initContent as EditQuestionContent).images.map((image, index) => {
+            return {
+              id: index,
+              src: image,
+            }
+          })
+          this.uploadImageInitId = this.editPostImages.length
+        }
+      }
+
+      this.$nextTick(() => {
+        this.isInitContentUpdated = true
+      })
+    },
+    removeEditPostImage(id: number) {
+      if (typeof (this.form as QuestionFormData).removeImages === 'undefined') {
+        ;(this.form as QuestionFormData).removeImages = []
+      }
+
+      const removeImage = this.editPostImages.find((image) => image.id === id)
+      if (typeof removeImage === 'undefined') return
+      ;(this.form as QuestionFormData).removeImages!.push(removeImage.src)
+    },
+    imageUploadValidate(msg: string) {
+      if (msg) {
+        this.$set(this.errors, 'images', {
+          message: msg,
+          state: 'error',
+        })
+      } else {
+        delete this.errors.images
+      }
+    },
     async submit() {
       if (!this.form) return
 
@@ -203,9 +285,11 @@ const options: ComponentOption = {
       if (!this.form.nickname && this.nickname) {
         this.form.nickname = this.nickname
       }
-
-      const validate = await this.validate(this.form)
-      console.log(validate)
+      const validateResult = await this.validate(this.form)
+      this.form.images = (await this.$refs.uploadImageField.convert()) || []
+      if (validateResult) {
+        this.questionForm.submit()
+      }
     },
     async getGoogleReCaptcha() {
       let token = ''
@@ -219,16 +303,38 @@ const options: ComponentOption = {
     },
     async validate(form: QuestionFormData) {
       try {
-        await this.validator.validateAll(form)
-        return true
+        const result = await this.validator.validateAll(form)
+        this.$set(this, 'errors', {
+          images: this.errors.images,
+          ...result,
+        })
       } catch (error) {
-        this.$set(this, 'errors', error)
-        return false
+        this.$set(this, 'errors', {
+          images: this.errors.images,
+          ...error,
+        })
       }
+
+      if (typeof this.errors.images === 'undefined') {
+        delete this.errors.images
+      }
+
+      return !_.keys(this.errors).length
     },
   },
   watch: {
     'form.purpose'(val) {
+      // 避免透過 query string 送過來的 purpose_tag_id 不合法
+      if (
+        this.form &&
+        typeof _.find(this.purposeOption, ['value', val]) === 'undefined'
+      ) {
+        this.form.purpose = 0
+        return
+      }
+
+      if (!this.isInitContentUpdated) return
+
       if (this.form) {
         // 0: 尚未選擇, -1: 無選項可以選擇
         this.form.target = val && !this.targetOption.length ? -1 : 0
@@ -236,17 +342,26 @@ const options: ComponentOption = {
       }
     },
     'form.target'() {
+      if (!this.isInitContentUpdated) return
+
       if (this.form) {
         this.form.insurance = []
       }
     },
+    formOption() {
+      this.appendInitContent()
+    },
   },
   created() {
-    this.form = QuestionForm.form as QuestionFormData
+    const { id } = this.$route.params
+    const formType = id ? 'edit' : 'new'
+
+    this.questionForm = new QuestionFromFactory(formType)
+    this.form = this.questionForm.form as QuestionFormData
   },
   async mounted() {
     this.isMounted = true
-    this.validator = new Validator(QuestionForm.validateRule)
+    this.validator = new Validator(this.questionForm.validateRule)
     await this.$recaptcha.init()
   },
   beforeDestroy() {
@@ -274,22 +389,35 @@ export interface Instance
   extends Vue,
     Omit<DeviceMixinComponentInstance, keyof Vue>,
     Omit<UserMetaMixinComponentInstance, keyof Vue> {
+  questionForm: QuestionFromFactory
   validator: Validator<QuestionFormData>
+  $refs: {
+    uploadImageField: AskingFormUploadImageFieldComponentInstance
+  }
 }
 
 export interface Data {
   isMounted: boolean
+  isInitContentUpdated: boolean
+  editPostImages: PreviewImage[]
+  uploadImageInitId: number
   form: QuestionFormData | null
-  errors: Partial<Record<keyof QuestionFormData, Record<string, any>>>
+  errors: Partial<
+    Record<keyof QuestionFormData, Record<string, ValidateMessage>>
+  >
 }
 
 export interface Methods {
+  appendInitContent(): void
+  removeEditPostImage(id: number): void
+  imageUploadValidate(msg: string): void
   submit(): void
   getGoogleReCaptcha(): Promise<string>
   validate(form: QuestionFormData): Promise<boolean>
 }
 
 export interface Computed {
+  editPostPreviewImages: PreviewImage[]
   targetOptionPlaceholder: string
   purposeOption: SelectOption[]
   targetOption: SelectOption[]
@@ -298,7 +426,8 @@ export interface Computed {
 }
 
 export interface Props {
-  formOption: transformFormOption
+  formOption: TransformFormOption
+  initContent: EditQuestionContent | {}
 }
 
 export default options

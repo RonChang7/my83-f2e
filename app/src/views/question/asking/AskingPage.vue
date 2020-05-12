@@ -8,7 +8,10 @@
         <AskingNotifySection />
       </div>
       <div class="AskingPage__column right">
-        <AskingFormSection :form-option="transformFormOption" />
+        <AskingFormSection
+          :form-option="transformFormOption"
+          :init-content="initContent"
+        />
       </div>
     </div>
   </div>
@@ -24,7 +27,10 @@ import {
 import { CombinedVueInstance } from 'vue/types/vue'
 import AskingNotifySection from '@/components/question/AskingNotifySection.vue'
 import AskingFormSection from '@/components/question/AskingFormSection.vue'
-import { AskingFormOptionResponse } from '@/api/question/asking.type'
+import {
+  AskingFormOptionResponse,
+  EditQuestionContent,
+} from '@/api/question/asking.type'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 
 const options: ComponentOption = {
@@ -37,6 +43,10 @@ const options: ComponentOption = {
       type: Object as PropType<Props['formOption']>,
       required: true,
     },
+    initContent: {
+      type: Object as PropType<Props['initContent']>,
+      default: () => {},
+    },
   },
   data() {
     return {
@@ -45,7 +55,7 @@ const options: ComponentOption = {
   },
   computed: {
     transformFormOption() {
-      const option: transformFormOption = {
+      const option: TransformFormOption = {
         purpose: [],
         target: {},
         insurance: {},
@@ -149,11 +159,12 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
-  transformFormOption: transformFormOption
+  transformFormOption: TransformFormOption
 }
 
 export interface Props {
   formOption: AskingFormOptionResponse
+  initContent: EditQuestionContent | {}
 }
 
 export interface InsuranceTagOption {
@@ -162,7 +173,7 @@ export interface InsuranceTagOption {
   options: SelectOption[]
 }
 
-export interface transformFormOption {
+export interface TransformFormOption {
   purpose: SelectOption[]
   target: Record<string, SelectOption[]>
   insurance: Record<
