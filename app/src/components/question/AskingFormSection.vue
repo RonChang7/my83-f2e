@@ -225,25 +225,12 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    appendInitContent() {
+    setInitContent() {
       if (!_.isEmpty(this.initContent)) {
-        if (this.questionForm.formType === 'edit') {
-          ;(this.form as QuestionFormData).questionId = (this
-            .initContent as EditQuestionContent).question_id
-        }
+        this.questionForm.setInitContent(this.initContent)
+        this.form = this.questionForm.form
 
-        ;(this.form as QuestionFormData).title =
-          (this.initContent as EditQuestionContent).title || ''
-        ;(this.form as QuestionFormData).content =
-          (this.initContent as EditQuestionContent).content || ''
-        ;(this.form as QuestionFormData).purpose =
-          (this.initContent as EditQuestionContent).purpose_tag_id || 0
-        ;(this.form as QuestionFormData).target =
-          (this.initContent as EditQuestionContent).target_tag_id || 0
-        ;(this.form as QuestionFormData).insurance =
-          (this.initContent as EditQuestionContent).insurance_type_tag_ids || []
-
-        if ((this.initContent as EditQuestionContent).title) {
+        if ((this.initContent as EditQuestionContent).images) {
           this.editPostImages = (this
             .initContent as EditQuestionContent).images.map((image, index) => {
             return {
@@ -349,7 +336,7 @@ const options: ComponentOption = {
       }
     },
     formOption() {
-      this.appendInitContent()
+      this.setInitContent()
     },
   },
   created() {
@@ -357,7 +344,7 @@ const options: ComponentOption = {
     const formType = id ? 'edit' : 'new'
 
     this.questionForm = new QuestionFromService(formType)
-    this.form = this.questionForm.form as QuestionFormData
+    this.form = this.questionForm.form
   },
   async mounted() {
     this.isMounted = true
@@ -408,7 +395,7 @@ export interface Data {
 }
 
 export interface Methods {
-  appendInitContent(): void
+  setInitContent(): void
   removeEditPostImage(id: number): void
   imageUploadValidate(msg: string): void
   submit(): void
