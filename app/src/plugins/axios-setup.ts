@@ -105,6 +105,7 @@ export default (({ app, req }) => {
               data: {
                 success: false,
                 message: '發生問題，請稍後再試',
+                error_message: '發生問題，請稍後再試',
               },
             },
           }

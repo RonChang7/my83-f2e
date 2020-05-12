@@ -21,6 +21,7 @@ import {
   IsUserSuspectDialogContent,
   IsDuplicatedPostDialogContent,
 } from '@/config/question-asking-dialog-info'
+import { ErrorPageType } from '@/config/error-page.config'
 const AskingPage = () => import('./AskingPage.vue')
 
 const options: ComponentOption = {
@@ -28,25 +29,40 @@ const options: ComponentOption = {
     const { id } = this.$route.params
     const { purpose_tag_id: purposeTagId } = this.$route.query
 
-    if (id) {
-      const { user_meta, data } = await editQuestion(parseInt(id))
-      this.isSuspect = !!user_meta.is_suspect
-      this.isDuplicatedPost = !!user_meta.is_duplicated_post
-      this.initContent = data
-    } else {
-      const { user_meta } = await createQuestion()
-      this.isSuspect = !!user_meta.is_suspect
-      this.isDuplicatedPost = !!user_meta.is_duplicated_post
+    try {
+      if (id) {
+        const { user_meta, data } = await editQuestion(parseInt(id))
+        this.isSuspect = !!user_meta.is_suspect
+        this.isDuplicatedPost = !!user_meta.is_duplicated_post
+        this.initContent = data
+      } else {
+        const { user_meta } = await createQuestion()
+        this.isSuspect = !!user_meta.is_suspect
+        this.isDuplicatedPost = !!user_meta.is_duplicated_post
 
-      if (typeof purposeTagId === 'string' && parseInt(purposeTagId)) {
-        ;(this.initContent as EditQuestionContent).purpose_tag_id = parseInt(
-          purposeTagId
-        )
+        if (typeof purposeTagId === 'string' && parseInt(purposeTagId)) {
+          ;(this.initContent as EditQuestionContent).purpose_tag_id = parseInt(
+            purposeTagId
+          )
+        }
       }
+    } catch (error) {
+      // @TODO: Change path after migrate to Nuxt.js
+      console.error(error)
+      window.location.href = '/question'
+      return
     }
 
     if (this.isAllowPost) {
-      this.formOption = await fetchAskingFormOption()
+      try {
+        this.formOption = await fetchAskingFormOption()
+      } catch (error) {
+        console.error(error)
+        return this.$nuxt.error({
+          statusCode: 500,
+          message: ErrorPageType.SERVER,
+        })
+      }
     } else {
       this.updateGlobalDialogContent()
       this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)

@@ -45,6 +45,9 @@ export class QuestionFromService {
         {
           required: true,
           message: '請輸入標題',
+          transform(value) {
+            return value.trim()
+          },
         },
         {
           max: 50,
@@ -127,19 +130,11 @@ export class QuestionFromService {
     }
 
     if (this._formType === 'new') {
-      try {
-        const result = await submitNewQuestion(payload)
-        console.log(result)
-      } catch (error) {
-        console.error(error)
-      }
-    } else if (this._formType === 'edit') {
-      try {
-        const result = await submitEditQuestion(this.form.questionId!, payload)
-        console.log(result)
-      } catch (error) {
-        console.error(error)
-      }
+      const result = await submitNewQuestion(payload)
+      return result
+    } else {
+      const result = await submitEditQuestion(this.form.questionId!, payload)
+      return result
     }
   }
 
