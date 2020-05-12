@@ -3,6 +3,7 @@ import {
   CreateQuestionResponse,
   EditQuestionResponse,
   SubmitQuestionPayload,
+  SubmitQuestionResponse,
 } from './asking.type'
 import request from '@/api/request'
 
@@ -39,7 +40,7 @@ export const editQuestion = async (
  */
 export const submitNewQuestion = async (
   payload: SubmitQuestionPayload
-): Promise<any> => {
+): Promise<SubmitQuestionResponse> => {
   const { data } = await request.post(`api/v1/question/create`, payload)
   return data
 }
@@ -52,7 +53,7 @@ export const submitNewQuestion = async (
 export const submitEditQuestion = async (
   id: number,
   payload: SubmitQuestionPayload
-): Promise<any> => {
+): Promise<SubmitQuestionResponse> => {
   const { data } = await request.post(`api/v1/question/${id}/save`, payload)
   return data
 }

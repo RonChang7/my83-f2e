@@ -1,3 +1,4 @@
+import { GlobalErrorResponse } from '../type'
 export interface AskingFormOptionResponse {
   tag_list: Record<string, string>
   purpose_tag_ids: TagId[]
@@ -50,4 +51,17 @@ export interface SubmitQuestionPayload {
   images?: string[]
   remove_images?: string[]
   google_recaptcha: string
+}
+
+export interface SubmitQuestionResponse {
+  data: {
+    question_id: number
+  }
+}
+
+export interface ErrorResponse extends GlobalErrorResponse {
+  user_meta?: UserMeta
+  data?: {
+    validator?: Record<string, string[]>
+  }
 }
