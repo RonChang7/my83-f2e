@@ -36,6 +36,10 @@ const options: ComponentOption = {
       type: Number,
       default: 30,
     },
+    errMsg: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -56,6 +60,7 @@ const options: ComponentOption = {
       } else {
         this.uploadImageService.remove(id)
       }
+      this.$emit('validate', this.inputFileErrMsg)
     },
     async convert() {
       const compressImages = await this.uploadImageService.base64Images()
@@ -78,7 +83,7 @@ const options: ComponentOption = {
           })
         : h()
     },
-    errMsg() {
+    inputFileErrMsg() {
       let errMsg = ''
       if (
         this.editPostImages.length + this.previewImages.length >
@@ -115,7 +120,7 @@ const options: ComponentOption = {
           props: {
             title: this.title,
             legend: `照片包含「商品名稱、保額、保費、年期」，方便業務員為您分析保單\n請遮蔽照片中的重要個資，確保個資不外洩\n每張照片最大尺寸為 ${this.sizeLimit} MB`,
-            errMsg: this.errMsg,
+            errMsg: this.errMsg || this.inputFileErrMsg,
           },
           on: {
             change: this.uploadImageHandler,
@@ -160,7 +165,7 @@ export interface Methods {
 
 export interface Computed {
   $imagePreview: VNode
-  errMsg: string
+  inputFileErrMsg: string
 }
 
 export interface Props {
@@ -169,6 +174,7 @@ export interface Props {
   initId: number
   sizeLimit: number
   countLimit: number
+  errMsg: string
 }
 
 export default options

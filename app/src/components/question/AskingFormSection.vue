@@ -49,6 +49,7 @@
       :edit-post-images="editPostPreviewImages"
       :init-id="uploadImageInitId"
       :size-limit="7"
+      :err-msg="errors.images ? errors.images.message : ''"
       @validate="imageUploadValidate"
       @remove-edit-post-image="removeEditPostImage"
     />
@@ -291,7 +292,7 @@ const options: ComponentOption = {
           state: 'error',
         })
       } else {
-        delete this.errors.images
+        this.$delete(this.errors, 'images')
       }
     },
     async submit() {
@@ -409,7 +410,7 @@ const options: ComponentOption = {
       }
 
       if (typeof this.errors.images === 'undefined') {
-        delete this.errors.images
+        this.$delete(this.errors, 'images')
       }
 
       return !_.keys(this.errors).length
