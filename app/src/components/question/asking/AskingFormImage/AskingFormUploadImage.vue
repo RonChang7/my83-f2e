@@ -15,7 +15,7 @@
         type="file"
         accept="image/gif, image/jpeg, image/png"
         multiple
-        @input="imageUploadHandler"
+        @change="imageUploadHandler"
       />
     </AskingFormBaseField>
   </div>
