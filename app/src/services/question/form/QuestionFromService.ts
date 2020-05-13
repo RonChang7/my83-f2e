@@ -112,8 +112,10 @@ export class QuestionFromService {
     this.form.title = data.title || ''
     this.form.content = data.content || ''
     this.form.purpose = data.purpose_tag_id || 0
-    this.form.target = data.target_tag_id || 0
+    this.form.target = data.target_tag_id === null ? -1 : 0
     this.form.insurance = data.insurance_type_tag_ids || []
+
+    return this.form
   }
 
   public async submit() {
