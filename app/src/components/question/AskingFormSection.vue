@@ -172,7 +172,7 @@ const options: ComponentOption = {
   data() {
     return {
       isMounted: false,
-      isInitContentUpdated: false,
+      isEditContentUpdated: false,
       editPostImages: [],
       uploadImageInitId: 0,
       form: null,
@@ -256,9 +256,16 @@ const options: ComponentOption = {
   },
   methods: {
     setInitContent() {
+      if (this.questionForm.formType === 'new') {
+        /**
+         * 新發問透過 query string 設定分類，
+         * 需要觸發 watch，得以正確出現可選擇之分類
+         */
+        this.isEditContentUpdated = true
+      }
+
       if (!_.isEmpty(this.initContent)) {
-        this.questionForm.setInitContent(this.initContent)
-        this.form = this.questionForm.form
+        this.form = this.questionForm.setInitContent(this.initContent)
 
         if ((this.initContent as EditQuestionContent).images) {
           this.editPostImages = (this
@@ -273,7 +280,7 @@ const options: ComponentOption = {
       }
 
       this.$nextTick(() => {
-        this.isInitContentUpdated = true
+        this.isEditContentUpdated = true
       })
     },
     removeEditPostImage(id: number) {
@@ -427,7 +434,7 @@ const options: ComponentOption = {
         return
       }
 
-      if (!this.isInitContentUpdated) return
+      if (!this.isEditContentUpdated) return
 
       if (this.form) {
         // 0: 尚未選擇, -1: 無選項可以選擇
@@ -436,7 +443,7 @@ const options: ComponentOption = {
       }
     },
     'form.target'() {
-      if (!this.isInitContentUpdated) return
+      if (!this.isEditContentUpdated) return
 
       if (this.form) {
         this.form.insurance = []
@@ -492,7 +499,7 @@ export interface Instance
 
 export interface Data {
   isMounted: boolean
-  isInitContentUpdated: boolean
+  isEditContentUpdated: boolean
   editPostImages: PreviewImage[]
   uploadImageInitId: number
   form: QuestionFormData | null
