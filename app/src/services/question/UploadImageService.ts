@@ -27,14 +27,23 @@ export class UploadImageService {
   public upload(files: FileList) {
     if (!files.length) return
 
-    this._uploadImages.push(
-      ...[].slice.call(files).map((file: File) => {
-        return {
-          id: this._seed++,
-          file,
-        }
-      })
-    )
+    if (!this._checkAcceptFileType(files)) {
+      this.error.type = {
+        message: `您選取了不支援的檔案格式，請重新選擇`,
+      }
+    } else {
+      delete this.error.type
+
+      this._uploadImages.push(
+        ...[].slice.call(files).map((file: File) => {
+          return {
+            id: this._seed++,
+            file,
+          }
+        })
+      )
+    }
+
     this._validate()
     this._preview()
   }
@@ -46,6 +55,7 @@ export class UploadImageService {
     this._uploadImages.splice(index, 1)
     this._previewImages.splice(index, 1)
     delete this.error[id]
+    delete this.error.type
   }
 
   public get previewImages() {
@@ -111,11 +121,19 @@ export class UploadImageService {
   private _setImageSizeLimit(size: number) {
     this._imageSizeLimit = size
   }
+
+  private _checkAcceptFileType(files: FileList) {
+    return [].slice
+      .call(files)
+      .every((file: File) => ACCEPT_MIME_TYPES.includes(file.type))
+  }
 }
 
 export const SINGLE_IMAGE_MAX_SIZE = 7
 
 const MEGABYTE = 1024 * 1024
+
+const ACCEPT_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png']
 
 export const PREVIEW_FAILED = 'Image file cannot preview.'
 

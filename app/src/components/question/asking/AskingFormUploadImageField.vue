@@ -45,6 +45,7 @@ const options: ComponentOption = {
     return {
       previewImages: [],
       error: {},
+      inputFileErrMsg: '',
     }
   },
   methods: {
@@ -53,6 +54,7 @@ const options: ComponentOption = {
 
       this.uploadImageService.upload(files)
       this.error = this.uploadImageService.error
+      this.validate()
     },
     removeImageHandler(id) {
       if (id < this.initId) {
@@ -60,6 +62,28 @@ const options: ComponentOption = {
       } else {
         this.uploadImageService.remove(id)
       }
+      this.validate()
+    },
+    validate() {
+      if (
+        this.editPostImages.length + this.previewImages.length >
+        this.countLimit
+      ) {
+        this.inputFileErrMsg = `超過 ${this.countLimit} 張不能上傳喔！`
+        this.$emit('validate', this.inputFileErrMsg)
+        return
+      }
+
+      if (this.error.type) {
+        this.inputFileErrMsg = this.error.type.message
+        this.$emit('validate', this.inputFileErrMsg)
+        return
+      }
+
+      const errorMessages = _.values(this.error)
+      this.inputFileErrMsg = errorMessages.length
+        ? errorMessages[0].message
+        : ''
       this.$emit('validate', this.inputFileErrMsg)
     },
     async convert() {
@@ -82,22 +106,6 @@ const options: ComponentOption = {
             },
           })
         : h()
-    },
-    inputFileErrMsg() {
-      let errMsg = ''
-      if (
-        this.editPostImages.length + this.previewImages.length >
-        this.countLimit
-      ) {
-        errMsg = `超過 ${this.countLimit} 張不能上傳喔！`
-        this.$emit('validate', errMsg)
-        return errMsg
-      }
-
-      const errorMessages = _.values(this.error)
-      errMsg = errorMessages.length ? errorMessages[0].message : ''
-      this.$emit('validate', errMsg)
-      return errMsg
     },
   },
   watch: {
@@ -155,17 +163,18 @@ export interface Instance extends Vue {
 export interface Data {
   previewImages: PreviewImage[]
   error: Record<string, ValidateMessage>
+  inputFileErrMsg: string
 }
 
 export interface Methods {
   uploadImageHandler(files: FileList | null): void
   removeImageHandler(id: number): void
+  validate(): void
   convert(): Promise<string[] | undefined>
 }
 
 export interface Computed {
   $imagePreview: VNode
-  inputFileErrMsg: string
 }
 
 export interface Props {
