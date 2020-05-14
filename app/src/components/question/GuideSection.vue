@@ -53,8 +53,7 @@ export default {
       window.location.href = '/question'
     },
     newPost() {
-      // @todo: Change path after migrate to Nuxt.js
-      window.location.href = '/question/asking'
+      this.$router.push('/question/asking')
     },
   },
 } as ComponentOption

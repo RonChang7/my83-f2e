@@ -190,8 +190,7 @@ export default {
   },
   methods: {
     editPost() {
-      // @todo: Change path after migrate to Nuxt.js
-      window.location.href = `/question/asking/${this.sectionId}`
+      this.$router.push(`/question/asking/${this.sectionId}`)
     },
     followQuestion() {
       this.temporarilyFollowStatus =
