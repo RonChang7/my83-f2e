@@ -130,7 +130,8 @@ export interface Props {
   &__content {
     margin: 12px 0 28px;
     text-align: center;
-    height: 100%;
+    width: 100%;
+    flex: 1 1 auto;
   }
 }
 </style>
