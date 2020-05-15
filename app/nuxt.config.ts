@@ -124,6 +124,8 @@ const config: Configuration = {
     /*
      ** You can extend webpack config here
      */
+    transpile: ({ isDev, isClient }) =>
+      !isDev && isClient ? ['autotrack', 'dom-utils'] : [],
     // extend(config, ctx) {},
   },
   typescript: {
