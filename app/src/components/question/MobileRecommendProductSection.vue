@@ -65,7 +65,7 @@ export default {
 
     this.recommendProductObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        this.shouldFixBanner = entry.boundingClientRect.bottom <= 0
+        this.shouldFixBanner = entry.boundingClientRect.bottom < 0
       })
     })
 
