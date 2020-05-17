@@ -1,6 +1,8 @@
 <template functional>
   <div class="LoginInfo">
-    <img class="logo" src="@/assets/images/my83-logo.svg" alt="my83 logo" />
+    <div class="logo">
+      <img class="logo" src="@/assets/images/my83-logo.svg" alt="my83 logo" />
+    </div>
     <div class="wording">全台灣最大保險社群平台</div>
     <img
       class="introduction"
