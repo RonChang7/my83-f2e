@@ -120,12 +120,18 @@ const config: Configuration = {
   /*
    ** Build configuration
    */
+  // @TODO: remove ts-ignore tag after update related npm packages
+  // @ts-ignore
   build: {
     /*
      ** You can extend webpack config here
      */
-    transpile: ({ isDev, isClient }) =>
-      !isDev && isClient ? ['autotrack', 'dom-utils'] : [],
+    transpile: [
+      // @ts-ignore
+      ({ isClient }) => (isClient ? 'dom-utils' : ''),
+      // @ts-ignore
+      ({ isClient }) => (isClient ? 'autotrack' : ''),
+    ],
     // extend(config, ctx) {},
   },
   typescript: {
