@@ -22,7 +22,7 @@
         :key="index"
         class="BaseDesktopSelect__option"
         :class="{ selected: value === option.value }"
-        @click="
+        @mousedown="
           (e) => {
             panelHandler(e.type, false)
             input(option.value)
