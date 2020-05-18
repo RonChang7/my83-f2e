@@ -128,9 +128,9 @@ const config: Configuration = {
      */
     transpile: [
       // @ts-ignore
-      ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || '',
+      ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || undefined,
       // @ts-ignore
-      ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || '',
+      ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || undefined,
     ],
     // extend(config, ctx) {},
   },
