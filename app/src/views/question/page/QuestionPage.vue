@@ -238,7 +238,9 @@ export default {
     }, 200)
 
     this.getScrollHeightBottom = _.throttle(() => {
-      this.scrollHeightBottom = window.scrollY + window.innerHeight
+      const pageYScroll =
+        window.pageYOffset || document.documentElement.scrollTop
+      this.scrollHeightBottom = pageYScroll + window.innerHeight
     }, 200)
   },
   mounted() {
