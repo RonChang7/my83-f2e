@@ -35,7 +35,7 @@ export default {
     },
   },
   data() {
-    const plugins = ['table', 'link', 'paste', 'fullscreen']
+    const plugins = ['table', 'link', 'paste', 'fullscreen', 'lists']
 
     return {
       isFocus: false,
@@ -52,8 +52,8 @@ export default {
         plugins,
         menubar: '',
         toolbar:
-          'undo redo | fullscreen | bold italic underline forecolor backcolor table link',
-        toolbar_mode: 'wrap',
+          'undo redo | bold italic underline forecolor backcolor | numlist bullist table link | fullscreen',
+        toolbar_mode: 'floating',
         elementpath: false,
         branding: false,
         min_height: this.minHeight,
@@ -79,7 +79,7 @@ export default {
          * https://www.tiny.cloud/docs/configure/content-filtering/#valid_elements
          */
         valid_elements:
-          'br,@[style],strong,em,span,p,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
+          'br,@[style],strong,em,span,p/div,ul,ol,li,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
 
         mobile: {
           plugins: [...plugins, 'autoresize'],
