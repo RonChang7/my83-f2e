@@ -136,6 +136,7 @@ export interface Props {
   &__content {
     display: flex;
     flex-direction: column;
+    flex-basis: 100%;
   }
 
   &__title {
