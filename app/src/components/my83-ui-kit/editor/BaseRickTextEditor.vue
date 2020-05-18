@@ -61,7 +61,7 @@ export default {
 
         // link plugin setting
         default_link_target: '_blank',
-        link_assume_external_targets: true,
+        link_assume_external_targets: 'https',
         link_context_toolbar: true,
         link_title: false,
         target_list: false,
