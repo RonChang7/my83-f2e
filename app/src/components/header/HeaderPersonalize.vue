@@ -261,6 +261,7 @@ interface Menu extends HeaderNavItem {
 
     li {
       display: flex;
+      align-items: center;
       cursor: pointer;
 
       @include max-media('xl') {
