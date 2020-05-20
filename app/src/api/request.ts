@@ -1,39 +1,35 @@
 import https from 'https'
 import axios, { AxiosInstance } from 'axios'
+export class Request {
+  private static instance: Request
 
-const request: RequestInstance = axios.create({
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: process.client,
-  }),
-  withCredentials: true,
-})
+  public initApiUrlLogger: boolean
 
-// TODO: need to construct a class or change to nuxt-module
-request.initApiUrlLogger = false
+  public initServerSideSentryInterceptor: boolean
 
-if (process.server) {
-  request.interceptors.response.use(
-    (res) => {
-      return res
-    },
-    (err) => {
-      if (err && err.response) {
-        const { status } = err.response
-        const { method, url } = err.config
-        console.error(
-          `Error ${status}: ${(method as string).toLocaleUpperCase()} ${url}`
-        )
-      } else {
-        console.error('Unknown API Error:', err)
-      }
-      return Promise.reject(err)
+  public axiosInstance: AxiosInstance
+
+  private constructor() {
+    this.initApiUrlLogger = false
+    this.initServerSideSentryInterceptor = false
+
+    this.axiosInstance = axios.create({
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: process.client,
+      }),
+      withCredentials: true,
+    })
+  }
+
+  public static getInstance() {
+    if (!Request.instance) {
+      Request.instance = new Request()
     }
-  )
+    return Request.instance
+  }
 }
 
-interface RequestInstance extends AxiosInstance {
-  initApiUrlLogger?: boolean
-}
+const request = Request.getInstance().axiosInstance
 
 // P.S. Axios creates only one which is shared across SSR requests
 export default request
