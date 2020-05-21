@@ -9,15 +9,17 @@ export const sentryLog = (
   sentry.withScope((scope) => {
     const { statusCode, method, apiUrl, message, severity } = detail
     const platform = process.server ? 'server' : 'client'
+    const project = 'nuxt'
 
     scope.setTags({
       status_code: String(statusCode),
       method: String(method),
       api_url: String(apiUrl),
       process: platform,
+      project,
     })
 
-    scope.setFingerprint([String(statusCode), platform])
+    scope.setFingerprint([String(statusCode), platform, project])
     sentry.captureMessage(message, severity || Severity.Error)
     sentry.captureException(err)
   })
