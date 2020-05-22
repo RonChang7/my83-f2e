@@ -24,7 +24,7 @@ export class UploadImageService {
     this._seed = id
   }
 
-  public upload(files: FileList) {
+  public async upload(files: FileList) {
     if (!files.length) return
 
     if (!this._checkAcceptFileType(files)) {
@@ -45,7 +45,7 @@ export class UploadImageService {
     }
 
     this._validate()
-    this._preview()
+    await this._preview()
   }
 
   public remove(id: number) {
