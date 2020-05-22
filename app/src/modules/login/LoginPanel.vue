@@ -64,17 +64,31 @@ export default {
     }
   },
   computed: {
-    ...mapState('global', ['actionAfterLogin']),
+    ...mapState('global', ['actionAfterLogin', 'actionAfterClosePanel']),
   },
   methods: {
     closePanel() {
       this.$store.dispatch(`global/${types.CLOSE_LOGIN_PANEL}`)
+      this.afterClosePanel()
     },
     toPanel(panelName) {
       this.$store.dispatch(`global/${types.NAVIGATE_LOGIN_PANEL}`, panelName)
     },
     afterLogin() {
       this.actionAfterLogin()
+    },
+    afterClosePanel() {
+      if (typeof this.actionAfterClosePanel === 'function') {
+        this.actionAfterClosePanel()
+        /**
+         * 當有設定登入 panel 關閉後 Function，則執行 Function，
+         * 並將 Function 從 Store 清空，以確保不會影響到其他使用登入 panel 但未設定 afterClosePanel 的地方
+         */
+        this.$store.dispatch(
+          `global/${types.UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT}`,
+          null
+        )
+      }
     },
     sendForgetPasswordSuccess() {
       this.displayForgetPasswordWording = true
@@ -109,11 +123,13 @@ export interface Methods {
   closePanel(): void
   toPanel(panelName: TargetPanel): void
   afterLogin(): void
+  afterClosePanel(): void
   sendForgetPasswordSuccess(): void
 }
 
 export interface Computed {
   actionAfterLogin: Function
+  actionAfterClosePanel: Function | null
 }
 
 export interface Props {

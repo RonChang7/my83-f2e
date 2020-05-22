@@ -13,6 +13,9 @@ import {
   EditQuestionContent,
 } from '@/api/question/asking.type'
 import {
+  OPEN_LOGIN_PANEL,
+  UPDATE_AFTER_LOGIN_EVENT,
+  UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT,
   UPDATE_GLOBAL_DIALOG,
   OPEN_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
@@ -22,12 +25,20 @@ import {
   IsDuplicatedPostDialogContent,
 } from '@/config/question-asking-dialog-info'
 import { ErrorPageType } from '@/config/error-page.config'
+import { User } from '@/services/user/user'
 const AskingPage = () => import('./AskingPage.vue')
+
+const user = User.getInstance()
 
 const options: ComponentOption = {
   async fetch() {
     const { id } = this.$route.params
     const { purpose_tag_id: purposeTagId } = this.$route.query
+
+    if (!user.isLogin()) {
+      this.showLoginPanel()
+      return
+    }
 
     try {
       if (id) {
@@ -91,6 +102,19 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    showLoginPanel() {
+      this.$store.dispatch(`global/${OPEN_LOGIN_PANEL}`, 'login')
+      this.$store.dispatch(
+        `global/${UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT}`,
+        () => {
+          // @TODO: Change path after migrate to Nuxt.js
+          window.location.href = '/question'
+        }
+      )
+      this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
+        window.location.reload()
+      })
+    },
     updateGlobalDialogContent() {
       let payload = {}
 
@@ -169,6 +193,7 @@ export interface Data {
 }
 
 export interface Methods {
+  showLoginPanel(): void
   updateGlobalDialogContent(): void
 }
 
