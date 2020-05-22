@@ -49,10 +49,10 @@ const options: ComponentOption = {
     }
   },
   methods: {
-    uploadImageHandler(files) {
+    async uploadImageHandler(files) {
       if (!files) return
 
-      this.uploadImageService.upload(files)
+      await this.uploadImageService.upload(files)
       this.error = this.uploadImageService.error
       this.validate()
     },
