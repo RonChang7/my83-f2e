@@ -96,6 +96,7 @@
 <script lang="ts">
 import _ from 'lodash'
 import Vue from 'vue'
+import { Store } from 'vuex'
 import {
   ThisTypedComponentOptionsWithRecordProps,
   PropType,
@@ -132,7 +133,13 @@ import {
   UPDATE_GLOBAL_DIALOG,
   OPEN_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
+import {
+  UPDATE_QUESTION_DATA,
+  FETCH_PAGE_DATA_AFTER_POST,
+} from '@/store/question/question.type'
+import { UPDATE_PAGE_META } from '@/store/seo/seo.type'
 import { GlobalDialogContent } from '@/store/global/index'
+import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   IsUserSuspectDialogContent,
   IsDuplicatedPostDialogContent,
@@ -317,10 +324,14 @@ const options: ComponentOption = {
       if (validateResult) {
         this.submitErrMsg = ''
         try {
-          const {
-            data: { question_id: questionId },
-          } = await this.questionForm.submit()
-          this.$router.push(`/question/${questionId}`)
+          const { data, page_meta } = await this.questionForm.submit()
+          this.$store.commit(`question/${UPDATE_QUESTION_DATA}`, data)
+          this.$store.commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta)
+          await this.$store.dispatch(
+            `question/${FETCH_PAGE_DATA_AFTER_POST}`,
+            data.question_id
+          )
+          this.$router.push(`/question/${data.question_id}`)
         } catch (error) {
           this.submitErrorHandler(error)
         }
@@ -495,6 +506,7 @@ export interface Instance
   $refs: {
     uploadImageField: AskingFormUploadImageFieldComponentInstance
   }
+  $store: Store<QuestionVuexState>
 }
 
 export interface Data {

@@ -1,4 +1,5 @@
 import { GlobalErrorResponse } from '../type'
+import { QuestionDataResponse } from './question.type'
 export interface AskingFormOptionResponse {
   tag_list: Record<string, string>
   purpose_tag_ids: TagId[]
@@ -53,11 +54,7 @@ export interface SubmitQuestionPayload {
   google_recaptcha: string
 }
 
-export interface SubmitQuestionResponse {
-  data: {
-    question_id: number
-  }
-}
+export interface SubmitQuestionResponse extends QuestionDataResponse {}
 
 export interface ErrorResponse extends GlobalErrorResponse {
   user_meta?: UserMeta
