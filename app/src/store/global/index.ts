@@ -11,6 +11,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           targetPanel: 'login',
         },
         actionAfterLogin: null,
+        actionAfterClosePanel: null,
         globalDialogVisible: false,
         globalDialogContent: null,
         userAgent: null,
@@ -37,6 +38,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_AFTER_LOGIN_EVENT]({ commit }, data: Function) {
         commit(types.UPDATE_AFTER_LOGIN_EVENT, data)
       },
+      [types.UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT](
+        { commit },
+        data: Function | null
+      ) {
+        commit(types.UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT, data)
+      },
       [types.OPEN_GLOBAL_DIALOG]({ commit }) {
         commit(types.UPDATE_GLOBAL_DIALOG_DISPLAY, true)
       },
@@ -61,6 +68,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_AFTER_LOGIN_EVENT](state, data: Function) {
         state.actionAfterLogin = data
       },
+      [types.UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT](
+        state,
+        data: Function | null
+      ) {
+        state.actionAfterClosePanel = data
+      },
       [types.UPDATE_GLOBAL_DIALOG_DISPLAY](state, visible: boolean) {
         state.globalDialogVisible = visible
       },
@@ -77,6 +90,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   loginPanel: LoginPanelState
   actionAfterLogin: Function | null
+  actionAfterClosePanel: Function | null
   globalDialogVisible: boolean
   globalDialogContent: GlobalDialogContent | null
   userAgent: UserAgent | null
