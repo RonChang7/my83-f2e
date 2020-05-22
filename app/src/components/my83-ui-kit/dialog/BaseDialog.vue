@@ -4,6 +4,10 @@
       ref="dialog"
       tabindex="0"
       class="BaseDialog"
+      :class="{
+        singleButton: !rightButtonText,
+        doubleButton: rightButtonText,
+      }"
       @keyup.esc="closePanel"
       @keyup.enter="enterToConfirm"
     >
@@ -181,11 +185,18 @@ export interface Props {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 480px;
   padding: 40px 40px 30px;
   color: $gray-primary;
   outline: 0;
   overflow: auto;
+
+  &.singleButton {
+    width: 410px;
+  }
+
+  &.doubleButton {
+    width: 480px;
+  }
 
   @include max-media('lg') {
     width: calc(100vw - 24px);

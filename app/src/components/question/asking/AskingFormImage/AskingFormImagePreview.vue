@@ -86,7 +86,8 @@ export default options
     user-select: none;
 
     &.error {
-      border-color: $error-color;
+      border-width: 3px;
+      border-color: $error-light-color;
     }
   }
 }

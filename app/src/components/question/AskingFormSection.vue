@@ -37,7 +37,7 @@
       :auto-grow-max-height="500"
       height="100px"
       :placeholder="
-        '範例：32歲 男 男 辦公室上班族 \n預算約：3 萬 \n保障需求：重疾癌症、殘廢殘扶險、壽險'
+        `範例：32歲 男 辦公室上班族 \n預算約：3 萬 \n保障需求：重疾癌症、殘廢殘扶險、壽險`
       "
       legend="建議包含「年齡、性別、職業、相關家庭責任、大概收入狀況」，可以得到更完整的保險建議唷～"
       :err-msg="errors.content ? errors.content.message : ''"
@@ -567,6 +567,7 @@ export default options
   &__row {
     display: flex;
     justify-content: center;
+    margin-top: 70px;
   }
 }
 </style>
