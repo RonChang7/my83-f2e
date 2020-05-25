@@ -104,7 +104,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
               resolve(res)
             })
             .catch((err) => {
-              console.error(err)
               reject(err)
             })
         })
@@ -114,8 +113,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchAnswerData(id)
             .then(({ data }) => resolve(data))
-            .catch((err) => {
-              console.error(err)
+            .catch(() => {
               resolve(null)
             })
         })
@@ -137,9 +135,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
             types.UPDATE_QUESTION_PERSONALIZE_DATA,
             (res as QuestionPersonalizeResponse).personalize
           )
-        } catch (err) {
-          console.error(err)
-        }
+        } catch (err) {}
       },
       async [types.FETCH_ANSWER_PERSONALIZE_DATA](
         { commit, state },
@@ -163,9 +159,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           })
 
           commit(types.UPDATE_ANSWER_PERSONALIZE_DATA, answers)
-        } catch (err) {
-          console.error(err)
-        }
+        } catch (err) {}
       },
       async [types.FOLLOW_QUESTION]({ commit }, id: number) {
         try {
@@ -177,7 +171,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           }
           return success
         } catch (err) {
-          console.error(err)
           const { success } = err.response.data as FollowQuestionResponse
           return success
         }
@@ -192,7 +185,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           }
           return success
         } catch (err) {
-          console.error(err)
           const { success } = err.response.data as UnFollowQuestionResponse
           return success
         }
@@ -211,7 +203,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           }
           return success
         } catch (err) {
-          console.error(err)
           const { success } = err.response.data as SetBestAnswerResponse
           return success
         }
@@ -226,7 +217,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           }
           return success
         } catch (err) {
-          console.error(err)
           const { success } = err.response.data as UnsetBestAnswerResponse
           return success
         }
@@ -242,7 +232,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
             return res
           }
         } catch (err) {
-          console.error(err)
           const res = err.response.data as AddAnswerResponse
           return res
         }
@@ -269,7 +258,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
             return res
           }
         } catch (err) {
-          console.error(err)
           const res = err.response.data as AddResponseResponse
           return res
         }
@@ -296,7 +284,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
             return res
           }
         } catch (err) {
-          console.error(err)
           const res = err.response.data as AddResponseResponse
           return res
         }
@@ -306,8 +293,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchRelatedQuestions(id)
             .then(({ data }) => resolve(data))
-            .catch((err) => {
-              console.error(err)
+            .catch(() => {
               resolve(null)
             })
         })
@@ -317,8 +303,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchRelatedBlogs(id)
             .then(({ data }) => resolve(data))
-            .catch((err) => {
-              console.error(err)
+            .catch(() => {
               resolve(null)
             })
         })
@@ -380,7 +365,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
             }
           }
         } catch (err) {
-          console.error(err)
           const res = err.response.data as SimpleResponse
           return res
         }
@@ -427,7 +411,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
             }
           }
         } catch (err) {
-          console.error(err)
           const res = err.response.data as SimpleResponse
           return res
         }
@@ -437,8 +420,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchRecommendProduct(id)
             .then(({ recommend_product }) => resolve(recommend_product))
-            .catch((err) => {
-              console.error(err)
+            .catch(() => {
               resolve(null)
             })
         })
