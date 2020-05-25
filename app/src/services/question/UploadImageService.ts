@@ -13,6 +13,9 @@ export class UploadImageService {
   // 單位：MB
   private _imageSizeLimit: number
 
+  // 單位：bytes
+  private _currentBase64ImagesSize: number | undefined
+
   constructor(imageSizeLimit: number = SINGLE_IMAGE_MAX_SIZE) {
     this._uploadImages = []
     this._previewImages = []
@@ -66,10 +69,29 @@ export class UploadImageService {
     return this._imageSizeLimit
   }
 
+  public currentBase64ImagesSize(unit?: Unit) {
+    if (typeof this._currentBase64ImagesSize === 'undefined') {
+      return 0
+    }
+
+    switch (unit) {
+      case 'MB':
+        return this._currentBase64ImagesSize / MEGABYTE
+      case 'KB':
+        return this._currentBase64ImagesSize / KILOBYTE
+      case 'byte':
+      default:
+        return this._currentBase64ImagesSize
+    }
+  }
+
   public async base64Images() {
     const base64Images = await this._convert(
       this._uploadImages.map(({ file }) => file)
     )
+    this._currentBase64ImagesSize = base64Images?.reduce((acc, curr) => {
+      return acc + curr.length
+    }, 0)
     return base64Images
   }
 
@@ -133,6 +155,8 @@ export const SINGLE_IMAGE_MAX_SIZE = 7
 
 const MEGABYTE = 1024 * 1024
 
+const KILOBYTE = 1024
+
 const ACCEPT_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png']
 
 export const PREVIEW_FAILED = 'Image file cannot preview.'
@@ -150,3 +174,5 @@ interface UploadImage {
   id: number
   file: File
 }
+
+type Unit = 'byte' | 'KB' | 'MB'

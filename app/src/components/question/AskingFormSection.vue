@@ -51,6 +51,7 @@
       :size-limit="7"
       :err-msg="errors.images ? errors.images.message : ''"
       @validate="imageUploadValidate"
+      @convert-images-size="payloadSizeValidate"
       @remove-edit-post-image="removeEditPostImage"
     />
     <AskingFormTagSelectField
@@ -152,6 +153,9 @@ import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 import { Validator, ValidateMessage } from '@/services/validator/Validator'
+
+// 單位：MB
+const MAX_IMAGE_PAYLOAD_SIZE_LIMIT = 20
 
 const options: ComponentOption = {
   components: {
@@ -256,9 +260,15 @@ const options: ComponentOption = {
       return this.isDesktop ? 'xl' : 'l-b'
     },
     formErrMsg() {
-      return this.errors.googleReCaptcha && _.keys(this.errors).length === 1
-        ? this.errors.googleReCaptcha.message
-        : this.submitErrMsg
+      if (this.errors.payload) {
+        return this.errors.payload.message
+      } else if (
+        this.errors.googleReCaptcha &&
+        _.keys(this.errors).length === 1
+      ) {
+        return this.errors.googleReCaptcha.message
+      }
+      return this.submitErrMsg
     },
   },
   methods: {
@@ -309,6 +319,16 @@ const options: ComponentOption = {
         this.$delete(this.errors, 'images')
       }
     },
+    payloadSizeValidate(size: number) {
+      if (size > MAX_IMAGE_PAYLOAD_SIZE_LIMIT) {
+        this.$set(this.errors, 'payload', {
+          message: '整份檔案超過尺寸限制，請再精簡一下喔！',
+          state: 'error',
+        })
+      } else {
+        this.$delete(this.errors, 'payload')
+      }
+    },
     async submit() {
       if (!this.form) return
 
@@ -318,8 +338,8 @@ const options: ComponentOption = {
       if (!this.form.nickname && this.nickname) {
         this.form.nickname = this.nickname
       }
-      const validateResult = await this.validate(this.form)
       this.form.images = (await this.$refs.uploadImageField.convert()) || []
+      const validateResult = await this.validate(this.form)
 
       if (validateResult) {
         this.submitErrMsg = ''
@@ -418,17 +438,23 @@ const options: ComponentOption = {
         const result = await this.validator.validateAll(form)
         this.$set(this, 'errors', {
           images: this.errors.images,
+          payload: this.errors.payload,
           ...result,
         })
       } catch (error) {
         this.$set(this, 'errors', {
           images: this.errors.images,
+          payload: this.errors.payload,
           ...error,
         })
       }
 
       if (typeof this.errors.images === 'undefined') {
         this.$delete(this.errors, 'images')
+      }
+
+      if (typeof this.errors.payload === 'undefined') {
+        this.$delete(this.errors, 'payload')
       }
 
       return !_.keys(this.errors).length
@@ -515,7 +541,7 @@ export interface Data {
   editPostImages: PreviewImage[]
   uploadImageInitId: number
   form: QuestionFormData | null
-  errors: Partial<Record<keyof QuestionFormData, ValidateMessage>>
+  errors: Partial<Record<keyof QuestionFormData | 'payload', ValidateMessage>>
   submitErrMsg: string
   submitState: string
 }
@@ -524,6 +550,7 @@ export interface Methods {
   setInitContent(): void
   removeEditPostImage(id: number): void
   imageUploadValidate(msg: string): void
+  payloadSizeValidate(size: number): void
   submit(): void
   submitErrorHandler(error: any): void
   updateGlobalDialogContent(payload: {

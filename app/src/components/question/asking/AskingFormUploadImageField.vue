@@ -88,6 +88,10 @@ const options: ComponentOption = {
     },
     async convert() {
       const compressImages = await this.uploadImageService.base64Images()
+      this.$emit(
+        'convert-images-size',
+        this.uploadImageService.currentBase64ImagesSize('MB')
+      )
       return compressImages
     },
   },
