@@ -13,17 +13,13 @@
         <BaseArrowDown v-else />
       </div>
     </div>
-    <div v-if="shouldDisplayOptions" class="BaseTagSelect__options">
-      <BaseTag
-        v-for="option in options"
-        :key="option.value"
-        class="tag"
-        :class="{ active: isSelected(option.value) }"
-        @click.native="clickTagHandler(option.value)"
-      >
-        {{ option.text }}
-      </BaseTag>
-    </div>
+    <BaseTagOptions
+      v-if="shouldDisplayOptions"
+      class="BaseTagSelect__options"
+      :options="options"
+      :selected="selected"
+      @click-option="clickOptionHandler"
+    />
   </div>
 </template>
 
@@ -32,7 +28,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseTag from '../tag/BaseTag.vue'
+import BaseTagOptions from '../tag/BaseTagOptions.vue'
 import { Option } from './BaseSelect.vue'
 const BaseArrowDown = () =>
   import('@/components/base/icon/18/BaseArrowDown.vue')
@@ -40,7 +36,7 @@ const BaseArrowUp = () => import('@/components/base/icon/18/BaseArrowUp.vue')
 
 const options: ComponentOption = {
   components: {
-    BaseTag,
+    BaseTagOptions,
     BaseArrowDown,
     BaseArrowUp,
   },
@@ -67,17 +63,13 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    isSelected(value) {
-      return _.includes(this.selected, value)
-    },
-    clickTagHandler(value) {
-      if (this.isSelected(value)) {
-        this.$emit('update:selected', _.without(this.selected, value))
-        this.$emit('update', _.without(this.selected, value))
-      } else {
-        this.$emit('update:selected', this.selected.concat(value))
-        this.$emit('update', this.selected.concat(value))
-      }
+    clickOptionHandler({ isSelected, value }) {
+      const selected = isSelected
+        ? _.without(this.selected, value)
+        : this.selected.concat(value)
+
+      this.$emit('update:selected', selected)
+      this.$emit('update', selected)
     },
     clickHeaderHandler() {
       if (!this.enableFold) return
@@ -113,8 +105,10 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  isSelected(value: Option['value']): boolean
-  clickTagHandler(value: Option['value']): void
+  clickOptionHandler(payload: {
+    isSelected: boolean
+    value: Option['value']
+  }): void
   clickHeaderHandler(): void
 }
 
@@ -151,18 +145,6 @@ export default options
   &__label {
     color: $gray-primary;
     margin: 8px 0;
-  }
-
-  &__options {
-    padding: 5px 0;
-
-    .tag {
-      margin-bottom: 8px;
-
-      &:not(:last-child) {
-        margin-right: 10px;
-      }
-    }
   }
 }
 </style>
