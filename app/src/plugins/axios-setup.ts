@@ -1,6 +1,7 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { AxiosRequestConfig } from 'axios'
-import request from '@/api/request'
+import request, { Request } from '@/api/request'
+import { sentryLog } from '@/api/sentry'
 import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
@@ -8,10 +9,11 @@ import { JWT } from '@/services/auth/jwt'
 export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
   const { APP_ENV, API_URL } = app.$env
+  const requestInstance = Request.getInstance()
 
   request.defaults.baseURL = API_URL
 
-  if (APP_ENV === 'development' && !request.initApiUrlLogger) {
+  if (APP_ENV === 'development' && !requestInstance.initApiUrlLogger) {
     request.interceptors.request.use((v) => {
       // eslint-disable-next-line no-console
       console.log(`\x1B[34mAPI Request:\x1B[0m`, v.url)
@@ -19,7 +21,7 @@ export default (({ app, req }) => {
       return v
     })
 
-    request.initApiUrlLogger = true
+    requestInstance.initApiUrlLogger = true
   }
 
   if (process.server) {
@@ -30,6 +32,26 @@ export default (({ app, req }) => {
 
     // Don't accept brotli encoding because Node can't parse it
     request.defaults.headers.common['accept-encoding'] = 'gzip, deflate'
+
+    if (!requestInstance.initServerSideSentryInterceptor) {
+      request.interceptors.response.use(
+        (res) => {
+          return res
+        },
+        (err) => {
+          sentryLog(app.$sentry, err, {
+            statusCode: err?.response?.status || '',
+            method: err.config.method,
+            apiUrl: err.config.url,
+            message: 'API error',
+          })
+
+          return Promise.reject(err)
+        }
+      )
+
+      requestInstance.initServerSideSentryInterceptor = true
+    }
   }
 
   if (process.client) {
@@ -95,9 +117,22 @@ export default (({ app, req }) => {
             auth.logout()
             return Promise.reject(err)
           } else {
+            sentryLog(app.$sentry, err, {
+              statusCode: err?.response?.status || '',
+              method: err.config.method,
+              apiUrl: err.config.url,
+              message: 'API error',
+            })
             return Promise.reject(err)
           }
         } else {
+          sentryLog(app.$sentry, err, {
+            statusCode: err?.response?.status || '',
+            method: err.config.method,
+            apiUrl: err.config.url,
+            message: 'API error',
+          })
+
           err = {
             ...err,
             response: {
