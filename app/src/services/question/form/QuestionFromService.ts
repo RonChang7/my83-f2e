@@ -122,6 +122,11 @@ export class QuestionFromService {
     return this.form
   }
 
+  public removeEditPostImage(imageSrc: string) {
+    if (typeof this.form.removeImages === 'undefined') return
+    this.form.removeImages.push(imageSrc)
+  }
+
   public async submit() {
     const payload: SubmitQuestionPayload = {
       title: this.form.title,
