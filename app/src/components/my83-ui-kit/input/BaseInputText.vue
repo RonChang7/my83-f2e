@@ -28,7 +28,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseEyeOutline from '@/components/base/icon/24/BaseEyeOutline.vue'
 
@@ -67,7 +70,7 @@ export default {
       default: false,
     },
     autocomplete: {
-      type: String as () => Props['autocomplete'],
+      type: String as PropType<Props['autocomplete']>,
       default: 'on',
     },
     maxlength: {

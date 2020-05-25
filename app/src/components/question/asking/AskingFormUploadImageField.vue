@@ -96,7 +96,7 @@ const options: ComponentOption = {
     },
   },
   computed: {
-    $imagePreview() {
+    $$imagePreview() {
       const h = this.$createElement
 
       return this.previewImages.length || this.editPostImages.length
@@ -138,7 +138,7 @@ const options: ComponentOption = {
             change: this.uploadImageHandler,
           },
         }),
-        this.$imagePreview,
+        this.$$imagePreview,
       ]
     )
   },
@@ -178,7 +178,7 @@ export interface Methods {
 }
 
 export interface Computed {
-  $imagePreview: VNode
+  $$imagePreview: VNode
 }
 
 export interface Props {
