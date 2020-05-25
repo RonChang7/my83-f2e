@@ -199,8 +199,11 @@ export interface Props {
   }
 
   @include max-media('lg') {
-    width: calc(100vw - 24px);
-    padding: 45px 30px 30px;
+    &.singleButton,
+    &.doubleButton {
+      width: calc(100vw - 24px);
+      padding: 45px 30px 30px;
+    }
   }
 
   &__close {
