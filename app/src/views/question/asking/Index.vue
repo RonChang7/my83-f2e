@@ -161,7 +161,7 @@ const options: ComponentOption = {
               initContent: this.initContent,
             },
           })
-        : h('div')
+        : h()
     return renderComponent
   },
 }
