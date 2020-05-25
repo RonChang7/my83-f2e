@@ -13,6 +13,9 @@ export default (({ app, store }) => {
       const userId = (store.state as GlobalVuexState).header.headerPersonalized!
         .personalize.id
 
+      // Update user ID for Sentry
+      app.$sentry.setUser({ id: String(userId) })
+
       app.$analytics.dispatch<EventTypes.SetUserId>(EventTypes.SetUserId, {
         userId,
       })
