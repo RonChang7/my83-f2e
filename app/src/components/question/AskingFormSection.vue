@@ -301,13 +301,9 @@ const options: ComponentOption = {
       })
     },
     removeEditPostImage(id: number) {
-      if (typeof (this.form as QuestionFormData).removeImages === 'undefined') {
-        ;(this.form as QuestionFormData).removeImages = []
-      }
-
       const removeImage = this.editPostImages.find((image) => image.id === id)
       if (typeof removeImage === 'undefined') return
-      ;(this.form as QuestionFormData).removeImages!.push(removeImage.src)
+      this.questionForm.removeEditPostImage(removeImage.src)
     },
     imageUploadValidate(msg: string) {
       if (msg) {
