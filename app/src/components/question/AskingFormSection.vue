@@ -394,7 +394,6 @@ const options: ComponentOption = {
       } else {
         this.submitErrMsg =
           '資料送出失敗，請再試一次。\n若問題持續發生，請聯繫客服。'
-        console.error(error)
       }
     },
     updateGlobalDialogContent({ isSuspect, isDuplicatedPost }) {
@@ -423,9 +422,7 @@ const options: ComponentOption = {
       let token = ''
       try {
         token = await this.$recaptcha.execute('login')
-      } catch (error) {
-        console.error(error)
-      }
+      } catch (error) {}
 
       return token
     },

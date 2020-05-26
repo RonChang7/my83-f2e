@@ -59,7 +59,6 @@ const options: ComponentOption = {
       }
     } catch (error) {
       // @TODO: Change path after migrate to Nuxt.js
-      console.error(error)
       window.location.href = '/question'
       return
     }
@@ -68,7 +67,6 @@ const options: ComponentOption = {
       try {
         this.formOption = await fetchAskingFormOption()
       } catch (error) {
-        console.error(error)
         return this.$nuxt.error({
           statusCode: 500,
           message: ErrorPageType.SERVER,
