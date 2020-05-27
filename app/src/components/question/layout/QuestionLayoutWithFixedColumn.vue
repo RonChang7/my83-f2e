@@ -49,9 +49,11 @@ const options: ComponentOption = {
   },
   methods: {
     calcRightColumnHeight() {
-      this.rightColumnHeight =
-        parseInt(window.getComputedStyle(this.$refs.wrapper).height) -
-        parseInt(window.getComputedStyle(this.$refs.wrapper).paddingTop)
+      if (this.$refs.wrapper) {
+        this.rightColumnHeight =
+          parseInt(window.getComputedStyle(this.$refs.wrapper).height) -
+          parseInt(window.getComputedStyle(this.$refs.wrapper).paddingTop)
+      }
     },
     getFixedColumnStart() {
       if (this.$refs.wrapper) {
@@ -81,9 +83,7 @@ const options: ComponentOption = {
   mounted() {
     this.getScreenWidth()
 
-    if (this.$refs.wrapper) {
-      this.calcRightColumnHeight()
-    }
+    this.calcRightColumnHeight()
 
     this.$nextTick(() => {
       this.getFixedColumnStart()
