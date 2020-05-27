@@ -117,9 +117,9 @@ import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import {
-  QuestionFromService,
+  QuestionFormService,
   QuestionFormData,
-} from '@/services/question/form/QuestionFromService'
+} from '@/services/question/form/QuestionFormService'
 import { PreviewImage } from '@/services/question/UploadImageService'
 import {
   TransformFormOption,
@@ -487,7 +487,7 @@ const options: ComponentOption = {
     const { id } = this.$route.params
     const formType = id ? 'edit' : 'new'
 
-    this.questionForm = new QuestionFromService(formType)
+    this.questionForm = new QuestionFormService(formType)
     this.form = this.questionForm.form
   },
   async mounted() {
@@ -520,7 +520,7 @@ export interface Instance
   extends Vue,
     Omit<DeviceMixinComponentInstance, keyof Vue>,
     Omit<UserMetaMixinComponentInstance, keyof Vue> {
-  questionForm: QuestionFromService
+  questionForm: QuestionFormService
   validator: Validator<QuestionFormData>
   $refs: {
     uploadImageField: AskingFormUploadImageFieldComponentInstance

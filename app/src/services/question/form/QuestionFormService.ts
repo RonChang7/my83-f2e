@@ -5,7 +5,7 @@ import {
   EditQuestionContent,
 } from '@/api/question/asking.type'
 
-export class QuestionFromService {
+export class QuestionFormService {
   public form: QuestionFormData
 
   private _formType: FormType
