@@ -33,7 +33,6 @@
         />
       </div>
       <div class="ResponseEditor__function">
-        <BaseInputMessage :msg="errMsg" class="mr-4" />
         <BaseButton size="m" type="secondary" @click.native="cancel">
           取消
         </BaseButton>
@@ -46,6 +45,7 @@
           留言
         </BaseButton>
       </div>
+      <BaseInputMessage :msg="errMsg" text-align="right" />
     </template>
     <div v-else class="ResponseEditor__placeholder">
       <BaseInputText
@@ -334,7 +334,12 @@ export interface Props {
   &__function {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 10px;
+
+    > button {
+      white-space: nowrap;
+    }
 
     > button:not(:last-child) {
       margin-right: 10px;
