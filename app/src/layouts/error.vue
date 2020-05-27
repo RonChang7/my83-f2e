@@ -11,6 +11,7 @@
       <BaseButton
         size="l-a"
         :type="errorContent.enableZendesk ? 'secondary' : 'primary'"
+        :is-full-width="isMobile && errorContent.enableZendesk"
         @click.native="redirectTo(errorContent.redirectUrl)"
       >
         {{ errorContent.buttonText }}
@@ -18,6 +19,7 @@
       <BaseButton
         v-if="errorContent.enableZendesk"
         size="l-a"
+        :is-full-width="isMobile"
         @click.native="feedback"
       >
         建議與回報問題
@@ -41,9 +43,13 @@ import {
 import { Zendesk } from '@/services/zendesk/zendesk'
 import { UserRoleMap } from '@/services/user/user'
 import { GlobalVuexState } from '@/store/global-state'
+import DeviceMixin, {
+  Computed as DeviceMixinComputed,
+} from '@/mixins/device/device-mixins'
 
 export default {
   name: 'ErrorLayout',
+  mixins: [DeviceMixin],
   components: {
     BaseButton,
   },
@@ -112,7 +118,7 @@ export interface Methods {
   feedback(): void
 }
 
-export interface Computed {
+export interface Computed extends DeviceMixinComputed {
   errorContent: ErrorContent
 }
 
@@ -162,6 +168,12 @@ export interface Props {
 
   &__function {
     margin-top: 24px;
+
+    @include max-media('xl') {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
 
     > button:not(:first-child) {
       margin-left: 16px;
