@@ -24,7 +24,6 @@
       <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseInputMessage :msg="errMsg" text-align="right" class="mr-4" />
       <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
@@ -37,6 +36,7 @@
         留言
       </BaseButton>
     </div>
+    <BaseInputMessage :msg="errMsg" text-align="right" />
     <div v-if="userRole === 'sales'" class="AnswerEditor__function">
       <BaseCheckbox :checked.sync="acceptRule" label="我同意遵守版規" />
     </div>
@@ -284,7 +284,9 @@ export interface Props {
   &__function {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 10px;
+    padding-bottom: 10px;
 
     > button {
       white-space: nowrap;
