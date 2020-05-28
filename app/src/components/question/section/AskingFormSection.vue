@@ -143,7 +143,7 @@ import { GlobalDialogContent } from '@/store/global/index'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   IsUserSuspectDialogContent,
-  IsDuplicatedPostDialogContent,
+  HasDuplicatedPostDialogContent,
 } from '@/config/question-asking-dialog-info'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
 import DeviceMixin, {
@@ -386,7 +386,7 @@ const options: ComponentOption = {
       } else if (err.user_meta) {
         this.updateGlobalDialogContent({
           isSuspect: err.user_meta.is_suspect,
-          isDuplicatedPost: err.user_meta.is_duplicated_post,
+          hasDuplicatedPost: err.user_meta.has_duplicated_post,
         })
         this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
       } else if (err.error_message) {
@@ -396,7 +396,7 @@ const options: ComponentOption = {
           '資料送出失敗，請再試一次。\n若問題持續發生，請聯繫客服。'
       }
     },
-    updateGlobalDialogContent({ isSuspect, isDuplicatedPost }) {
+    updateGlobalDialogContent({ isSuspect, hasDuplicatedPost }) {
       let payload = {}
 
       // @TODO: Change path after migrate to Nuxt.js
@@ -410,9 +410,9 @@ const options: ComponentOption = {
             window.location.href = '/question'
           },
         } as GlobalDialogContent
-      } else if (isDuplicatedPost) {
+      } else if (hasDuplicatedPost) {
         payload = {
-          ...IsDuplicatedPostDialogContent,
+          ...HasDuplicatedPostDialogContent,
         } as GlobalDialogContent
       }
 
@@ -548,7 +548,7 @@ export interface Methods {
   submitErrorHandler(error: any): void
   updateGlobalDialogContent(payload: {
     isSuspect?: boolean
-    isDuplicatedPost?: boolean
+    hasDuplicatedPost?: boolean
   }): void
   getGoogleReCaptcha(): Promise<string>
   validate(form: QuestionFormData): Promise<boolean>

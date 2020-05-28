@@ -29,7 +29,7 @@ export type TagId = number
 
 export interface UserMeta {
   is_suspect?: boolean
-  is_duplicated_post?: boolean
+  has_duplicated_post?: boolean
 }
 
 export interface EditQuestionContent {
