@@ -26,10 +26,10 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import HotServiceCard from './hot-service/HotServiceCard.vue'
 import hotServiceContent, {
   HotServiceContent,
-} from './hot-service/hot-service-content'
+} from '../hot-service/hot-service-content'
+import HotServiceCard from '../hot-service/HotServiceCard.vue'
 
 export default {
   components: {

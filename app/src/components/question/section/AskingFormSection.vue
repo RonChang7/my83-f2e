@@ -103,16 +103,16 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import AskingFormBaseField from './asking/AskingFormBaseField.vue'
-import AskingFormInputField from './asking/AskingFormInputField.vue'
-import AskingFormTextareaField from './asking/AskingFormTextareaField.vue'
-import AskingFormSelectField from './asking/AskingFormSelectField.vue'
 import AskingFormUploadImageField, {
   ComponentInstance as AskingFormUploadImageFieldComponentInstance,
-} from './asking/AskingFormUploadImageField.vue'
+} from '../asking/AskingFormUploadImageField.vue'
 import AskingFormTagSelectField, {
   Props as InsuranceOption,
-} from './asking/AskingFormTagSelectField.vue'
+} from '../asking/AskingFormTagSelectField.vue'
+import AskingFormBaseField from '../asking/AskingFormBaseField.vue'
+import AskingFormInputField from '../asking/AskingFormInputField.vue'
+import AskingFormTextareaField from '../asking/AskingFormTextareaField.vue'
+import AskingFormSelectField from '../asking/AskingFormSelectField.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
