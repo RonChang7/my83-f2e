@@ -32,11 +32,11 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import QuestionAuthorInfo from './question/QuestionAuthorInfo.vue'
-import QuestionTitle from './question/QuestionTitle.vue'
-import BaseContent from './base/BaseContent.vue'
-import BaseMeta from './base/BaseMeta.vue'
-import BaseHeaderFunction from './base/BaseHeaderFunction.vue'
+import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
+import QuestionTitle from '../question/QuestionTitle.vue'
+import BaseContent from '../base/BaseContent.vue'
+import BaseMeta from '../base/BaseMeta.vue'
+import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   QuestionData,
@@ -47,8 +47,8 @@ import { textToUrl } from '@/utils/text-parser'
 import UserMetaMixin, {
   Computed as UserMetaMixinComputed,
 } from '@/mixins/user/user-meta'
-const QuestionImages = () => import('./question/QuestionImages.vue')
-const QuestionTags = () => import('./question/QuestionTags.vue')
+const QuestionImages = () => import('../question/QuestionImages.vue')
+const QuestionTags = () => import('../question/QuestionTags.vue')
 
 export default {
   components: {

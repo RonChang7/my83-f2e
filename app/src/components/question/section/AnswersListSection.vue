@@ -25,7 +25,7 @@ import { QuestionMeta, AnswerData } from '@/api/question/question.type'
 import UserMetaMixin, {
   Computed as UserMetaMixinComputed,
 } from '@/mixins/user/user-meta'
-const AnswerSection = () => import('./answer/AnswerSection.vue')
+const AnswerSection = () => import('../answer/AnswerSection.vue')
 
 export default {
   components: {

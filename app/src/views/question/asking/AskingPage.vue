@@ -25,8 +25,8 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import AskingNotifySection from '@/components/question/AskingNotifySection.vue'
-import AskingFormSection from '@/components/question/AskingFormSection.vue'
+import AskingNotifySection from '@/components/question/section/AskingNotifySection.vue'
+import AskingFormSection from '@/components/question/section/AskingFormSection.vue'
 import {
   AskingFormOptionResponse,
   EditQuestionContent,

@@ -1,9 +1,9 @@
 <template>
   <RelatedSection
-    v-if="relatedQuestions.length"
-    :related-data="relatedQuestions"
+    v-if="relatedBlogs.length"
+    :related-data="relatedBlogs"
     :max-post="maxPost"
-    title="相關問答"
+    title="相關文章"
   />
 </template>
 
@@ -12,9 +12,9 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import RelatedSection from './related/RelatedSection.vue'
+import RelatedSection from '../related/RelatedSection.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RelatedQuestion } from '@/api/question/question.type'
+import { RelatedBlog } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -27,8 +27,8 @@ export default {
     },
   },
   computed: {
-    relatedQuestions() {
-      return this.$store.state.question.relatedQuestions || []
+    relatedBlogs() {
+      return this.$store.state.question.relatedBlogs || []
     },
   },
 } as ComponentOption
@@ -58,7 +58,7 @@ export interface Data {}
 export interface Methods {}
 
 export interface Computed {
-  relatedQuestions: RelatedQuestion[]
+  relatedBlogs: RelatedBlog[]
 }
 
 export interface Props {
