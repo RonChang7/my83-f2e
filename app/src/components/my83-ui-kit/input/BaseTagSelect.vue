@@ -13,13 +13,17 @@
         <BaseArrowDown v-else />
       </div>
     </div>
-    <BaseTagOptions
-      v-if="shouldDisplayOptions"
-      class="BaseTagSelect__options"
-      :options="options"
-      :selected="selected"
-      @click-option="clickOptionHandler"
-    />
+    <div v-if="shouldDisplayOptions" class="BaseTagSelect__options">
+      <template v-for="option in options">
+        <BaseTagOption
+          v-if="option.text"
+          :key="option.value"
+          :option="option"
+          :selected="isSelected(option.value)"
+          @click-option="clickOptionHandler"
+        />
+      </template>
+    </div>
   </div>
 </template>
 
@@ -28,7 +32,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseTagOptions from '../tag/BaseTagOptions.vue'
+import BaseTagOption from '../tag/BaseTagOption.vue'
 import { Option } from './BaseSelect.vue'
 const BaseArrowDown = () =>
   import('@/components/base/icon/18/BaseArrowDown.vue')
@@ -36,7 +40,7 @@ const BaseArrowUp = () => import('@/components/base/icon/18/BaseArrowUp.vue')
 
 const options: ComponentOption = {
   components: {
-    BaseTagOptions,
+    BaseTagOption,
     BaseArrowDown,
     BaseArrowUp,
   },
@@ -63,6 +67,9 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    isSelected(value) {
+      return _.includes(this.selected, value)
+    },
     clickOptionHandler({ isSelected, value }) {
       const selected = isSelected
         ? _.without(this.selected, value)
@@ -105,6 +112,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
+  isSelected(value: Option['value']): boolean
   clickOptionHandler(payload: {
     isSelected: boolean
     value: Option['value']
@@ -145,6 +153,10 @@ export default options
   &__label {
     color: $gray-primary;
     margin: 8px 0;
+  }
+
+  &__options {
+    padding: 5px 0;
   }
 }
 </style>
