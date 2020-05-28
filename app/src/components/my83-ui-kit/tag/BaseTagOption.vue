@@ -1,21 +1,19 @@
 <template>
-  <div class="BaseTagOptions">
-    <BaseTag
-      v-for="option in options"
-      :key="option.value"
-      class="tag"
-      :class="{ active: isSelected(option.value) }"
-      @click.native="clickTagHandler(option.value)"
-    >
-      {{ option.text }}
-    </BaseTag>
-  </div>
+  <BaseTag
+    class="BaseTagOption"
+    :class="{ active: selected }"
+    @click.native="clickTagHandler(option.value)"
+  >
+    {{ option.text }}
+  </BaseTag>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Option } from '../input/BaseSelect.vue'
 import BaseTag from './BaseTag.vue'
@@ -25,22 +23,19 @@ const options: ComponentOption = {
     BaseTag,
   },
   props: {
-    options: {
-      type: Array,
+    option: {
+      type: Object as PropType<Props['option']>,
       required: true,
     },
     selected: {
-      type: Array,
+      type: Boolean,
       required: true,
     },
   },
   methods: {
-    isSelected(value) {
-      return _.includes(this.selected, value)
-    },
     clickTagHandler(value) {
       this.$emit('click-option', {
-        isSelected: this.isSelected(value),
+        isSelected: this.selected,
         value,
       })
     },
@@ -68,30 +63,25 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export interface Methods {
-  isSelected(value: Option['value']): boolean
   clickTagHandler(value: Option['value']): void
 }
 
 export interface Computed {}
 
 export interface Props {
-  options: Option[]
-  selected: (string | number)[]
+  option: Option
+  selected: Boolean
 }
 
 export default options
 </script>
 
 <style lang="scss" scoped>
-.BaseTagOptions {
-  padding: 5px 0;
+.BaseTagOption {
+  margin-bottom: 8px;
 
-  .tag {
-    margin-bottom: 8px;
-
-    &:not(:last-child) {
-      margin-right: 10px;
-    }
+  &:not(:last-child) {
+    margin-right: 10px;
   }
 }
 </style>
