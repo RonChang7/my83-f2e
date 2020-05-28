@@ -22,7 +22,7 @@ import {
 import { GlobalDialogContent } from '@/store/global/index'
 import {
   IsUserSuspectDialogContent,
-  IsDuplicatedPostDialogContent,
+  HasDuplicatedPostDialogContent,
 } from '@/config/question-asking-dialog-info'
 import { ErrorPageType } from '@/config/error-page.config'
 import { User } from '@/services/user/user'
@@ -44,12 +44,12 @@ const options: ComponentOption = {
       if (id) {
         const { user_meta, data } = await editQuestion(parseInt(id))
         this.isSuspect = !!user_meta.is_suspect
-        this.isDuplicatedPost = !!user_meta.is_duplicated_post
+        this.hasDuplicatedPost = !!user_meta.has_duplicated_post
         this.initContent = data
       } else {
         const { user_meta } = await createQuestion()
         this.isSuspect = !!user_meta.is_suspect
-        this.isDuplicatedPost = !!user_meta.is_duplicated_post
+        this.hasDuplicatedPost = !!user_meta.has_duplicated_post
 
         if (typeof purposeTagId === 'string' && parseInt(purposeTagId)) {
           ;(this.initContent as EditQuestionContent).purpose_tag_id = parseInt(
@@ -83,7 +83,7 @@ const options: ComponentOption = {
       isMounted: false,
       formOption: {},
       isSuspect: undefined,
-      isDuplicatedPost: undefined,
+      hasDuplicatedPost: undefined,
       initContent: {},
     }
   },
@@ -91,12 +91,12 @@ const options: ComponentOption = {
     isAllowPost() {
       if (
         typeof this.isSuspect === 'undefined' ||
-        typeof this.isDuplicatedPost === 'undefined'
+        typeof this.hasDuplicatedPost === 'undefined'
       ) {
         return false
       }
 
-      return !(this.isSuspect || this.isDuplicatedPost)
+      return !(this.isSuspect || this.hasDuplicatedPost)
     },
   },
   methods: {
@@ -127,9 +127,9 @@ const options: ComponentOption = {
             window.location.href = '/question'
           },
         } as GlobalDialogContent
-      } else if (this.isDuplicatedPost) {
+      } else if (this.hasDuplicatedPost) {
         payload = {
-          ...IsDuplicatedPostDialogContent,
+          ...HasDuplicatedPostDialogContent,
           rightConfirmFn: () => {
             window.location.href = '/question'
           },
@@ -186,7 +186,7 @@ export interface Data {
   isMounted: boolean
   formOption: AskingFormOptionResponse | {}
   isSuspect: boolean | undefined
-  isDuplicatedPost: boolean | undefined
+  hasDuplicatedPost: boolean | undefined
   initContent: EditQuestionContent | {}
 }
 

@@ -9,7 +9,7 @@ export const IsUserSuspectDialogContent: GlobalDialogContent = {
   defaultActionButton: 'left',
 }
 
-export const IsDuplicatedPostDialogContent: GlobalDialogContent = {
+export const HasDuplicatedPostDialogContent: GlobalDialogContent = {
   title: '10分鐘內禁止重複發問喔！',
   leftButtonText: '確定',
   leftButtonType: 'primary',
