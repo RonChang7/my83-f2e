@@ -4,7 +4,11 @@
       <section class="slogan">
         <h3 class="title">
           <GlobalLink to="/">
-            <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
+            <img
+              :src="`${$imageUrl}/front/common/my83-logo.svg`"
+              alt="MY83"
+              class="logo"
+            />
           </GlobalLink>
         </h3>
         <div class="content">
