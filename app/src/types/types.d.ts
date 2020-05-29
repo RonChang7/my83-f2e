@@ -11,6 +11,7 @@ declare module 'vue/types/vue' {
     $analytics: AnalyticsEventManager
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageUrl: string
   }
 }
 declare module '@nuxt/types' {
@@ -18,12 +19,14 @@ declare module '@nuxt/types' {
     $analytics: AnalyticsEventManager
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageUrl: string
   }
 
   interface NuxtAppOptions {
     $analytics: AnalyticsEventManager
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageUrl: string
   }
 }
 
@@ -31,5 +34,6 @@ declare module 'vuex/types/index' {
   interface Store<S> {
     $analytics: AnalyticsEventManager
     readonly $ua: UA
+    readonly $imageUrl: string
   }
 }
