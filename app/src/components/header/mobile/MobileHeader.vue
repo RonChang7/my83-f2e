@@ -4,7 +4,11 @@
     class="MobileHeader"
   >
     <GlobalLink to="/">
-      <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
+      <img
+        :src="`${$imageUrl}/front/common/my83-logo.svg`"
+        alt="MY83"
+        class="logo"
+      />
     </GlobalLink>
     <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
     <BaseMenu v-else @click.native="openMenuHandler" />
