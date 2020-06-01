@@ -33,7 +33,6 @@
         />
       </div>
       <div class="ResponseEditor__function">
-        <BaseInputMessage :msg="errMsg" class="mr-4" />
         <BaseButton size="m" type="secondary" @click.native="cancel">
           取消
         </BaseButton>
@@ -46,6 +45,7 @@
           留言
         </BaseButton>
       </div>
+      <BaseInputMessage :msg="errMsg" text-align="right" />
     </template>
     <div v-else class="ResponseEditor__placeholder">
       <BaseInputText
@@ -77,15 +77,14 @@ import {
   UPDATE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
 import {
-  PostDataFactory,
-  ResponsePostData,
-} from '@/services/question/PostDataFactory'
+  ResponseFormService,
+  ResponseFormData,
+} from '@/services/question/form/ResponseFormService'
 import { scrollTo } from '@/utils/element'
 import { nl2br } from '@/utils/text-parser'
 import { User } from '@/services/user/user'
 
 const user = User.getInstance()
-let ResponseFormData: PostDataFactory
 
 export default {
   components: {
@@ -187,8 +186,8 @@ export default {
       this.submitState = ''
     },
     reset() {
-      ResponseFormData.reset()
-      this.form = ResponseFormData.form as ResponsePostData
+      this.responseForm.reset()
+      this.form = this.responseForm.form
       this.errMsg = ''
       this.activePanelHandler(false)
     },
@@ -244,8 +243,8 @@ export default {
     },
   },
   created() {
-    ResponseFormData = new PostDataFactory('response')
-    this.form = ResponseFormData.form as ResponsePostData
+    this.responseForm = new ResponseFormService()
+    this.form = this.responseForm.form
   },
 } as ComponentOption
 
@@ -266,13 +265,14 @@ export type ComponentInstance = CombinedVueInstance<
 >
 
 export interface Instance extends Vue {
+  responseForm: ResponseFormService
   $refs: {
     textarea: Vue
   }
 }
 
 export interface Data {
-  form: ResponsePostData
+  form: ResponseFormData
   errMsg: string
   submitState: string
   nicknameError: boolean
@@ -334,7 +334,12 @@ export interface Props {
   &__function {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 10px;
+
+    > button {
+      white-space: nowrap;
+    }
 
     > button:not(:last-child) {
       margin-right: 10px;
