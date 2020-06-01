@@ -13,7 +13,11 @@
       </div>
       <div v-if="authorInfo.role === 'sales'" class="BaseAuthorInfo__medal">
         <GlobalLink to="/medal" target="_blank">
-          <Medal :level="authorInfo.role_meta.level" size="S" />
+          <Medal
+            :image-url="$imageUrl"
+            :level="authorInfo.role_meta.level"
+            size="S"
+          />
         </GlobalLink>
       </div>
       <div class="BaseAuthorInfo__role">
