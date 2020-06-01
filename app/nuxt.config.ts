@@ -71,6 +71,10 @@ const config: Configuration = {
       src: '@/plugins/personalized-header',
       mode: 'client',
     },
+    {
+      src: '@/plugins/recaptcha',
+      mode: 'client',
+    },
   ],
   /*
    ** Nuxt.js dev-modules
@@ -107,13 +111,14 @@ const config: Configuration = {
           { key: 'TRACKING_DEV_LOG_ENABLE' },
           { key: 'FACEBOOK_PIXEL_ID' },
           { key: 'GOOGLE_ANALYTICS_ID' },
+          { key: 'RECAPTCHA_SITE_KEY' },
+          { key: 'RECAPTCHA_VERSION' },
           { key: 'IMAGE_BUCKET_URL' },
         ],
       },
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
-    '@/nuxt-modules/recaptcha/module',
   ],
   webfontloader: {
     google: {
