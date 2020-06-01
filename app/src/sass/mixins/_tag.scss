@@ -1,0 +1,36 @@
+@mixin tag {
+  display: inline-block;
+  line-height: 22px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  user-select: none;
+  cursor: pointer;
+}
+
+@mixin tag-default {
+  background: $primary-bg;
+  color: $gray-secondary;
+
+  &.active {
+    background: $primary-bright-color;
+    color: $primary-color;
+
+    @media (hover: hover) {
+      &:hover:not(.disabled) {
+        background: $primary-light-color;
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover:not(.disabled) {
+      background: $gray-quaternary;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

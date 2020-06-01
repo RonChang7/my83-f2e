@@ -5,7 +5,7 @@
       :images="galleryImages"
       thumbnail-class-name="QuestionImages__thumbnail"
     />
-    <QuestionThumbnail
+    <ImagePreviewThumbnail
       v-for="(image, index) in images"
       :key="index"
       :image-url="image"
@@ -20,13 +20,13 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import QuestionThumbnail from './QuestionThumbnail.vue'
+import ImagePreviewThumbnail from '../base/ImagePreviewThumbnail.vue'
 const PhotoSwipeGallery = () =>
   import('@/components/base/gallery/PhotoSwipeGallery.vue')
 
 export default {
   components: {
-    QuestionThumbnail,
+    ImagePreviewThumbnail,
     PhotoSwipeGallery,
   },
   props: {

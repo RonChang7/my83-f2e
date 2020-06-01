@@ -4,6 +4,10 @@
       ref="dialog"
       tabindex="0"
       class="BaseDialog"
+      :class="{
+        singleButton: !rightButtonText,
+        doubleButton: rightButtonText,
+      }"
       @keyup.esc="closePanel"
       @keyup.enter="enterToConfirm"
     >
@@ -29,7 +33,7 @@
           {{ rightButtonText }}
         </BaseButton>
       </div>
-      <BaseInputErrorMessage :msg="errMsg" text-align="center" />
+      <BaseInputMessage :msg="errMsg" text-align="center" />
     </div>
   </BaseModal>
 </template>
@@ -41,14 +45,14 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 
 export default {
   components: {
     BaseModal,
     BaseClose,
     BaseButton,
-    BaseInputErrorMessage,
+    BaseInputMessage,
   },
   props: {
     visible: {
@@ -181,15 +185,25 @@ export interface Props {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 480px;
   padding: 40px 40px 30px;
   color: $gray-primary;
   outline: 0;
   overflow: auto;
 
+  &.singleButton {
+    width: 410px;
+  }
+
+  &.doubleButton {
+    width: 480px;
+  }
+
   @include max-media('lg') {
-    width: calc(100vw - 24px);
-    padding: 45px 30px 30px;
+    &.singleButton,
+    &.doubleButton {
+      width: calc(100vw - 24px);
+      padding: 45px 30px 30px;
+    }
   }
 
   &__close {
