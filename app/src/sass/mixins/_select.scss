@@ -14,7 +14,8 @@
     outline: 0;
   }
 
-  &:disabled {
+  &:disabled,
+  &.disabled {
     color: $gray-tertiary;
     background-color: $secondary-bg;
     cursor: not-allowed;

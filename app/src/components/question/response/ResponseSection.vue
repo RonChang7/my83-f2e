@@ -53,8 +53,18 @@ export default {
   },
   computed: {
     content() {
+      const ignoreParserToUrl = [/^https?:\/\/finfo.tw/]
+
       // TODO: 之後 response 後端移除 HTML tag 之後要另外處理
-      return textToUrl(br2nl(this.response.content))
+      return textToUrl(br2nl(this.response.content), {
+        email: () => false,
+        url: (value) => {
+          return (
+            /^https?:\/\//.test(value) &&
+            ignoreParserToUrl.every((rule) => !rule.test(value))
+          )
+        },
+      })
     },
   },
 } as ComponentOption

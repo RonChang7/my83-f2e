@@ -24,7 +24,6 @@
       <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseInputErrorMessage :msg="errMsg" text-align="right" class="mr-4" />
       <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
@@ -37,8 +36,9 @@
         留言
       </BaseButton>
     </div>
+    <BaseInputMessage :msg="errMsg" text-align="right" />
     <div v-if="userRole === 'sales'" class="AnswerEditor__function">
-      <BaseCheckbox :checked.sync="acceptRule" label="我同意遵守版規" />
+      <BaseCheckbox :checked.sync="form.acceptRule" label="我同意遵守版規" />
     </div>
     <div v-if="userRole === 'sales'" class="AnswerEditor__rule">
       <AnswerSalesRule />
@@ -53,7 +53,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
 import BaseRickTextEditor from '@/components/my83-ui-kit/editor/BaseRickTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { ADD_ANSWER } from '@/store/question/question.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
@@ -62,9 +62,9 @@ import {
   UPDATE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
 import {
-  PostDataFactory,
-  AnswerPostData,
-} from '@/services/question/PostDataFactory'
+  AnswerFormService,
+  AnswerFormData,
+} from '@/services/question/form/AnswerFormService'
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollTo } from '@/utils/element'
 import { htmlStrip } from '@/utils/text-parser'
@@ -75,15 +75,13 @@ const BaseInputText = () =>
   import('@/components/my83-ui-kit/input/BaseInputText.vue')
 const AnswerSalesRule = () => import('./AnswerSalesRule.vue')
 
-const AnswerFormData = new PostDataFactory('answer')
-
 export default {
   components: {
     BaseInputText,
     BaseRickTextEditor,
     BaseButton,
     BaseCheckbox,
-    BaseInputErrorMessage,
+    BaseInputMessage,
     AnswerSalesRule,
   },
   props: {
@@ -106,10 +104,9 @@ export default {
   },
   data() {
     return {
-      form: AnswerFormData.form,
+      form: null,
       errMsg: '',
       submitState: '',
-      acceptRule: false,
       nicknameError: false,
     }
   },
@@ -118,12 +115,9 @@ export default {
       this.errMsg = '請檢查從外部貼上的文字，確認格式正常再送出喔！'
     },
     validate() {
-      if (this.userRole === 'sales' && !this.acceptRule) {
-        this.errMsg = '請同意遵守版規'
-        return false
-      }
-      this.errMsg = ''
-      return true
+      const result = this.answerForm.validate()
+      this.errMsg = this.answerForm.errorMessage
+      return result
     },
     async submit() {
       if (!this.validate()) return
@@ -164,9 +158,8 @@ export default {
       this.submitState = ''
     },
     reset() {
-      AnswerFormData.reset()
-      this.acceptRule = false
-      this.form = AnswerFormData.form as AnswerPostData
+      this.answerForm.reset()
+      this.form = this.answerForm.form
     },
     cancel() {
       if (this.form.content.length) {
@@ -204,6 +197,10 @@ export default {
       return !(nickname && this.isContentEmpty(this.form.content))
     },
   },
+  created() {
+    this.answerForm = new AnswerFormService(this.userRole)
+    this.form = this.answerForm.form
+  },
   mounted() {
     this.reset()
     this.$emit('is-loaded')
@@ -226,13 +223,14 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  answerForm: AnswerFormService
+}
 
 export interface Data {
-  form: AnswerPostData
+  form: AnswerFormData
   errMsg: string
   submitState: string
-  acceptRule: boolean
   nicknameError: boolean
 }
 
@@ -284,7 +282,9 @@ export interface Props {
   &__function {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-top: 10px;
+    padding-bottom: 10px;
 
     > button {
       white-space: nowrap;

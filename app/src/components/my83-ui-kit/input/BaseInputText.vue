@@ -8,6 +8,7 @@
       :disabled="disabled"
       :autocomplete="autocomplete"
       :autofocus="autofocus"
+      :maxlength="maxlength || ''"
       class="BaseInputText__input"
       @input="input"
       @blur="$emit('blur')"
@@ -27,7 +28,10 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseEyeOutline from '@/components/base/icon/24/BaseEyeOutline.vue'
 
@@ -66,8 +70,11 @@ export default {
       default: false,
     },
     autocomplete: {
-      type: String,
+      type: String as PropType<Props['autocomplete']>,
       default: 'on',
+    },
+    maxlength: {
+      type: Number,
     },
   },
   methods: {
@@ -115,6 +122,7 @@ export interface Props {
   disabled: boolean
   autofocus: boolean
   autocomplete: 'on' | 'off'
+  maxlength: number
 }
 </script>
 

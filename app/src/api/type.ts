@@ -27,3 +27,7 @@ export interface PageMetaImage {
   width: number
   height: number
 }
+
+export interface GlobalErrorResponse {
+  error_message: string
+}

@@ -106,6 +106,7 @@ const config: Configuration = {
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
+    '@/nuxt-modules/recaptcha/module',
   ],
   webfontloader: {
     google: {
@@ -121,16 +122,12 @@ const config: Configuration = {
   /*
    ** Build configuration
    */
-  // @TODO: remove ts-ignore tag after update related npm packages
-  // @ts-ignore
   build: {
     /*
      ** You can extend webpack config here
      */
     transpile: [
-      // @ts-ignore
       ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || undefined,
-      // @ts-ignore
       ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || undefined,
     ],
     // extend(config, ctx) {},
