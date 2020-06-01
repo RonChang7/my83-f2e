@@ -30,8 +30,8 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { PostType } from '../helpers/type'
 import { postingTimeParser } from '@/utils/time-parser'
-import { PostType } from '@/services/question/PostDataFactory'
 const BaseThumbUp = () => import('@/components/base/icon/18/BaseThumbUp.vue')
 const BaseThumbDown = () =>
   import('@/components/base/icon/18/BaseThumbDown.vue')

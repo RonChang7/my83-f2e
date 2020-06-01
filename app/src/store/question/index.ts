@@ -24,6 +24,7 @@ import {
   RelatedBlog,
   RecommendProduct,
   QuestionPersonalizeResponse,
+  QuestionDataResponse,
 } from '@/api/question/question.type'
 import { SimpleResponse } from '@/api/type'
 
@@ -64,7 +65,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     getters: {},
     actions: {
-      [types.FETCH_PAGE_DATA]({ dispatch, commit }, id: number) {
+      [types.FETCH_PAGE_DATA]({ dispatch }, id: number) {
         return new Promise((resolve, reject) => {
           Promise.all([
             dispatch(types.FETCH_QUESTION_DATA, id),
@@ -73,49 +74,55 @@ export const createStoreModule = <R>(): Module<State, R> => {
             dispatch(types.FETCH_RELATED_BLOGS, id),
             dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
           ])
+            .then(() => {
+              resolve()
+            })
+            .catch((err) => reject(err))
+        })
+      },
+      [types.FETCH_PAGE_DATA_AFTER_POST]({ dispatch }, id: number) {
+        return new Promise((resolve, reject) => {
+          Promise.all([
+            dispatch(types.FETCH_ANSWER_DATA, id),
+            dispatch(types.FETCH_RELATED_QUESTIONS, id),
+            dispatch(types.FETCH_RELATED_BLOGS, id),
+            dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
+          ])
+            .then(() => {
+              resolve()
+            })
+            .catch((err) => reject(err))
+        })
+      },
+      [types.FETCH_QUESTION_DATA]({ commit }, id: number) {
+        return new Promise((resolve, reject) => {
+          api
+            .fetchQuestionData(id)
             .then((res) => {
-              const [
-                question,
-                answers,
-                relatedQuestion,
-                relatedBlogs,
-                recommendProducts,
-              ] = res
-              const { data: questionData, page_meta, json_ld } = question
-
+              const {
+                data: questionData,
+                page_meta,
+                json_ld,
+              } = res as QuestionDataResponse
               commit(types.UPDATE_QUESTION_DATA, questionData)
-              commit(types.UPDATE_ANSWER_DATA, answers)
-              commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestion)
-              commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
-              commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProducts)
-
-              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, { root: true })
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
               commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
               resolve()
             })
             .catch((err) => reject(err))
         })
       },
-      [types.FETCH_QUESTION_DATA](context, id: number) {
-        return new Promise((resolve, reject) => {
-          api
-            .fetchQuestionData(id)
-            .then((res) => {
-              resolve(res)
-            })
-            .catch((err) => {
-              reject(err)
-            })
-        })
-      },
-      [types.FETCH_ANSWER_DATA](context, id: number) {
+      [types.FETCH_ANSWER_DATA]({ commit }, id: number) {
         return new Promise((resolve) => {
           api
             .fetchAnswerData(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => {
-              resolve(null)
+            .then(({ data: answers }) => {
+              commit(types.UPDATE_ANSWER_DATA, answers)
+              resolve()
             })
+            .catch(() => resolve())
         })
       },
       [types.HIGHLIGHT_BEST_ANSWER]({ commit, state }, bestAnswerId: number) {
@@ -288,24 +295,26 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RELATED_QUESTIONS](context, id: number) {
+      [types.FETCH_RELATED_QUESTIONS]({ commit }, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRelatedQuestions(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => {
-              resolve(null)
+            .then(({ data: relatedQuestion }) => {
+              commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestion)
+              resolve()
             })
+            .catch(() => resolve())
         })
       },
-      [types.FETCH_RELATED_BLOGS](context, id: number) {
+      [types.FETCH_RELATED_BLOGS]({ commit }, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRelatedBlogs(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => {
-              resolve(null)
+            .then(({ data: relatedBlogs }) => {
+              commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
+              resolve()
             })
+            .catch(() => resolve())
         })
       },
       [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](
@@ -415,14 +424,15 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RECOMMEND_PRODUCT](context, id: number) {
+      [types.FETCH_RECOMMEND_PRODUCT]({ commit }, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRecommendProduct(id)
-            .then(({ recommend_product }) => resolve(recommend_product))
-            .catch(() => {
-              resolve(null)
+            .then(({ recommend_product: recommendProducts }) => {
+              commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProducts)
+              resolve()
             })
+            .catch(() => resolve())
         })
       },
     },

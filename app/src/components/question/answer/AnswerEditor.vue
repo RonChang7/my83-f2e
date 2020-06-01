@@ -24,7 +24,7 @@
       <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
-      <BaseInputErrorMessage :msg="errMsg" text-align="right" class="mr-4" />
+      <BaseInputMessage :msg="errMsg" text-align="right" class="mr-4" />
       <BaseButton size="m" type="secondary" @click.native="cancel">
         取消
       </BaseButton>
@@ -53,7 +53,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
 import BaseRickTextEditor from '@/components/my83-ui-kit/editor/BaseRickTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputErrorMessage from '@/components/my83-ui-kit/input/BaseInputErrorMessage.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { ADD_ANSWER } from '@/store/question/question.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
@@ -83,7 +83,7 @@ export default {
     BaseRickTextEditor,
     BaseButton,
     BaseCheckbox,
-    BaseInputErrorMessage,
+    BaseInputMessage,
     AnswerSalesRule,
   },
   props: {

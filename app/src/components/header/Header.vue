@@ -20,22 +20,18 @@ import { UserRole } from '@/services/user/user'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import UserMetaMixin, {
+  Computed as UserMetaMixinComputed,
+} from '@/mixins/user/user-meta'
 
 export default {
   serverPrefetch() {
     return this.$store.dispatch(`header/${types.FETCH_HEADER_NAV_DATA}`)
   },
-  mixins: [DeviceMixin],
+  mixins: [DeviceMixin, UserMetaMixin],
   components: {
     DesktopHeader,
     MobileHeader,
-  },
-  computed: {
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
   },
   watch: {
     userRole(val: UserRole) {
@@ -70,9 +66,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed extends DeviceMixinComputed {}
+export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {}
 
-export interface Props {
-  userRole: UserRole
-}
+export interface Props {}
 </script>

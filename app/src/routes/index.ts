@@ -15,6 +15,13 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
+      path: '/question/asking/:id(\\d+)?',
+      component: resolve('@/views/question/asking/Index.vue'),
+      meta: {
+        requiredStoreModules: ['question'],
+      },
+    },
+    {
       path: '/question/:id(\\d+)',
       component: resolve('@/views/question/page/Index.vue'),
       meta: {
