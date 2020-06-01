@@ -29,7 +29,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/cw.png')"
+              :image-url="`${$imageUrl}/front/footer/cw.png`"
               image-alt="天下雜誌"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
@@ -42,7 +42,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/cnyes.png')"
+              :image-url="`${$imageUrl}/front/footer/cnyes.png`"
               image-alt="鉅亨網"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
@@ -55,7 +55,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/HIT_FM.jpg')"
+              :image-url="`${$imageUrl}/front/footer/HIT_FM.jpg`"
               image-alt="HIT_FM"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
