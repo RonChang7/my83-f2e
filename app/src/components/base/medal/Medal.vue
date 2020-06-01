@@ -2,7 +2,7 @@
   <div class="Medal">
     <img
       :class="`Medal__${props.size}`"
-      :src="require(`@/assets/images/medal/medal-lv-${props.level}.png`)"
+      :src="`${props.imageUrl}/front/common/medal/medal-lv-${props.level}.png`"
       :alt="`Level ${props.level}`"
     />
   </div>
