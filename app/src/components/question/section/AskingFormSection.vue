@@ -153,6 +153,7 @@ import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 import { Validator, ValidateMessage } from '@/services/validator/Validator'
+import { sentryLog } from '@/api/sentry'
 
 // 單位：MB
 const MAX_IMAGE_PAYLOAD_SIZE_LIMIT = 20
@@ -422,7 +423,11 @@ const options: ComponentOption = {
       let token = ''
       try {
         token = await this.$recaptcha.execute('login')
-      } catch (error) {}
+      } catch (error) {
+        sentryLog(this.$sentry, error, {
+          message: 'Get Google ReCaptcha failed.',
+        })
+      }
 
       return token
     },
