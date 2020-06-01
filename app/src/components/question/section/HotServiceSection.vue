@@ -13,7 +13,7 @@
     </div>
     <div class="HotServiceSection__cards">
       <HotServiceCard
-        v-for="(item, index) in cardsDataTransform()"
+        v-for="(item, index) in cardsDataTransform"
         :key="index"
         :item="item"
         class="HotServiceSection__card"
@@ -35,11 +35,13 @@ export default {
   components: {
     HotServiceCard,
   },
-  methods: {
+  computed: {
     cardsDataTransform() {
       return hotServiceContent.map((content) => {
-        content.src = `${this.$imageBucketUrl}/front/question/${content.src}`
-        return content
+        return {
+          ...content,
+          src: `${this.$imageBucketUrl}/${content.src}`,
+        }
       })
     },
   },
@@ -65,11 +67,11 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
+export interface Methods {}
+
+export interface Computed {
   cardsDataTransform: HotServiceContent[]
 }
-
-export interface Computed {}
 
 export interface Props {}
 </script>
