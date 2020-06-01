@@ -38,7 +38,7 @@ export default {
   methods: {
     cardsDataTransform() {
       return hotServiceContent.map((content) => {
-        content.src = `${this.$imageUrl}/front/question/${content.src}`
+        content.src = `${this.$imageBucketUrl}/front/question/${content.src}`
         return content
       })
     },

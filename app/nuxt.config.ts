@@ -107,7 +107,7 @@ const config: Configuration = {
           { key: 'TRACKING_DEV_LOG_ENABLE' },
           { key: 'FACEBOOK_PIXEL_ID' },
           { key: 'GOOGLE_ANALYTICS_ID' },
-          { key: 'IMAGE_URL' },
+          { key: 'IMAGE_BUCKET_URL' },
         ],
       },
     ],

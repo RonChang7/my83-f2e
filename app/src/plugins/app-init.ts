@@ -35,7 +35,7 @@ export default (({ app, store }, inject) => {
   const user = User.getInstance()
 
   // Set image bucket url
-  inject('imageUrl', app.$env.IMAGE_URL)
+  inject('imageBucketUrl', app.$env.IMAGE_BUCKET_URL)
 
   _.forEach(storeModules, ({ createModule, moduleName }) => {
     app.$registerStore({

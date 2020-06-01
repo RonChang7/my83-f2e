@@ -2,7 +2,7 @@
   <div class="errorPage">
     <img
       class="errorPage__image"
-      :src="`${$imageUrl}/front/error/${errorContent.image}`"
+      :src="`${$imageBucketUrl}/front/error/${errorContent.image}`"
       alt="error"
     />
     <div class="errorPage__title">{{ errorContent.title }}</div>

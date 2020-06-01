@@ -5,7 +5,7 @@
   >
     <GlobalLink to="/">
       <img
-        :src="`${$imageUrl}/front/common/my83-logo.svg`"
+        :src="`${$imageBucketUrl}/front/common/my83-logo.svg`"
         alt="MY83"
         class="logo"
       />
