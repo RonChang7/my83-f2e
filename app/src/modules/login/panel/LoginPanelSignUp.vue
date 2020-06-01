@@ -1,6 +1,6 @@
 <template>
   <div class="LoginPanelSignUp">
-    <LoginInfo :image-url="$imageUrl" />
+    <LoginInfo :image-bucket-url="$imageBucketUrl" />
     <div class="vertical-line"></div>
     <LoginSignUpForm @to-panel="(name) => $emit('to-panel', name)" />
   </div>

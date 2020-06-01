@@ -3,15 +3,17 @@
     <div class="logo">
       <img
         class="logo"
-        :src="`${props.imageUrl}/front/common/my83-logo.svg`"
+        :src="`${props.imageBucketUrl}/front/common/my83-logo.svg`"
         alt="my83 logo"
       />
     </div>
     <div class="wording">全台灣最大保險社群平台</div>
     <img
       class="introduction"
-      :src="`${props.imageUrl}/front/login/img-brand-feature.png`"
-      :srcset="`${props.imageUrl}/front/login/img-brand-feature@2x.png 2x`"
+      :src="`${props.imageBucketUrl}/front/login/img-brand-feature.png`"
+      :srcset="
+        `${props.imageBucketUrl}/front/login/img-brand-feature@2x.png 2x`
+      "
       alt="my83 introduction"
     />
   </div>
@@ -33,7 +35,7 @@ export type ComponentInstance = CombinedVueInstance<Instance, {}, {}, {}, Props>
 export interface Instance extends Vue {}
 
 export interface Props {
-  imageUrl: string
+  imageBucketUrl: string
 }
 </script>
 
