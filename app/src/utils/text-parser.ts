@@ -1,16 +1,22 @@
 import linkifyStr from 'linkifyjs/string'
+import { Options } from 'linkifyjs'
 
-export const textToUrl = (content: string) => {
+export const textToUrl = (
+  content: string,
+  customValidate?: Options['validate']
+) => {
+  const validate = customValidate || {
+    url: (value) => /^https?:\/\//.test(value),
+    email: () => false,
+  }
+
   const string = linkifyStr(content, {
     attributes: {
       rel: 'noopener nofollow',
     },
     className: '',
     nl2br: true,
-    validate: {
-      url: (value) => /^https?:\/\//.test(value),
-      email: () => false,
-    },
+    validate,
   })
   return string.replace(/&amp;/g, '&')
 }
