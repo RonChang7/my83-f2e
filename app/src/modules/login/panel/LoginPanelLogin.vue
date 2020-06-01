@@ -1,6 +1,6 @@
 <template>
   <div class="LoginPanelLogin">
-    <LoginInfo />
+    <LoginInfo :image-url="$imageUrl" />
     <div class="vertical-line"></div>
     <LoginLoginForm
       :display-forget-password-wording="displayForgetPasswordWording"
