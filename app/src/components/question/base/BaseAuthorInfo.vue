@@ -25,7 +25,7 @@
         <template v-if="authorInfo.role_meta">
           <span>
             <img
-              src="@/assets/images/icon/location.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/location.svg`"
               alt="location"
               class="mr-1"
             />

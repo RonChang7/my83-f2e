@@ -1,7 +1,11 @@
 <template>
   <div class="GuideSection">
     <div v-if="!isMobile" class="GuideSection__title">
-      <img src="@/assets/images/icon/comment.svg" alt="icon" class="mr-4" />
+      <img
+        :src="`${$imageBucketUrl}/front/common/icon/comment.svg`"
+        alt="icon"
+        class="mr-4"
+      />
       MY83保險網 討論區
     </div>
     <div v-if="!isMobile" class="GuideSection__content">

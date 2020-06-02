@@ -86,7 +86,7 @@
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
           <p class="tips d-flex align-items-center">
             <img
-              src="@/assets/images/icon/info.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/info.svg`"
               alt="info-icon"
               class="icon mr-2"
             />
@@ -102,7 +102,7 @@
           <p><GlobalLink to="/aboutUs">關於MY83</GlobalLink></p>
           <p class="d-flex align-items-center">
             <img
-              src="@/assets/images/icon/facebook.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/facebook.svg`"
               alt="facebook-icon"
               class="icon mr-2"
             />
