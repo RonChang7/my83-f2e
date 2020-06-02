@@ -15,6 +15,8 @@
         <template v-slot:right>
           <ListGuideSection v-if="isDesktop" />
           <ListRecommendProductSection />
+          <PopularQuestionSection :max-post="isMobile ? 5 : 10" />
+          <PopularBlogSection :max-post="isMobile ? 5 : 10" />
         </template>
       </QuestionLayoutWithFixedColumn>
     </div>
@@ -29,6 +31,8 @@ import QuestionLayoutWithFixedColumn from '@/components/question/layout/Question
 import BannerSection from '@/components/question/section/BannerSection.vue'
 import ListGuideSection from '@/components/question/section/ListGuideSection.vue'
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
+import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
+import PopularQuestionSection from '@/components/question/section/PopularQuestionSection.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -40,6 +44,8 @@ const options: ComponentOption = {
     BannerSection,
     ListGuideSection,
     ListRecommendProductSection,
+    PopularBlogSection,
+    PopularQuestionSection,
   },
 }
 
