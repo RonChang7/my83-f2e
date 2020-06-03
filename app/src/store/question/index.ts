@@ -65,7 +65,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     getters: {},
     actions: {
-      [types.FETCH_PAGE_DATA]({ dispatch }, id: number) {
+      [types.FETCH_PAGE_DATA]({ dispatch, commit }, id: number) {
         return new Promise((resolve, reject) => {
           Promise.all([
             dispatch(types.FETCH_QUESTION_DATA, id),
@@ -74,13 +74,36 @@ export const createStoreModule = <R>(): Module<State, R> => {
             dispatch(types.FETCH_RELATED_BLOGS, id),
             dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
           ])
-            .then(() => {
-              resolve()
-            })
+            .then(
+              ([
+                question,
+                answers,
+                relatedQuestions,
+                relatedBlogs,
+                recommendProduct,
+              ]) => {
+                const {
+                  data: questionData,
+                  page_meta,
+                  json_ld,
+                } = question as QuestionDataResponse
+                commit(types.UPDATE_QUESTION_DATA, questionData)
+                commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                  root: true,
+                })
+                commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+
+                commit(types.UPDATE_ANSWER_DATA, answers || null)
+                commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestions)
+                commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
+                commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProduct)
+                resolve()
+              }
+            )
             .catch((err) => reject(err))
         })
       },
-      [types.FETCH_PAGE_DATA_AFTER_POST]({ dispatch }, id: number) {
+      [types.FETCH_PAGE_DATA_AFTER_POST]({ dispatch, commit }, id: number) {
         return new Promise((resolve, reject) => {
           Promise.all([
             dispatch(types.FETCH_ANSWER_DATA, id),
@@ -88,40 +111,31 @@ export const createStoreModule = <R>(): Module<State, R> => {
             dispatch(types.FETCH_RELATED_BLOGS, id),
             dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
           ])
-            .then(() => {
-              resolve()
-            })
+            .then(
+              ([answers, relatedQuestions, relatedBlogs, recommendProduct]) => {
+                commit(types.UPDATE_ANSWER_DATA, answers || null)
+                commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestions)
+                commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
+                commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProduct)
+                resolve()
+              }
+            )
             .catch((err) => reject(err))
         })
       },
-      [types.FETCH_QUESTION_DATA]({ commit }, id: number) {
+      [types.FETCH_QUESTION_DATA](ctx, id: number) {
         return new Promise((resolve, reject) => {
           api
             .fetchQuestionData(id)
-            .then((res) => {
-              const {
-                data: questionData,
-                page_meta,
-                json_ld,
-              } = res as QuestionDataResponse
-              commit(types.UPDATE_QUESTION_DATA, questionData)
-              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
-                root: true,
-              })
-              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
-              resolve()
-            })
+            .then((res) => resolve(res))
             .catch((err) => reject(err))
         })
       },
-      [types.FETCH_ANSWER_DATA]({ commit }, id: number) {
+      [types.FETCH_ANSWER_DATA](ctx, id: number) {
         return new Promise((resolve) => {
           api
             .fetchAnswerData(id)
-            .then(({ data: answers }) => {
-              commit(types.UPDATE_ANSWER_DATA, answers)
-              resolve()
-            })
+            .then(({ data }) => resolve(data))
             .catch(() => resolve())
         })
       },
@@ -295,25 +309,19 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RELATED_QUESTIONS]({ commit }, id: number) {
+      [types.FETCH_RELATED_QUESTIONS](ctx, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRelatedQuestions(id)
-            .then(({ data: relatedQuestion }) => {
-              commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestion)
-              resolve()
-            })
+            .then(({ data }) => resolve(data))
             .catch(() => resolve())
         })
       },
-      [types.FETCH_RELATED_BLOGS]({ commit }, id: number) {
+      [types.FETCH_RELATED_BLOGS](ctx, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRelatedBlogs(id)
-            .then(({ data: relatedBlogs }) => {
-              commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
-              resolve()
-            })
+            .then(({ data }) => resolve(data))
             .catch(() => resolve())
         })
       },
@@ -424,14 +432,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RECOMMEND_PRODUCT]({ commit }, id: number) {
+      [types.FETCH_RECOMMEND_PRODUCT](ctx, id: number) {
         return new Promise((resolve) => {
           api
             .fetchRecommendProduct(id)
-            .then(({ recommend_product: recommendProducts }) => {
-              commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProducts)
-              resolve()
-            })
+            .then(({ recommend_product }) => resolve(recommend_product))
             .catch(() => resolve())
         })
       },
@@ -443,7 +448,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
           personalize: DefaultQuestionPersonalize,
         }
       },
-      [types.UPDATE_ANSWER_DATA](state, data: AnswerData[]) {
+      [types.UPDATE_ANSWER_DATA](state, data: AnswerData[] | null) {
+        if (data === null) {
+          state.answers = data
+          return
+        }
+
         state.answers = data.map((answer) => {
           return {
             ...answer,
