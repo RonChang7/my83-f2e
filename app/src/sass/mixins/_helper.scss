@@ -20,3 +20,15 @@
   }
 }
 
+@mixin text-ellipsis($line-clamp: 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if ($line-clamp == 1) {
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $line-clamp;
+    -webkit-box-orient: vertical;
+  }
+}
