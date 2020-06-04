@@ -88,7 +88,7 @@
             <img
               :src="`${$imageBucketUrl}/front/common/icon/info.svg`"
               alt="info-icon"
-              class="icon mr-2"
+              class="icon mr-1"
             />
             客服無法提供保險諮詢服務、僅提供網站使用客服
           </p>
@@ -104,7 +104,7 @@
             <img
               :src="`${$imageBucketUrl}/front/common/icon/facebook.svg`"
               alt="facebook-icon"
-              class="icon mr-2"
+              class="icon mr-1"
             />
             <a
               href="https://facebook.com/my83.com.tw/"
