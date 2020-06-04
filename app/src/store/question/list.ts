@@ -1,53 +1,86 @@
 import { Module } from 'vuex'
 import * as types from './list.type'
 import * as api from '@/api/question/list'
-import { PopularBlog, PopularQuestion } from '@/api/question/list.type'
+import {
+  PopularBlog,
+  PopularQuestion,
+  QuestionListData,
+  QuestionListMeta,
+  QuestionListSortType,
+  FetchQuestionListPayload,
+} from '@/api/question/list.type'
+import { Pagination } from '@/api/type'
+import { paginationResponseDataTransform } from '@/utils/api-data-transform'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
     namespaced: true,
     state() {
       return {
+        list: null,
+        meta: null,
         popularQuestions: null,
         popularBlogs: null,
       }
     },
     getters: {},
     actions: {
-      [types.FETCH_PAGE_DATA]({ dispatch }) {
-        return new Promise((resolve, reject) => {
+      [types.FETCH_PAGE_DATA]({ dispatch, commit }) {
+        return new Promise((resolve) => {
           Promise.all([
             dispatch(types.FETCH_POPULAR_QUESTIONS),
             dispatch(types.FETCH_POPULAR_BLOGS),
           ])
-            .then(() => resolve())
-            .catch((err) => reject(err))
-        })
-      },
-      [types.FETCH_POPULAR_QUESTIONS]({ commit }) {
-        return new Promise((resolve) => {
-          api
-            .fetchPopularQuestions()
-            .then(({ data: popularQuestions }) => {
+            .then(([popularQuestions, popularBlogs]) => {
               commit(types.UPDATE_POPULAR_QUESTIONS, popularQuestions)
-              resolve()
-            })
-            .catch(() => resolve())
-        })
-      },
-      [types.FETCH_POPULAR_BLOGS]({ commit }) {
-        return new Promise((resolve) => {
-          api
-            .fetchPopularBlogs()
-            .then(({ data: popularBlogs }) => {
               commit(types.UPDATE_POPULAR_BLOGS, popularBlogs)
               resolve()
             })
             .catch(() => resolve())
         })
       },
+      [types.FETCH_QUESTION_LIST](
+        { commit },
+        payload: FetchQuestionListPayload
+      ) {
+        return new Promise((resolve, reject) => {
+          api
+            .fetchQuestionList(payload)
+            .then(({ data, meta }) => {
+              commit(types.UPDATE_QUESTION_LIST_DATA, data)
+              commit(types.UPDATE_QUESTION_LIST_META, meta)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_POPULAR_QUESTIONS]() {
+        return new Promise((resolve) => {
+          api
+            .fetchPopularQuestions()
+            .then(({ data }) => resolve(data))
+            .catch(() => resolve())
+        })
+      },
+      [types.FETCH_POPULAR_BLOGS]() {
+        return new Promise((resolve) => {
+          api
+            .fetchPopularBlogs()
+            .then(({ data }) => resolve(data))
+            .catch(() => resolve())
+        })
+      },
     },
     mutations: {
+      [types.UPDATE_QUESTION_LIST_DATA](state, data: QuestionListData[]) {
+        state.list = data
+      },
+      [types.UPDATE_QUESTION_LIST_META](state, meta: QuestionListMeta) {
+        state.meta = {
+          pagination: paginationResponseDataTransform(meta.pagination),
+          sort: meta.sort,
+        }
+      },
       [types.UPDATE_POPULAR_QUESTIONS](state, data: PopularQuestion[]) {
         state.popularQuestions = data
       },
@@ -59,6 +92,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
 }
 
 export interface State {
+  list: QuestionListData[] | null
+  meta: {
+    pagination: Pagination
+    sort: QuestionListSortType
+  } | null
   popularQuestions: PopularQuestion[] | null
   popularBlogs: PopularBlog[] | null
 }
