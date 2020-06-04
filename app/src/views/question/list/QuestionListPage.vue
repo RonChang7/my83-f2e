@@ -10,7 +10,7 @@
     <div class="QuestionListPage__row">
       <QuestionLayoutWithFixedColumn>
         <template v-slot:left>
-          <div style="height: 3000px; background: white;"></div>
+          <ListQuestionSection />
         </template>
         <template v-slot:right>
           <ListGuideSection v-if="isDesktop" />
@@ -29,6 +29,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionLayoutWithFixedColumn from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
 import BannerSection from '@/components/question/section/BannerSection.vue'
+import ListQuestionSection from '@/components/question/section/ListQuestionSection.vue'
 import ListGuideSection from '@/components/question/section/ListGuideSection.vue'
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
@@ -42,6 +43,7 @@ const options: ComponentOption = {
   components: {
     QuestionLayoutWithFixedColumn,
     BannerSection,
+    ListQuestionSection,
     ListGuideSection,
     ListRecommendProductSection,
     PopularBlogSection,
