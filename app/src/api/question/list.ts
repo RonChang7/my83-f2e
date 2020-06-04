@@ -1,5 +1,29 @@
-import { PopularBlogsResponse, PopularQuestionsResponse } from './list.type'
+import {
+  PopularBlogsResponse,
+  PopularQuestionsResponse,
+  QuestionListResponse,
+  FetchQuestionListPayload,
+} from './list.type'
 import request from '@/api/request'
+
+/**
+ * @description Question 列表
+ */
+export const fetchQuestionList = async ({
+  page,
+  sort,
+}: FetchQuestionListPayload): Promise<QuestionListResponse> => {
+  const { data } = await request.get<QuestionListResponse>(
+    `/api/v1/questions`,
+    {
+      params: {
+        page,
+        sort,
+      },
+    }
+  )
+  return data
+}
 
 /**
  * @description 取得熱門問答

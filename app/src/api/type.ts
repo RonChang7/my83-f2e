@@ -31,3 +31,15 @@ export interface PageMetaImage {
 export interface GlobalErrorResponse {
   error_message: string
 }
+
+export interface PaginationResponse {
+  total_page: number
+  current_page: number
+  total_count: number
+}
+
+export interface Pagination {
+  totalPage: number
+  currentPage: number
+  totalCount: number
+}
