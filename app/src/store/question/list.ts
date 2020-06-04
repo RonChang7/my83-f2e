@@ -17,6 +17,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
     namespaced: true,
     state() {
       return {
+        currentPage: 0,
+        currentSort: '',
         list: null,
         meta: null,
         popularQuestions: null,
@@ -49,6 +51,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .then(({ data, meta }) => {
               commit(types.UPDATE_QUESTION_LIST_DATA, data)
               commit(types.UPDATE_QUESTION_LIST_META, meta)
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              commit(types.UPDATE_CURRENT_SORT, payload.sort)
               resolve()
             })
             .catch((error) => reject(error))
@@ -87,11 +91,19 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_POPULAR_BLOGS](state, data: PopularBlog[]) {
         state.popularBlogs = data
       },
+      [types.UPDATE_CURRENT_PAGE](state, page: number) {
+        state.currentPage = page
+      },
+      [types.UPDATE_CURRENT_SORT](state, sort: string) {
+        state.currentSort = sort
+      },
     },
   }
 }
 
 export interface State {
+  currentPage: number
+  currentSort: string
   list: QuestionListData[] | null
   meta: {
     pagination: Pagination

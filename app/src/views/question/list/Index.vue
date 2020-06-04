@@ -8,22 +8,84 @@ import {
   FETCH_PAGE_DATA,
   FETCH_QUESTION_LIST,
 } from '@/store/question/list.type'
-import { FetchQuestionListPayload } from '@/api/question/list.type'
+import { ErrorPageType } from '@/config/error-page.config'
+import {
+  FetchQuestionListPayload,
+  QuestionListSortType,
+} from '@/api/question/list.type'
 const ListPage = () => import('./QuestionListPage.vue')
 
 export default {
-  async middleware({ store }) {
-    await store.dispatch(`questionList/${FETCH_PAGE_DATA}`)
+  async middleware({ store, query, error, redirect }) {
+    if (query?.page === '1' || query?.sort === 'latest') {
+      const page = query?.page === '1' ? undefined : query?.page
+      const sort = query?.sort === 'latest' ? undefined : query?.sort
+      redirect({
+        query: {
+          ...query,
+          page,
+          sort,
+        },
+      })
+    }
+
+    const sortType: QuestionListSortType[] = ['latest']
+    const sort =
+      typeof query?.sort === 'string'
+        ? sortType.includes(query.sort as QuestionListSortType)
+          ? query.sort
+          : 'latest'
+        : 'latest'
+
+    const page =
+      typeof query?.page === 'string'
+        ? /^\d+$/.test(query.page)
+          ? Number(query.page)
+          : 1
+        : 1
+
+    const questionListStore = (store.state as QuestionListVuexState)
+      .questionList
+
+    const fetchPageData: Promise<any>[] = []
+
+    // 與目前頁數或是排序條件不同才打 API
+    if (
+      !(
+        questionListStore.currentPage === page &&
+        questionListStore.currentSort === sort
+      )
+    ) {
+      fetchPageData.push(
+        store.dispatch(`questionList/${FETCH_QUESTION_LIST}`, {
+          page,
+          sort,
+        } as FetchQuestionListPayload)
+      )
+    }
+
+    // 熱門討論跟熱門文章有資料就不再重打 API
+    if (
+      !(questionListStore.popularQuestions || questionListStore.popularBlogs)
+    ) {
+      fetchPageData.push(store.dispatch(`questionList/${FETCH_PAGE_DATA}`))
+    }
+
     try {
-      await store.dispatch(`questionList/${FETCH_QUESTION_LIST}`, {
-        page: 1,
-        sort: 'latest',
-      } as FetchQuestionListPayload)
-    } catch (error) {
-      console.error(error)
+      await Promise.all(fetchPageData)
+    } catch (err) {
+      const statusCode = err.response.status === 404 ? err.response.status : 500
+      const message =
+        err.response.status === 404
+          ? ErrorPageType.QUESTION
+          : ErrorPageType.SERVER
+
+      return error({
+        statusCode,
+        message,
+      })
     }
   },
-  mounted() {},
   render(h) {
     return h(ListPage)
   },
