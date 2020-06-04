@@ -19,7 +19,7 @@
       :tags="companies"
       icon-type="company"
     />
-    <BaseMeta
+    <ContentMeta
       :created-at="createdAt"
       :answer-count="answerCount"
       meta-type="question"
@@ -35,7 +35,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
 import QuestionTitle from '../question/QuestionTitle.vue'
 import BaseContent from '../base/BaseContent.vue'
-import BaseMeta from '../base/BaseMeta.vue'
+import ContentMeta from '../base/ContentMeta.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
@@ -57,7 +57,7 @@ export default {
     BaseContent,
     QuestionImages,
     QuestionTags,
-    BaseMeta,
+    ContentMeta,
     BaseHeaderFunction,
   },
   mixins: [UserMetaMixin],
