@@ -7,3 +7,16 @@
   // Hide scrollbar for IE and Edge
   -ms-overflow-style: none;
 }
+
+@mixin hover-supported {
+  @media (hover: hover) {
+    @content;
+  }
+}
+
+@mixin hover-unsupported {
+  @media (hover: none) {
+    @content;
+  }
+}
+
