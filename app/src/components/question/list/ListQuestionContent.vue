@@ -3,20 +3,19 @@ import Vue from 'vue'
 import { FunctionalComponentOptions } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 
-export default {
+const options: ComponentOption = {
   functional: true,
   render(h, { props, data }) {
-    const htmlTag = props.type === 'list' ? 'h3' : 'h1'
     return h(
-      htmlTag,
+      'div',
       {
-        staticClass: 'QuestionTitle',
+        staticClass: 'ListQuestionContent',
         class: [data.class, data.staticClass],
       },
-      props.text
+      props.content
     )
   },
-} as ComponentOption
+}
 
 export type ComponentOption = FunctionalComponentOptions<Props>
 
@@ -25,35 +24,21 @@ export type ComponentInstance = CombinedVueInstance<Instance, {}, {}, {}, Props>
 export interface Instance extends Vue {}
 
 export interface Props {
-  text: string
-  type: 'list'
+  content: string
 }
+
+export default options
 </script>
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
-@import '@/sass/rwd.scss';
+@import '@/sass/mixins.scss';
 
-h1 {
-  font-size: 1.75rem;
-  margin: 12px 0 20px;
+.ListQuestionContent {
+  color: $gray-secondary;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
 
-  @include max-media('xl') {
-    font-size: 1.375rem;
-  }
-}
-
-h3 {
-  font-size: 1.375rem;
-  margin: 8px 0;
-
-  @include max-media('xl') {
-    font-size: 1.125rem;
-  }
-}
-
-.QuestionTitle {
-  color: $gray-primary;
-  font-weight: 500;
+  @include text-ellipsis(2);
 }
 </style>
