@@ -7,7 +7,7 @@ export const paginationResponseDataTransform = ({
 }: PaginationResponse): Pagination => {
   return {
     currentPage: current_page,
-    totalCount: total_page,
-    totalPage: total_count,
+    totalCount: total_count,
+    totalPage: total_page,
   }
 }
