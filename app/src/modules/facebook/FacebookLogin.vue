@@ -41,6 +41,11 @@ export default {
     },
   },
   render() {
+    /**
+     * Renderless component
+     * 使用上需注意，Renderless component 底下必須只有一個 root DOM
+     * Ref: https://adamwathan.me/renderless-components-in-vuejs/
+     */
     if (this.$scopedSlots.default) {
       return this.$scopedSlots.default(this.slot)
     }
