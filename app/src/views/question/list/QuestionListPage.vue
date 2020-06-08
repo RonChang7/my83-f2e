@@ -12,6 +12,13 @@
         <template v-slot:left>
           <ListQuestionSection />
         </template>
+        <template v-slot:left-bottom-offset>
+          <BasePagination
+            v-if="shouldShowPagination"
+            :pagination="pagination"
+            @to-page="(index) => $emit('to-page', index)"
+          />
+        </template>
         <template v-slot:right>
           <ListGuideSection v-if="isDesktop" />
           <ListRecommendProductSection />
@@ -25,6 +32,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionLayoutWithFixedColumn from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
@@ -34,6 +42,9 @@ import ListGuideSection from '@/components/question/section/ListGuideSection.vue
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
 import PopularQuestionSection from '@/components/question/section/PopularQuestionSection.vue'
+import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
+import { Pagination } from '@/api/type'
+import { QuestionListVuexState } from '@/views/question/list/Index.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -48,6 +59,18 @@ const options: ComponentOption = {
     ListRecommendProductSection,
     PopularBlogSection,
     PopularQuestionSection,
+    BasePagination,
+  },
+
+  computed: {
+    pagination() {
+      const { meta } = this.$store.state.questionList
+      return meta ? meta.pagination : null
+    },
+    shouldShowPagination() {
+      if (!this.pagination) return false
+      return !(this.pagination.totalPage === 1)
+    },
   },
 }
 
@@ -69,13 +92,18 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance
   extends Vue,
-    Omit<DeviceMixinComponentInstance, keyof Vue> {}
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
+  $store: Store<QuestionListVuexState>
+}
 
 export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  pagination: Pagination | null
+  shouldShowPagination: boolean
+}
 
 export interface Props {}
 
