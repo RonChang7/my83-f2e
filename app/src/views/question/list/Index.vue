@@ -16,6 +16,7 @@ import {
 const ListPage = () => import('./QuestionListPage.vue')
 
 export default {
+  watchQuery: ['page', 'sort'],
   async middleware({ store, query, error, redirect }) {
     if (query?.page === '1' || query?.sort === 'latest') {
       const page = query?.page === '1' ? undefined : query?.page
@@ -27,6 +28,7 @@ export default {
           sort,
         },
       })
+      return
     }
 
     const sortType: QuestionListSortType[] = ['latest']
@@ -85,9 +87,30 @@ export default {
         message,
       })
     }
+
+    // 如果頁面超過最大頁面，則導回討論區首頁
+    if (
+      questionListStore.meta!.pagination.currentPage >
+      questionListStore.meta!.pagination.totalPage
+    ) {
+      redirect('/question')
+    }
+  },
+  methods: {
+    toPage(index) {
+      this.$router.push({
+        query: {
+          page: String(index),
+        },
+      })
+    },
   },
   render(h) {
-    return h(ListPage)
+    return h(ListPage, {
+      on: {
+        'to-page': this.toPage,
+      },
+    })
   },
 } as ComponentOption
 
@@ -111,7 +134,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  toPage(index: number): void
+}
 
 export interface Computed {}
 
