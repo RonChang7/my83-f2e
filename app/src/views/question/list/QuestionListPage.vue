@@ -20,6 +20,7 @@
           />
         </template>
         <template v-slot:right>
+          <ListAskingSection />
           <ListGuideSection v-if="isDesktop" />
           <ListRecommendProductSection />
           <PopularQuestionSection :max-post="isMobile ? 5 : 10" />
@@ -38,6 +39,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionLayoutWithFixedColumn from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
 import BannerSection from '@/components/question/section/BannerSection.vue'
 import ListQuestionSection from '@/components/question/section/ListQuestionSection.vue'
+import ListAskingSection from '@/components/question/section/ListAskingSection.vue'
 import ListGuideSection from '@/components/question/section/ListGuideSection.vue'
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
@@ -55,6 +57,7 @@ const options: ComponentOption = {
     QuestionLayoutWithFixedColumn,
     BannerSection,
     ListQuestionSection,
+    ListAskingSection,
     ListGuideSection,
     ListRecommendProductSection,
     PopularBlogSection,
