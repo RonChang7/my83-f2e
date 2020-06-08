@@ -23,6 +23,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { isSlotExist } from '@/utils/render-helper'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -66,7 +67,7 @@ const options: ComponentOption = {
   },
   computed: {
     hasLeftBottomOffsetSlot() {
-      return !!this.$slots['left-bottom-offset']
+      return isSlotExist('left-bottom-offset', this)
     },
   },
   beforeMount() {
