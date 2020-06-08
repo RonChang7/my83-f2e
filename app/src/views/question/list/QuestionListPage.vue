@@ -4,12 +4,9 @@
       <BannerSection />
     </div>
     <div class="QuestionListPage__row">
-      <!-- Search bar -->
-      <!-- Asking button -->
-    </div>
-    <div class="QuestionListPage__row">
       <QuestionLayoutWithFixedColumn>
         <template v-slot:left>
+          <ListSearchSection />
           <ListQuestionSection />
         </template>
         <template v-slot:left-bottom-offset>
@@ -42,6 +39,7 @@ import ListQuestionSection from '@/components/question/section/ListQuestionSecti
 import ListAskingSection from '@/components/question/section/ListAskingSection.vue'
 import ListGuideSection from '@/components/question/section/ListGuideSection.vue'
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
+import ListSearchSection from '@/components/question/section/ListSearchSection.vue'
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
 import PopularQuestionSection from '@/components/question/section/PopularQuestionSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
@@ -60,6 +58,7 @@ const options: ComponentOption = {
     ListAskingSection,
     ListGuideSection,
     ListRecommendProductSection,
+    ListSearchSection,
     PopularBlogSection,
     PopularQuestionSection,
     BasePagination,
