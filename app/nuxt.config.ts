@@ -29,7 +29,13 @@ const config: Configuration = {
       { property: 'og:type', content: 'website' },
       { property: 'og:locale', content: 'zh_TW' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/static/favicon.ico' }],
+    link: [
+      {
+        rel: 'icon',
+        type: 'image/x-icon',
+        href: 'https://images.my83.com.tw/front/common/favicon.ico',
+      },
+    ],
     htmlAttrs: {
       lang: 'zh-TW',
     },
@@ -107,6 +113,7 @@ const config: Configuration = {
           { key: 'GOOGLE_ANALYTICS_ID' },
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
+          { key: 'IMAGE_BUCKET_URL' },
         ],
       },
     ],

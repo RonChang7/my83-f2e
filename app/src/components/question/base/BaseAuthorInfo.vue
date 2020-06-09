@@ -13,7 +13,11 @@
       </div>
       <div v-if="authorInfo.role === 'sales'" class="BaseAuthorInfo__medal">
         <GlobalLink to="/medal" target="_blank">
-          <Medal :level="authorInfo.role_meta.level" size="S" />
+          <Medal
+            :image-bucket-url="$imageBucketUrl"
+            :level="authorInfo.role_meta.level"
+            size="S"
+          />
         </GlobalLink>
       </div>
       <div class="BaseAuthorInfo__role">
@@ -21,7 +25,7 @@
         <template v-if="authorInfo.role_meta">
           <span>
             <img
-              src="@/assets/images/icon/location.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/location.svg`"
               alt="location"
               class="mr-1"
             />

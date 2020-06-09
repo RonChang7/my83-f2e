@@ -2,7 +2,9 @@
   <div class="Medal">
     <img
       :class="`Medal__${props.size}`"
-      :src="require(`@/assets/images/medal/medal-lv-${props.level}.png`)"
+      :src="
+        `${props.imageBucketUrl}/front/common/medal/medal-lv-${props.level}.png`
+      "
       :alt="`Level ${props.level}`"
     />
   </div>
@@ -26,6 +28,7 @@ export interface Instance extends Vue {}
 export interface Props {
   size: 'S' | 'M' | 'L'
   level: number
+  imageBucketUrl: string
 }
 </script>
 
