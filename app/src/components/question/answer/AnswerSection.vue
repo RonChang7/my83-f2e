@@ -155,6 +155,8 @@ export default {
     },
     avatar() {
       return AvatarMap[this.userRole]
+        ? `${this.$imageBucketUrl}/${AvatarMap[this.userRole]}`
+        : ''
     },
   },
   methods: {

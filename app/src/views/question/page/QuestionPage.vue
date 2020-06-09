@@ -11,70 +11,68 @@
       :visible="shouldShowReportPanel"
     />
     <div class="QuestionPage__row">
-      <div ref="leftColumn" class="QuestionPage__column left">
-        <HotServiceSection v-if="isMobile && shouldShowGuide" />
+      <QuestionLayoutWithFixedColumn
+        ref="fixedColumnLayout"
+        :display-right-column="!isMobile"
+      >
+        <template v-slot:left>
+          <HotServiceSection v-if="isMobile && shouldShowGuide" />
 
-        <GuideSection v-if="isMobile && shouldShowGuide" />
+          <GuideSection v-if="isMobile && shouldShowGuide" />
 
-        <QuestionSection />
+          <QuestionSection />
 
-        <client-only>
-          <AddAnswerSection v-if="userRole === 'sales'" />
-        </client-only>
+          <client-only>
+            <AddAnswerSection v-if="userRole === 'sales'" />
+          </client-only>
 
-        <MobileRecommendProductSection
-          v-if="isMobile && shouldShowRecommendProduct"
-        />
-
-        <div
-          ref="mobileRelatedSection"
-          class="QuestionPage__mobileRelatedSection"
-        >
-          <RelatedQuestionSection v-if="isMobile" :max-post="5" />
-
-          <RelatedBlogSection
-            v-if="isMobile && shouldShowBlogSection"
-            :max-post="5"
+          <MobileRecommendProductSection
+            v-if="isMobile && shouldShowRecommendProduct"
           />
-        </div>
 
-        <AnswersListSection />
+          <div
+            ref="mobileRelatedSection"
+            class="QuestionPage__mobileRelatedSection"
+          >
+            <RelatedQuestionSection v-if="isMobile" :max-post="5" />
 
-        <client-only>
-          <AddAnswerSection
-            v-if="userRole !== 'sales'"
-            ref="salesAddAnswerSection"
-          />
-        </client-only>
+            <RelatedBlogSection
+              v-if="isMobile && shouldShowBlogSection"
+              :max-post="5"
+            />
+          </div>
 
-        <BaseScrollToTopButton
-          v-if="isMobile && shouldShowScrollToTop"
-          class="scrollToTop"
-          :class="{ hasProduct: shouldShowRecommendProduct }"
-          @click.native="scrollToTop"
-        />
-      </div>
-      <div v-if="!isMobile" class="QuestionPage__column right">
-        <div
-          ref="wrapper"
-          class="wrapper"
-          :class="{ fixed: shouldFixedColumn }"
-        >
+          <AnswersListSection />
+        </template>
+        <template v-slot:left-bottom-offset>
+          <client-only>
+            <AddAnswerSection
+              v-if="userRole !== 'sales'"
+              ref="clientAddAnswerSection"
+            />
+          </client-only>
+        </template>
+        <template v-slot:right>
           <GuideSection v-if="shouldShowGuide" />
           <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
           <RelatedQuestionSection />
           <RelatedBlogSection v-if="shouldShowBlogSection" />
-        </div>
-      </div>
+        </template>
+      </QuestionLayoutWithFixedColumn>
     </div>
     <div v-if="!isMobile" class="QuestionPage__row">
       <HotServiceSection />
     </div>
+    <BaseScrollToTopButton
+      v-if="isMobile && shouldShowScrollToTop"
+      class="scrollToTop"
+      :class="{ hasProduct: shouldShowRecommendProduct }"
+      @click.native="scrollToTop"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -90,6 +88,9 @@ import RelatedBlogSection from '@/components/question/section/RelatedBlogSection
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DesktopRecommendProductSection from '@/components/question/section/DesktopRecommendProductSection.vue'
 import MobileRecommendProductSection from '@/components/question/section/MobileRecommendProductSection.vue'
+import QuestionLayoutWithFixedColumn, {
+  ComponentInstance as QuestionLayoutWithFixedColumnComponentInstance,
+} from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
 import { UserRole } from '@/services/user/user'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
 import { scrollTo } from '@/utils/element'
@@ -119,6 +120,7 @@ export default {
     QuestionDropdownPanel,
     ReportPanel,
     BaseScrollToTopButton,
+    QuestionLayoutWithFixedColumn,
   },
   data() {
     return {
@@ -127,14 +129,6 @@ export default {
         scrollToTopObserver: null,
       },
       shouldShowScrollToTop: false,
-      shouldFixedColumn: false,
-      screenWidth: 0,
-      scrollHeightBottom: 0,
-      rightColumnHeight: 0,
-      fixedColumn: {
-        start: 0,
-        end: 0,
-      },
     }
   },
   methods: {
@@ -177,20 +171,6 @@ export default {
         })
       })
     },
-    calcRightColumnHeight() {
-      this.rightColumnHeight =
-        parseInt(window.getComputedStyle(this.$refs.wrapper).height) -
-        parseInt(window.getComputedStyle(this.$refs.wrapper).paddingTop)
-    },
-    getFixedColumnStart() {
-      if (this.$refs.wrapper) {
-        this.fixedColumn.start =
-          (document.querySelector('.QuestionPage__column.right') as HTMLElement)
-            ?.offsetTop +
-          this.$refs.wrapper?.offsetHeight +
-          60
-      }
-    },
   },
   computed: {
     shouldShowGuide() {
@@ -230,29 +210,8 @@ export default {
       }
     },
   },
-  beforeMount() {
-    this.getScreenWidth = _.throttle(() => {
-      this.screenWidth = window.innerWidth
-    }, 200)
-
-    this.getScrollHeightBottom = _.throttle(() => {
-      const pageYScroll =
-        window.pageYOffset || document.documentElement.scrollTop
-      this.scrollHeightBottom = pageYScroll + window.innerHeight
-    }, 200)
-  },
   mounted() {
     this.isMounted = true
-
-    this.getScreenWidth()
-
-    if (this.$refs.wrapper) {
-      this.calcRightColumnHeight()
-    }
-
-    this.$nextTick(() => {
-      this.getFixedColumnStart()
-    })
 
     if (this.$route.hash) {
       this.scrollToAnchorPoint(this.$route.hash)
@@ -262,77 +221,21 @@ export default {
       this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
       this.observer.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
     }
-
-    this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
-    this.isDesktop &&
-      window.addEventListener('scroll', this.getScrollHeightBottom)
   },
   watch: {
-    scrollHeightBottom(val: number) {
-      if (!this.$refs.wrapper) return
-
-      if (!this.isDesktop || this.screenWidth < 1200) {
-        this.$refs.wrapper.style.cssText = ''
-        this.shouldFixedColumn = false
-        return
-      }
-
-      this.fixedColumn.end =
-        this.$refs.leftColumn.offsetTop +
-        this.$refs.leftColumn.offsetHeight +
-        60
-
-      if (this.$refs.salesAddAnswerSection) {
-        const addAnswerEl = this.$refs.salesAddAnswerSection.$el as HTMLElement
-        const verticalMargin =
-          parseFloat(window.getComputedStyle(addAnswerEl).marginTop) +
-          parseFloat(window.getComputedStyle(addAnswerEl).marginBottom)
-
-        this.fixedColumn.end -= addAnswerEl.offsetHeight + verticalMargin
-      }
-
-      if (val < this.fixedColumn.start) {
-        this.$refs.wrapper.style.cssText = ''
-        this.shouldFixedColumn = false
-      } else if (val > this.fixedColumn.start && val < this.fixedColumn.end) {
-        this.$refs.wrapper.style.cssText = ''
-        this.shouldFixedColumn = true
-      } else {
-        const paddingTop = this.fixedColumn.end - this.fixedColumn.start
-        this.shouldFixedColumn = false
-        this.$refs.wrapper.style.paddingTop = `${paddingTop}px`
-      }
-    },
-    rightColumnHeight() {
-      this.$nextTick(() => {
-        this.getFixedColumnStart()
-      })
-    },
     userRole(val: UserRole) {
       // 登入角色如果為業務員，重新計算右側 column 高度
       if (val === 'sales') {
         this.$nextTick(() => {
-          this.calcRightColumnHeight()
+          this.$refs.fixedColumnLayout.calcRightColumnHeight()
         })
       }
     },
     '$store.state.question.answers'() {
       this.$nextTick(() => {
-        this.getScrollHeightBottom()
+        this.$refs.fixedColumnLayout.getScrollHeightBottom()
       })
     },
-  },
-  beforeDestroy() {
-    this.isDesktop && window.removeEventListener('resize', this.getScreenWidth)
-    this.isDesktop &&
-      window.removeEventListener('scroll', this.getScrollHeightBottom)
-
-    _.forEach(this.observer, (observer, key) => {
-      if (observer) {
-        this.observer[key].disconnect()
-        this.observer[key] = null
-      }
-    })
   },
 } as ComponentOption
 
@@ -357,12 +260,8 @@ export interface Instance extends Vue {
   $refs: {
     dropdownPanel: Vue
     mobileRelatedSection: Element
-    wrapper: HTMLElement
-    leftColumn: HTMLElement
-    salesAddAnswerSection: Vue
+    fixedColumnLayout: QuestionLayoutWithFixedColumnComponentInstance
   }
-  getScreenWidth(this: ComponentInstance): void
-  getScrollHeightBottom(this: ComponentInstance): void
 }
 
 export interface Data {
@@ -371,14 +270,6 @@ export interface Data {
     scrollToTopObserver: IntersectionObserver | null
   }
   shouldShowScrollToTop: boolean
-  shouldFixedColumn: boolean
-  screenWidth: number
-  scrollHeightBottom: number
-  rightColumnHeight: number
-  fixedColumn: {
-    start: number
-    end: number
-  }
 }
 
 export interface Methods {
@@ -386,8 +277,6 @@ export interface Methods {
   hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
-  calcRightColumnHeight(): void
-  getFixedColumnStart(): void
 }
 
 export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {
@@ -423,40 +312,6 @@ export interface Props {}
 
     @include max-media('xl') {
       flex-direction: column;
-    }
-  }
-
-  &__column {
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px;
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    &.left {
-      width: 740px;
-    }
-
-    &.right {
-      width: 360px;
-
-      .wrapper {
-        width: inherit;
-
-        &.fixed {
-          position: fixed;
-          bottom: 60px;
-        }
-      }
-    }
-
-    &.left,
-    &.right {
-      @include max-media('xl') {
-        width: 100%;
-      }
     }
   }
 }

@@ -1,10 +1,7 @@
 <template>
   <GlobalLink class="HotServiceCard" :to="item.url">
     <div class="HotServiceCard__image">
-      <BaseLazyImage
-        :image-url="require(`@/assets/images/question/${item.src}`)"
-        image-alt="icon"
-      />
+      <BaseLazyImage :image-url="item.src" image-alt="icon" />
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="HotServiceCard__title" v-html="title" />

@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
+import qs from 'qs'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -244,15 +245,15 @@ export default {
     consultSales() {
       // @todo: Change path after migrate to Nuxt.js
       const path = this.authorInfo.nickname
-        ? `/message/nicknameSales/nickname/${this.authorInfo.nickname}`
+        ? `/message/nicknameSales/nickname/${encodeURIComponent(
+            this.authorInfo.nickname
+          )}`
         : `/user/${this.authorInfo.id}`
       const query = {
-        content: encodeURIComponent(
-          `你好,\n\n我有看到你的留言\n${this.$env.HOST_URL}${this.$route.path}#${this.anchorString}\n`
-        ),
+        content: `你好,\n\n我有看到你的留言\n${this.$env.HOST_URL}${this.$route.path}#${this.anchorString}\n`,
         source: 'forum',
       }
-      window.location.href = `${path}?content=${query.content}&source=${query.source}`
+      window.location.href = `${path}?${qs.stringify(query)}`
     },
     showDropdownPanel() {
       const el = this.$refs.more
