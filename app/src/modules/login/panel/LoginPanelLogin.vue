@@ -1,6 +1,6 @@
 <template>
   <div class="LoginPanelLogin">
-    <LoginInfo />
+    <LoginInfo :image-bucket-url="$imageBucketUrl" />
     <div class="vertical-line"></div>
     <LoginLoginForm
       :display-forget-password-wording="displayForgetPasswordWording"

@@ -4,7 +4,11 @@
       <section class="slogan">
         <h3 class="title">
           <GlobalLink to="/">
-            <img src="@/assets/images/my83-logo.svg" alt="MY83" class="logo" />
+            <img
+              :src="`${$imageBucketUrl}/front/common/my83-logo.svg`"
+              alt="MY83"
+              class="logo"
+            />
           </GlobalLink>
         </h3>
         <div class="content">
@@ -25,7 +29,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/cw.png')"
+              :image-url="`${$imageBucketUrl}/front/footer/cw.png`"
               image-alt="天下雜誌"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
@@ -38,7 +42,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/cnyes.png')"
+              :image-url="`${$imageBucketUrl}/front/footer/cnyes.png`"
               image-alt="鉅亨網"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
@@ -51,7 +55,7 @@
             rel="noopener"
           >
             <BaseLazyImage
-              :image-url="require('@/assets/images/footer/HIT_FM.jpg')"
+              :image-url="`${$imageBucketUrl}/front/footer/HIT_FM.jpg`"
               image-alt="HIT_FM"
               :ignore-placeholder="true"
               :image-loaded-style="footerImageStyle"
@@ -82,9 +86,9 @@
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
           <p class="tips d-flex align-items-center">
             <img
-              src="@/assets/images/icon/info.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/info.svg`"
               alt="info-icon"
-              class="icon mr-2"
+              class="icon mr-1"
             />
             客服無法提供保險諮詢服務、僅提供網站使用客服
           </p>
@@ -98,9 +102,9 @@
           <p><GlobalLink to="/aboutUs">關於MY83</GlobalLink></p>
           <p class="d-flex align-items-center">
             <img
-              src="@/assets/images/icon/facebook.svg"
+              :src="`${$imageBucketUrl}/front/common/icon/facebook.svg`"
               alt="facebook-icon"
-              class="icon mr-2"
+              class="icon mr-1"
             />
             <a
               href="https://facebook.com/my83.com.tw/"

@@ -218,12 +218,12 @@ export interface Props {
 }
 
 .pswp__button--arrow--right:before {
-  background: url('~assets/images/icon/arrow-next.svg') !important;
+  background: url('https://images.my83.com.tw/front/common/icon/arrow-next.svg') !important;
   right: 40px;
 }
 
 .pswp__button--arrow--left:before {
-  background: url('~assets/images/icon/arrow-previous.svg') !important;
+  background: url('https://images.my83.com.tw/front/common/icon/arrow-previous.svg') !important;
   left: 40px;
 }
 </style>

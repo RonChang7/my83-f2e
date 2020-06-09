@@ -129,6 +129,7 @@ export interface Props {
 
   display: flex;
   justify-content: center;
+  align-items: center;
   color: $primary-button-text-color;
   background: #4668b2;
   border: 0;
