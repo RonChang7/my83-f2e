@@ -2,10 +2,14 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import DeviceMixin, {
+  ComponentInstance as DeviceMixinComponentInstance,
+} from '@/mixins/device/device-mixins'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BasePencil from '@/components/base/icon/24/BasePencil.vue'
 
 const options: ComponentOption = {
+  mixins: [DeviceMixin],
   render(h) {
     return h(
       'div',
@@ -15,7 +19,7 @@ const options: ComponentOption = {
       [
         h(BaseButton, {
           props: {
-            size: 'xl',
+            size: this.isDesktop ? 'xl' : 'l-b',
           },
           nativeOn: {
             click: () => this.$router.push('/question/asking'),
@@ -46,7 +50,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {}
 
 export interface Data {}
 
@@ -60,9 +66,15 @@ export default options
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .ListAskingSection {
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
+
+  @include max-media('xl') {
+    margin: 20px 0;
+  }
 }
 </style>

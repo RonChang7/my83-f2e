@@ -116,6 +116,10 @@ export default options
 .ListRecommendProductSection {
   margin-bottom: 20px;
 
+  @include max-media('xl') {
+    margin-bottom: 10px;
+  }
+
   &__product {
     display: flex;
     align-items: center;
