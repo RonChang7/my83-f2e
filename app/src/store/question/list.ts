@@ -1,5 +1,6 @@
 import { Module } from 'vuex'
 import * as types from './list.type'
+import { UPDATE_PAGE_META } from '@/store/seo/seo.type'
 import * as api from '@/api/question/list'
 import {
   PopularBlog,
@@ -50,9 +51,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
         return new Promise((resolve, reject) => {
           api
             .fetchQuestionList(payload)
-            .then(({ data, meta }) => {
+            .then(({ data, meta, page_meta }) => {
               commit(types.UPDATE_QUESTION_LIST_DATA, data)
               commit(types.UPDATE_QUESTION_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
               commit(types.UPDATE_CURRENT_PAGE, payload.page)
               commit(types.UPDATE_CURRENT_SORT, payload.sort)
               commit(types.UPDATE_CURRENT_SEARCH_QUERY, '')
@@ -68,9 +72,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
         return new Promise((resolve, reject) => {
           api
             .fetchSearchQuestionList(payload)
-            .then(({ data, meta }) => {
+            .then(({ data, meta, page_meta }) => {
               commit(types.UPDATE_QUESTION_LIST_DATA, data)
               commit(types.UPDATE_QUESTION_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
               commit(types.UPDATE_CURRENT_PAGE, payload.page)
               commit(types.UPDATE_CURRENT_SORT, payload.sort)
               commit(types.UPDATE_CURRENT_SEARCH_QUERY, payload.q)
