@@ -27,6 +27,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 $background-max-width: 1600px;
 
 .BannerSection {
@@ -42,6 +43,18 @@ $background-max-width: 1600px;
   color: $gray-primary;
   font-size: 1.125rem;
 
+  @include max-media('xl') {
+    height: 120px;
+    justify-content: flex-start;
+    padding-top: 7px;
+
+    p {
+      font-size: 0.857rem;
+      font-weight: 400;
+      color: $gray-secondary;
+    }
+  }
+
   @media (min-width: $background-max-width) {
     background-size: $background-max-width;
   }
@@ -53,10 +66,18 @@ $background-max-width: 1600px;
 
   h1 {
     font-size: 2.25rem;
+
+    @include max-media('xl') {
+      display: none;
+    }
   }
 
   h2 {
     font-size: 1.75rem;
+
+    @include max-media('xl') {
+      font-size: 1.375rem;
+    }
   }
 }
 </style>

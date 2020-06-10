@@ -77,7 +77,13 @@ export default options
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .ListSearchSection {
   margin-bottom: 40px;
+
+  @include max-media('xl') {
+    margin-bottom: 0;
+  }
 }
 </style>

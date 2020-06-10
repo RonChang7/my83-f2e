@@ -1,15 +1,24 @@
 <template>
-  <div class="QuestionListPage">
+  <div
+    class="QuestionListPage"
+    :class="{ 'pb-0': pageType === 'search' && !hasSearchResult }"
+  >
     <div class="QuestionListPage__row banner">
-      <BannerSection />
+      <BannerSection v-if="pageType === 'list'" />
     </div>
     <div class="QuestionListPage__row search">
-      <div class="left">
+      <div class="left" :class="[pageType]">
         <ListSearchSection />
       </div>
-      <div v-if="!isMobile" class="right">
+      <div v-if="!isMobile && pageType === 'list'" class="right">
         <ListAskingSection />
       </div>
+    </div>
+    <div
+      v-if="pageType === 'search'"
+      class="QuestionListPage__row searchResultCount"
+    >
+      <span>共 {{ pagination.totalCount }} 個搜尋結果</span>
     </div>
     <template v-if="isMobile && shouldShowHotService">
       <div class="QuestionListPage__row hot">
@@ -19,17 +28,24 @@
         <ListAskingSection />
       </div>
     </template>
-    <div class="QuestionListPage__row content">
-      <QuestionLayoutWithFixedColumn>
+    <div
+      class="QuestionListPage__row content"
+      :class="{ 'mb-0': pageType === 'search' && !hasSearchResult }"
+    >
+      <QuestionLayoutWithFixedColumn
+        v-if="pageType === 'list' || (pageType === 'search' && hasSearchResult)"
+      >
         <template v-slot:left>
           <ListQuestionSection />
         </template>
         <template v-slot:left-bottom-offset>
-          <BasePagination
-            v-if="shouldShowPagination"
-            :pagination="pagination"
-            @to-page="(index) => $emit('to-page', index)"
-          />
+          <div class="pagination">
+            <BasePagination
+              v-if="shouldShowPagination"
+              :pagination="pagination"
+              @to-page="(index) => $emit('to-page', index)"
+            />
+          </div>
         </template>
         <template v-slot:right>
           <ListGuideSection v-if="isDesktop && shouldShowGuide" />
@@ -38,6 +54,19 @@
           <PopularBlogSection :max-post="isMobile ? 5 : 10" />
         </template>
       </QuestionLayoutWithFixedColumn>
+      <div v-else class="noSearchResult">
+        <img
+          :src="`${$imageBucketUrl}/front/question/search-noresult.png`"
+          :srcset="`${$imageBucketUrl}/front/question/search-noresult.png 2x`"
+          alt="No search result"
+        />
+        <span>
+          沒有符合的搜尋結果
+          <br />
+          換個關鍵字試試看吧
+        </span>
+        <HotServiceSection />
+      </div>
     </div>
   </div>
 </template>
@@ -88,6 +117,10 @@ const options: ComponentOption = {
     }
   },
   computed: {
+    pageType() {
+      // pageType: 'list' | 'search'
+      return this.$route.meta.pageType
+    },
     pagination() {
       const { meta } = this.$store.state.questionList
       return meta ? meta.pagination : null
@@ -97,6 +130,7 @@ const options: ComponentOption = {
       return !(this.pagination.totalPage === 1)
     },
     shouldShowGuide() {
+      if (this.pageType !== 'list') return false
       if (process.server || !this.isMounted) return true
 
       return this.userRole !== 'sales'
@@ -107,9 +141,17 @@ const options: ComponentOption = {
       return this.userRole !== 'sales'
     },
     shouldShowHotService() {
+      if (this.pageType !== 'list') return false
       if (process.server || !this.isMounted) return true
 
       return this.userRole !== 'sales'
+    },
+    hasSearchResult() {
+      return !!(
+        this.pageType === 'search' &&
+        this.pagination &&
+        this.pagination.totalCount
+      )
     },
   },
   mounted() {
@@ -147,11 +189,13 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
+  pageType: string
   pagination: Pagination | null
   shouldShowPagination: boolean
   shouldShowGuide: boolean
   shouldShowRecommendProduct: boolean
   shouldShowHotService: boolean
+  hasSearchResult: boolean
 }
 
 export interface Props {}
@@ -180,6 +224,30 @@ export default options
 
     @include max-media('xl') {
       flex-direction: column;
+
+      &.search {
+        order: 0;
+        padding: 20px;
+      }
+
+      &.banner {
+        order: 1;
+        margin-bottom: 0;
+      }
+
+      &.hot {
+        order: 2;
+        margin-bottom: 0;
+      }
+
+      &.asking {
+        order: 3;
+        margin-bottom: 0;
+      }
+
+      &.content {
+        order: 4;
+      }
     }
   }
 
@@ -187,9 +255,72 @@ export default options
     margin-bottom: 0;
   }
 
+  .searchResultCount {
+    margin: -20px 0 20px;
+
+    > span {
+      width: 1120px;
+
+      @include max-media('xl') {
+        width: 100%;
+        padding: 10px 20px 0px;
+      }
+    }
+  }
+
+  .noSearchResult {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 80px;
+
+    @include max-media('xl') {
+      margin-bottom: 0;
+    }
+
+    > img {
+      height: 100px;
+      margin: 80px 0 30px;
+
+      @include max-media('xl') {
+        margin: 50px 0 20px;
+        height: 50px;
+      }
+    }
+
+    > span {
+      text-align: center;
+
+      @include max-media('xl') {
+        margin-bottom: 63px;
+      }
+
+      @include min-media('xl') {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .pagination {
+    @include max-media('xl') {
+      margin: 30px 0;
+    }
+  }
+
   .left {
     width: 740px;
-    margin-right: 20px;
+
+    &.search {
+      width: 1120px;
+
+      @include max-media('xl') {
+        width: auto;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-right: 20px;
+    }
 
     @include max-media('xl') {
       margin-right: 0;
@@ -204,27 +335,6 @@ export default options
     .left,
     .right {
       width: 100%;
-    }
-
-    .search {
-      order: 0;
-      padding: 20px;
-    }
-
-    .banner {
-      order: 1;
-    }
-
-    .hot {
-      order: 2;
-    }
-
-    .asking {
-      order: 3;
-    }
-
-    .content {
-      order: 4;
     }
   }
 }

@@ -68,8 +68,14 @@ export default options
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/rwd.scss';
+
 .ListQuestionSection {
   margin-bottom: 20px;
   padding: 0 10px;
+
+  @include max-media('xl') {
+    margin-bottom: 0;
+  }
 }
 </style>
