@@ -67,7 +67,7 @@
       v-if="isMobile && shouldShowScrollToTop"
       class="scrollToTop"
       :class="{ hasProduct: shouldShowRecommendProduct }"
-      @click.native="scrollToTop"
+      @click="scrollToTop"
     />
   </div>
 </template>
@@ -316,7 +316,7 @@ export interface Props {}
   }
 }
 
-.scrollToTop {
+::v-deep .scrollToTop {
   position: fixed;
   bottom: 20px;
   right: 20px;
