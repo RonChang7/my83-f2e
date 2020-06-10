@@ -13,7 +13,7 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import RelatedSection from '../related/RelatedSection.vue'
-import { QuestionListVuexState } from '@/views/question/list/Index.vue'
+import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import { PopularBlog } from '@/api/question/list.type'
 
 export default {
