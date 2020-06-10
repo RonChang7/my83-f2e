@@ -2,12 +2,15 @@ import {
   PopularBlogsResponse,
   PopularQuestionsResponse,
   QuestionListResponse,
+  QuestionSearchResponse,
   FetchQuestionListPayload,
+  FetchSearchQuestionListPayload,
 } from './list.type'
 import request from '@/api/request'
 
 /**
  * @description Question 列表
+ * @param {FetchQuestionListPayload} payload
  */
 export const fetchQuestionList = async ({
   page,
@@ -19,6 +22,28 @@ export const fetchQuestionList = async ({
       params: {
         page,
         sort,
+      },
+    }
+  )
+  return data
+}
+
+/**
+ * @description Question 搜尋
+ * @param {FetchSearchQuestionListPayload} payload
+ */
+export const fetchSearchQuestionList = async ({
+  page,
+  sort,
+  q,
+}: FetchSearchQuestionListPayload): Promise<QuestionSearchResponse> => {
+  const { data } = await request.get<QuestionSearchResponse>(
+    `/api/v1/questions/search`,
+    {
+      params: {
+        page,
+        sort,
+        q,
       },
     }
   )

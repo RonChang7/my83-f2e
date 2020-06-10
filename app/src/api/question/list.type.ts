@@ -6,6 +6,11 @@ export interface QuestionListResponse {
   meta: QuestionListMeta
 }
 
+export interface QuestionSearchResponse {
+  data: QuestionListData[]
+  meta: QuestionListMeta
+}
+
 export interface PopularBlogsResponse {
   data: PopularBlog[]
 }
@@ -22,6 +27,7 @@ export type QuestionListData = Omit<
 export interface QuestionListMeta {
   pagination: PaginationResponse
   sort: QuestionListSortType
+  q?: string
 }
 
 export type QuestionListSortType = 'latest'
@@ -33,4 +39,10 @@ export interface PopularQuestion extends RelatedQuestion {}
 export interface FetchQuestionListPayload {
   page: number
   sort: QuestionListSortType
+}
+
+export interface FetchSearchQuestionListPayload {
+  page: number
+  sort: QuestionListSortType
+  q: string
 }
