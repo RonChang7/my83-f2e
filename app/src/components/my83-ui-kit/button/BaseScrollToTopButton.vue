@@ -14,7 +14,7 @@ const options: ComponentOption = {
       },
       attrs: {
         ...ctx.data.attrs,
-        src: `${ctx.props.imageBucketUrl}/front/common/icon/to-top.svg`,
+        src: `${ctx.parent.$imageBucketUrl}/front/common/icon/to-top.svg`,
         alt: 'Scroll to top',
       },
       on: ctx.listeners,
@@ -30,7 +30,6 @@ export interface Instance extends Vue {}
 
 export interface Props {
   disabled: boolean
-  imageBucketUrl: string
 }
 
 export default options
