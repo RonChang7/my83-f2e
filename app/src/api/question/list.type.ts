@@ -1,14 +1,16 @@
-import { PaginationResponse } from '../type'
+import { PaginationResponse, PageMeta } from '../type'
 import { RelatedBlog, RelatedQuestion, QuestionData } from './question.type'
 
 export interface QuestionListResponse {
   data: QuestionListData[]
   meta: QuestionListMeta
+  page_meta: PageMeta
 }
 
 export interface QuestionSearchResponse {
   data: QuestionListData[]
   meta: QuestionListMeta
+  page_meta: PageMeta
 }
 
 export interface PopularBlogsResponse {
