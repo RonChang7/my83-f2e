@@ -3,7 +3,7 @@
     <img
       :class="`Medal__${props.size}`"
       :src="
-        `${props.imageBucketUrl}/front/common/medal/medal-lv-${props.level}.png`
+        `${parent.$imageBucketUrl}/front/common/medal/medal-lv-${props.level}.png`
       "
       :alt="`Level ${props.level}`"
     />
@@ -28,7 +28,6 @@ export interface Instance extends Vue {}
 export interface Props {
   size: 'S' | 'M' | 'L'
   level: number
-  imageBucketUrl: string
 }
 </script>
 
