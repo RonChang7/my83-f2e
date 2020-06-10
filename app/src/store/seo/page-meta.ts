@@ -19,7 +19,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.pageMeta?.keywords ||
         '保險,媒合,保單,罐頭,業務員,投保,諮詢,醫療險,壽險,重大疾病險,癌症險,意外險,失能扶助險,失能險,儲蓄險,irr,健診,國泰人壽,富邦人壽,南山人壽',
       imageUrl: (state) =>
-        state.pageMeta?.image?.url || 'https://my83.com.tw/images/ogImage.png',
+        state.pageMeta?.image?.url ||
+        'https://images.my83.com.tw/front/seo/og-image.png',
       imageType: (state) => state.pageMeta?.image?.type || 'image/png',
       imageAlt: (state) =>
         state.pageMeta?.image?.alt || 'MY83 保險網－把保險變簡單',
