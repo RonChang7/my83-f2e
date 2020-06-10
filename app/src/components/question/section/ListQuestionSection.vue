@@ -18,7 +18,7 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import ListQuestion from '../list/ListQuestion.vue'
-import { QuestionListVuexState } from '@/views/question/list/Index.vue'
+import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import { QuestionListData } from '@/api/question/list.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 

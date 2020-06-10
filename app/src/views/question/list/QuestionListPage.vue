@@ -1,12 +1,27 @@
 <template>
   <div class="QuestionListPage">
-    <div class="QuestionListPage__row">
+    <div class="QuestionListPage__row banner">
       <BannerSection />
     </div>
-    <div class="QuestionListPage__row">
+    <div class="QuestionListPage__row search">
+      <div class="left">
+        <ListSearchSection />
+      </div>
+      <div v-if="!isMobile" class="right">
+        <ListAskingSection />
+      </div>
+    </div>
+    <template v-if="isMobile && shouldShowHotService">
+      <div class="QuestionListPage__row hot">
+        <HotServiceSection />
+      </div>
+      <div class="QuestionListPage__row asking">
+        <ListAskingSection />
+      </div>
+    </template>
+    <div class="QuestionListPage__row content">
       <QuestionLayoutWithFixedColumn>
         <template v-slot:left>
-          <ListSearchSection />
           <ListQuestionSection />
         </template>
         <template v-slot:left-bottom-offset>
@@ -17,9 +32,8 @@
           />
         </template>
         <template v-slot:right>
-          <ListAskingSection />
-          <ListGuideSection v-if="isDesktop" />
-          <ListRecommendProductSection />
+          <ListGuideSection v-if="isDesktop && shouldShowGuide" />
+          <ListRecommendProductSection v-if="shouldShowRecommendProduct" />
           <PopularQuestionSection :max-post="isMobile ? 5 : 10" />
           <PopularBlogSection :max-post="isMobile ? 5 : 10" />
         </template>
@@ -40,17 +54,21 @@ import ListAskingSection from '@/components/question/section/ListAskingSection.v
 import ListGuideSection from '@/components/question/section/ListGuideSection.vue'
 import ListRecommendProductSection from '@/components/question/section/ListRecommendProductSection.vue'
 import ListSearchSection from '@/components/question/section/ListSearchSection.vue'
+import HotServiceSection from '@/components/question/section/HotServiceSection.vue'
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
 import PopularQuestionSection from '@/components/question/section/PopularQuestionSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
-import { QuestionListVuexState } from '@/views/question/list/Index.vue'
+import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
+import UserMetaMixin, {
+  ComponentInstance as UserMetaMixinComponentInstance,
+} from '@/mixins/user/user-meta'
 
 const options: ComponentOption = {
-  mixins: [DeviceMixin],
+  mixins: [DeviceMixin, UserMetaMixin],
   components: {
     QuestionLayoutWithFixedColumn,
     BannerSection,
@@ -59,11 +77,16 @@ const options: ComponentOption = {
     ListGuideSection,
     ListRecommendProductSection,
     ListSearchSection,
+    HotServiceSection,
     PopularBlogSection,
     PopularQuestionSection,
     BasePagination,
   },
-
+  data() {
+    return {
+      isMounted: false,
+    }
+  },
   computed: {
     pagination() {
       const { meta } = this.$store.state.questionList
@@ -73,6 +96,24 @@ const options: ComponentOption = {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
     },
+    shouldShowGuide() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+    shouldShowRecommendProduct() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+    shouldShowHotService() {
+      if (process.server || !this.isMounted) return true
+
+      return this.userRole !== 'sales'
+    },
+  },
+  mounted() {
+    this.isMounted = true
   },
 }
 
@@ -94,17 +135,23 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance
   extends Vue,
-    Omit<DeviceMixinComponentInstance, keyof Vue> {
+    Omit<DeviceMixinComponentInstance, keyof Vue>,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {
   $store: Store<QuestionListVuexState>
 }
 
-export interface Data {}
+export interface Data {
+  isMounted: boolean
+}
 
 export interface Methods {}
 
 export interface Computed {
   pagination: Pagination | null
   shouldShowPagination: boolean
+  shouldShowGuide: boolean
+  shouldShowRecommendProduct: boolean
+  shouldShowHotService: boolean
 }
 
 export interface Props {}
@@ -133,6 +180,51 @@ export default options
 
     @include max-media('xl') {
       flex-direction: column;
+    }
+  }
+
+  .search {
+    margin-bottom: 0;
+  }
+
+  .left {
+    width: 740px;
+    margin-right: 20px;
+
+    @include max-media('xl') {
+      margin-right: 0;
+    }
+  }
+
+  .right {
+    width: 360px;
+  }
+
+  @include max-media('xl') {
+    .left,
+    .right {
+      width: 100%;
+    }
+
+    .search {
+      order: 0;
+      padding: 20px;
+    }
+
+    .banner {
+      order: 1;
+    }
+
+    .hot {
+      order: 2;
+    }
+
+    .asking {
+      order: 3;
+    }
+
+    .content {
+      order: 4;
     }
   }
 }
