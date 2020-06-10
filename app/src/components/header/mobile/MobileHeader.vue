@@ -10,8 +10,14 @@
         class="logo"
       />
     </GlobalLink>
-    <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
-    <BaseMenu v-else @click.native="openMenuHandler" />
+    <div class="MobileHeader__function">
+      <AskingRoundButton
+        v-if="shouldShowAskingButton"
+        @click="$router.push('/question/asking')"
+      />
+      <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
+      <BaseMenu v-else @click.native="openMenuHandler" />
+    </div>
   </div>
 </template>
 
@@ -20,12 +26,18 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
 import BaseMenu from '@/components/base/icon/24/BaseMenu.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
+import UserMetaMixin, {
+  ComponentInstance as UserMetaMixinComponentInstance,
+} from '@/mixins/user/user-meta'
 
 export default {
+  mixins: [UserMetaMixin],
   components: {
     GlobalLink,
+    AskingRoundButton,
     BaseMenu,
     BaseClose,
   },
@@ -37,8 +49,20 @@ export default {
   },
   data() {
     return {
+      isMounted: false,
       showCloseMenu: false,
     }
+  },
+  computed: {
+    shouldShowAskingButton() {
+      if (process.server || !this.isMounted) return false
+
+      return (
+        this.userRole === 'sales' &&
+        (this.$route.path === '/question' ||
+          this.$route.path === '/question/search')
+      )
+    },
   },
   methods: {
     closeMenuHandler() {
@@ -55,6 +79,9 @@ export default {
         this.showCloseMenu = val === '/header-menu'
       },
     },
+  },
+  mounted() {
+    this.isMounted = true
   },
 } as ComponentOption
 
@@ -74,9 +101,12 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance
+  extends Vue,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {}
 
 export interface Data {
+  isMounted: boolean
   showCloseMenu: boolean
 }
 
@@ -85,7 +115,9 @@ export interface Methods {
   openMenuHandler(): void
 }
 
-export interface Computed {}
+export interface Computed {
+  shouldShowAskingButton: boolean
+}
 
 export interface Props {
   enableRwd: boolean
@@ -105,6 +137,15 @@ export interface Props {
   justify-content: space-between;
   height: 56px;
   padding: 0 15px;
+
+  &__function {
+    display: flex;
+    align-items: center;
+
+    &::v-deep > *:not(:last-child) {
+      margin-right: 15px;
+    }
+  }
 
   .logo {
     width: 148px;
