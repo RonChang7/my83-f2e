@@ -8,6 +8,7 @@ import {
   QuestionListMeta,
   QuestionListSortType,
   FetchQuestionListPayload,
+  FetchSearchQuestionListPayload,
 } from '@/api/question/list.type'
 import { Pagination } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
@@ -19,6 +20,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
       return {
         currentPage: 0,
         currentSort: '',
+        currentSearchQuery: '',
         list: null,
         meta: null,
         popularQuestions: null,
@@ -53,6 +55,25 @@ export const createStoreModule = <R>(): Module<State, R> => {
               commit(types.UPDATE_QUESTION_LIST_META, meta)
               commit(types.UPDATE_CURRENT_PAGE, payload.page)
               commit(types.UPDATE_CURRENT_SORT, payload.sort)
+              commit(types.UPDATE_CURRENT_SEARCH_QUERY, '')
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_SEARCH_QUESTION_LIST](
+        { commit },
+        payload: FetchSearchQuestionListPayload
+      ) {
+        return new Promise((resolve, reject) => {
+          api
+            .fetchSearchQuestionList(payload)
+            .then(({ data, meta }) => {
+              commit(types.UPDATE_QUESTION_LIST_DATA, data)
+              commit(types.UPDATE_QUESTION_LIST_META, meta)
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              commit(types.UPDATE_CURRENT_SORT, payload.sort)
+              commit(types.UPDATE_CURRENT_SEARCH_QUERY, payload.q)
               resolve()
             })
             .catch((error) => reject(error))
@@ -97,6 +118,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_CURRENT_SORT](state, sort: string) {
         state.currentSort = sort
       },
+      [types.UPDATE_CURRENT_SEARCH_QUERY](state, q: string) {
+        state.currentSearchQuery = q
+      },
     },
   }
 }
@@ -104,6 +128,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   currentPage: number
   currentSort: string
+  currentSearchQuery: string
   list: QuestionListData[] | null
   meta: {
     pagination: Pagination
