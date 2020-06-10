@@ -53,8 +53,8 @@ export default {
   },
   methods: {
     hotPost() {
-      // @todo: Change path after migrate to Nuxt.js
-      window.location.href = '/question'
+      // @todo: Update query string after sort function
+      this.$router.push('/question/asking')
     },
     newPost() {
       this.$router.push('/question/asking')
