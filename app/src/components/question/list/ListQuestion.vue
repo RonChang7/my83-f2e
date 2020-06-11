@@ -193,7 +193,7 @@ export default options
   &__content {
     $self: &;
 
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     margin-right: 20px;
 
     &__link {
