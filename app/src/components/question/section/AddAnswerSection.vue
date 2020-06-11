@@ -85,7 +85,9 @@ export default {
       return this.isDesktop ? 'xl' : 'l-b'
     },
     avatar() {
-      return this.userRole ? AvatarMap[this.userRole] : ''
+      return this.userRole
+        ? `${this.$imageBucketUrl}/${AvatarMap[this.userRole]}`
+        : ''
     },
   },
 } as ComponentOption

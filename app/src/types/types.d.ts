@@ -12,6 +12,7 @@ declare module 'vue/types/vue' {
     $recaptcha: ReCaptchaInstance
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageBucketUrl: string
   }
 }
 declare module '@nuxt/types' {
@@ -20,6 +21,7 @@ declare module '@nuxt/types' {
     $recaptcha: ReCaptchaInstance
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageBucketUrl: string
   }
 
   interface NuxtAppOptions {
@@ -27,6 +29,7 @@ declare module '@nuxt/types' {
     $recaptcha: ReCaptchaInstance
     readonly $ua: UA
     readonly $env: Record<string, any>
+    readonly $imageBucketUrl: string
   }
 }
 
@@ -35,5 +38,6 @@ declare module 'vuex/types/index' {
     $analytics: AnalyticsEventManager
     $recaptcha: ReCaptchaInstance
     readonly $ua: UA
+    readonly $imageBucketUrl: string
   }
 }
