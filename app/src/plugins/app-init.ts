@@ -27,12 +27,15 @@ const storeModules: Record<string, StoreModule> = {
   },
 }
 
-export default (({ app, store }) => {
+export default (({ app, store }, inject) => {
   // 設定 my83 token name
   const auth = Auth.getInstance()
   auth.setTokenKey(app.$env.JWT_TOKEN_NAME)
 
   const user = User.getInstance()
+
+  // Set image bucket url
+  inject('imageBucketUrl', app.$env.IMAGE_BUCKET_URL)
 
   _.forEach(storeModules, ({ createModule, moduleName }) => {
     app.$registerStore({
