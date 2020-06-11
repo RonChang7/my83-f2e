@@ -65,78 +65,126 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     getters: {},
     actions: {
-      [types.FETCH_PAGE_DATA]({ dispatch, commit }, id: number) {
+      [types.FETCH_PAGE_DATA]({ commit }, id: number) {
         return new Promise((resolve, reject) => {
-          Promise.all([
-            dispatch(types.FETCH_QUESTION_DATA, id),
-            dispatch(types.FETCH_ANSWER_DATA, id),
-            dispatch(types.FETCH_RELATED_QUESTIONS, id),
-            dispatch(types.FETCH_RELATED_BLOGS, id),
-            dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
-          ])
-            .then(
-              ([
-                question,
-                answers,
-                relatedQuestions,
-                relatedBlogs,
-                recommendProduct,
-              ]) => {
+          Promise.allSettled([
+            api.fetchQuestionData(id),
+            api.fetchAnswerData(id),
+            api.fetchRelatedQuestions(id),
+            api.fetchRelatedBlogs(id),
+            api.fetchRecommendProduct(id),
+          ]).then(
+            ([
+              questionResponse,
+              answersResponse,
+              relatedQuestionsResponse,
+              relatedBlogsResponse,
+              recommendProductResponse,
+            ]) => {
+              if (questionResponse.status === 'fulfilled') {
                 const {
-                  data: questionData,
+                  data,
                   page_meta,
                   json_ld,
-                } = question as QuestionDataResponse
-                commit(types.UPDATE_QUESTION_DATA, questionData)
+                } = questionResponse.value as QuestionDataResponse
+                commit(types.UPDATE_QUESTION_DATA, {
+                  ...data,
+                  personalize: DefaultQuestionPersonalize,
+                })
                 commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
                   root: true,
                 })
                 commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+              } else {
+                reject(questionResponse.reason)
+              }
 
-                commit(types.UPDATE_ANSWER_DATA, answers || null)
-                commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestions)
-                commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
-                commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProduct)
-                resolve()
+              if (answersResponse.status === 'fulfilled') {
+                const answerData = answersResponse.value.data.map((answer) => {
+                  return {
+                    ...answer,
+                    personalize: DefaultAnswerPersonalize,
+                  }
+                })
+                commit(types.UPDATE_ANSWER_DATA, answerData)
+              } else {
+                commit(types.UPDATE_ANSWER_DATA, null)
               }
-            )
-            .catch((err) => reject(err))
-        })
-      },
-      [types.FETCH_PAGE_DATA_AFTER_POST]({ dispatch, commit }, id: number) {
-        return new Promise((resolve, reject) => {
-          Promise.all([
-            dispatch(types.FETCH_ANSWER_DATA, id),
-            dispatch(types.FETCH_RELATED_QUESTIONS, id),
-            dispatch(types.FETCH_RELATED_BLOGS, id),
-            dispatch(types.FETCH_RECOMMEND_PRODUCT, id),
-          ])
-            .then(
-              ([answers, relatedQuestions, relatedBlogs, recommendProduct]) => {
-                commit(types.UPDATE_ANSWER_DATA, answers || null)
-                commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestions)
-                commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
-                commit(types.UPDATE_RECOMMEND_PRODUCT, recommendProduct)
-                resolve()
+
+              if (relatedQuestionsResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RELATED_QUESTIONS,
+                  relatedQuestionsResponse.value.data
+                )
               }
-            )
-            .catch((err) => reject(err))
+
+              if (relatedBlogsResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RELATED_BLOGS,
+                  relatedBlogsResponse.value.data
+                )
+              }
+
+              if (recommendProductResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RECOMMEND_PRODUCT,
+                  recommendProductResponse.value.recommend_product
+                )
+              }
+              resolve()
+            }
+          )
         })
       },
-      [types.FETCH_QUESTION_DATA](ctx, id: number) {
-        return new Promise((resolve, reject) => {
-          api
-            .fetchQuestionData(id)
-            .then((res) => resolve(res))
-            .catch((err) => reject(err))
-        })
-      },
-      [types.FETCH_ANSWER_DATA](ctx, id: number) {
+      [types.FETCH_PAGE_DATA_AFTER_POST]({ commit }, id: number) {
         return new Promise((resolve) => {
-          api
-            .fetchAnswerData(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => resolve())
+          Promise.allSettled([
+            api.fetchAnswerData(id),
+            api.fetchRelatedQuestions(id),
+            api.fetchRelatedBlogs(id),
+            api.fetchRecommendProduct(id),
+          ]).then(
+            ([
+              answersResponse,
+              relatedQuestionsResponse,
+              relatedBlogsResponse,
+              recommendProductResponse,
+            ]) => {
+              if (answersResponse.status === 'fulfilled') {
+                const answerData = answersResponse.value.data.map((answer) => {
+                  return {
+                    ...answer,
+                    personalize: DefaultAnswerPersonalize,
+                  }
+                })
+                commit(types.UPDATE_ANSWER_DATA, answerData)
+              } else {
+                commit(types.UPDATE_ANSWER_DATA, null)
+              }
+
+              if (relatedQuestionsResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RELATED_QUESTIONS,
+                  relatedQuestionsResponse.value.data
+                )
+              }
+
+              if (relatedBlogsResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RELATED_BLOGS,
+                  relatedBlogsResponse.value.data
+                )
+              }
+
+              if (recommendProductResponse.status === 'fulfilled') {
+                commit(
+                  types.UPDATE_RECOMMEND_PRODUCT,
+                  recommendProductResponse.value.recommend_product
+                )
+              }
+              resolve()
+            }
+          )
         })
       },
       [types.HIGHLIGHT_BEST_ANSWER]({ commit, state }, bestAnswerId: number) {
@@ -309,22 +357,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RELATED_QUESTIONS](ctx, id: number) {
-        return new Promise((resolve) => {
-          api
-            .fetchRelatedQuestions(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => resolve())
-        })
-      },
-      [types.FETCH_RELATED_BLOGS](ctx, id: number) {
-        return new Promise((resolve) => {
-          api
-            .fetchRelatedBlogs(id)
-            .then(({ data }) => resolve(data))
-            .catch(() => resolve())
-        })
-      },
       [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](
         { commit },
         data: DropdownMenu
@@ -432,34 +464,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      [types.FETCH_RECOMMEND_PRODUCT](ctx, id: number) {
-        return new Promise((resolve) => {
-          api
-            .fetchRecommendProduct(id)
-            .then(({ recommend_product }) => resolve(recommend_product))
-            .catch(() => resolve())
-        })
-      },
     },
     mutations: {
       [types.UPDATE_QUESTION_DATA](state, data: QuestionData) {
-        state.question = {
-          ...data,
-          personalize: DefaultQuestionPersonalize,
-        }
+        state.question = data
       },
       [types.UPDATE_ANSWER_DATA](state, data: AnswerData[] | null) {
-        if (data === null) {
-          state.answers = data
-          return
-        }
-
-        state.answers = data.map((answer) => {
-          return {
-            ...answer,
-            personalize: DefaultAnswerPersonalize,
-          }
-        })
+        state.answers = data
       },
       [types.UPDATE_TOP_ANSWER_ORDER](state, index: number) {
         const bestAnswer: AnswerData = state.answers!.splice(index, 1)[0]
