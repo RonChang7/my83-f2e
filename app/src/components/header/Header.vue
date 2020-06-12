@@ -1,10 +1,12 @@
 <template>
-  <header>
-    <template v-if="isDesktop">
-      <DesktopHeader :enable-rwd="true" :user-role="userRole" />
-    </template>
-    <MobileHeader :enable-rwd="isDesktop" />
-  </header>
+  <Affix placeholder-class="Header__wrapper" content-class="Header__content">
+    <header>
+      <template v-if="isDesktop">
+        <DesktopHeader :enable-rwd="true" :user-role="userRole" />
+      </template>
+      <MobileHeader :enable-rwd="isDesktop" />
+    </header>
+  </Affix>
 </template>
 
 <script lang="ts">
@@ -14,6 +16,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import DesktopHeader from './desktop/DesktopHeader.vue'
 import MobileHeader from './mobile/MobileHeader.vue'
+import Affix from '@/components/base/affix/Affix.vue'
 import * as types from '@/store/header/header.type'
 import { GlobalVuexState } from '@/store/global-state'
 import { UserRole } from '@/services/user/user'
@@ -32,6 +35,7 @@ export default {
   components: {
     DesktopHeader,
     MobileHeader,
+    Affix,
   },
   watch: {
     userRole(val: UserRole) {
@@ -70,3 +74,14 @@ export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {}
 
 export interface Props {}
 </script>
+<style lang="scss" scoped>
+.Header {
+  &__wrapper {
+    width: auto;
+  }
+
+  ::v-deep &__content {
+    z-index: 1000;
+  }
+}
+</style>
