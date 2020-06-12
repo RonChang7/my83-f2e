@@ -3,6 +3,7 @@ import { Module } from 'vuex'
 import * as types from './question.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/question/question'
+import { promiseAllSettledWrapper } from '@/utils/promise-all-settled'
 import {
   QuestionData,
   AnswerData,
@@ -67,12 +68,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
     actions: {
       [types.FETCH_PAGE_DATA]({ commit }, id: number) {
         return new Promise((resolve, reject) => {
-          Promise.allSettled([
-            api.fetchQuestionData(id),
-            api.fetchAnswerData(id),
-            api.fetchRelatedQuestions(id),
-            api.fetchRelatedBlogs(id),
-            api.fetchRecommendProduct(id),
+          Promise.all([
+            promiseAllSettledWrapper(api.fetchQuestionData(id)),
+            promiseAllSettledWrapper(api.fetchAnswerData(id)),
+            promiseAllSettledWrapper(api.fetchRelatedQuestions(id)),
+            promiseAllSettledWrapper(api.fetchRelatedBlogs(id)),
+            promiseAllSettledWrapper(api.fetchRecommendProduct(id)),
           ]).then(
             ([
               questionResponse,
@@ -138,11 +139,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.FETCH_PAGE_DATA_AFTER_POST]({ commit }, id: number) {
         return new Promise((resolve) => {
-          Promise.allSettled([
-            api.fetchAnswerData(id),
-            api.fetchRelatedQuestions(id),
-            api.fetchRelatedBlogs(id),
-            api.fetchRecommendProduct(id),
+          Promise.all([
+            promiseAllSettledWrapper(api.fetchAnswerData(id)),
+            promiseAllSettledWrapper(api.fetchRelatedQuestions(id)),
+            promiseAllSettledWrapper(api.fetchRelatedBlogs(id)),
+            promiseAllSettledWrapper(api.fetchRecommendProduct(id)),
           ]).then(
             ([
               answersResponse,
