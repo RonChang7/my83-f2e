@@ -92,7 +92,9 @@ const options: ComponentOption = {
 
     this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
     this.isDesktop &&
-      window.addEventListener('scroll', this.getScrollHeightBottom)
+      window.addEventListener('scroll', this.getScrollHeightBottom, {
+        passive: true,
+      })
   },
   watch: {
     scrollHeightBottom(val: number) {
