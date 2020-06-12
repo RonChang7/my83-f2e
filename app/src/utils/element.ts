@@ -78,3 +78,10 @@ export function getOffsetTop(
 
   return rect.top
 }
+
+export function getRect(target: HTMLElement | Window | null): ClientRect {
+  if (target === window) {
+    return { top: 0, left: 0, bottom: 0 } as ClientRect
+  }
+  return (target as HTMLElement).getBoundingClientRect()
+}
