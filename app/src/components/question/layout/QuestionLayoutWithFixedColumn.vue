@@ -88,6 +88,7 @@ const options: ComponentOption = {
 
     this.$nextTick(() => {
       this.getFixedColumnStart()
+      this.getScrollHeightBottom()
     })
 
     this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
