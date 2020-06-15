@@ -1,15 +1,14 @@
 <template>
-  <div class="BaseSearch">
+  <form class="BaseSearch" @submit.prevent="submit">
     <input
       class="BaseSearch__search"
       type="search"
       :value="value"
       :placeholder="placeholder"
       @input="input"
-      @keyup.enter="submit"
     />
     <BaseSearchIcon class="BaseSearch__button" @click.native="submit" />
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
