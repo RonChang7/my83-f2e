@@ -12,6 +12,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { Route } from 'vue-router'
 import BaseSearch from '@/components/my83-ui-kit/search/BaseSearch.vue'
 
 const options: ComponentOption = {
@@ -35,11 +36,14 @@ const options: ComponentOption = {
       })
     },
   },
-  created() {
-    this.value =
-      this.$route.path === '/question/search' && this.$route.query.q
-        ? String(this.$route.query.q)
-        : ''
+  watch: {
+    '$route.query': {
+      immediate: true,
+      handler(val: Route['query']) {
+        this.value =
+          this.$route.path === '/question/search' && val.q ? String(val.q) : ''
+      },
+    },
   },
 }
 
