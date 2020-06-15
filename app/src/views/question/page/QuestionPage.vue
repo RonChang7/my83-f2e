@@ -161,8 +161,8 @@ export default {
       )
     },
     scrollToTop() {
-      const header = document.querySelector('header')
-      scrollTo(header!, window)
+      const body = document.querySelector('body')
+      scrollTo(body!, window)
     },
     createScrollToTopIntersectionObserver() {
       return new IntersectionObserver((entries) => {
