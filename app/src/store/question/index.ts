@@ -3,7 +3,7 @@ import { Module } from 'vuex'
 import * as types from './question.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/question/question'
-import { promiseAllSettledWrapper } from '@/utils/promise-all-settled'
+import { promiseSettledWrapper } from '@/utils/promise-settled'
 import {
   QuestionData,
   AnswerData,
@@ -69,11 +69,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.FETCH_PAGE_DATA]({ commit }, id: number) {
         return new Promise((resolve, reject) => {
           Promise.all([
-            promiseAllSettledWrapper(api.fetchQuestionData(id)),
-            promiseAllSettledWrapper(api.fetchAnswerData(id)),
-            promiseAllSettledWrapper(api.fetchRelatedQuestions(id)),
-            promiseAllSettledWrapper(api.fetchRelatedBlogs(id)),
-            promiseAllSettledWrapper(api.fetchRecommendProduct(id)),
+            promiseSettledWrapper(api.fetchQuestionData(id)),
+            promiseSettledWrapper(api.fetchAnswerData(id)),
+            promiseSettledWrapper(api.fetchRelatedQuestions(id)),
+            promiseSettledWrapper(api.fetchRelatedBlogs(id)),
+            promiseSettledWrapper(api.fetchRecommendProduct(id)),
           ]).then(
             ([
               questionResponse,
@@ -140,10 +140,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.FETCH_PAGE_DATA_AFTER_POST]({ commit }, id: number) {
         return new Promise((resolve) => {
           Promise.all([
-            promiseAllSettledWrapper(api.fetchAnswerData(id)),
-            promiseAllSettledWrapper(api.fetchRelatedQuestions(id)),
-            promiseAllSettledWrapper(api.fetchRelatedBlogs(id)),
-            promiseAllSettledWrapper(api.fetchRecommendProduct(id)),
+            promiseSettledWrapper(api.fetchAnswerData(id)),
+            promiseSettledWrapper(api.fetchRelatedQuestions(id)),
+            promiseSettledWrapper(api.fetchRelatedBlogs(id)),
+            promiseSettledWrapper(api.fetchRecommendProduct(id)),
           ]).then(
             ([
               answersResponse,
