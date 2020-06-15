@@ -7,7 +7,7 @@
  *
  * @param p A Promise.
  */
-export const promiseAllSettledWrapper = <T>(
+export const promiseSettledWrapper = <T>(
   p: Promise<T>
 ): Promise<PromiseFulfilledResult<T> | PromiseRejectedResult> =>
   p.then(
