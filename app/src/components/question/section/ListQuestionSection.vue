@@ -76,6 +76,7 @@ export default options
 
   @include max-media('xl') {
     margin-bottom: 0;
+    padding: 0;
   }
 }
 </style>
