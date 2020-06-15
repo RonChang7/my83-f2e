@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import * as SentryTypes from '@sentry/minimal'
-import { Severity } from '@sentry/types'
 
 export const sentryLog = (
   sentry: typeof SentryTypes,
@@ -8,7 +7,7 @@ export const sentryLog = (
   detail: ErrorDetail
 ) => {
   sentry.withScope((scope) => {
-    const { statusCode, method, apiUrl, message, severity } = detail
+    const { statusCode, method, apiUrl, message } = detail
     const platform = process.server ? 'server' : 'client'
     const project = 'nuxt'
     const tags = _.reduce(
@@ -18,6 +17,7 @@ export const sentryLog = (
         api_url: apiUrl,
         process: platform,
         project,
+        message,
       },
       (result, value, key) => {
         if (typeof value !== 'undefined') {
@@ -30,9 +30,7 @@ export const sentryLog = (
     )
 
     scope.setTags(tags)
-
     scope.setFingerprint([String(statusCode), platform, project])
-    sentry.captureMessage(message, severity || Severity.Error)
     sentry.captureException(err)
   })
 }
@@ -42,5 +40,4 @@ interface ErrorDetail {
   method?: string
   apiUrl?: string
   message: string
-  severity?: Severity
 }
