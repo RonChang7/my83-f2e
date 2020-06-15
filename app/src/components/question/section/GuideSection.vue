@@ -54,7 +54,7 @@ export default {
   methods: {
     hotPost() {
       // @todo: Update query string after sort function
-      this.$router.push('/question/asking')
+      this.$router.push('/question')
     },
     newPost() {
       this.$router.push('/question/asking')
