@@ -24,9 +24,8 @@
               ? toPage(page)
               : null
         "
-      >
-        {{ page }}
-      </span>
+        v-text="page"
+      />
       <BaseArrowRight
         v-if="shouldShowNextButton"
         class="BasePagination__next"
