@@ -7,7 +7,7 @@ const options: ComponentOption = {
   functional: true,
   render(h, ctx) {
     return h('img', {
-      staticClass: `ScrollToTopButton ${ctx.data.staticClass}`,
+      staticClass: `BaseScrollToTopButton ${ctx.data.staticClass}`,
       class: {
         ...ctx.data.class,
         disabled: ctx.props.disabled || false,
@@ -36,12 +36,18 @@ export default options
 </script>
 
 <style lang="scss" scoped>
-.ScrollToTopButton {
+@import '@/sass/mixins.scss';
+
+.BaseScrollToTopButton {
   opacity: 0.3;
 
-  &:hover,
-  &:active {
-    opacity: 0.55;
+  @include hover-supported {
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      opacity: 0.55;
+    }
   }
 
   &.disabled {
