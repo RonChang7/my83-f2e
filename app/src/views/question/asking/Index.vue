@@ -58,8 +58,7 @@ const options: ComponentOption = {
         }
       }
     } catch (error) {
-      // @TODO: Change path after migrate to Nuxt.js
-      window.location.href = '/question'
+      this.$router.push('/question')
       return
     }
 
@@ -105,8 +104,7 @@ const options: ComponentOption = {
       this.$store.dispatch(
         `global/${UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT}`,
         () => {
-          // @TODO: Change path after migrate to Nuxt.js
-          window.location.href = '/question'
+          this.$router.push('/question')
         }
       )
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
@@ -116,25 +114,24 @@ const options: ComponentOption = {
     updateGlobalDialogContent() {
       let payload = {}
 
-      // @TODO: Change path after migrate to Nuxt.js
       if (this.isSuspect) {
         payload = {
           ...IsUserSuspectDialogContent,
           rightConfirmFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
           closeFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
         } as GlobalDialogContent
       } else if (this.hasDuplicatedPost) {
         payload = {
           ...HasDuplicatedPostDialogContent,
           rightConfirmFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
           closeFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
         } as GlobalDialogContent
       }
