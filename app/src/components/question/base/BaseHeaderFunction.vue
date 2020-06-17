@@ -429,7 +429,7 @@ export interface Props {
     }
   }
 
-  &::v-deep button {
+  &::v-deep [type='button'] {
     margin-left: 10px;
   }
 

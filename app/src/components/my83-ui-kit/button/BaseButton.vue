@@ -1,7 +1,9 @@
 <template>
-  <button
+  <component
+    :is="to ? 'GlobalLink' : 'button'"
     :class="classObject"
     :disabled="isDisabled || state === 'loading'"
+    :to="to"
     type="button"
     class="BaseButton"
   >
@@ -18,21 +20,28 @@
       v-if="isLoading || state === 'loading'"
       :class="[`BaseButton__${size}__loading`, `BaseButton__${type}__loading`]"
     />
-  </button>
+  </component>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { RawLocation } from 'vue-router'
 import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
+import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { isSlotExist } from '@/utils/render-helper'
 
 export default {
   components: {
     LoadingIcon,
+    GlobalLink,
   },
   props: {
+    to: {
+      type: [String, Object],
+      default: '',
+    },
     size: {
       type: String,
       required: true,
@@ -101,6 +110,7 @@ export interface Computed {
 }
 
 export interface Props {
+  to: RawLocation
   size: 's' | 'm' | 'l-a' | 'l-b' | 'xl'
   type: 'primary' | 'secondary'
   state: string
@@ -114,7 +124,6 @@ export interface Props {
 @import '@/sass/mixins.scss';
 
 @mixin loading($font-size) {
-  margin-left: calc(50% - 9px);
   font-size: $font-size;
 }
 
@@ -123,6 +132,10 @@ export interface Props {
 }
 
 .BaseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   @each $size, $value in $button-height {
     &__#{$size} {
       @include button($size);
@@ -135,9 +148,8 @@ export interface Props {
     &::v-deep &__#{$size}__loading {
       @include loading(map-get($button-font, $size));
 
-      margin-top: -1em;
       position: relative;
-      top: 0.5em;
+      left: -1em;
     }
   }
 

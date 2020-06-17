@@ -121,7 +121,7 @@ export default options
     display: none;
   }
 
-  button {
+  [type='button'] {
     margin-top: 16px;
   }
 }

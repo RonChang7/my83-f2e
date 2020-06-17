@@ -231,7 +231,7 @@ export interface Props {
     width: 100%;
     margin-top: 30px;
 
-    &::v-deep > button:not(:first-child) {
+    &::v-deep > [type='button']:not(:first-child) {
       margin-left: 15px;
     }
   }
