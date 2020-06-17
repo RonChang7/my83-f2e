@@ -337,11 +337,11 @@ export interface Props {
     align-items: center;
     margin-top: 10px;
 
-    > button {
+    > [type='button'] {
       white-space: nowrap;
     }
 
-    > button:not(:last-child) {
+    > [type='button']:not(:last-child) {
       margin-right: 10px;
     }
   }

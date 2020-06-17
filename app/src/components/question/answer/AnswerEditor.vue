@@ -286,11 +286,11 @@ export interface Props {
     margin-top: 10px;
     padding-bottom: 10px;
 
-    > button {
+    > [type='button'] {
       white-space: nowrap;
     }
 
-    > button:not(:last-child) {
+    > [type='button']:not(:last-child) {
       margin-right: 10px;
     }
   }

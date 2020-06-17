@@ -122,7 +122,7 @@ export interface Props {}
   &__action {
     display: flex;
 
-    > button:not(:last-child) {
+    > [type='button']:not(:last-child) {
       margin-right: 12px;
     }
   }

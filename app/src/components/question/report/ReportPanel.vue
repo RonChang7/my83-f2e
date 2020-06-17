@@ -300,7 +300,7 @@ export interface ValidateMessage {
   &__function {
     display: flex;
 
-    > button:not(:last-child) {
+    > [type='button']:not(:last-child) {
       margin-right: 14px;
     }
   }
