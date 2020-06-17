@@ -28,7 +28,7 @@
       <span class="highlight">多發表專業留言，讓保戶了解你的專業所在吧！</span>
     </div>
     <div class="AnswerSalesRule__action">
-      <BaseButton size="m" @click.native="qaKing">
+      <BaseButton size="m" to="/classroom#qaKing">
         我要成為討論區達人
       </BaseButton>
     </div>
@@ -44,12 +44,6 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 export default {
   components: {
     BaseButton,
-  },
-  methods: {
-    qaKing() {
-      // @todo: Change path after migrate to Nuxt.js
-      window.location.href = '/classroom#qaKing'
-    },
   },
 } as ComponentOption
 
@@ -73,9 +67,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
-  qaKing(): void
-}
+export interface Methods {}
 
 export interface Computed {}
 

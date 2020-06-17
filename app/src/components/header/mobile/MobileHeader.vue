@@ -11,10 +11,12 @@
       />
     </GlobalLink>
     <div class="MobileHeader__function">
-      <AskingRoundButton
+      <GlobalLink
         v-if="shouldShowAskingButton"
-        @click="$router.push({ name: 'questionAsking' })"
-      />
+        :to="{ name: 'questionAsking' }"
+      >
+        <AskingRoundButton />
+      </GlobalLink>
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
     </div>
