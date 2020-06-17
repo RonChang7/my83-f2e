@@ -4,7 +4,7 @@
       v-if="shouldShowEditButton"
       size="s"
       type="secondary"
-      @click.native="editPost"
+      :to="{ name: 'questionAsking', params: { id: sectionId } }"
     >
       編輯
     </BaseButton>
@@ -30,7 +30,7 @@
       v-if="shouldShowConsultSalesButton"
       size="s"
       type="secondary"
-      @click.native="consultSales"
+      :to="consultSalesUrl"
     >
       免費諮詢
     </BaseButton>
@@ -139,6 +139,8 @@ export default {
       return `${this.sectionType}-${this.sectionId}`
     },
     shouldShowEditButton() {
+      if (!this.isMounted) return false
+
       return this.sectionType === 'question' && this.personalize.is_owner
     },
     shouldShowFollowButton() {
@@ -188,11 +190,20 @@ export default {
     shouldShowMoreButton() {
       return this.sectionType !== 'response'
     },
+    consultSalesUrl() {
+      const path = this.authorInfo.nickname
+        ? `/message/nicknameSales/nickname/${encodeURIComponent(
+            this.authorInfo.nickname
+          )}`
+        : `/user/${this.authorInfo.id}`
+      const query = {
+        content: `你好,\n\n我有看到你的留言\n${this.$env.HOST_URL}${this.$route.path}#${this.anchorString}\n`,
+        source: 'forum',
+      }
+      return `${path}?${qs.stringify(query)}`
+    },
   },
   methods: {
-    editPost() {
-      this.$router.push(`/question/asking/${this.sectionId}`)
-    },
     followQuestion() {
       this.temporarilyFollowStatus =
         this.temporarilyFollowStatus === null
@@ -241,19 +252,6 @@ export default {
       }
 
       this.state.setBestAnswer = ''
-    },
-    consultSales() {
-      // @todo: Change path after migrate to Nuxt.js
-      const path = this.authorInfo.nickname
-        ? `/message/nicknameSales/nickname/${encodeURIComponent(
-            this.authorInfo.nickname
-          )}`
-        : `/user/${this.authorInfo.id}`
-      const query = {
-        content: `你好,\n\n我有看到你的留言\n${this.$env.HOST_URL}${this.$route.path}#${this.anchorString}\n`,
-        source: 'forum',
-      }
-      window.location.href = `${path}?${qs.stringify(query)}`
     },
     showDropdownPanel() {
       const el = this.$refs.more
@@ -366,7 +364,6 @@ export interface Data {
 }
 
 export interface Methods {
-  editPost(): void
   followQuestion(): void
   updateFollowQuestionState(
     this: ComponentInstance,
@@ -374,7 +371,6 @@ export interface Methods {
   ): Promise<void>
   resetTempState(): void
   setBestAnswer(): void
-  consultSales(): void
   showDropdownPanel(): void
   reportOption(): DropdownMenuOption
   dropdownMenuOptions(): DropdownMenuOption[]
@@ -390,6 +386,7 @@ export interface Computed {
   bestAnswerButtonText: string
   shouldShowConsultSalesButton: boolean
   shouldShowMoreButton: boolean
+  consultSalesUrl: string
 }
 
 export interface Props {
