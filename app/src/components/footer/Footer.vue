@@ -13,7 +13,7 @@
         </h3>
         <div class="content">
           從
-          <span class="text-primary">消費者立場</span>
+          <span class="text-primary">保戶立場</span>
           出發，推薦最優質保險商品，找到最合適的業務員
         </div>
       </section>
