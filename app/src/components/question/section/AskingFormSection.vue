@@ -400,15 +400,14 @@ const options: ComponentOption = {
     updateGlobalDialogContent({ isSuspect, hasDuplicatedPost }) {
       let payload = {}
 
-      // @TODO: Change path after migrate to Nuxt.js
       if (isSuspect) {
         payload = {
           ...IsUserSuspectDialogContent,
           rightConfirmFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
           closeFn: () => {
-            window.location.href = '/question'
+            this.$router.push('/question')
           },
         } as GlobalDialogContent
       } else if (hasDuplicatedPost) {
