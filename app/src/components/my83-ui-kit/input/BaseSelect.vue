@@ -48,13 +48,7 @@ export default {
       : BaseMobileSelect
 
     return h(selectComponent, {
-      props: {
-        value: this.value,
-        options: this.options,
-        placeholder: this.placeholder,
-        state: this.state,
-        disabled: this.disabled,
-      },
+      props: this.$props,
       on: {
         input: this.input,
       },
