@@ -24,7 +24,7 @@
       :state="state.setBestAnswer"
       @click.native="setBestAnswer"
     >
-      {{ BestAnswerButtonText }}
+      {{ bestAnswerButtonText }}
     </BaseButton>
     <BaseButton
       v-if="shouldShowConsultSalesButton"
@@ -169,7 +169,7 @@ export default {
         !this.personalize.is_owner
       )
     },
-    BestAnswerButtonText() {
+    bestAnswerButtonText() {
       if (this.sectionType === 'answer') {
         return this.isBestAnswer ? '取消最佳留言' : '設為最佳留言'
       }
@@ -387,7 +387,7 @@ export interface Computed {
   shouldShowFollowButton: boolean
   followButtonText: string
   shouldShowBestAnswerButton: boolean
-  BestAnswerButtonText: string
+  bestAnswerButtonText: string
   shouldShowConsultSalesButton: boolean
   shouldShowMoreButton: boolean
 }
