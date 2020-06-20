@@ -18,12 +18,7 @@
           active: page === pagination.currentPage,
           link: typeof page === 'number' && page !== pagination.currentPage,
         }"
-        @click="
-          () =>
-            typeof page === 'number' && page !== pagination.currentPage
-              ? toPage(page)
-              : null
-        "
+        @click="navigateToPage(page, toPage)"
         v-text="page"
       />
       <BaseArrowRight
@@ -43,7 +38,6 @@ import {
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import Pagination from '@/components/base/pagination/Pagination.vue'
-import { Pagination as PaginationType } from '@/api/type'
 import BaseArrowLeft from '@/components/base/icon/24/BaseArrowLeft.vue'
 import BaseArrowRight from '@/components/base/icon/24/BaseArrowRight.vue'
 
@@ -62,7 +56,7 @@ const options: ComponentOption = {
     maxPages: {
       type: Number,
       default: 5,
-      validator: (value) => !!(value % 2),
+      validator: (value) => value > 0 && !!(value % 2),
     },
   },
   computed: {
@@ -111,6 +105,13 @@ const options: ComponentOption = {
       return this.pagination.currentPage !== this.pagination.totalPage
     },
   },
+  methods: {
+    navigateToPage(page, cb) {
+      if (typeof page === 'number' && page !== this.pagination.currentPage) {
+        cb(page)
+      }
+    },
+  },
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -133,7 +134,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export interface Methods {
+  navigateToPage(page: number, cb: Function): void
+}
 
 export interface Computed {
   paginationPages: (number | string)[]
@@ -142,8 +145,13 @@ export interface Computed {
 }
 
 export interface Props {
-  pagination: PaginationType
+  pagination: Pagination
   maxPages: number
+}
+
+interface Pagination {
+  totalPage: number
+  currentPage: number
 }
 
 export default options
