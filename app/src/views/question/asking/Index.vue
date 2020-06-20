@@ -58,7 +58,7 @@ const options: ComponentOption = {
         }
       }
     } catch (error) {
-      this.$router.push('/question')
+      this.$router.push({ name: 'questionList' })
       return
     }
 
@@ -104,7 +104,7 @@ const options: ComponentOption = {
       this.$store.dispatch(
         `global/${UPDATE_AFTER_CLOSE_LOGIN_PANEL_EVENT}`,
         () => {
-          this.$router.push('/question')
+          this.$router.push({ name: 'questionList' })
         }
       )
       this.$store.dispatch(`global/${UPDATE_AFTER_LOGIN_EVENT}`, () => {
@@ -118,20 +118,20 @@ const options: ComponentOption = {
         payload = {
           ...IsUserSuspectDialogContent,
           rightConfirmFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
           closeFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
         } as GlobalDialogContent
       } else if (this.hasDuplicatedPost) {
         payload = {
           ...HasDuplicatedPostDialogContent,
           rightConfirmFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
           closeFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
         } as GlobalDialogContent
       }

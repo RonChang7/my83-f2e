@@ -8,6 +8,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       component: resolve('@/views/Ping.vue'),
     },
     {
+      name: 'headerMenu',
       path: '/header-menu',
       component: resolve('@/views/header-menu/HeaderMenu.vue'),
       meta: {
@@ -15,6 +16,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
+      name: 'questionList',
       path: '/question',
       component: resolve('@/views/question/list/CreateQuestionListPage.ts'),
       meta: {
@@ -23,6 +25,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
+      name: 'questionSearch',
       path: '/question/search',
       component: resolve('@/views/question/list/CreateQuestionListPage.ts'),
       meta: {
@@ -31,6 +34,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
+      name: 'questionAsking',
       path: '/question/asking/:id(\\d+)?',
       component: resolve('@/views/question/asking/Index.vue'),
       meta: {
@@ -38,6 +42,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       },
     },
     {
+      name: 'questionPage',
       path: '/question/:id(\\d+)',
       component: resolve('@/views/question/page/Index.vue'),
       meta: {

@@ -404,10 +404,10 @@ const options: ComponentOption = {
         payload = {
           ...IsUserSuspectDialogContent,
           rightConfirmFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
           closeFn: () => {
-            this.$router.push('/question')
+            this.$router.push({ name: 'questionList' })
           },
         } as GlobalDialogContent
       } else if (hasDuplicatedPost) {

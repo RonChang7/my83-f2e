@@ -37,7 +37,7 @@ export default {
     const validatedQuery = queryValidator(query) as Record<string, any>
 
     if (pageType === 'search' && !validatedQuery.q) {
-      redirect('/question')
+      redirect({ name: 'questionList' })
       return
     }
 
@@ -99,7 +99,7 @@ export default {
       questionListStore.meta!.pagination.currentPage >
       questionListStore.meta!.pagination.totalPage
     ) {
-      redirect('/question')
+      redirect({ name: 'questionList' })
     }
   },
   methods: {

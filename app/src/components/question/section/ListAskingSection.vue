@@ -22,7 +22,7 @@ const options: ComponentOption = {
             size: this.isDesktop ? 'xl' : 'l-b',
           },
           nativeOn: {
-            click: () => this.$router.push('/question/asking'),
+            click: () => this.$router.push({ name: 'questionAsking' }),
           },
           scopedSlots: {
             icon: () => h(BasePencil),
