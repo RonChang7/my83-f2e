@@ -6,12 +6,16 @@ import { CombinedVueInstance } from 'vue/types/vue'
 const options: ComponentOption = {
   functional: true,
   render(h, ctx) {
+    const disabledStyleObject = {
+      opacity: 0.1,
+    }
+
     return h('img', {
       staticClass: `BaseScrollToTopButton ${ctx.data.staticClass}`,
       class: {
         ...ctx.data.class,
-        disabled: ctx.props.disabled || false,
       },
+      staticStyle: ctx.props.disabled ? disabledStyleObject : {},
       attrs: {
         ...ctx.data.attrs,
         src: `${ctx.parent.$imageBucketUrl}/front/common/icon/to-top.svg`,
