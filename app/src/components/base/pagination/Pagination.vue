@@ -6,6 +6,7 @@ import {
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Pagination } from '@/api/type'
+import { renderlessComponentWrapper } from '@/utils/render-helper'
 
 const options: ComponentOption = {
   props: {
@@ -37,9 +38,9 @@ const options: ComponentOption = {
     },
   },
   // @ts-ignore
-  render() {
+  render(h) {
     if (this.$scopedSlots.default) {
-      return this.$scopedSlots.default(this.slot)
+      return renderlessComponentWrapper(this.$scopedSlots.default(this.slot), h)
     }
   },
 }
