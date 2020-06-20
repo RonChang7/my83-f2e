@@ -6,9 +6,8 @@ import { CombinedVueInstance } from 'vue/types/vue'
 export default {
   functional: true,
   render(h, { props, data }) {
-    const htmlTag = props.type === 'list' ? 'h3' : 'h1'
     return h(
-      htmlTag,
+      props.type,
       {
         staticClass: 'QuestionTitle',
         class: [data.class, data.staticClass],
@@ -26,7 +25,7 @@ export interface Instance extends Vue {}
 
 export interface Props {
   text: string
-  type: 'list'
+  type: 'h1' | 'h3'
 }
 </script>
 
