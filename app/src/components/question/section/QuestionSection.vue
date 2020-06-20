@@ -10,7 +10,7 @@
         :user-role="userRole"
       />
     </div>
-    <QuestionTitle :text="subject" />
+    <QuestionTitle type="h1" :text="subject" />
     <BaseContent :content="content" />
     <QuestionImages v-if="images.length" :images="images" />
     <QuestionTags v-if="tags.length" :tags="tags" icon-type="tag" />

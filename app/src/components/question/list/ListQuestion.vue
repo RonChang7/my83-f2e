@@ -8,7 +8,7 @@
           <QuestionTitle
             class="ListQuestion__content__title"
             :text="subject"
-            type="list"
+            type="h3"
           />
           <ListQuestionContent
             class="ListQuestion__content__abstract"
