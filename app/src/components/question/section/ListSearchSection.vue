@@ -55,7 +55,7 @@ const options: ComponentOption = {
       if (!this.value.trim()) return
 
       this.$router.push({
-        path: '/question/search',
+        name: 'questionSearch',
         query: {
           q: this.value,
         },
@@ -67,7 +67,7 @@ const options: ComponentOption = {
       immediate: true,
       handler(val: Route['query']) {
         this.value =
-          this.$route.path === '/question/search' && val.q ? String(val.q) : ''
+          this.$route.name === 'questionSearch' && val.q ? String(val.q) : ''
       },
     },
   },

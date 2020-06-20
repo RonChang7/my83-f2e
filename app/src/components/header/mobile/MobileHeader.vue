@@ -13,7 +13,7 @@
     <div class="MobileHeader__function">
       <AskingRoundButton
         v-if="shouldShowAskingButton"
-        @click="$router.push('/question/asking')"
+        @click="$router.push({ name: 'questionAsking' })"
       />
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
@@ -50,7 +50,6 @@ export default {
   data() {
     return {
       isMounted: false,
-      showCloseMenu: false,
     }
   },
   computed: {
@@ -59,9 +58,12 @@ export default {
 
       return (
         this.userRole === 'sales' &&
-        (this.$route.path === '/question' ||
-          this.$route.path === '/question/search')
+        (this.$route.name === 'questionList' ||
+          this.$route.name === 'questionSearch')
       )
+    },
+    showCloseMenu() {
+      return this.$route.name === 'headerMenu'
     },
   },
   methods: {
@@ -70,14 +72,6 @@ export default {
     },
     openMenuHandler() {
       this.$router.push('/header-menu')
-    },
-  },
-  watch: {
-    '$route.path': {
-      immediate: true,
-      handler(val) {
-        this.showCloseMenu = val === '/header-menu'
-      },
     },
   },
   mounted() {
@@ -107,7 +101,6 @@ export interface Instance
 
 export interface Data {
   isMounted: boolean
-  showCloseMenu: boolean
 }
 
 export interface Methods {
@@ -117,6 +110,7 @@ export interface Methods {
 
 export interface Computed {
   shouldShowAskingButton: boolean
+  showCloseMenu: boolean
 }
 
 export interface Props {
