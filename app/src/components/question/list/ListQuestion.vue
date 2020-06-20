@@ -102,7 +102,6 @@ const options: ComponentOption = {
       return this.question.images.length ? this.question.images[0] : ''
     },
     tags() {
-      const originTagsCount = this.question.tags.length
       const cutPoint = this.isMobile
         ? this.image
           ? 5
@@ -110,8 +109,9 @@ const options: ComponentOption = {
         : this.image
         ? 13
         : 15
+      const shouldAttachEllipsis = this.question.tags.length > cutPoint
       const tags = _.cloneDeep(this.question.tags.slice(0, cutPoint))
-      if (originTagsCount > cutPoint) {
+      if (shouldAttachEllipsis) {
         tags[cutPoint - 1].name += ' ...'
       }
       return tags
