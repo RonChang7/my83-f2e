@@ -75,13 +75,15 @@ export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {}
 export interface Props {}
 </script>
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
+
 .Header {
   &__wrapper {
     width: auto;
   }
 
   ::v-deep &__content {
-    z-index: 1000;
+    z-index: map-get($z-index, 'header');
   }
 }
 </style>
