@@ -198,6 +198,11 @@ export default options
 
     &__link {
       @include hover-supported {
+        &::v-deep #{$self}__title,
+        &::v-deep #{$self}__abstract {
+          transition: 0.3s;
+        }
+
         &:hover {
           &::v-deep #{$self}__title {
             color: $primary-color;
