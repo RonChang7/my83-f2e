@@ -37,6 +37,7 @@ import QuestionTitle from '../question/QuestionTitle.vue'
 import BaseContent from '../base/BaseContent.vue'
 import ContentMeta from '../base/ContentMeta.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
+import QuestionTags from '../question/QuestionTags.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   QuestionData,
@@ -48,7 +49,6 @@ import UserMetaMixin, {
   Computed as UserMetaMixinComputed,
 } from '@/mixins/user/user-meta'
 const QuestionImages = () => import('../question/QuestionImages.vue')
-const QuestionTags = () => import('../question/QuestionTags.vue')
 
 export default {
   components: {

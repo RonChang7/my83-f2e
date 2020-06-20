@@ -50,6 +50,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import ContentMeta from '../base/ContentMeta.vue'
 import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
 import QuestionTitle from '../question/QuestionTitle.vue'
+import QuestionTags from '../question/QuestionTags.vue'
 import ListQuestionContent from './ListQuestionContent.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { QuestionListData } from '@/api/question/list.type'
@@ -57,7 +58,6 @@ import { AuthorInfo, QuestionMeta } from '@/api/question/question.type'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
-const QuestionTags = () => import('../question/QuestionTags.vue')
 const ListQuestionImage = () => import('./ListQuestionImage.vue')
 
 const options: ComponentOption = {
