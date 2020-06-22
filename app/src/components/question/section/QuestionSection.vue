@@ -10,7 +10,7 @@
         :user-role="userRole"
       />
     </div>
-    <QuestionTitle :text="subject" />
+    <QuestionTitle type="h1" :text="subject" />
     <BaseContent :content="content" />
     <QuestionImages v-if="images.length" :images="images" />
     <QuestionTags v-if="tags.length" :tags="tags" icon-type="tag" />
@@ -19,7 +19,7 @@
       :tags="companies"
       icon-type="company"
     />
-    <BaseMeta
+    <ContentMeta
       :created-at="createdAt"
       :answer-count="answerCount"
       meta-type="question"
@@ -35,8 +35,9 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
 import QuestionTitle from '../question/QuestionTitle.vue'
 import BaseContent from '../base/BaseContent.vue'
-import BaseMeta from '../base/BaseMeta.vue'
+import ContentMeta from '../base/ContentMeta.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
+import QuestionTags from '../question/QuestionTags.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   QuestionData,
@@ -48,7 +49,6 @@ import UserMetaMixin, {
   Computed as UserMetaMixinComputed,
 } from '@/mixins/user/user-meta'
 const QuestionImages = () => import('../question/QuestionImages.vue')
-const QuestionTags = () => import('../question/QuestionTags.vue')
 
 export default {
   components: {
@@ -57,7 +57,7 @@ export default {
     BaseContent,
     QuestionImages,
     QuestionTags,
-    BaseMeta,
+    ContentMeta,
     BaseHeaderFunction,
   },
   mixins: [UserMetaMixin],

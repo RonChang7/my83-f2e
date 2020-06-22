@@ -4,6 +4,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Facebook } from './facebook'
 import { FaceBookStatus, FacebookUser } from './facebook.type'
+import { renderlessComponentWrapper } from '@/utils/render-helper'
 
 // Manual refresh token when (current time - token expire time) is less than REFRESH_TIME_THRESHOLD
 const REFRESH_TIME_THRESHOLD = 60 * 1000
@@ -40,9 +41,9 @@ export default {
       }
     },
   },
-  render() {
+  render(h) {
     if (this.$scopedSlots.default) {
-      return this.$scopedSlots.default(this.slot)
+      return renderlessComponentWrapper(this.$scopedSlots.default(this.slot), h)
     }
   },
 } as ComponentOption

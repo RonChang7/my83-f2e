@@ -67,7 +67,7 @@
       v-if="isMobile && shouldShowScrollToTop"
       class="scrollToTop"
       :class="{ hasProduct: shouldShowRecommendProduct }"
-      @click.native="scrollToTop"
+      @click="scrollToTop"
     />
   </div>
 </template>
@@ -161,8 +161,8 @@ export default {
       )
     },
     scrollToTop() {
-      const header = document.querySelector('header')
-      scrollTo(header!, window)
+      const body = document.querySelector('body')
+      scrollTo(body!, window)
     },
     createScrollToTopIntersectionObserver() {
       return new IntersectionObserver((entries) => {
@@ -316,7 +316,7 @@ export interface Props {}
   }
 }
 
-.scrollToTop {
+::v-deep .scrollToTop {
   position: fixed;
   bottom: 20px;
   right: 20px;

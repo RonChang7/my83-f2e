@@ -1,28 +1,28 @@
 <template>
-  <div class="BaseMeta">
-    <div class="BaseMeta__meta">
+  <div class="ContentMeta">
+    <div class="ContentMeta__meta">
       <template v-if="metaType === 'question'">
-        <div class="BaseMeta__count">
+        <div class="ContentMeta__count">
           <BaseComment24 />
           {{ answerCount }}
         </div>
       </template>
       <template v-else-if="metaType === 'answer'">
-        <div class="BaseMeta__count">
+        <div class="ContentMeta__count">
           <BaseThumbUp />
           {{ likeCount }}
         </div>
-        <div class="BaseMeta__count">
+        <div class="ContentMeta__count">
           <BaseThumbDown />
           {{ dislikeCount }}
         </div>
-        <div class="BaseMeta__count">
+        <div class="ContentMeta__count">
           <BaseComment18 />
           {{ answerCount }}
         </div>
       </template>
     </div>
-    <div class="BaseMeta__createdAt">{{ relativeTime }}</div>
+    <div class="ContentMeta__createdAt">{{ relativeTime }}</div>
   </div>
 </template>
 
@@ -112,7 +112,7 @@ export interface Props {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 
-.BaseMeta {
+.ContentMeta {
   display: flex;
   justify-content: space-between;
   align-items: center;

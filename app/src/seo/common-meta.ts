@@ -4,7 +4,7 @@ export const getOrganizationJsonLd = () => {
     {
       "@context" : "http://schema.org",
       "@type" : "Organization",
-      "logo": "https://my83.com.tw/images/logo-jsonld-organization.png",
+      "logo": "https://images.my83.com.tw/front/seo/logo-jsonld-organization.png",
       "url" : "https://my83.com.tw",
       "contactPoint": [{
           "@type": "ContactPoint",

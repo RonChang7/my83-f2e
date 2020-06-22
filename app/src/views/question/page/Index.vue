@@ -11,7 +11,7 @@ import {
 } from '@/store/question/question.type'
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
-import { State } from '@/store/question/index'
+import { State } from '@/store/question/question'
 import { User } from '@/services/user/user'
 const QuestionPage = () => import('./QuestionPage.vue')
 const user = User.getInstance()

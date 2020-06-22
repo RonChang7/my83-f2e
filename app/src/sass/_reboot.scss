@@ -33,3 +33,7 @@ img,
 svg {
   vertical-align: middle;
 }
+
+::placeholder {
+  line-height: normal;
+}
