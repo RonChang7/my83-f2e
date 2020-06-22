@@ -23,6 +23,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { isSlotExist } from '@/utils/render-helper'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -66,7 +67,7 @@ const options: ComponentOption = {
   },
   computed: {
     hasLeftBottomOffsetSlot() {
-      return !!this.$slots['left-bottom-offset']
+      return isSlotExist('left-bottom-offset', this)
     },
   },
   beforeMount() {
@@ -87,11 +88,14 @@ const options: ComponentOption = {
 
     this.$nextTick(() => {
       this.getFixedColumnStart()
+      this.getScrollHeightBottom()
     })
 
     this.isDesktop && window.addEventListener('resize', this.getScreenWidth)
     this.isDesktop &&
-      window.addEventListener('scroll', this.getScrollHeightBottom)
+      window.addEventListener('scroll', this.getScrollHeightBottom, {
+        passive: true,
+      })
   },
   watch: {
     scrollHeightBottom(val: number) {

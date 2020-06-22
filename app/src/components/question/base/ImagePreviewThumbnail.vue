@@ -82,6 +82,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 $--width: 100px;
 $--border: 2px;
 
@@ -108,7 +109,7 @@ figure {
       transition: 0.3s;
     }
 
-    @media (hover: hover) {
+    @include hover-supported {
       #{$self}__image:hover {
         opacity: 0.3;
       }
@@ -126,7 +127,7 @@ figure {
       transition: 0.3s;
     }
 
-    @media (hover: hover) {
+    @include hover-supported {
       &:hover {
         &::v-deep circle {
           fill: $gray-primary;

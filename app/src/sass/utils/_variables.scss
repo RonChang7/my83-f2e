@@ -22,3 +22,8 @@ $spacers: map-merge(
   ),
   $spacers
 );
+
+// Z-index list
+$z-index: (
+  'header': 1000,
+);

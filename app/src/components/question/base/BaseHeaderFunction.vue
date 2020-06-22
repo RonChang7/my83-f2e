@@ -79,7 +79,7 @@ import {
   DropdownMenu,
   DropdownMenuOption,
   Report,
-} from '@/store/question/index'
+} from '@/store/question/question'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse } from '@/api/type'
 

@@ -13,11 +13,12 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { isSlotExist } from '@/utils/render-helper'
 
 export default {
   computed: {
     hasTitle() {
-      return !!this.$slots.title
+      return isSlotExist('title', this)
     },
   },
 } as ComponentOption
