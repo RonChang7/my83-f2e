@@ -40,7 +40,6 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
 import {
   ThisTypedComponentOptionsWithRecordProps,
@@ -110,11 +109,12 @@ const options: ComponentOption = {
         ? 13
         : 15
       const shouldAttachEllipsis = this.question.tags.length > cutPoint
-      const tags = _.cloneDeep(this.question.tags.slice(0, cutPoint))
       if (shouldAttachEllipsis) {
-        tags[cutPoint - 1].name += ' ...'
+        const lastTag = Object.assign({}, this.question.tags[cutPoint - 1])
+        lastTag.name += ' ...'
+        return [...this.question.tags.slice(0, cutPoint - 1), lastTag]
       }
-      return tags
+      return this.question.tags
     },
     companies() {
       return this.question.companies
