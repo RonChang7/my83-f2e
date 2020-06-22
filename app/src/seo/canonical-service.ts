@@ -1,30 +1,23 @@
 import { Route } from 'vue-router'
-import _ from 'lodash'
-import qs from 'qs'
+import { getFirstQuery } from '@/utils/query-string'
 
 const rules: Rule[] = [
   {
     checkMatch: (route) => route.path === '/question/search',
     getCanonical: (route) => {
-      const { page, q } = route.query
-      const query: Record<string, string | undefined> = {}
+      const queryString: Record<string, string> = {}
 
-      if (q) {
-        query.q = _.isString(q)
-          ? q
-          : _.isArray(q)
-          ? q[0] || undefined
-          : undefined
+      if (route.query.q) {
+        queryString.q = getFirstQuery(route.query.q)
       }
 
-      if (page) {
-        query.page =
-          _.isString(page) && /^\d+$/.test(page) && page !== '1'
-            ? page
-            : undefined
+      if (
+        route.query.page &&
+        /^\d+$/.test(getFirstQuery(route.query.page)) &&
+        parseInt(getFirstQuery(route.query.page)) > 1
+      ) {
+        queryString.page = getFirstQuery(route.query.page)
       }
-
-      const queryString = qs.stringify(_.pickBy(query, _.identity))
 
       if (queryString) {
         return `/question/search?${queryString}`
