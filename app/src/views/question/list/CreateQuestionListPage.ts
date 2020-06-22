@@ -1,15 +1,7 @@
-import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Context } from '@nuxt/types'
-import {
-  searchQueryValidate,
-  pageQueryValidate,
-  sortQueryValidate,
-  pageQueryTransform,
-  sortQueryTransform,
-} from './query-handler'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/list'
 import {
@@ -18,7 +10,7 @@ import {
   FETCH_SEARCH_QUESTION_LIST,
 } from '@/store/question/list.type'
 import { ErrorPageType } from '@/config/error-page.config'
-import { QuestionListSortType } from '@/api/question/list.type'
+import { PageService, PageType } from '@/services/question/PageService'
 const ListPage = () => import('../list/QuestionListPage.vue')
 
 export default {
@@ -26,39 +18,20 @@ export default {
   async middleware(ctx) {
     const { store, query, error, redirect, route } = ctx
     const pageType = route.meta[route.meta.length - 1].pageType
-    const sortType: QuestionListSortType[] = ['latest']
-    const queryValidator = _.flow([
-      pageType === 'search' ? searchQueryValidate : (q) => q,
-      pageQueryValidate,
-      _.curry(sortQueryValidate)(_, sortType),
-    ])
-    const queryTransformer = _.flow([pageQueryTransform, sortQueryTransform])
+    const pageService = new PageService({ pageType, query })
 
-    const validatedQuery = queryValidator(query) as Record<string, any>
+    const sanitizedQuery = pageService.sanitizePageQuery
+    const transformedQuery = pageService.transformedQuery
 
-    if (pageType === 'search' && !validatedQuery.q) {
+    if (pageType === PageType.Search && !sanitizedQuery.q) {
       redirect({ name: 'questionList' })
       return
     }
 
-    if (validatedQuery.page === '1' || validatedQuery.sort === 'latest') {
-      redirect({
-        query: {
-          ...queryTransformer(validatedQuery),
-        },
-      })
-      return
-    }
-
-    const transformedQuery = queryTransformer(validatedQuery) as Record<
-      string,
-      string | undefined
-    >
-
     const payload = {
       sort: transformedQuery.sort || 'latest',
       page: transformedQuery.page ? Number(query.page) : 1,
-      q: pageType === 'search' ? transformedQuery.q : undefined,
+      q: pageType === PageType.Search ? transformedQuery.q : undefined,
     }
 
     const questionListStore = (store.state as QuestionListVuexState)
@@ -94,6 +67,12 @@ export default {
       })
     }
 
+    const shouldRedirect = pageService.shouldSimplifyQuery(sanitizedQuery)
+    if (shouldRedirect) {
+      redirect({ query: transformedQuery })
+      return
+    }
+
     // 如果頁面超過最大頁面，則導回討論區首頁
     if (
       questionListStore.meta!.pagination.currentPage >
@@ -122,25 +101,28 @@ export default {
 } as ComponentOption
 
 const fetchList = (
-  pageType: string,
+  pageType: PageType,
   { from, route, store }: Context,
-  payload
+  payload: FetchListPayload
 ) => {
-  const questionListStore = (store.state as QuestionListVuexState).questionList
-  const rules = [
-    questionListStore.currentPage === payload.page,
-    questionListStore.currentSort === payload.sort,
-  ]
+  const currentParam = (store.state as QuestionListVuexState).questionList
+    .currentParam
+  const defaultPageParam = ['page', 'sort']
+  const searchPageParam = ['page', 'sort', 'q']
+  const currentPageParam =
+    pageType === PageType.Search ? searchPageParam : defaultPageParam
 
-  if (pageType === 'search') {
-    rules.push(questionListStore.currentSearchQuery === payload.q)
-  }
+  const isAllParamMatch = currentPageParam.every(
+    (key) => currentParam[key] === payload[key]
+  )
 
   // 與目前搜尋字串、頁數或是排序條件不同才打 API
-  if (from?.path !== route.path || !rules.every((rule) => rule)) {
+  if (from?.path !== route.path || !isAllParamMatch) {
     return store.dispatch(
       `questionList/${
-        pageType === 'search' ? FETCH_SEARCH_QUESTION_LIST : FETCH_QUESTION_LIST
+        pageType === PageType.Search
+          ? FETCH_SEARCH_QUESTION_LIST
+          : FETCH_QUESTION_LIST
       }`,
       payload
     )
@@ -177,4 +159,10 @@ export interface Props {}
 
 export interface QuestionListVuexState extends GlobalVuexState {
   questionList: State
+}
+
+interface FetchListPayload {
+  page: number
+  sort: string
+  q: string | undefined
 }
