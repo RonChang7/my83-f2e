@@ -14,7 +14,10 @@
       </li>
     </ol>
     <div class="AskingNotifySection__image">
-      <img src="https://my83.com.tw/images/feature3.png" alt="asking" />
+      <img
+        :src="`${$imageBucketUrl}/front/question/discuss.png`"
+        alt="asking"
+      />
     </div>
   </BaseCard>
 </template>

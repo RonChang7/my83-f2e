@@ -26,6 +26,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import LoadingIcon from '@/components/base/loading/LoadingIcon.vue'
+import { isSlotExist } from '@/utils/render-helper'
 
 export default {
   components: {
@@ -67,7 +68,7 @@ export default {
       }
     },
     hasIcon() {
-      return !!this.$slots.icon
+      return isSlotExist('icon', this)
     },
   },
 } as ComponentOption

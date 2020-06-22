@@ -14,7 +14,7 @@
       />
     </div>
     <BaseContent :content="content" />
-    <BaseMeta :created-at="response.created_at" meta-type="response" />
+    <ContentMeta :created-at="response.created_at" meta-type="response" />
   </div>
 </template>
 
@@ -22,7 +22,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseMeta from '../base/BaseMeta.vue'
+import ContentMeta from '../base/ContentMeta.vue'
 import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import BaseContent from '../base/BaseContent.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
@@ -32,7 +32,7 @@ import { UserRole } from '@/services/user/user'
 
 export default {
   components: {
-    BaseMeta,
+    ContentMeta,
     BaseAuthorInfo,
     BaseContent,
     BaseHeaderFunction,

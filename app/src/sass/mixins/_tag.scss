@@ -1,3 +1,5 @@
+@import 'helper';
+
 @mixin tag {
   display: inline-block;
   line-height: 22px;
@@ -16,14 +18,14 @@
     background: $primary-bright-color;
     color: $primary-color;
 
-    @media (hover: hover) {
+    @include hover-supported {
       &:hover:not(.disabled) {
         background: $primary-light-color;
       }
     }
   }
 
-  @media (hover: hover) {
+  @include hover-supported {
     &:hover:not(.disabled) {
       background: $gray-quaternary;
     }

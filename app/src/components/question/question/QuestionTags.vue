@@ -1,7 +1,7 @@
 <template>
   <div class="QuestionTags">
-    <div class="QuestionTags__icon">
-      <component :is="iconName" v-if="iconName" />
+    <div v-if="iconName" class="QuestionTags__icon">
+      <component :is="iconName" />
     </div>
     <div class="QuestionTags__tag">
       <template v-for="tag in tags">
@@ -15,10 +15,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionTag from './QuestionTag.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { Tag } from '@/api/question/question.type'
 const BaseCompany = () => import('@/components/base/icon/24/BaseCompany.vue')
 const BaseTag = () => import('@/components/base/icon/24/BaseTag.vue')
 
@@ -35,7 +39,7 @@ export default {
       default: '',
     },
     tags: {
-      type: Array,
+      type: Array as PropType<Props['tags']>,
       required: true,
     },
   },
@@ -81,7 +85,7 @@ export interface Computed {
 
 export interface Props {
   iconType: 'tag' | 'company' | ''
-  tags: string[]
+  tags: Tag[]
 }
 </script>
 

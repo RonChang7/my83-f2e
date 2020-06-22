@@ -1,3 +1,5 @@
+@import 'helper';
+
 $button-height: (
   's': 26px,
   'm': 32px,
@@ -63,7 +65,7 @@ $button-font: (
     fill: $primary-button-text-color;
   }
 
-  @media (hover: hover) {
+  @include hover-supported {
     &:hover:not([disabled]) {
       background: $primary-hover-color;
       border-color: $primary-hover-color;
@@ -94,7 +96,7 @@ $button-font: (
       fill: $primary-color;
     }
 
-    @media (hover: hover) {
+    @include hover-supported {
       &:hover:not([disabled]) {
         color: $primary-hover-color;
         border-color: $primary-hover-color;
@@ -106,7 +108,7 @@ $button-font: (
     }
   }
 
-  @media (hover: hover) {
+  @include hover-supported {
     &:hover:not([disabled]) {
       color: $gray-primary;
       border-color: $gray-secondary;

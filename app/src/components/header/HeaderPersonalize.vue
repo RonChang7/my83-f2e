@@ -18,7 +18,10 @@
 
     <ul v-else class="HeaderPersonalize__authorized">
       <li v-if="personalize.sales">
-        <HeaderSalesDetail :sales-info="personalize.sales" />
+        <HeaderSalesDetail
+          class="HeaderPersonalize__name"
+          :sales-info="personalize.sales"
+        />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -261,7 +264,6 @@ interface Menu extends HeaderNavItem {
 
     li {
       display: flex;
-      align-items: center;
       cursor: pointer;
 
       @include max-media('xl') {

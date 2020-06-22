@@ -19,7 +19,7 @@
         />
       </div>
       <BaseContent :content="answer.content" />
-      <BaseMeta
+      <ContentMeta
         :like-count="likeCount"
         :dislike-count="dislikeCount"
         :answer-count="answer.answer_meta.response_count"
@@ -56,7 +56,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { AvatarMap } from '../helpers/reply-default-avatar'
 import ResponsesListSection from '../section/ResponsesListSection.vue'
 import BaseContent from '../base/BaseContent.vue'
-import BaseMeta from '../base/BaseMeta.vue'
+import ContentMeta from '../base/ContentMeta.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import AnswerInteraction from './AnswerInteraction.vue'
@@ -81,7 +81,7 @@ export default {
   components: {
     BaseAuthorInfo,
     BaseContent,
-    BaseMeta,
+    ContentMeta,
     AnswerInteraction,
     ResponsesListSection,
     ResponseEditor,
