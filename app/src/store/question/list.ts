@@ -19,9 +19,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
     namespaced: true,
     state() {
       return {
-        currentPage: 0,
-        currentSort: '',
-        currentSearchQuery: '',
+        currentParam: {
+          page: 0,
+          sort: '',
+          q: '',
+        },
         list: null,
         meta: null,
         popularQuestions: null,
@@ -120,22 +122,24 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.popularBlogs = data
       },
       [types.UPDATE_CURRENT_PAGE](state, page: number) {
-        state.currentPage = page
+        state.currentParam.page = page
       },
       [types.UPDATE_CURRENT_SORT](state, sort: string) {
-        state.currentSort = sort
+        state.currentParam.sort = sort
       },
       [types.UPDATE_CURRENT_SEARCH_QUERY](state, q: string) {
-        state.currentSearchQuery = q
+        state.currentParam.q = q
       },
     },
   }
 }
 
 export interface State {
-  currentPage: number
-  currentSort: string
-  currentSearchQuery: string
+  currentParam: {
+    page: number
+    sort: string
+    q: string
+  }
   list: QuestionListData[] | null
   meta: {
     pagination: Pagination

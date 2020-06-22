@@ -12,12 +12,12 @@ export const rules: Rule[] = [
     from: (route) => {
       const { search } = route.query
       return !!(
-        (route.path === '/question' && search) ||
+        (route.path === '/question' && search !== undefined) ||
         route.path === '/question/index'
       )
     },
     to: (route) => {
-      if (route.query.search) {
+      if (route.query.search !== undefined) {
         const queryMap = route.query
         const q = queryMap.search
         delete queryMap.search
