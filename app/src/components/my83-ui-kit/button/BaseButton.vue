@@ -148,8 +148,7 @@ export interface Props {
     &::v-deep &__#{$size}__loading {
       @include loading(map-get($button-font, $size));
 
-      position: relative;
-      left: -1em;
+      position: absolute;
     }
   }
 
