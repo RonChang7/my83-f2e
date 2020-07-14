@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  layout: 'PingLayout',
   asyncData({ app, req, redirect }) {
     const targetAgents = app.$env.HEALTH_CHECK_AGENT_STRING || ''
 
