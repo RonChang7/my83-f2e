@@ -29,7 +29,7 @@ import {
 } from '@/api/question/question.type'
 import { SimpleResponse } from '@/api/type'
 
-const DefaultQuestionPersonalize: QuestionPersonalize = {
+export const DefaultQuestionPersonalize: QuestionPersonalize = {
   is_owner: false,
   is_reporter: false,
   is_follower: false,
