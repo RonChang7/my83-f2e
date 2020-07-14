@@ -9,7 +9,9 @@
       <BaseDialog v-if="globalDialogVisible" />
     </client-only>
     <Header v-if="shouldShowHeader" />
-    <nuxt />
+    <div class="container">
+      <nuxt />
+    </div>
     <Footer v-if="shouldShowFooter" />
   </div>
 </template>
@@ -100,3 +102,8 @@ export interface Computed extends PageMetaMixinComputed {
 
 export interface Props {}
 </script>
+<style lang="scss" scoped>
+.container {
+  min-height: 100vh;
+}
+</style>
