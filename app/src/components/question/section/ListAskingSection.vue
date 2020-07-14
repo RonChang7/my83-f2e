@@ -19,10 +19,8 @@ const options: ComponentOption = {
       [
         h(BaseButton, {
           props: {
+            to: { name: 'questionAsking' },
             size: this.isDesktop ? 'xl' : 'l-b',
-          },
-          nativeOn: {
-            click: () => this.$router.push({ name: 'questionAsking' }),
           },
           scopedSlots: {
             icon: () => h(BasePencil),

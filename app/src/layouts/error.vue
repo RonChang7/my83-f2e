@@ -175,7 +175,7 @@ export interface Props {
       width: 100%;
     }
 
-    > button:not(:first-child) {
+    > [type='button']:not(:first-child) {
       margin-left: 16px;
     }
   }

@@ -12,7 +12,11 @@
       想看看身上的保單需不需要補強或修改？投保有體況？理賠遇到問題怎麼辦？讓MY83討論區裡專業的業務員來幫你！
     </div>
     <div class="GuideSection__action">
-      <BaseButton size="l-a" :is-full-width="true" @click.native="hotPost">
+      <BaseButton
+        size="l-a"
+        :is-full-width="true"
+        :to="{ name: 'questionList' }"
+      >
         <template v-slot:icon>
           <BaseComment />
         </template>
@@ -22,7 +26,7 @@
         size="l-a"
         type="secondary"
         :is-full-width="true"
-        @click.native="newPost"
+        :to="{ name: 'questionAsking' }"
       >
         <template v-slot:icon>
           <BasePencil />
@@ -51,15 +55,6 @@ export default {
     BaseComment,
     BasePencil,
   },
-  methods: {
-    hotPost() {
-      // @todo: Update query string after sort function
-      this.$router.push({ name: 'questionList' })
-    },
-    newPost() {
-      this.$router.push({ name: 'questionAsking' })
-    },
-  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -82,10 +77,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
-  hotPost(): void
-  newPost(): void
-}
+export interface Methods {}
 
 export interface Computed extends DeviceMixinComputed {}
 
@@ -122,7 +114,7 @@ export interface Props {}
   &__action {
     display: flex;
 
-    > button:not(:last-child) {
+    > [type='button']:not(:last-child) {
       margin-right: 12px;
     }
   }
