@@ -1,22 +1,13 @@
 import { Context } from '@nuxt/types'
-import { FETCH_HEADER_NAV_DATA } from '@/store/header/header.type'
-import { GlobalVuexState } from '@/store/global-state'
+import { pageRequestMap } from './page-request-map'
 
 export class Content {
-  public static requests(ctx: Context) {
-    const requests: Promise<any>[] = []
-
-    if (Content._shouldFetchHeaderData(ctx)) {
-      requests.push(ctx.store.dispatch(`header/${FETCH_HEADER_NAV_DATA}`))
-    }
-
-    return requests
-  }
-
-  private static _shouldFetchHeaderData({ store, route }: Context) {
-    return (
-      !route.meta.hideHeader &&
-      !(store.state as GlobalVuexState).header.headerNavItems.length
-    )
+  public static requests(ctx: Context): Promise<any>[] {
+    return pageRequestMap.reduce<Promise<any>[]>((promises, request) => {
+      if (request.shouldFetchRequest(ctx)) {
+        promises.push(request.promise(ctx))
+      }
+      return promises
+    }, [])
   }
 }
