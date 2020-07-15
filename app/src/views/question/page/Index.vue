@@ -13,11 +13,13 @@ import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/question'
 import { User } from '@/services/user/user'
+import { Content } from '@/services/page/Content'
 const QuestionPage = () => import('./QuestionPage.vue')
 const user = User.getInstance()
 
 export default {
-  async middleware({ store, route, error }) {
+  async asyncData(ctx) {
+    const { store, route, error } = ctx
     const id = Number(route.params.id)
     if (_.isNaN(id)) {
       return error({ statusCode: 404 })
@@ -31,7 +33,10 @@ export default {
     }
 
     try {
-      await store.dispatch(`question/${FETCH_PAGE_DATA}`, id)
+      await Promise.all([
+        ...Content.requests(ctx),
+        store.dispatch(`question/${FETCH_PAGE_DATA}`, id),
+      ])
     } catch (err) {
       const statusCode = err.response.status === 404 ? err.response.status : 500
       const message =

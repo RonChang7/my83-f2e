@@ -28,9 +28,6 @@ import UserMetaMixin, {
 } from '@/mixins/user/user-meta'
 
 export default {
-  serverPrefetch() {
-    return this.$store.dispatch(`header/${types.FETCH_HEADER_NAV_DATA}`)
-  },
   mixins: [DeviceMixin, UserMetaMixin],
   components: {
     DesktopHeader,
