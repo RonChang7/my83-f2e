@@ -11,11 +11,12 @@ import {
 } from '@/store/question/list.type'
 import { ErrorPageType } from '@/config/error-page.config'
 import { PageService, PageType } from '@/services/question/PageService'
+import { Content } from '@/services/page/Content'
 const ListPage = () => import('../list/QuestionListPage.vue')
 
 export default {
   watchQuery: ['page', 'sort', 'q'],
-  async middleware(ctx) {
+  async asyncData(ctx) {
     const { store, query, error, redirect, route } = ctx
     const pageType = route.meta[route.meta.length - 1].pageType
     const pageService = new PageService({ pageType, query })
@@ -53,7 +54,7 @@ export default {
     }
 
     try {
-      await Promise.all(fetchPageData)
+      await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
       const statusCode = err.response.status === 404 ? err.response.status : 500
       const message =
