@@ -154,6 +154,7 @@ import UserMetaMixin, {
 } from '@/mixins/user/user-meta'
 import { Validator, ValidateMessage } from '@/services/validator/Validator'
 import { sentryLog } from '@/api/sentry'
+import { DefaultQuestionPersonalize } from '@/store/question/question'
 
 // 單位：MB
 const MAX_IMAGE_PAYLOAD_SIZE_LIMIT = 20
@@ -342,7 +343,10 @@ const options: ComponentOption = {
         this.submitErrMsg = ''
         try {
           const { data, page_meta } = await this.questionForm.submit()
-          this.$store.commit(`question/${UPDATE_QUESTION_DATA}`, data)
+          this.$store.commit(`question/${UPDATE_QUESTION_DATA}`, {
+            ...data,
+            personalize: DefaultQuestionPersonalize,
+          })
           this.$store.commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta)
           await this.$store.dispatch(
             `question/${FETCH_PAGE_DATA_AFTER_POST}`,
