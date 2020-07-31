@@ -17,20 +17,25 @@ _mutagen_start()
     local APP_CONTIANER_ID=$(docker-compose ps -q app | awk '{print $1}')
     local APP_USERNAME="$(_get_user_in_app)"
     local APP_GROUPNAME="$(_get_group_in_app)"
+    local IS_MUTAGEN_NOT_EXISTED=$(mutagen sync list --label-selector=$APP_CODE_MUTAGEN_LABEL | grep "No sessions found")
 
     mutagen daemon start
 
-    mutagen sync create \
-        --label=$APP_CODE_MUTAGEN_LABEL \
-        --default-file-mode=0644 \
-        --default-directory-mode=0755 \
-        --default-owner-beta=$APP_USERNAME \
-        --default-group-beta=$APP_GROUPNAME \
-        --sync-mode=two-way-resolved \
-        --ignore=/node_modules \
-        --ignore=/.nuxt \
-        --ignore-vcs \
-        $APP_CODE_PATH_HOST "docker://root@$APP_CONTIANER_ID$APP_CODE_PATH_CONTAINER"
+    if [[ $IS_MUTAGEN_NOT_EXISTED ]]; then
+        mutagen sync create \
+            --label=$APP_CODE_MUTAGEN_LABEL \
+            --default-file-mode=0644 \
+            --default-directory-mode=0755 \
+            --default-owner-beta=$APP_USERNAME \
+            --default-group-beta=$APP_GROUPNAME \
+            --sync-mode=two-way-resolved \
+            --ignore=/node_modules \
+            --ignore=/.nuxt \
+            --ignore-vcs \
+            $APP_CODE_PATH_HOST "docker://root@$APP_CONTIANER_ID$APP_CODE_PATH_CONTAINER"
+    else
+        mutagen sync resume --label-selector=$APP_CODE_MUTAGEN_LABEL
+    fi
 }
 
 _mutagen_stop()
