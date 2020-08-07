@@ -1,0 +1,8 @@
+version: '3.7'
+
+services:
+  app:
+    volumes:
+      - app-code:${APP_CODE_PATH_CONTAINER}
+volumes:
+  app-code:
