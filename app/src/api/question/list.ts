@@ -5,6 +5,7 @@ import {
   QuestionSearchResponse,
   FetchQuestionListPayload,
   FetchSearchQuestionListPayload,
+  PromotionsResponse,
 } from './list.type'
 import request from '@/api/request'
 
@@ -66,6 +67,16 @@ export const fetchPopularQuestions = async (): Promise<PopularQuestionsResponse>
 export const fetchPopularBlogs = async (): Promise<PopularBlogsResponse> => {
   const { data } = await request.get<PopularBlogsResponse>(
     `/api/v1/questions/hot-blog`
+  )
+  return data
+}
+
+/**
+ * @description 取得推薦商品
+ */
+export const fetchPromotions = async (): Promise<PromotionsResponse> => {
+  const { data } = await request.get<PromotionsResponse>(
+    `/api/v1/questions/promotion`
   )
   return data
 }

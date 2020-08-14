@@ -1,27 +1,28 @@
 <template>
   <BaseCard class="ListRecommendProductSection">
-    <template v-slot:title>
-      保險商品推薦
-    </template>
+    <template v-slot:title>{{ promotionHeader }}</template>
     <template v-slot>
       <GlobalLink
-        v-for="product in products"
-        :key="product.title"
-        :to="product.link.path"
-        class="ListRecommendProductSection__product"
+        v-for="promotion in promotions"
+        :key="promotion.title"
+        :to="promotion.link.path"
+        class="ListRecommendProductSection__promotion"
       >
-        <div class="ListRecommendProductSection__product__image">
+        <div class="ListRecommendProductSection__promotion__image">
           <BaseLazyImage
-            :image-url="product.imageUrl"
-            :image-alt="product.title"
+            :image-url="promotion.image_url"
+            :image-alt="promotion.title"
           />
         </div>
-        <div class="ListRecommendProductSection__product__description">
+        <div class="ListRecommendProductSection__promotion__description">
           <div class="title">
-            {{ product.title }}
+            {{ promotion.title }}
+          </div>
+          <div v-if="promotion.consultations_count > 50" class="count">
+            已經有 {{ promotion.consultations_count }} 人在此規劃保險
           </div>
         </div>
-        <div class="ListRecommendProductSection__product__button">
+        <div class="ListRecommendProductSection__promotion__button">
           <BaseButton size="l-a" :is-full-width="true">
             去看看
           </BaseButton>
@@ -33,13 +34,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { Link } from '@/api/type'
+import { PromotionsResponse, Promotion } from '@/api/question/list.type'
 
 const options: ComponentOption = {
   components: {
@@ -48,27 +51,17 @@ const options: ComponentOption = {
     BaseLazyImage,
     GlobalLink,
   },
-  data() {
-    return {
-      products: [
-        {
-          title: '嬰幼兒罐頭保單',
-          imageUrl: `${this.$imageBucketUrl}/front/common/promotion/img-newborn@2x.png`,
-          link: {
-            path: '/bundle/1',
-            url: `${this.$env.HOST_URL}/bundle/1`,
-          },
-        },
-        {
-          title: '成人罐頭保單',
-          imageUrl: `${this.$imageBucketUrl}/front/common/promotion/img-adult@2x.png`,
-          link: {
-            path: '/bundle/2',
-            url: `${this.$env.HOST_URL}/bundle/2`,
-          },
-        },
-      ],
-    }
+  computed: {
+    promotionHeader() {
+      return this.$store.state.questionList.promotions
+        ? this.$store.state.questionList.promotions.header
+        : ''
+    },
+    promotions() {
+      return this.$store.state.questionList.promotions
+        ? this.$store.state.questionList.promotions.promotions
+        : []
+    },
   },
 }
 
@@ -88,23 +81,20 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
-
-export interface Data {
-  products: Product[]
+export interface Instance extends Vue {
+  $store: Store<QuestionListVuexState>
 }
+
+export interface Data {}
 
 export interface Methods {}
 
-export interface Computed {}
+export interface Computed {
+  promotionHeader: PromotionsResponse['data']['header']
+  promotions: Promotion[]
+}
 
 export interface Props {}
-
-interface Product {
-  title: string
-  imageUrl: string
-  link: Link
-}
 
 export default options
 </script>
@@ -120,7 +110,7 @@ export default options
     margin-bottom: 10px;
   }
 
-  &__product {
+  &__promotion {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -148,6 +138,19 @@ export default options
       .title {
         font-size: 1.375rem;
         font-weight: 500;
+
+        @include max-media('xl') {
+          font-size: 1.125rem;
+        }
+      }
+
+      .count {
+        font-size: 0.875rem;
+        color: $gray-secondary;
+
+        @include max-media('xl') {
+          font-size: 0.75rem;
+        }
       }
     }
 
