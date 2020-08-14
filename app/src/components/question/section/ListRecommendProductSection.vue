@@ -21,6 +21,10 @@
           <div v-if="promotion.consultations_count > 50" class="count">
             已經有 {{ promotion.consultations_count }} 人在此規劃保險
           </div>
+          <!-- @todo: 之後要刪除 -->
+          <div v-else class="count">
+            專為熟齡朋友準備的高CP值商品
+          </div>
         </div>
         <div class="ListRecommendProductSection__promotion__button">
           <BaseButton size="l-a" :is-full-width="true">
