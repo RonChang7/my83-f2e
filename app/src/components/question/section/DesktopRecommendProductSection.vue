@@ -9,7 +9,15 @@
         >
           <BaseLazyImage :image-url="recommendProduct.image_url" />
         </div>
-        {{ recommendProduct.title }}
+        <div class="DesktopRecommendProductSection__text">
+          {{ recommendProduct.title }}
+          <span
+            v-if="promotionConsultationCount"
+            class="DesktopRecommendProductSection__count"
+          >
+            {{ promotionConsultationCount }}
+          </span>
+        </div>
       </div>
       <BaseButton size="l-a" :is-full-width="true">
         {{ recommendProduct.action_text }}
@@ -28,7 +36,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RecommendProduct } from '@/api/question/question.type'
+import { RecommendProductTransform } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -40,6 +48,16 @@ export default {
   computed: {
     recommendProduct() {
       return this.$store.state.question.recommendProduct
+    },
+    promotionConsultationCount() {
+      if (
+        !this.recommendProduct ||
+        !this.recommendProduct.consultation_count ||
+        this.recommendProduct.consultation_count <= 50
+      ) {
+        return ''
+      }
+      return `已經有 ${this.recommendProduct.consultation_count} 人購買`
     },
   },
 } as ComponentOption
@@ -69,7 +87,8 @@ export interface Data {}
 export interface Methods {}
 
 export interface Computed {
-  recommendProduct: RecommendProduct | null
+  recommendProduct: RecommendProductTransform | null
+  promotionConsultationCount: string
 }
 
 export interface Props {}
@@ -91,10 +110,17 @@ export interface Props {}
     padding: 16px 0 18px;
   }
 
+  &__count {
+    display: block;
+    font-size: 0.875rem;
+    color: $gray-secondary;
+  }
+
   &__icon {
     width: 50px;
     height: 50px;
     margin-right: 10px;
+    flex: 0 0 auto;
   }
 }
 </style>

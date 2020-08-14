@@ -21,6 +21,12 @@
         </div>
         <div class="MobileRecommendProductSection__title">
           {{ recommendProduct.title }}
+          <span
+            v-if="promotionConsultationCount"
+            class="MobileRecommendProductSection__count"
+          >
+            {{ promotionConsultationCount }}
+          </span>
         </div>
         <div class="MobileRecommendProductSection__button">
           <BaseButton size="l-a" :is-full-width="true">
@@ -41,7 +47,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RecommendProduct } from '@/api/question/question.type'
+import { RecommendProductTransform } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -58,6 +64,16 @@ export default {
   computed: {
     recommendProduct() {
       return this.$store.state.question.recommendProduct
+    },
+    promotionConsultationCount() {
+      if (
+        !this.recommendProduct ||
+        !this.recommendProduct.consultation_count ||
+        this.recommendProduct.consultation_count <= 50
+      ) {
+        return ''
+      }
+      return `已經有 ${this.recommendProduct.consultation_count} 人購買`
     },
   },
   mounted() {
@@ -110,7 +126,8 @@ export interface Data {
 export interface Methods {}
 
 export interface Computed {
-  recommendProduct: RecommendProduct | null
+  recommendProduct: RecommendProductTransform | null
+  promotionConsultationCount: string
 }
 
 export interface Props {}
@@ -172,6 +189,12 @@ export interface Props {}
     @include max-media('xs') {
       font-size: 1rem;
     }
+  }
+
+  &__count {
+    display: block;
+    font-size: 0.75rem;
+    color: $gray-secondary;
   }
 
   &__button {
