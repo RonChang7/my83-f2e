@@ -68,12 +68,12 @@ export default {
     promotionConsultationCount() {
       if (
         !this.recommendProduct ||
-        !this.recommendProduct.consultation_count ||
-        this.recommendProduct.consultation_count <= 50
+        !this.recommendProduct.consultations_count ||
+        this.recommendProduct.consultations_count <= 50
       ) {
         return ''
       }
-      return `已經有 ${this.recommendProduct.consultation_count} 人購買`
+      return `已經有 ${this.recommendProduct.consultations_count} 人購買`
     },
   },
   mounted() {
