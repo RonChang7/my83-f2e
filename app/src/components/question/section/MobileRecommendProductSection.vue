@@ -5,7 +5,7 @@
     class="MobileRecommendProductSection"
   >
     <div class="MobileRecommendProductSection__header">
-      保險商品推薦
+      {{ recommendProduct.header }}
     </div>
     <div class="MobileRecommendProductSection__wrapper">
       <GlobalLink
