@@ -129,8 +129,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
               if (recommendProductResponse.status === 'fulfilled') {
                 commit(types.UPDATE_RECOMMEND_PRODUCT, {
                   ...recommendProductResponse.value.recommend_product,
-                  consultation_count:
-                    recommendProductResponse.value.consultation_count || 0,
+                  consultations_count:
+                    recommendProductResponse.value.consultations_count || 0,
                 })
               }
               resolve()

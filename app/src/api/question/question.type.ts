@@ -66,7 +66,7 @@ export interface RelatedQuestionsResponse {
 
 export interface RecommendProductResponse {
   recommend_product: RecommendProduct | null
-  consultation_count?: number
+  consultations_count?: number
 }
 
 export interface addReportPayload {
@@ -183,5 +183,5 @@ export interface RecommendProduct {
 }
 
 export interface RecommendProductTransform extends RecommendProduct {
-  consultation_count: number
+  consultations_count: number
 }
