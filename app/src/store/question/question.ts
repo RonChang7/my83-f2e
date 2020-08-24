@@ -23,7 +23,7 @@ import {
   LikeStatus,
   RelatedQuestion,
   RelatedBlog,
-  RecommendProduct,
+  RecommendProductTransform,
   QuestionPersonalizeResponse,
   QuestionDataResponse,
 } from '@/api/question/question.type'
@@ -127,10 +127,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
               }
 
               if (recommendProductResponse.status === 'fulfilled') {
-                commit(
-                  types.UPDATE_RECOMMEND_PRODUCT,
-                  recommendProductResponse.value.recommend_product
-                )
+                commit(types.UPDATE_RECOMMEND_PRODUCT, {
+                  ...recommendProductResponse.value.recommend_product,
+                  consultations_count:
+                    recommendProductResponse.value.consultations_count || 0,
+                })
               }
               resolve()
             }
@@ -538,7 +539,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
           state.question!.personalize!.is_reporter = reportStatus
         }
       },
-      [types.UPDATE_RECOMMEND_PRODUCT](state, data: RecommendProduct | null) {
+      [types.UPDATE_RECOMMEND_PRODUCT](
+        state,
+        data: RecommendProductTransform | null
+      ) {
         state.recommendProduct = data
       },
     },
@@ -548,7 +552,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   question: QuestionData | null
   answers: AnswerData[] | null
-  recommendProduct: RecommendProduct | null
+  recommendProduct: RecommendProductTransform | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   dropdownMenu: DropdownMenu
