@@ -41,6 +41,10 @@ $button-font: (
   user-select: none;
   cursor: pointer;
 
+  &:not(button) {
+    appearance: none;
+  }
+
   &:focus {
     outline: 0;
   }
