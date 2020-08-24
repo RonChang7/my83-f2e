@@ -66,6 +66,7 @@ export interface RelatedQuestionsResponse {
 
 export interface RecommendProductResponse {
   recommend_product: RecommendProduct | null
+  consultations_count?: number
 }
 
 export interface addReportPayload {
@@ -179,4 +180,8 @@ export interface RecommendProduct {
   image_url: string
   action_text: string
   link: Link
+}
+
+export interface RecommendProductTransform extends RecommendProduct {
+  consultations_count: number
 }
