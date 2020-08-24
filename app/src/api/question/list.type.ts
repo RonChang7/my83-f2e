@@ -1,4 +1,4 @@
-import { PaginationResponse, PageMeta } from '../type'
+import { PaginationResponse, PageMeta, Link } from '../type'
 import { RelatedBlog, RelatedQuestion, QuestionData } from './question.type'
 
 export interface QuestionListResponse {
@@ -19,6 +19,13 @@ export interface PopularBlogsResponse {
 
 export interface PopularQuestionsResponse {
   data: PopularQuestion[]
+}
+
+export interface PromotionsResponse {
+  data: {
+    header: string
+    promotions: Promotion[]
+  }
 }
 
 export type QuestionListData = Omit<
@@ -47,4 +54,11 @@ export interface FetchSearchQuestionListPayload {
   page: number
   sort: QuestionListSortType
   q: string
+}
+
+export interface Promotion {
+  title: string
+  image_url: string
+  consultations_count: number
+  link: Link
 }

@@ -10,6 +10,7 @@ import {
   QuestionListSortType,
   FetchQuestionListPayload,
   FetchSearchQuestionListPayload,
+  PromotionsResponse,
 } from '@/api/question/list.type'
 import { Pagination } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
@@ -28,6 +29,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         meta: null,
         popularQuestions: null,
         popularBlogs: null,
+        promotions: null,
       }
     },
     getters: {},
@@ -37,10 +39,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
           Promise.all([
             dispatch(types.FETCH_POPULAR_QUESTIONS),
             dispatch(types.FETCH_POPULAR_BLOGS),
+            dispatch(types.FETCH_PROMOTIONS),
           ])
-            .then(([popularQuestions, popularBlogs]) => {
+            .then(([popularQuestions, popularBlogs, promotions]) => {
               commit(types.UPDATE_POPULAR_QUESTIONS, popularQuestions)
               commit(types.UPDATE_POPULAR_BLOGS, popularBlogs)
+              commit(types.UPDATE_PROMOTIONS, promotions)
               resolve()
             })
             .catch(() => resolve())
@@ -104,6 +108,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch(() => resolve())
         })
       },
+      [types.FETCH_PROMOTIONS]() {
+        return new Promise((resolve) => {
+          api
+            .fetchPromotions()
+            .then(({ data }) => resolve(data))
+            .catch(() => resolve())
+        })
+      },
     },
     mutations: {
       [types.UPDATE_QUESTION_LIST_DATA](state, data: QuestionListData[]) {
@@ -130,6 +142,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_CURRENT_SEARCH_QUERY](state, q: string) {
         state.currentParam.q = q
       },
+      [types.UPDATE_PROMOTIONS](state, data: PromotionsResponse['data']) {
+        state.promotions = data
+      },
     },
   }
 }
@@ -147,4 +162,5 @@ export interface State {
   } | null
   popularQuestions: PopularQuestion[] | null
   popularBlogs: PopularBlog[] | null
+  promotions: PromotionsResponse['data'] | null
 }
