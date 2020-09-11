@@ -11,9 +11,28 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import MobileHeaderNav from '@/components/header/mobile/MobileHeaderNav.vue'
 import HeaderPersonalize from '@/components/header/HeaderPersonalize.vue'
+import { Content } from '@/services/page/Content'
+import { ErrorPageType } from '@/config/error-page.config'
 
 export default {
-  asyncData({ from }) {
+  async asyncData(ctx) {
+    const { from, error } = ctx
+
+    try {
+      await Promise.all([...Content.requests(ctx)])
+    } catch (err) {
+      const statusCode = err.response.status === 404 ? err.response.status : 500
+      const message =
+        err.response.status === 404
+          ? ErrorPageType.QUESTION
+          : ErrorPageType.SERVER
+
+      return error({
+        statusCode,
+        message,
+      })
+    }
+
     return {
       // 如果 client 點選登出，mobile 要回到上一頁並重新整理 (因為 mobile 的選單是獨立 route)
       perviousPath: from?.path || '/',
