@@ -26,11 +26,26 @@ import {
 } from '@/config/question-asking-dialog-info'
 import { ErrorPageType } from '@/config/error-page.config'
 import { User } from '@/services/user/user'
+import { Content } from '@/services/page/Content'
 const AskingPage = () => import('./AskingPage.vue')
 
 const user = User.getInstance()
 
 const options: ComponentOption = {
+  async asyncData(ctx) {
+    const { error } = ctx
+
+    try {
+      await Promise.all([...Content.requests(ctx)])
+    } catch (err) {
+      const statusCode = err.response.status === 404 ? err.response.status : 500
+
+      return error({
+        statusCode,
+        message: ErrorPageType.SERVER,
+      })
+    }
+  },
   async fetch() {
     const { id } = this.$route.params
     const { purpose_tag_id: purposeTagId } = this.$route.query
