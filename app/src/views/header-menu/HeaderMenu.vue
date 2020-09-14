@@ -22,14 +22,10 @@ export default {
       await Promise.all([...Content.requests(ctx)])
     } catch (err) {
       const statusCode = err.response.status === 404 ? err.response.status : 500
-      const message =
-        err.response.status === 404
-          ? ErrorPageType.QUESTION
-          : ErrorPageType.SERVER
 
       return error({
         statusCode,
-        message,
+        message: ErrorPageType.SERVER,
       })
     }
 
