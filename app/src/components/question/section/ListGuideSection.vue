@@ -1,8 +1,6 @@
 <template>
   <BaseCard class="ListGuideSection">
-    <template v-slot:title>
-      討論區使用指南
-    </template>
+    <template v-slot:title>討論區使用指南</template>
     <template v-slot>
       <ol>
         <li><span>發問</span></li>

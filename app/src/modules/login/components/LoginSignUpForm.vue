@@ -1,8 +1,6 @@
 <template>
   <div class="LoginSignUpForm">
-    <div class="LoginSignUpForm__title">
-      註冊 只需 1 分鐘就能完成！
-    </div>
+    <div class="LoginSignUpForm__title">註冊 只需 1 分鐘就能完成！</div>
     <FacebookLoginButton
       :state="state"
       text="以 Facebook 註冊"

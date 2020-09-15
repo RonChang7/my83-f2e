@@ -4,9 +4,9 @@ export const facebookPixelSetup = (trackingEnable, trackingLogEnable) => {
   return new Promise((resolve) => {
     if (trackingEnable) {
       // eslint-disable-next-line no-unused-expressions
-      !(function(f, b, e, v, n, t, s) {
+      !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return
-        n = f.fbq = function() {
+        n = f.fbq = function () {
           n.callMethod
             ? n.callMethod.apply(n, arguments)
             : n.queue.push(arguments)

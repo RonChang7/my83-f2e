@@ -131,11 +131,11 @@ export default {
         Object.assign(options, this.options)
       )
 
-      gallery.listen('gettingData', function(index, item) {
+      gallery.listen('gettingData', function (index, item) {
         if (_.isNil(item.w) || _.isNil(item.h) || item.w < 1 || item.h < 1) {
           // unknown size
           const img = new Image()
-          img.onload = function() {
+          img.onload = function () {
             // will get size after load
             item.w = (this as HTMLImageElement).width // set image width
             item.h = (this as HTMLImageElement).height // set image height
@@ -146,7 +146,7 @@ export default {
         }
       })
 
-      gallery.listen('close', function() {
+      gallery.listen('close', function () {
         // 清空 index 數值
         vm.$emit('update:index', null)
       })
