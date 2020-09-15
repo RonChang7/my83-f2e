@@ -2,9 +2,7 @@
   <div class="Medal">
     <img
       :class="`Medal__${props.size}`"
-      :src="
-        `${parent.$imageBucketUrl}/front/common/medal/medal-lv-${props.level}.png`
-      "
+      :src="`${parent.$imageBucketUrl}/front/common/medal/medal-lv-${props.level}.png`"
       :alt="`Level ${props.level}`"
     />
   </div>

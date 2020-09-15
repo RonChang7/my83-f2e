@@ -18,9 +18,7 @@
         </div>
       </section>
       <section class="report">
-        <h3 class="title">
-          媒體報導
-        </h3>
+        <h3 class="title">媒體報導</h3>
         <div class="content">
           <a
             class="logo"
@@ -64,9 +62,7 @@
         </div>
       </section>
       <section class="contact">
-        <h3 class="title">
-          幫助
-        </h3>
+        <h3 class="title">幫助</h3>
         <div class="content">
           <p class="d-flex align-items-center">
             <a class="mr-2" href="#" @click.prevent="openZendeskChat">
@@ -95,9 +91,7 @@
         </div>
       </section>
       <section class="about">
-        <h3 class="title">
-          關於MY83
-        </h3>
+        <h3 class="title">關於MY83</h3>
         <div class="content">
           <p><GlobalLink to="/aboutUs">關於MY83</GlobalLink></p>
           <p class="d-flex align-items-center">

@@ -212,7 +212,7 @@ export default {
 
       this.updateFollowQuestionState(this.temporarilyFollowStatus)
     },
-    updateFollowQuestionState: _.debounce(async function(state) {
+    updateFollowQuestionState: _.debounce(async function (state) {
       if (state === (this.personalize as QuestionPersonalize).is_follower) {
         this.resetTempState()
         return

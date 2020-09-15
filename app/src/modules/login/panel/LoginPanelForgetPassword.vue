@@ -1,17 +1,13 @@
 <template>
   <div class="LoginPanelForgetPassword">
-    <div class="LoginPanelForgetPassword__title">
-      忘記密碼了？
-    </div>
+    <div class="LoginPanelForgetPassword__title">忘記密碼了？</div>
 
     <div class="LoginPanelForgetPassword__info">
       請輸入註冊時所填寫的 E-Mail 或 Facebook 註冊的 E-mail，MY83
       將會寄重置密碼信到您的信箱。
     </div>
 
-    <label for="email">
-      電子信箱
-    </label>
+    <label for="email">電子信箱</label>
     <BaseInputText
       :value.sync="form.email"
       :state="errors.email ? errors.email.state : ''"

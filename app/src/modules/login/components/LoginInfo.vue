@@ -11,9 +11,7 @@
     <img
       class="introduction"
       :src="`${parent.$imageBucketUrl}/front/login/img-brand-feature.png`"
-      :srcset="
-        `${parent.$imageBucketUrl}/front/login/img-brand-feature@2x.png 2x`
-      "
+      :srcset="`${parent.$imageBucketUrl}/front/login/img-brand-feature@2x.png 2x`"
       alt="my83 introduction"
     />
   </div>

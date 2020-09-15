@@ -6,7 +6,7 @@ import path from 'path'
 import { Module } from '@nuxt/types'
 import { StoreOptions } from 'vuex'
 
-const ClassicStore: Module<Options> = function(options) {
+const ClassicStore: Module<Options> = function (options) {
   const _options: Options = Object.assign(
     {},
     {

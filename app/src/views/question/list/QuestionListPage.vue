@@ -131,7 +131,7 @@ const options: ComponentOption = {
       const body = document.querySelector('body')
       scrollTo(body!, window)
     },
-    checkShouldShowScrollToTop: _.debounce(function() {
+    checkShouldShowScrollToTop: _.debounce(function () {
       const screenInnerHeight = window.innerHeight
       const pageYScroll =
         window.pageYOffset || document.documentElement.scrollTop

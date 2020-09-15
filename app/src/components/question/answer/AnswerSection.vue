@@ -225,7 +225,7 @@ export default {
       this.temporarilyLikeStatus = likeStatus
       this.updateLikeStatus(likeStatus)
     },
-    updateLikeStatus: _.debounce(async function(status) {
+    updateLikeStatus: _.debounce(async function (status) {
       if (status === this.answer.personalize!.like_status) {
         this.resetTempState()
         return
