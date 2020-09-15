@@ -76,7 +76,7 @@ import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
 import * as types from '@/store/global/global.type'
 import { logout } from '@/api/login/login'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
@@ -194,7 +194,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
   $store: Store<GlobalVuexState>
 }
 
@@ -204,15 +206,15 @@ export interface Data {
 }
 
 export interface Methods {
+  reloadHandler: Function
   checkItemEmpty(item: Personalize | Menu): boolean
   menuToggle(): void
   getScreenWidth(): void
-  reloadHandler(): Function
   showLoginPanel(): void
   logout(): void
 }
 
-export interface Computed extends DeviceMixinComputed {
+export interface Computed {
   personalize: Personalize
   notificationCount: number | string
   menu: Menu

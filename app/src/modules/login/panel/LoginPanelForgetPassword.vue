@@ -127,12 +127,12 @@ export interface Instance extends Vue {
 
 export interface Data {
   form: Form
-  errors: Errors<Form>
+  errors: Errors<Form> | {}
   state: string
 }
 
 export interface Methods {
-  validate(): void
+  validate(key: string, value: any): void
   submit(): void
   sendForgetPassword(): void
 }

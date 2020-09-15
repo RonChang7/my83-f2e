@@ -23,7 +23,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import { QuestionMeta, AnswerData } from '@/api/question/question.type'
 import UserMetaMixin, {
-  Computed as UserMetaMixinComputed,
+  ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 const AnswerSection = () => import('../answer/AnswerSection.vue')
 
@@ -67,7 +67,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {
   $store: Store<QuestionVuexState>
 }
 
@@ -75,7 +77,7 @@ export interface Data {}
 
 export interface Methods {}
 
-export interface Computed extends UserMetaMixinComputed {
+export interface Computed {
   answerCount: QuestionMeta['answer_count']
   answers: AnswerData[]
   bestAnswerId: boolean

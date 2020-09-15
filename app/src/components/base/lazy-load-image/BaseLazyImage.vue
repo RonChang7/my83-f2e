@@ -206,7 +206,7 @@ export interface Props {
   imageLoadedStyle: CSSStyleDeclaration
   hasPlaceholderImage: boolean
   imageAlt: string | null
-  fit: ObjectFitTypeType
+  fit: ObjectFitTypeType | ''
   ignorePlaceholder: boolean
 }
 </script>

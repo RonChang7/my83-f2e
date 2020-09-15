@@ -76,7 +76,7 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance extends Vue {}
 
 export interface Data {
-  avatarStyle: CSSStyleDeclaration
+  avatarStyle: Partial<CSSStyleDeclaration>
 }
 
 export interface Methods {

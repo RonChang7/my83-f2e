@@ -216,7 +216,7 @@ export interface Data {
   shouldShowScrollToTop: boolean
 }
 
-export interface Methods {
+export type Methods = {
   scrollToTop(): void
   checkShouldShowScrollToTop(this: ComponentInstance): void
 }

@@ -186,7 +186,7 @@ export interface Instance extends Vue {}
 export interface Data {
   currentYear: number
   zendeskLoading: boolean
-  footerImageStyle: CSSStyleDeclaration
+  footerImageStyle: Partial<CSSStyleDeclaration>
 }
 
 export interface Methods {
