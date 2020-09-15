@@ -44,6 +44,17 @@ steps:
       branch: master
       event: push
 
+  - name: remove-devDependencies
+    image: node:10-alpine
+    user: root
+    commands:
+      - npm prune --production
+    depends_on:
+      - rebuild-cache
+    when:
+      branch: master
+      event: push
+
   - name: push-image
     image: plugins/gcr
     settings:
@@ -57,7 +68,7 @@ steps:
       context: ./app
       cache_from: node:10-alpine
     depends_on:
-      - build-app
+      - remove-devDependencies
     when:
       branch: master
       event: push
