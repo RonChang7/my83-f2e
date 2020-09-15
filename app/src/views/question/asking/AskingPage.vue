@@ -156,7 +156,7 @@ export interface Data {
   isMounted: boolean
 }
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   transformFormOption: TransformFormOption

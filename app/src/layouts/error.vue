@@ -31,7 +31,10 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import {
+  ThisTypedComponentOptionsWithRecordProps,
+  PropType,
+} from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { NuxtError } from '@nuxt/types/index'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
@@ -44,7 +47,7 @@ import { Zendesk } from '@/services/zendesk/zendesk'
 import { UserRoleMap } from '@/services/user/user'
 import { GlobalVuexState } from '@/store/global-state'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 
 export default {
@@ -53,7 +56,11 @@ export default {
   components: {
     BaseButton,
   },
-  props: ['error'],
+  props: {
+    error: {
+      type: Object as PropType<Props['error']>,
+    },
+  },
   methods: {
     redirectTo(url) {
       if (url) {
@@ -107,7 +114,7 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance extends Vue, DeviceMixinComponentInstance {
   $store: Store<GlobalVuexState>
 }
 
@@ -118,7 +125,7 @@ export interface Methods {
   feedback(): void
 }
 
-export interface Computed extends DeviceMixinComputed {
+export interface Computed {
   errorContent: ErrorContent
 }
 

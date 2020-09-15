@@ -179,7 +179,7 @@ export interface Instance extends Vue {
 
 export interface Data {
   visible: boolean
-  minWidth: number
+  minWidth: number | null
   disableBlur: boolean
 }
 

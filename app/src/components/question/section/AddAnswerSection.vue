@@ -41,10 +41,10 @@ import {
   UPDATE_AFTER_LOGIN_EVENT,
 } from '@/store/global/global.type'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import UserMetaMixin, {
-  Computed as UserMetaMixinComputed,
+  ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 const AnswerEditor = () => import('../answer/AnswerEditor.vue')
 const user = User.getInstance()
@@ -108,7 +108,10 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue>,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {
   $store: Store<QuestionVuexState>
 }
 
@@ -122,7 +125,7 @@ export interface Methods {
   panelDisplayHandler(status: boolean): void
 }
 
-export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {
+export interface Computed {
   questionId: number
   addAnswerButtonSize: string
   avatar: string

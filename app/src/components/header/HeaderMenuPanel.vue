@@ -68,7 +68,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 
 export default {
@@ -132,7 +132,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
   $refs: {
     column: HTMLElement[]
     panel: HTMLElement
@@ -145,7 +147,7 @@ export interface Methods {
   columnWidthHandler(): void
 }
 
-export interface Computed extends DeviceMixinComputed {
+export interface Computed {
   headerMenuPanelWithMultiColumn: boolean
 }
 

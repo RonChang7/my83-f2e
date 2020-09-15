@@ -251,7 +251,7 @@ export interface Instance extends Vue {
 export interface Data {
   form: Form
   autocomplete: boolean
-  errors: Errors<Form>
+  errors: Errors<Form> | {}
   state: {
     facebook: string
     email: string

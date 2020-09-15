@@ -56,7 +56,7 @@ export default {
     },
     answerCount: {
       type: Number,
-      required: null,
+      default: null,
     },
     createdAt: {
       type: Number,

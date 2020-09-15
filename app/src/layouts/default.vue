@@ -26,7 +26,7 @@ import Header from '@/components/header/Header.vue'
 import Footer from '@/components/footer/Footer.vue'
 import { LoginPanelState } from '@/store/global/index'
 import PageMetaMixin, {
-  Computed as PageMetaMixinComputed,
+  ComponentInstance as PageMetaMixinComponentInstance,
 } from '@/mixins/seo/page-meta'
 const LoginPanel = () => import('@/modules/login/LoginPanel.vue')
 const BaseDialog = () => import('@/components/base/dialog/BaseDialog.vue')
@@ -86,7 +86,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance
+  extends Vue,
+    Omit<PageMetaMixinComponentInstance, keyof Vue> {}
 
 export interface Data {
   shouldShowFooter: boolean
@@ -95,7 +97,7 @@ export interface Data {
 
 export interface Methods {}
 
-export interface Computed extends PageMetaMixinComputed {
+export interface Computed {
   loginPanel: LoginPanelState
   globalDialogVisible: boolean
 }

@@ -124,8 +124,8 @@ export default {
 
       const payload = {
         questionId: this.questionId,
-        nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: this.form.content,
+        nickname: this.nickname ? this.nickname : this.form?.nickname,
+        content: this.form?.content,
       }
 
       this.submitState = 'loading'
@@ -162,7 +162,7 @@ export default {
       this.form = this.answerForm.form
     },
     cancel() {
-      if (this.form.content.length) {
+      if (this.form?.content.length) {
         const payload: GlobalDialogContent = {
           ...CancelAnswerDialogContent,
           rightConfirmFn: () => this.$emit('close'),
@@ -179,7 +179,7 @@ export default {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
       el && scrollTo(el, window)
     },
-    isContentEmpty(content: string) {
+    isContentEmpty(content) {
       /**
        * 移除 HTML tag
        * 移除換行
@@ -193,8 +193,8 @@ export default {
   },
   computed: {
     disableSubmit() {
-      const nickname = this.nickname || this.form.nickname
-      return !(nickname && this.isContentEmpty(this.form.content))
+      const nickname = this.nickname || this.form?.nickname
+      return !(nickname && this.isContentEmpty(this.form!.content))
     },
   },
   created() {
@@ -228,7 +228,7 @@ export interface Instance extends Vue {
 }
 
 export interface Data {
-  form: AnswerFormData
+  form: AnswerFormData | null
   errMsg: string
   submitState: string
   nicknameError: boolean
