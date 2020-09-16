@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
+import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -217,8 +217,8 @@ export interface Data {
 }
 
 export type Methods = {
+  checkShouldShowScrollToTop: DebouncedFunc<(this: ComponentInstance) => void>
   scrollToTop(): void
-  checkShouldShowScrollToTop(this: ComponentInstance): void
 }
 
 export interface Computed {

@@ -206,7 +206,7 @@ export interface Data {
   state: string
 }
 
-export interface Methods {
+export type Methods = {
   closePanel(): void
   validate(): boolean
   submit(): void

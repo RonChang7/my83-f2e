@@ -189,7 +189,7 @@ export interface Data {
   footerImageStyle: Partial<CSSStyleDeclaration>
 }
 
-export interface Methods {
+export type Methods = {
   openZendeskChat(): void
 }
 

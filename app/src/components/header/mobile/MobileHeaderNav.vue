@@ -84,7 +84,7 @@ export interface Data {
   displayMenuIndex: number | null
 }
 
-export interface Methods {
+export type Methods = {
   menuToggle(index: number): void
   shouldShowMenu(index: number): boolean
 }

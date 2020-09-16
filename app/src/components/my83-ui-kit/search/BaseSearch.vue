@@ -64,7 +64,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
+export type Methods = {
   input(e: Event): void
   submit(): void
 }

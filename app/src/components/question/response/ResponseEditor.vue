@@ -278,7 +278,7 @@ export interface Data {
   nicknameError: boolean
 }
 
-export interface Methods {
+export type Methods = {
   showLoginPanel(): void
   closePanel(): void
   activePanelHandler(status: boolean): void

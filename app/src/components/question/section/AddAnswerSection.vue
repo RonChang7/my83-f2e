@@ -120,7 +120,7 @@ export interface Data {
   editorIsLoaded: boolean
 }
 
-export interface Methods {
+export type Methods = {
   showLoginPanel(): void
   panelDisplayHandler(status: boolean): void
 }

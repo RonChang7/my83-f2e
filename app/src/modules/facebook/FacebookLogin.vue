@@ -72,7 +72,7 @@ export interface Data {
   facebookStatus: FaceBookStatus | null
 }
 
-export interface Methods {
+export type Methods = {
   facebookLogin(): void
 }
 

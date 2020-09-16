@@ -202,7 +202,7 @@ export interface Data {
   initContent: EditQuestionContent | {}
 }
 
-export interface Methods {
+export type Methods = {
   showLoginPanel(): void
   updateGlobalDialogContent(): void
 }

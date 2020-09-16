@@ -105,7 +105,7 @@ export interface Data {
   isMounted: boolean
 }
 
-export interface Methods {
+export type Methods = {
   closeMenuHandler(): void
   openMenuHandler(): void
 }

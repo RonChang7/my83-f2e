@@ -75,7 +75,7 @@ export interface Instance
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   answerCount: QuestionMeta['answer_count']

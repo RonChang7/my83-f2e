@@ -95,7 +95,7 @@ export interface Data {
   shouldShowHeader: boolean
 }
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   loginPanel: LoginPanelState

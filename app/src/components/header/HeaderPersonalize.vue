@@ -205,7 +205,7 @@ export interface Data {
   screenWidth: number
 }
 
-export interface Methods {
+export type Methods = {
   reloadHandler: Function
   checkItemEmpty(item: Personalize | Menu): boolean
   menuToggle(): void

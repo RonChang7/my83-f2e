@@ -107,7 +107,7 @@ export interface Data {
   isDisabled: boolean
 }
 
-export interface Methods {
+export type Methods = {
   login(facebookLogin: FacebookLoginMethods['facebookLogin']): void
   buttonText(name: string): string
 }

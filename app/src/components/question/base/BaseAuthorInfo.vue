@@ -103,7 +103,7 @@ export interface Data {
   avatarStyle: Partial<CSSStyleDeclaration>
 }
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   roleName: '保險業務員' | '保戶' | 'MY83未認證業務員'

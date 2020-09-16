@@ -182,7 +182,7 @@ export interface Data {
   contentStyle: Partial<CSSStyleDeclaration>
 }
 
-export interface Methods {
+export type Methods = {
   syncPlaceholderStyle(): void
   updateAffixPosition(event?: Event): void
 }

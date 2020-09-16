@@ -183,7 +183,7 @@ export interface Data {
   disableBlur: boolean
 }
 
-export interface Methods {
+export type Methods = {
   input(value: string | number): void
   panelHandler(eventType: string, status: boolean): void
   disableBlurHandler(): void

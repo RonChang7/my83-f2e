@@ -93,7 +93,7 @@ export interface Data {
   value: string
 }
 
-export interface Methods {
+export type Methods = {
   search(): void
 }
 

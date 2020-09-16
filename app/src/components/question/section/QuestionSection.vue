@@ -133,7 +133,7 @@ export interface Instance
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   id: QuestionData['question_id']
