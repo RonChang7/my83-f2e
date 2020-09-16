@@ -170,7 +170,7 @@ export interface Data {
   inputFileErrMsg: string
 }
 
-export interface Methods {
+export type Methods = {
   uploadImageHandler(files: FileList | null): void
   removeImageHandler(id: number): void
   validate(): void

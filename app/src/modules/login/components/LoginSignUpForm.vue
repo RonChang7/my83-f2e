@@ -101,7 +101,7 @@ export interface Data {
   message: string
 }
 
-export interface Methods {
+export type Methods = {
   login(jwtToken: string, expiredTime: number): void
   facebookSignUp(fbToken: string): void
 }

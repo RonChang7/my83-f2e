@@ -187,7 +187,7 @@ export interface Data {
   imageHeight: number | null
 }
 
-export interface Methods {
+export type Methods = {
   loadImage(): void
   handleLoad(img: HTMLImageElement): void
   handleObserveVisibleViewport(entry: IntersectionObserverEntry): void

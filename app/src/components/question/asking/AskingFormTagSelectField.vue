@@ -110,7 +110,7 @@ export interface Data {
   panelExpandState: boolean[]
 }
 
-export interface Methods {
+export type Methods = {
   update(value: Props['value']): void
 }
 

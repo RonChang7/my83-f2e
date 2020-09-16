@@ -151,7 +151,7 @@ export interface Data {
   init: TinymceSettings
 }
 
-export interface Methods {
+export type Methods = {
   focusHandler(status: boolean): void
 }
 

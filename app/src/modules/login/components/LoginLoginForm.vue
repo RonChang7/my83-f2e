@@ -258,7 +258,7 @@ export interface Data {
   }
 }
 
-export interface Methods {
+export type Methods = {
   landingUrl(): LandingUrlInfo
   login(jwtToken: string, expiredTime: number): void
   validate(key: string, value: any): void

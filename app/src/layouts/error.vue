@@ -120,7 +120,7 @@ export interface Instance extends Vue, DeviceMixinComponentInstance {
 
 export interface Data {}
 
-export interface Methods {
+export type Methods = {
   redirectTo(url?: string): void
   feedback(): void
 }

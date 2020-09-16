@@ -111,7 +111,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
+export type Methods = {
   isSelected(value: Option['value']): boolean
   clickOptionHandler(payload: {
     isSelected: boolean

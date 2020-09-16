@@ -131,7 +131,7 @@ export interface Data {
   state: string
 }
 
-export interface Methods {
+export type Methods = {
   validate(key: string, value: any): void
   submit(): void
   sendForgetPassword(): void

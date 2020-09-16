@@ -234,7 +234,7 @@ export interface Data {
   nicknameError: boolean
 }
 
-export interface Methods {
+export type Methods = {
   paste(): void
   validate(): boolean
   submit(): void

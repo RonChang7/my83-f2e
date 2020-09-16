@@ -79,7 +79,7 @@ export interface Data {
   avatarStyle: Partial<CSSStyleDeclaration>
 }
 
-export interface Methods {
+export type Methods = {
   checkItemEmpty(item: Props['target']): boolean
 }
 

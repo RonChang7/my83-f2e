@@ -545,7 +545,7 @@ export interface Data {
   submitState: string
 }
 
-export interface Methods {
+export type Methods = {
   setInitContent(): void
   removeEditPostImage(id: number): void
   imageUploadValidate(msg: string): void
