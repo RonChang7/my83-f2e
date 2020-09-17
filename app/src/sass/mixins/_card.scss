@@ -1,13 +1,13 @@
 // Card (Panel)
-@mixin card-primary {
-  background: $default-bg;
+@mixin card-primary($background: $default-bg) {
+  background: $background;
   border: 1px solid $gray-quaternary;
   border-radius: $border-radius;
   @include shadow-01;
 }
 
-@mixin card-secondary {
-  background: $default-bg;
+@mixin card-secondary($background: $default-bg) {
+  background: $background;
   border: 0;
   border-radius: 0;
   @include shadow-02;
