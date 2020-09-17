@@ -25,7 +25,7 @@
       <br />
       您所參與過的留言，都會累積在你的業務員檔案下方
       <br />
-      <span class="highlight">多發表專業留言，讓保戶了解你的專業所在吧！</span>
+      <em>多發表專業留言，讓保戶了解你的專業所在吧！</em>
     </div>
     <div class="AnswerSalesRule__action">
       <BaseButton size="m" to="/classroom#qaKing">
@@ -76,6 +76,7 @@ export interface Props {}
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 
 .AnswerSalesRule {
   padding: 20px 30px;
@@ -95,6 +96,10 @@ export interface Props {}
     margin-top: -71px;
   }
 
+  em {
+    @include emphasize;
+  }
+
   &__title {
     font-size: 1.125rem;
     font-weight: 500;
@@ -108,13 +113,6 @@ export interface Props {}
     > ol {
       padding-top: 16px;
       padding-left: 0.875rem;
-    }
-
-    .highlight {
-      display: inline;
-      box-shadow: inset 0 -12px 0 0 $primary-bright-color;
-      padding-bottom: 2px;
-      font-weight: 500;
     }
   }
 
