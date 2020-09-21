@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
+import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -225,7 +225,7 @@ export default {
       this.temporarilyLikeStatus = likeStatus
       this.updateLikeStatus(likeStatus)
     },
-    updateLikeStatus: _.debounce(async function(status) {
+    updateLikeStatus: _.debounce(async function (status) {
       if (status === this.answer.personalize!.like_status) {
         this.resetTempState()
         return
@@ -274,12 +274,14 @@ export interface Data {
   temporarilyLikeStatus: number | null
 }
 
-export interface Methods {
+export type Methods = {
+  updateLikeStatus: DebouncedFunc<
+    (this: ComponentInstance, status: LikeStatus) => Promise<void>
+  >
   showLoginPanel(): void
   buttonActionHandler(type: Type): void
   openResponsePanel(): void
   toggleLikeStatus(status: LikeStatus): void
-  updateLikeStatus(this: ComponentInstance, status: LikeStatus): Promise<void>
   resetTempState(): void
 }
 

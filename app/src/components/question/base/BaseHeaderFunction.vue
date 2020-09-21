@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
+import _, { DebouncedFunc } from 'lodash'
 import qs from 'qs'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -212,7 +212,7 @@ export default {
 
       this.updateFollowQuestionState(this.temporarilyFollowStatus)
     },
-    updateFollowQuestionState: _.debounce(async function(state) {
+    updateFollowQuestionState: _.debounce(async function (state) {
       if (state === (this.personalize as QuestionPersonalize).is_follower) {
         this.resetTempState()
         return
@@ -363,12 +363,11 @@ export interface Data {
   }
 }
 
-export interface Methods {
+export type Methods = {
+  updateFollowQuestionState: DebouncedFunc<
+    (this: ComponentInstance, state: boolean) => Promise<void>
+  >
   followQuestion(): void
-  updateFollowQuestionState(
-    this: ComponentInstance,
-    state: boolean
-  ): Promise<void>
   resetTempState(): void
   setBestAnswer(): void
   showDropdownPanel(): void

@@ -98,7 +98,7 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export interface Methods {
+export type Methods = {
   update(value: string): void
   uploadButtonClickHandler(): void
   imageUploadHandler(e: Event): void

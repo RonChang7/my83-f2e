@@ -25,7 +25,7 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import { nl2br } from '@/utils/text-parser'
 
@@ -67,13 +67,15 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {}
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
-export interface Computed extends DeviceMixinComputed {
+export interface Computed {
   title: string
 }
 

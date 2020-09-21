@@ -16,7 +16,9 @@ export const fetchHeaderData = async (): Promise<HeaderNavItem[]> => {
 /**
  * @description 取得個人化 Header 選單資料
  */
-export const fetchPersonalizedHeaderData = async (): Promise<HeaderPersonalized> => {
+export const fetchPersonalizedHeaderData = async (): Promise<
+  HeaderPersonalized
+> => {
   const { data } = await request.get<HeaderPersonalized>(
     '/api/menu/personalize'
   )

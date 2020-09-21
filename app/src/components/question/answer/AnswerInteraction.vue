@@ -73,7 +73,7 @@ export interface Data {
   buttonTypes: Type[]
 }
 
-export interface Methods {
+export type Methods = {
   actionHandler(type: Type): void
 }
 

@@ -18,12 +18,12 @@ export default {
   methods: {
     async facebookLogin() {
       if (
-        !this.facebookStatus.accessToken ||
+        !this.facebookStatus?.accessToken ||
         this.facebookStatus.accessTokenExpireTime <=
           Date.now() - REFRESH_TIME_THRESHOLD
       ) {
         await this.facebook.login()
-        return this.facebookStatus.accessToken
+        return this.facebookStatus?.accessToken
       }
       return this.facebookStatus.accessToken
     },
@@ -69,10 +69,10 @@ export interface Instance extends Vue {
 }
 
 export interface Data {
-  facebookStatus: FaceBookStatus
+  facebookStatus: FaceBookStatus | null
 }
 
-export interface Methods {
+export type Methods = {
   facebookLogin(): void
 }
 

@@ -119,7 +119,7 @@ export interface Data {
   displayForgetPasswordWording: boolean
 }
 
-export interface Methods {
+export type Methods = {
   closePanel(): void
   toPanel(panelName: TargetPanel): void
   afterLogin(): void

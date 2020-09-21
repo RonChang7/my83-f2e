@@ -77,7 +77,7 @@ export interface Data {
   closed: boolean
 }
 
-export interface Methods {
+export type Methods = {
   handleWrapperClick(): void
 }
 

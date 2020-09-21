@@ -1,6 +1,6 @@
 import { registerModule } from '@/store/module-register'
 
-const registerPageModule = async function({ app, store, route }) {
+const registerPageModule = async function ({ app, store, route }) {
   // load global module on demand.
   const { requiredStoreModules = [] } = route.meta[route.meta.length - 1] || {}
 

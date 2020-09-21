@@ -5,12 +5,12 @@ import { logger } from '../../helper/logger'
 export const googleAnalyticsSetup = (trackingEnable, trackingLogEnable) => {
   return new Promise((resolve) => {
     if (trackingEnable) {
-      ;(function(i, s, o, g, r, a, m) {
+      ;(function (i, s, o, g, r, a, m) {
         // eslint-disable-next-line dot-notation
         i['GoogleAnalyticsObject'] = r
         ;(i[r] =
           i[r] ||
-          function() {
+          function () {
             ;(i[r].q = i[r].q || []).push(arguments)
           }),
           (i[r].l = 1 * new Date())

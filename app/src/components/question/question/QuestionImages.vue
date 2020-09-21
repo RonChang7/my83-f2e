@@ -76,7 +76,7 @@ export interface Data {
   currentImageIndex: number | null
 }
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   galleryImages: GalleryImage[]

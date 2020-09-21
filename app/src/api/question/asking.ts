@@ -10,7 +10,9 @@ import request from '@/api/request'
 /**
  * @description 取得發文分類選項
  */
-export const fetchAskingFormOption = async (): Promise<AskingFormOptionResponse> => {
+export const fetchAskingFormOption = async (): Promise<
+  AskingFormOptionResponse
+> => {
   const { data } = await request.get(`/api/v1/question/tags`)
   return data
 }

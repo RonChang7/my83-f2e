@@ -54,7 +54,9 @@ export const fetchSearchQuestionList = async ({
 /**
  * @description 取得熱門問答
  */
-export const fetchPopularQuestions = async (): Promise<PopularQuestionsResponse> => {
+export const fetchPopularQuestions = async (): Promise<
+  PopularQuestionsResponse
+> => {
   const { data } = await request.get<PopularQuestionsResponse>(
     `/api/v1/questions/hot-qa`
   )
