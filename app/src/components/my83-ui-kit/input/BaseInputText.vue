@@ -108,7 +108,7 @@ export interface Data {
   displayPassword: boolean
 }
 
-export interface Methods {
+export type Methods = {
   input(e: Event): void
 }
 

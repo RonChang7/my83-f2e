@@ -67,7 +67,7 @@ export default {
         target_list: false,
 
         // newline setting
-        forced_root_block: false,
+        forced_root_block: '',
         entity_encoding: 'raw',
 
         // paste
@@ -151,7 +151,7 @@ export interface Data {
   init: TinymceSettings
 }
 
-export interface Methods {
+export type Methods = {
   focusHandler(status: boolean): void
 }
 

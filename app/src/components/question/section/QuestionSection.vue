@@ -46,7 +46,7 @@ import {
 } from '@/api/question/question.type'
 import { textToUrl } from '@/utils/text-parser'
 import UserMetaMixin, {
-  Computed as UserMetaMixinComputed,
+  ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 const QuestionImages = () => import('../question/QuestionImages.vue')
 
@@ -125,15 +125,17 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {
   $store: Store<QuestionVuexState>
 }
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
-export interface Computed extends UserMetaMixinComputed {
+export interface Computed {
   id: QuestionData['question_id']
   subject: QuestionData['subject']
   content: QuestionData['content']

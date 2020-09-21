@@ -5,9 +5,7 @@
       <span>MY83 熱門服務</span>
       <div class="decoration right"></div>
     </div>
-    <div class="HotServiceSection__title">
-      幫你解決保險問題的好幫手
-    </div>
+    <div class="HotServiceSection__title">幫你解決保險問題的好幫手</div>
     <div class="HotServiceSection__content">
       MY83 除了豐富專業的保險知識，還有這些功能幫你解決保險問題喔！
     </div>
@@ -67,7 +65,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   cardsDataTransform: HotServiceContent[]

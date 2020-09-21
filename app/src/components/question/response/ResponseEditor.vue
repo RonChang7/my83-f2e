@@ -153,8 +153,8 @@ export default {
       const payload = {
         questionId: this.questionId,
         answerId: this.answerId,
-        nickname: this.nickname ? this.nickname : this.form.nickname,
-        content: nl2br(this.form.content.trim()), // @TODO: 相容舊版，所以新增 response 要補上 <br />
+        nickname: this.nickname ? this.nickname : this.form?.nickname,
+        content: nl2br(this.form!.content.trim()), // @TODO: 相容舊版，所以新增 response 要補上 <br />
       }
 
       this.submitState = 'loading'
@@ -192,7 +192,7 @@ export default {
       this.activePanelHandler(false)
     },
     cancel() {
-      if (this.form.content.length) {
+      if (this.form?.content.length) {
         const payload: GlobalDialogContent = {
           ...CancelResponseDialogContent,
           rightConfirmFn: () => this.reset(),
@@ -220,8 +220,8 @@ export default {
   },
   computed: {
     disableSubmit() {
-      const nickname = this.nickname || this.form.nickname
-      return !(nickname && this.form.content.trim())
+      const nickname = this.nickname || this.form?.nickname
+      return !(nickname && this.form?.content.trim())
     },
   },
   watch: {
@@ -272,13 +272,13 @@ export interface Instance extends Vue {
 }
 
 export interface Data {
-  form: ResponseFormData
+  form: ResponseFormData | null
   errMsg: string
   submitState: string
   nicknameError: boolean
 }
 
-export interface Methods {
+export type Methods = {
   showLoginPanel(): void
   closePanel(): void
   activePanelHandler(status: boolean): void
@@ -287,7 +287,7 @@ export interface Methods {
   cancel(): void
   scrollToNewPost(id: number): void
   autoFocusHelper(): void
-  focusHandler(): void
+  focusHandler(status: boolean): void
 }
 
 export interface Computed {

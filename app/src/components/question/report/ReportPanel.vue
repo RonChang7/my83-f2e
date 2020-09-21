@@ -2,9 +2,7 @@
   <BaseModal :visible="visible" :lock-scroll="true" @close="closePanel">
     <div class="ReportPanel">
       <BaseClose class="ReportPanel__close" @click.native="closePanel" />
-      <div class="ReportPanel__title">
-        檢舉
-      </div>
+      <div class="ReportPanel__title">檢舉</div>
       <div class="ReportPanel__description">
         除了向 MY83
         檢舉，您也可試試「訴諸社群的力量」，若您認為此留言有問題，直接留言說明此留言不正確之處，提醒其他人，也讓您的論點得到更多人支持。
@@ -74,7 +72,7 @@ import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vu
 import { CLOSE_REPORT_PANEL, ADD_REPORT } from '@/store/question/question.type'
 import { SimpleResponse } from '@/api/type'
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 
 export const enum ValidateState {
@@ -197,22 +195,24 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {}
 
 export interface Data {
   form: Form
-  errors: Errors<Form>
+  errors: Errors<Form> | {}
   dropdownOptions: Option[]
   state: string
 }
 
-export interface Methods {
+export type Methods = {
   closePanel(): void
   validate(): boolean
   submit(): void
 }
 
-export interface Computed extends DeviceMixinComputed {
+export interface Computed {
   buttonSize: BaseButtonProps['size']
 }
 

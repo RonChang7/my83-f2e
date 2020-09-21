@@ -7,7 +7,7 @@ import path from 'path'
 import { Module } from '@nuxt/types'
 import { NuxtRouteConfig } from '@nuxt/types/config/router'
 
-const FlexibleRoutes: Module<Options> = function(options) {
+const FlexibleRoutes: Module<Options> = function (options) {
   const _options = Object.assign(
     {},
     {

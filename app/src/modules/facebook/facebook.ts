@@ -57,7 +57,7 @@ export class Facebook {
   private initFacebookSDK() {
     const appId = this.appId
     return new Promise((resolve) => {
-      window.fbAsyncInit = function() {
+      window.fbAsyncInit = function () {
         window.FB.init({
           appId,
           cookie: true,

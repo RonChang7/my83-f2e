@@ -22,14 +22,10 @@
             已經有 {{ promotion.consultations_count }} 人在此規劃保險
           </div>
           <!-- @todo: 之後要刪除 -->
-          <div v-else class="count">
-            專為熟齡朋友準備的高CP值商品
-          </div>
+          <div v-else class="count">專為熟齡朋友準備的高CP值商品</div>
         </div>
         <div class="ListRecommendProductSection__promotion__button">
-          <BaseButton size="l-a" :is-full-width="true">
-            去看看
-          </BaseButton>
+          <BaseButton size="l-a" :is-full-width="true">去看看</BaseButton>
         </div>
       </GlobalLink>
     </template>
@@ -91,7 +87,7 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   promotionHeader: PromotionsResponse['data']['header']

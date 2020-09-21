@@ -186,7 +186,7 @@ export interface Data {
   }
 }
 
-export interface Methods {
+export type Methods = {
   calcRightColumnHeight(): void
   getFixedColumnStart(): void
 }

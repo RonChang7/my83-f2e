@@ -1,7 +1,7 @@
-import { Configuration } from '@nuxt/types'
+import { NuxtConfig } from '@nuxt/types'
 require('dotenv').config()
 
-const config: Configuration = {
+const config: NuxtConfig = {
   server: {
     port: process.env.PORT,
   },
@@ -84,7 +84,14 @@ const config: Configuration = {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
-    '@nuxt/typescript-build',
+    [
+      '@nuxt/typescript-build',
+      {
+        typescript: {
+          memoryLimit: 2048, // default: 2048 MB
+        },
+      },
+    ],
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
   ],
@@ -144,13 +151,7 @@ const config: Configuration = {
     ],
     // extend(config, ctx) {},
   },
-  typescript: {
-    typeCheck: {
-      eslint: true,
-      memoryLimit: 2048,
-      workers: 2,
-    },
-  },
+  telemetry: false,
 }
 
 export default config
