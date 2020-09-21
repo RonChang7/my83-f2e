@@ -96,10 +96,10 @@ import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.
 import { scrollTo } from '@/utils/element'
 
 import DeviceMixin, {
-  Computed as DeviceMixinComputed,
+  ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import UserMetaMixin, {
-  Computed as UserMetaMixinComputed,
+  ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 const QuestionDropdownPanel = () =>
   import('@/components/question/panel/QuestionDropdownPanel.vue')
@@ -255,7 +255,10 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue>,
+    Omit<UserMetaMixinComponentInstance, keyof Vue> {
   $store: Store<QuestionVuexState>
   $refs: {
     dropdownPanel: Vue
@@ -272,14 +275,14 @@ export interface Data {
   shouldShowScrollToTop: boolean
 }
 
-export interface Methods {
+export type Methods = {
   scrollToAnchorPoint(anchor: string): void
   hideDropdownPanel(): void
   scrollToTop(): void
   createScrollToTopIntersectionObserver(): IntersectionObserver
 }
 
-export interface Computed extends DeviceMixinComputed, UserMetaMixinComputed {
+export interface Computed {
   shouldShowGuide: boolean
   shouldShowHotService: boolean
   shouldShowBlogSection: boolean

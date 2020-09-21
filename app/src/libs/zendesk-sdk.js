@@ -1,13 +1,13 @@
 // API file: https://api.zopim.com/
 export default (chatId) =>
   new Promise((resolve) => {
-    ;(function(d, s, id) {
-      const z = (window.$zopim = function(c) {
+    ;(function (d, s, id) {
+      const z = (window.$zopim = function (c) {
         z._.push(c)
       })
       const $ = (z.s = d.createElement(s))
       const e = d.getElementsByTagName(s)[0]
-      z.set = function(o) {
+      z.set = function (o) {
         z.set._.push(o)
       }
       z._ = []

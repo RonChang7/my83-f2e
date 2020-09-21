@@ -150,7 +150,7 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export interface Methods {
+export type Methods = {
   toPage(index: number): void
 }
 

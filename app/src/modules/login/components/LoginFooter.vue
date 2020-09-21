@@ -1,13 +1,9 @@
 <template>
   <div class="LoginFooter">
     <hr />
-    <div class="LoginFooter__content">
-      還不是MY83會員嗎？
-    </div>
+    <div class="LoginFooter__content">還不是MY83會員嗎？</div>
     <a @click.prevent="$emit('to-panel', 'sign-up')">我是保戶</a>
-    <GlobalLink to="/signup/sales">
-      我是業務員
-    </GlobalLink>
+    <GlobalLink to="/signup/sales">我是業務員</GlobalLink>
   </div>
 </template>
 
@@ -58,7 +54,7 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed extends DeviceMixinComputed {}
 

@@ -133,7 +133,7 @@ export interface Data {
   }
 }
 
-export interface Methods {
+export type Methods = {
   setCountdown(): void
   countdownTransformer(sec: number): void
 }

@@ -11,9 +11,7 @@
       已發送重設密碼信到您的信箱，請檢查您的信箱喔！
     </div>
 
-    <label for="email">
-      電子信箱
-    </label>
+    <label for="email">電子信箱</label>
     <BaseInputText
       :value.sync="form.email"
       :autocomplete="autocomplete ? 'on' : 'off'"
@@ -26,9 +24,7 @@
     <BaseInputMessage :msg="errors.email ? errors.email.message : ''" />
 
     <div class="LoginLoginForm__password">
-      <label for="password">
-        密碼
-      </label>
+      <label for="password">密碼</label>
       <a @click.prevent="$emit('to-panel', 'forget-password')">忘記密碼</a>
     </div>
     <BaseInputText
@@ -255,14 +251,14 @@ export interface Instance extends Vue {
 export interface Data {
   form: Form
   autocomplete: boolean
-  errors: Errors<Form>
+  errors: Errors<Form> | {}
   state: {
     facebook: string
     email: string
   }
 }
 
-export interface Methods {
+export type Methods = {
   landingUrl(): LandingUrlInfo
   login(jwtToken: string, expiredTime: number): void
   validate(key: string, value: any): void

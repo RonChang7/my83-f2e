@@ -77,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
+import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -131,7 +131,7 @@ const options: ComponentOption = {
       const body = document.querySelector('body')
       scrollTo(body!, window)
     },
-    checkShouldShowScrollToTop: _.debounce(function() {
+    checkShouldShowScrollToTop: _.debounce(function () {
       const screenInnerHeight = window.innerHeight
       const pageYScroll =
         window.pageYOffset || document.documentElement.scrollTop
@@ -216,9 +216,9 @@ export interface Data {
   shouldShowScrollToTop: boolean
 }
 
-export interface Methods {
+export type Methods = {
+  checkShouldShowScrollToTop: DebouncedFunc<(this: ComponentInstance) => void>
   scrollToTop(): void
-  checkShouldShowScrollToTop(this: ComponentInstance): void
 }
 
 export interface Computed {

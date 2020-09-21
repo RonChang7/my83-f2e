@@ -123,7 +123,7 @@ export interface Data {
   shouldFixBanner: boolean
 }
 
-export interface Methods {}
+export type Methods = {}
 
 export interface Computed {
   recommendProduct: RecommendProductTransform | null

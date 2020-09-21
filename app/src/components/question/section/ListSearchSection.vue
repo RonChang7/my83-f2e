@@ -6,9 +6,7 @@
       @submit="search"
     />
     <div class="ListSearchSection__HotKeyword">
-      <span>
-        熱門關鍵字：
-      </span>
+      <span>熱門關鍵字：</span>
       <QuestionTags :tags="hotKeyword" />
     </div>
   </div>
@@ -95,7 +93,7 @@ export interface Data {
   value: string
 }
 
-export interface Methods {
+export type Methods = {
   search(): void
 }
 

@@ -77,7 +77,7 @@ export interface Data {
   perviousPath: string
 }
 
-export interface Methods {
+export type Methods = {
   reloadHandler(): void
 }
 

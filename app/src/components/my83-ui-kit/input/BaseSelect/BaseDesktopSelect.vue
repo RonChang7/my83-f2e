@@ -179,11 +179,11 @@ export interface Instance extends Vue {
 
 export interface Data {
   visible: boolean
-  minWidth: number
+  minWidth: number | null
   disableBlur: boolean
 }
 
-export interface Methods {
+export type Methods = {
   input(value: string | number): void
   panelHandler(eventType: string, status: boolean): void
   disableBlurHandler(): void
