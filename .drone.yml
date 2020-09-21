@@ -48,6 +48,7 @@ steps:
     image: node:10-alpine
     user: root
     commands:
+      - cd app
       - npm prune --production
     depends_on:
       - rebuild-cache
