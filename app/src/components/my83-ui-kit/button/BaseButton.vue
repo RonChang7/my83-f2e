@@ -175,7 +175,7 @@ export interface Props {
 
     &.hasIcon {
       position: relative;
-      right: 5%;
+      right: 3%;
     }
 
     &.isLoading {
