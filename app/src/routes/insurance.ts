@@ -26,6 +26,10 @@ const generateInsurancePage = (
       name: insurance.name,
       path: insurance.path,
       component: resolve('@/views/insurance/page/Index.vue'),
+      meta: {
+        insurance: insurance.path.split('/')[1],
+        requiredStoreModules: ['insurance'],
+      },
     }
   })
 }
