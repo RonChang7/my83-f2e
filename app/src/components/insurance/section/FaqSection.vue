@@ -17,7 +17,10 @@
           <div class="FaqSection__collapse__content">
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div v-html="faq.answer" />
-            <div v-if="faq.recommend_blogs" class="d-flex">
+            <div
+              v-if="faq.recommend_blogs"
+              class="FaqSection__collapse__linkWrapper"
+            >
               <span>推薦閱讀：</span>
               <div class="FaqSection__collapse__link">
                 <GlobalLink
@@ -62,8 +65,12 @@ import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowTop from '@/components/base/icon/24/BaseArrowTop.vue'
 import BaseArrowDown from '@/components/base/icon/24/BaseArrowDown.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
+import DeviceMixin, {
+  ComponentInstance as DeviceMixinComponentInstance,
+} from '@/mixins/device/device-mixins'
 
 const options: ComponentOption = {
+  mixins: [DeviceMixin],
   components: {
     BaseCollapse,
     GlobalLink,
@@ -90,7 +97,13 @@ const options: ComponentOption = {
     faqs: {
       immediate: true,
       handler() {
-        this.activeList = Array(this.faqs?.length).fill(true)
+        let defaultActiveList = Array(this.faqs?.length).fill(true)
+
+        if (this.isMobile) {
+          defaultActiveList = defaultActiveList.fill(false, 1)
+        }
+
+        this.activeList = defaultActiveList
       },
     },
   },
@@ -112,7 +125,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
+export interface Instance
+  extends Vue,
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
   $store: Store<InsuranceVuexState>
 }
 
@@ -136,23 +151,38 @@ export default options
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/elements.scss';
+@import '@/sass/rwd.scss';
 
 .FaqSection {
   width: 1120px;
   color: $gray-primary;
 
+  @include max-media('xl') {
+    width: 100%;
+    font-size: 0.875rem;
+  }
+
   ::v-deep em {
     @include emphasize;
+  }
+
+  ::v-deep ul {
+    padding: 0 0 0 1.5em;
   }
 
   h2 {
     font-size: 1.75rem;
     font-weight: 500;
+    margin: 0 0 16px;
   }
 
   &__collapse {
     padding: 24px 16px;
     border-top: 1px solid $gray-quaternary;
+
+    @include max-media('xl') {
+      padding: 16px 0;
+    }
 
     &:last-of-type {
       border-bottom: 1px solid $gray-quaternary;
@@ -164,6 +194,11 @@ export default options
       font-size: 1.125rem;
       font-weight: 500;
       cursor: pointer;
+
+      @include max-media('xl') {
+        font-size: 1rem;
+        margin-left: 4px;
+      }
     }
 
     &__content {
@@ -174,6 +209,18 @@ export default options
 
       > div:not(:last-child) {
         margin-bottom: 1em;
+      }
+
+      @include max-media('xl') {
+        padding: 16px;
+      }
+    }
+
+    &__linkWrapper {
+      display: flex;
+
+      @include max-media('xl') {
+        flex-direction: column;
       }
     }
 
@@ -189,9 +236,19 @@ export default options
     align-items: center;
     padding: 48px 0;
 
+    @include max-media('xl') {
+      flex-direction: column;
+      padding: 16px 0;
+    }
+
     &__image {
       width: 76px;
       height: 104px;
+
+      @include max-media('xl') {
+        width: 61px;
+        height: 82px;
+      }
     }
 
     &__bubble {
@@ -202,6 +259,15 @@ export default options
       padding: 25px 82px 35px 76px;
       color: $secondary-color;
       font-weight: 500;
+
+      @include max-media('xl') {
+        background: url('https://images.my83.com.tw/front/insurance/reminder-bubble-mobile.svg');
+        background-size: cover;
+        width: 100%;
+        height: auto;
+        padding: 32px 28px 38px;
+        margin: -24px 0 0;
+      }
     }
   }
 }

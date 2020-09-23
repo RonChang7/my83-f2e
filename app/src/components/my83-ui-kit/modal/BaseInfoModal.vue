@@ -99,10 +99,17 @@ export default options
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: 15px;
+  padding: 39px 15px 15px;
   color: $gray-primary;
   outline: 0;
   overflow: auto;
+
+  @include max-media('lg') {
+    left: calc(50% - 12px);
+    top: calc(50% - 10px);
+    margin: 10px 12px;
+    overflow: hidden;
+  }
 
   &__close {
     position: absolute;
