@@ -4,7 +4,7 @@
     :lock-scroll="lockScroll"
     @close="closePanel"
   >
-    <div class="InfoModal">
+    <div ref="infoModal" class="InfoModal">
       <div class="InfoModal__navbar">
         <div
           v-for="tab in navTabs"
@@ -84,6 +84,15 @@ const options: ComponentOption = {
       return this.$store.state.insurance.principle
     },
   },
+  watch: {
+    visible(val) {
+      if (val) {
+        this.$nextTick(() => {
+          this.$refs.infoModal.scrollTop = 0
+        })
+      }
+    },
+  },
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -103,6 +112,9 @@ export type ComponentInstance = CombinedVueInstance<
 >
 
 export interface Instance extends Vue {
+  $refs: {
+    infoModal: HTMLElement
+  }
   $store: Store<InsuranceVuexState>
 }
 
@@ -134,10 +146,18 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .InfoModal {
-  padding: 33px 41px;
+  padding: 9px 41px 33px;
   width: 770px;
+
+  @include max-media('lg') {
+    padding: 5px 15px 29px;
+    width: calc(100vw - 54px);
+    max-height: calc(100vh - 76px);
+    overflow: auto;
+  }
 
   &__navbar {
     display: flex;
@@ -145,10 +165,14 @@ export default options
     color: $text-default-color;
 
     &__item {
-      flex: 1 1 auto;
+      flex: 1 1 50%;
       text-align: center;
       font-size: 1.375rem;
       cursor: pointer;
+
+      @include max-media('lg') {
+        font-size: 1rem;
+      }
 
       > span {
         display: inline-flex;
@@ -157,6 +181,10 @@ export default options
         &:after {
           content: '';
           margin-top: 16px;
+
+          @include max-media('lg') {
+            margin-top: 10px;
+          }
         }
       }
 
@@ -170,6 +198,11 @@ export default options
           border: 2px solid $secondary-color;
           border-radius: 2px;
           margin-top: 12px;
+
+          @include max-media('lg') {
+            border: 1px solid $secondary-color;
+            margin-top: 8px;
+          }
         }
       }
     }

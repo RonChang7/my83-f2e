@@ -88,10 +88,16 @@ export default options
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/elements.scss';
+@import '@/sass/rwd.scss';
 
 .GlossaryPanel {
   width: 100%;
   padding: 40px 44px 0;
+
+  @include max-media('xl') {
+    padding: 20px 0 10px;
+    font-size: 0.875rem;
+  }
 
   ::v-deep em {
     @include emphasize;
@@ -102,6 +108,18 @@ export default options
 
     &:not(:last-child) {
       margin-bottom: 40px;
+    }
+
+    @include max-media('xl') {
+      flex-direction: column;
+
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+
+      &:last-of-type {
+        padding-top: 20px;
+      }
     }
   }
 
@@ -116,6 +134,14 @@ export default options
     margin-right: 30px;
     color: $secondary-color;
     font-weight: 500;
+    font-size: 1rem;
+
+    @include max-media('xl') {
+      flex: 0 0 auto;
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 16px;
+    }
 
     > div {
       width: 100%;
@@ -133,10 +159,15 @@ export default options
       margin-left: -12px;
       top: 6px;
       left: 54px;
-    }
-  }
 
-  &__definition {
+      @include max-media('xl') {
+        border-width: 12px 6px 0 6px;
+        border-color: $secondary-bright-color transparent transparent
+          transparent;
+        left: calc((-100vw + 86px * 2 + 6px) / 2);
+        top: 35px;
+      }
+    }
   }
 
   &__recommendBlog {

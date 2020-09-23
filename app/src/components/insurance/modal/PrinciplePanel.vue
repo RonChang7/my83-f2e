@@ -7,7 +7,7 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="PrinciplePanel__content" v-html="rule.content" />
     </div>
-    <div v-if="recommendBlogs" class="PrinciplePanel__row d-flex">
+    <div v-if="recommendBlogs" class="PrinciplePanel__row blog">
       <span>推薦閱讀：</span>
       <div>
         <div
@@ -85,11 +85,17 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/elements.scss';
+@import '@/sass/rwd.scss';
 
 .PrinciplePanel {
   width: 100%;
   padding: 40px 44px 0;
   @include counter-list-type-reset;
+
+  @include max-media('xl') {
+    padding: 20px 0;
+    font-size: 0.875rem;
+  }
 
   ::v-deep em {
     @include emphasize;
@@ -99,6 +105,24 @@ export default options
     &:not(:last-child) {
       margin-bottom: 40px;
     }
+
+    @include max-media('xl') {
+      &:not(:last-child) {
+        margin-bottom: 24px;
+      }
+
+      &:last-of-type {
+        padding-top: 20px;
+      }
+    }
+
+    &.blog {
+      display: flex;
+
+      @include max-media('xl') {
+        flex-direction: column;
+      }
+    }
   }
 
   &__title {
@@ -107,16 +131,28 @@ export default options
     font-size: 1.375rem;
     font-weight: 500;
 
+    @include max-media('xl') {
+      font-size: 1.125rem;
+    }
+
     &:before {
       @include counter-list-type($prefix: '原則 ');
       font-size: 1rem;
       margin-right: 10px;
+
+      @include max-media('xl') {
+        font-size: 0.875rem;
+        margin-right: 8px;
+      }
     }
   }
 
   &__content {
     padding: 16px 0 0 16px;
-    margin-bottom: 40px;
+
+    @include max-media('xl') {
+      padding: 6px 0 0 6px;
+    }
   }
 
   &__recommendBlog {

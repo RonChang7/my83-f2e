@@ -105,6 +105,7 @@ export default options
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/elements.scss';
+@import '@/sass/rwd.scss';
 
 .HeaderSection {
   $self: &;
@@ -138,6 +139,43 @@ export default options
       &:not(:last-child) {
         margin-right: 16px;
       }
+    }
+  }
+
+  &__image {
+    width: 230px;
+    height: 230px;
+    margin-left: 70px;
+  }
+
+  @include max-media('xl') {
+    width: 100%;
+
+    h1 {
+      font-size: 1.75rem;
+      margin: 0 0 42px;
+    }
+
+    &__content {
+      width: 100%;
+      font-size: 0.875rem;
+    }
+
+    &__description {
+      line-height: 1.5rem;
+    }
+
+    &__link {
+      width: 100%;
+    }
+
+    &__image {
+      position: absolute;
+      top: 68px;
+      right: 26px;
+      width: 92px;
+      height: 92px;
+      margin: 0;
     }
   }
 }
