@@ -9,7 +9,7 @@
         <div
           v-for="tab in navTabs"
           :key="tab.key"
-          class="InfoModal__navbar--item"
+          class="InfoModal__navbar__item"
           :class="{ active: tab.key === activeTab }"
           @click="() => $emit('update-active-tab', tab.key)"
         >
@@ -144,7 +144,7 @@ export default options
     border-bottom: 1px solid $gray-quaternary;
     color: $text-default-color;
 
-    &--item {
+    &__item {
       flex: 1 1 auto;
       text-align: center;
       font-size: 1.375rem;
