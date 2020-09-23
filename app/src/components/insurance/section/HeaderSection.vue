@@ -104,7 +104,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
-@import '@/sass/mixins.scss';
+@import '@/sass/elements.scss';
 
 .HeaderSection {
   $self: &;
