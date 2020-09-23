@@ -90,6 +90,8 @@ export interface Props {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/mixins.scss';
+
 .BaseModal {
   position: fixed;
   top: 0;
@@ -98,25 +100,9 @@ export interface Props {
   left: 0;
   overflow: auto;
   margin: 0;
-}
 
-.BaseModal__fade-enter-active {
-  animation: modal-fade 0.3s;
-}
-
-.BaseModal__fade-leave-active {
-  animation: modal-fade 0.3s reverse;
-}
-
-@keyframes modal-fade {
-  0% {
-    transform: translate3d(0, -20px, 0);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 1;
+  &__fade {
+    @include vue-transition-fade;
   }
 }
 </style>
