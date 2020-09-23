@@ -7,19 +7,19 @@
         @toggle="toggleActiveCollapse(index)"
       >
         <template v-slot:title>
-          <div class="FaqSection__collapse--title">
+          <div class="FaqSection__collapse__title">
             <span>{{ index + 1 }}. {{ faq.question }}</span>
             <BaseArrowTop v-if="activeList[index]" />
             <BaseArrowDown v-else />
           </div>
         </template>
         <template v-slot:content>
-          <div class="FaqSection__collapse--content">
+          <div class="FaqSection__collapse__content">
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div v-html="faq.answer" />
             <div v-if="faq.recommend_blogs" class="d-flex">
               <span>推薦閱讀：</span>
-              <div class="FaqSection__collapse--link">
+              <div class="FaqSection__collapse__link">
                 <GlobalLink
                   v-for="link in faq.recommend_blogs"
                   :key="link.title"
@@ -34,13 +34,13 @@
       </BaseCollapse>
     </div>
     <section class="FaqSection__footer">
-      <div class="FaqSection__footer--image">
+      <div class="FaqSection__footer__image">
         <BaseLazyImage
           :image-url="`${$imageBucketUrl}/front/common/my-83-cat@2x.png`"
           :ignore-placeholder="true"
         />
       </div>
-      <div class="FaqSection__footer--bubble">
+      <div class="FaqSection__footer__bubble">
         MY83
         保險網知道，保險是會陪伴大家很久的商品！投保前務必謹慎小心，如果有任何問題，歡迎在
         <GlobalLink :to="{ name: 'questionList' }">MY83 討論區</GlobalLink>
@@ -158,7 +158,7 @@ export default options
       border-bottom: 1px solid $gray-quaternary;
     }
 
-    &--title {
+    &__title {
       display: flex;
       justify-content: space-between;
       font-size: 1.125rem;
@@ -166,7 +166,7 @@ export default options
       cursor: pointer;
     }
 
-    &--content {
+    &__content {
       padding: 24px;
       margin-top: 12px;
       background: $primary-bg;
@@ -177,7 +177,7 @@ export default options
       }
     }
 
-    &--link {
+    &__link {
       display: flex;
       flex-direction: column;
     }
@@ -189,12 +189,12 @@ export default options
     align-items: center;
     padding: 48px 0;
 
-    &--image {
+    &__image {
       width: 76px;
       height: 104px;
     }
 
-    &--bubble {
+    &__bubble {
       background: url('https://images.my83.com.tw/front/insurance/reminder-bubble-desktop.svg');
       width: 641px;
       height: 133px;
