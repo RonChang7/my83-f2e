@@ -113,6 +113,10 @@ export default options
   width: 1120px;
   color: $gray-primary;
 
+  @include max-media('xl') {
+    padding: 0 20px;
+  }
+
   ::v-deep em {
     @include emphasize;
   }
