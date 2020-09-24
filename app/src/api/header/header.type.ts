@@ -5,6 +5,7 @@ export interface HeaderDataResponse {
 }
 
 export interface HeaderNavItem {
+  id?: string
   name: string
   link: Link | null
   description?: string | null
