@@ -12,9 +12,9 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import RelatedSection from '../related/RelatedSection.vue'
+import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RelatedBlog } from '@/api/question/question.type'
+import { RelatedBlog } from '@/api/type'
 
 export default {
   components: {

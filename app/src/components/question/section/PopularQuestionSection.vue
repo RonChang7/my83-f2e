@@ -12,7 +12,7 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import RelatedSection from '../related/RelatedSection.vue'
+import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import { PopularQuestion } from '@/api/question/list.type'
 
