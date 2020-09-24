@@ -202,6 +202,10 @@ export default options
       font-size: 0.875rem;
       height: 36px;
     }
+
+    &__footer {
+      margin-right: 16px;
+    }
   }
 }
 </style>

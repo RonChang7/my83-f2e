@@ -160,6 +160,7 @@ export default options
   @include max-media('xl') {
     width: 100%;
     font-size: 0.875rem;
+    padding: 0 20px;
   }
 
   ::v-deep em {

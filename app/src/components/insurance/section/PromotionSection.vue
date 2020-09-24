@@ -84,6 +84,10 @@ export default options
   text-align: center;
   margin-bottom: 20px;
 
+  @include max-media('xl') {
+    margin: 0 20px 20px;
+  }
+
   &__title {
     color: #fff;
     font-size: 1.375rem;
