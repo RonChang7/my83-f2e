@@ -1,8 +1,9 @@
-import { Link } from '../type'
+import { Link, RelatedBlog, RelatedQuestion } from '../type'
 
 export interface InsurancePageStaticData {
   id: string
   name: string
+  query_for_question: string
   image: string
   description: string
   glossary: Glossary
@@ -39,4 +40,12 @@ export interface Term {
 export interface Rule {
   title: string
   content: string
+}
+
+export interface RelatedBlogsResponse {
+  data: RelatedBlog[]
+}
+
+export interface RelatedQuestionsResponse {
+  data: RelatedQuestion[]
 }
