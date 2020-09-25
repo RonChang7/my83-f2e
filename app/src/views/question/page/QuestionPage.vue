@@ -26,19 +26,9 @@
             <AddAnswerSection v-if="userRole === 'sales'" />
           </client-only>
 
-          <MobileRecommendProductSection
-            v-if="isMobile && shouldShowRecommendProduct"
-          />
-
-          <div
-            ref="mobileRelatedSection"
-            class="QuestionPage__mobileRelatedSection"
-          >
-            <RelatedQuestionSection v-if="isMobile" :max-post="5" />
-
-            <RelatedBlogSection
-              v-if="isMobile && shouldShowBlogSection"
-              :max-post="5"
+          <div ref="mobileRecommendProductSection">
+            <MobileRecommendProductSection
+              v-if="isMobile && shouldShowRecommendProduct"
             />
           </div>
 
@@ -48,9 +38,16 @@
           <client-only>
             <AddAnswerSection
               v-if="userRole !== 'sales'"
-              ref="clientAddAnswerSection"
+              class="QuestionPage__clientAddAnswerSection"
             />
           </client-only>
+
+          <RelatedQuestionSection v-if="isMobile" :max-post="5" />
+
+          <RelatedBlogSection
+            v-if="isMobile && shouldShowBlogSection"
+            :max-post="5"
+          />
         </template>
         <template v-slot:right>
           <GuideSection v-if="shouldShowGuide" />
@@ -217,9 +214,11 @@ export default {
       this.scrollToAnchorPoint(this.$route.hash)
     }
 
-    if (this.$refs.mobileRelatedSection) {
+    if (this.$refs.mobileRecommendProductSection) {
       this.observer.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
-      this.observer.scrollToTopObserver.observe(this.$refs.mobileRelatedSection)
+      this.observer.scrollToTopObserver.observe(
+        this.$refs.mobileRecommendProductSection
+      )
     }
   },
   watch: {
@@ -262,7 +261,7 @@ export interface Instance
   $store: Store<QuestionVuexState>
   $refs: {
     dropdownPanel: Vue
-    mobileRelatedSection: Element
+    mobileRecommendProductSection: Element
     fixedColumnLayout: QuestionLayoutWithFixedColumnComponentInstance
   }
 }
@@ -316,6 +315,10 @@ export interface Props {}
     @include max-media('xl') {
       flex-direction: column;
     }
+  }
+
+  &__clientAddAnswerSection {
+    padding-bottom: 10px;
   }
 }
 
