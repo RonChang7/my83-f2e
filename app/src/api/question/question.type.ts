@@ -9,7 +9,7 @@ import {
 
 export interface QuestionDataResponse {
   data: QuestionData
-  page_meta?: PageMeta
+  page_meta: PageMeta
   json_ld?: []
 }
 
