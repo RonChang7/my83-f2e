@@ -1,4 +1,10 @@
-import { Link, RelatedBlog, RelatedQuestion } from '../type'
+import {
+  Link,
+  RelatedBlog,
+  RelatedQuestion,
+  PageMeta,
+  PaginationResponse,
+} from '../type'
 
 export interface InsurancePageStaticData {
   id: string
@@ -48,4 +54,60 @@ export interface RelatedBlogsResponse {
 
 export interface RelatedQuestionsResponse {
   data: RelatedQuestion[]
+}
+export interface InsuranceListResponse {
+  data: InsuranceListData
+  page_meta: PageMeta
+  meta: InsuranceListMeta
+}
+
+export interface PromotionInsuranceProductResponse {
+  data: PromotionInsuranceProduct[]
+}
+
+export interface InsuranceListData {
+  title: string
+  ideal_coverages?: IdealCoverage[]
+  products: InsuranceProduct[]
+}
+
+export interface InsuranceListMeta {
+  pagination: PaginationResponse
+}
+
+export interface IdealCoverage {
+  name: string
+  amount: string
+}
+
+export interface BaseInsuranceProduct {
+  id: number
+  company: string
+  name: string
+  plan: string
+  fee: string
+  btn: InsuranceProductButton
+  features: string[]
+  coverage_age: string
+  view_count: number
+}
+
+export interface InsuranceProduct extends BaseInsuranceProduct {
+  coverage_charts: InsuranceProductCoverageChart[]
+  coverages: string[]
+  description: string
+  promotion: string
+  fee_prefix: string
+}
+
+export interface PromotionInsuranceProduct extends BaseInsuranceProduct {}
+
+export interface InsuranceProductButton {
+  text: string
+  link: Link
+}
+
+export interface InsuranceProductCoverageChart {
+  name: string
+  amount_percentage: number
 }

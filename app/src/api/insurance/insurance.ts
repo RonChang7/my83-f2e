@@ -3,6 +3,7 @@ import {
   FetchInsurancePageStaticDataPayload,
   RelatedBlogsResponse,
   RelatedQuestionsResponse,
+  PromotionInsuranceProductResponse,
 } from './insurance.type'
 import request from '@/api/request'
 
@@ -28,6 +29,19 @@ export const fetchInsurancePageStaticData = async ({
 
   const { data } = await request.get(
     `${host}/static/insurance-page/${insurance}.json`
+  )
+  return data
+}
+
+/**
+ * @description 取得險種推薦商品
+ * @param {string} insurance 險種名
+ */
+export const fetchPromotionProducts = async (
+  insurance: string
+): Promise<PromotionInsuranceProductResponse> => {
+  const { data } = await request.get<PromotionInsuranceProductResponse>(
+    `/api/insurance/${insurance}/promotion-products`
   )
   return data
 }
