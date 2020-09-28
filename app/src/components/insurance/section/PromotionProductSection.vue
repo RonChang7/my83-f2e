@@ -1,0 +1,113 @@
+<template>
+  <div class="PromotionProductSection">
+    <h2 class="PromotionProductSection__title">推薦商品</h2>
+    <div class="PromotionProductSection__description">
+      MY83 嚴選的高保障的保單，讓你挑選保險商品不再耗時傷神！
+    </div>
+    <BaseHorizontalList v-if="promotionProducts">
+      <PromotionProductCard
+        v-for="product in promotionProducts"
+        :key="product.id"
+        class="product"
+        :product="product"
+      />
+    </BaseHorizontalList>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import { Store } from 'vuex'
+import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
+import { CombinedVueInstance } from 'vue/types/vue'
+import PromotionProductCard from '../product/PromotionProductCard.vue'
+import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
+import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
+import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
+
+const options: ComponentOption = {
+  components: {
+    BaseHorizontalList,
+    PromotionProductCard,
+  },
+  computed: {
+    promotionProducts() {
+      return this.$store.state.insurance.promotionProducts
+    },
+  },
+}
+
+export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
+  Instance,
+  Data,
+  Methods,
+  Computed,
+  Props
+>
+
+export type ComponentInstance = CombinedVueInstance<
+  Instance,
+  Data,
+  Methods,
+  Computed,
+  Props
+>
+
+export interface Instance extends Vue {
+  $store: Store<InsuranceVuexState>
+}
+
+export interface Data {}
+
+export type Methods = {}
+
+export interface Computed {
+  promotionProducts: PromotionInsuranceProduct[] | null
+}
+
+export interface Props {}
+
+export default options
+</script>
+
+<style lang="scss" scoped>
+@import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
+
+.PromotionProductSection {
+  width: 1120px;
+  color: $gray-primary;
+
+  &__title {
+    margin: 0 0 8px 0;
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  &__description {
+    margin-bottom: 20px;
+  }
+
+  .product:not(:last-child) {
+    margin-right: 16px;
+  }
+
+  @include max-media('xl') {
+    width: 100%;
+    padding: 0 20px;
+
+    &__title {
+      font-size: 1.375rem;
+    }
+
+    &__description {
+      font-size: 0.875rem;
+      margin: 0 10px 12px 0;
+    }
+
+    .product:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+}
+</style>
