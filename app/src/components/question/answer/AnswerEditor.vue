@@ -66,7 +66,7 @@ import {
   AnswerFormData,
 } from '@/services/question/form/AnswerFormService'
 import { AddAnswerResponse } from '@/api/question/question.type'
-import { scrollTo } from '@/utils/element'
+import { scrollToElement } from '@/utils/scroll'
 import { htmlStrip } from '@/utils/text-parser'
 import { UserRole } from '@/services/user/user'
 const BaseCheckbox = () =>
@@ -177,7 +177,11 @@ export default {
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
-      el && scrollTo(el, window)
+      el &&
+        scrollToElement({
+          el,
+          vertical: true,
+        })
     },
     isContentEmpty(content) {
       /**
