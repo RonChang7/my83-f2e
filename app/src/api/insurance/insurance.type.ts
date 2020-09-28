@@ -9,7 +9,7 @@ import {
 export interface InsurancePageStaticData {
   id: string
   name: string
-  query_for_question: string
+  query_for_more_question: string
   image: string
   description: string
   glossary: Glossary

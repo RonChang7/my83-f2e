@@ -69,7 +69,7 @@ const options: ComponentOption = {
       return [
         {
           key: 'glossary',
-          value: `${this.$store.state.insurance.name}的名詞解釋`,
+          value: `${this.$store.state.insurance.abbr}的名詞解釋`,
         },
         {
           key: 'principle',

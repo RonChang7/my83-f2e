@@ -16,8 +16,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
     state() {
       return {
         id: '',
-        name: '',
-        queryForQuestion: '',
+        abbr: '',
+        queryForMoreQuestion: '',
         image: '',
         description: '',
         glossary: null,
@@ -94,8 +94,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
     mutations: {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
         state.id = data.id
-        state.name = data.name
-        state.queryForQuestion = data.query_for_question
+        state.abbr = data.name
+        state.queryForMoreQuestion = data.query_for_more_question
         state.image = data.image
         state.description = data.description
         state.glossary = data.glossary
@@ -120,8 +120,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
 
 export interface State {
   id: string
-  name: string
-  queryForQuestion: string
+  abbr: string
+  queryForMoreQuestion: string
   image: string
   description: string
   glossary: Glossary | null
