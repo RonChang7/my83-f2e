@@ -93,7 +93,7 @@ import QuestionLayoutWithFixedColumn, {
 } from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
 import { UserRole } from '@/services/user/user'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
-import { scrollTo } from '@/utils/element'
+import { scrollToElement } from '@/utils/scroll'
 
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
@@ -162,7 +162,10 @@ export default {
     },
     scrollToTop() {
       const body = document.querySelector('body')
-      scrollTo(body!, window)
+      scrollToElement({
+        el: body!,
+        vertical: true,
+      })
     },
     createScrollToTopIntersectionObserver() {
       return new IntersectionObserver((entries) => {

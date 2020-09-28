@@ -102,7 +102,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
-import { scrollTo } from '@/utils/element'
+import { scrollToElement } from '@/utils/scroll'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin, UserMetaMixin],
@@ -129,7 +129,10 @@ const options: ComponentOption = {
   methods: {
     scrollToTop() {
       const body = document.querySelector('body')
-      scrollTo(body!, window)
+      scrollToElement({
+        el: body!,
+        vertical: true,
+      })
     },
     checkShouldShowScrollToTop: _.debounce(function () {
       const screenInnerHeight = window.innerHeight
