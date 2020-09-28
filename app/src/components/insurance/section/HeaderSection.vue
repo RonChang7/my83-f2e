@@ -50,7 +50,7 @@ const options: ComponentOption = {
       return this.$store.state.insurance.description
     },
     name() {
-      return this.$store.state.insurance.name
+      return this.$store.state.insurance.abbr
     },
     image() {
       return this.$store.state.insurance.image
