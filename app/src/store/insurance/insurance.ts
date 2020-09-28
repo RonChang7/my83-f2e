@@ -6,6 +6,7 @@ import {
   Glossary,
   Principle,
   Faq,
+  PromotionInsuranceProduct,
 } from '@/api/insurance/insurance.type'
 import { RelatedBlog, RelatedQuestion } from '@/api/type'
 
@@ -24,61 +25,68 @@ export const createStoreModule = <R>(): Module<State, R> => {
         faq: null,
         relatedBlogs: null,
         relatedQuestions: null,
+        promotionProducts: null,
       }
     },
     getters: {},
     actions: {
-      [types.FETCH_PAGE_DATA]({ dispatch, commit, state }, insurance: string) {
-        if (insurance === state.id) {
-          return Promise.resolve()
-        }
-
-        return new Promise((resolve) => {
+      [types.FETCH_PAGE_DATA]({ dispatch, commit }, insurance: string) {
+        return new Promise((resolve, reject) => {
           Promise.all([
             dispatch(types.FETCH_STATIC_DATA, insurance),
+            dispatch(types.FETCH_PROMOTION_PRODUCTS, insurance),
             dispatch(types.FETCH_RELATED_BLOGS, insurance),
             dispatch(types.FETCH_RELATED_QUESTIONS, insurance),
           ])
-            .then(([insuranceStaticData]) => {
-              commit(types.UPDATE_STATIC_DATA, insuranceStaticData)
-              resolve()
-            })
-            .catch(() => resolve())
+            .then(
+              ([
+                insuranceStaticData,
+                promotionProducts,
+                relatedBlogs,
+                relatedQuestions,
+              ]) => {
+                commit(types.UPDATE_STATIC_DATA, insuranceStaticData)
+                commit(types.UPDATE_PROMOTION_PRODUCTS, promotionProducts)
+                commit(types.UPDATE_RELATED_BLOGS, relatedBlogs)
+                commit(types.UPDATE_RELATED_QUESTIONS, relatedQuestions)
+                resolve()
+              }
+            )
+            .catch((error) => reject(error))
         })
       },
-      [types.FETCH_STATIC_DATA]({ commit }, insurance: string) {
+      [types.FETCH_STATIC_DATA](_, insurance: string) {
         return new Promise((resolve, reject) => {
           api
             .fetchInsurancePageStaticData({
               host: this.$env.HOST_URL as string,
               insurance,
             })
-            .then((data) => {
-              commit(types.UPDATE_STATIC_DATA, data)
-              resolve()
-            })
+            .then((data) => resolve(data))
             .catch((error) => reject(error))
         })
       },
-      [types.FETCH_RELATED_BLOGS]({ commit }, insurance: string) {
+      [types.FETCH_PROMOTION_PRODUCTS](_, insurance: string) {
         return new Promise((resolve) => {
           api
-            .fetchRelatedBlogs(insurance)
-            .then(({ data }) => {
-              commit(types.UPDATE_RELATED_BLOGS, data)
-              resolve()
-            })
+            .fetchPromotionProducts(insurance)
+            .then(({ data }) => resolve(data))
             .catch(() => resolve())
         })
       },
-      [types.FETCH_RELATED_QUESTIONS]({ commit }, insurance: string) {
+      [types.FETCH_RELATED_BLOGS](_, insurance: string) {
+        return new Promise((resolve) => {
+          api
+            .fetchRelatedBlogs(insurance)
+            .then(({ data }) => resolve(data))
+            .catch(() => resolve())
+        })
+      },
+      [types.FETCH_RELATED_QUESTIONS](_, insurance: string) {
         return new Promise((resolve) => {
           api
             .fetchRelatedQuestions(insurance)
-            .then(({ data }) => {
-              commit(types.UPDATE_RELATED_QUESTIONS, data)
-              resolve()
-            })
+            .then(({ data }) => resolve(data))
             .catch(() => resolve())
         })
       },
@@ -93,6 +101,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.glossary = data.glossary
         state.principle = data.principle
         state.faq = data.faq
+      },
+      [types.UPDATE_PROMOTION_PRODUCTS](
+        state,
+        data: PromotionInsuranceProduct[]
+      ) {
+        state.promotionProducts = data
       },
       [types.UPDATE_RELATED_BLOGS](state, data: RelatedBlog[]) {
         state.relatedBlogs = data
@@ -115,4 +129,5 @@ export interface State {
   faq: Faq[] | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
+  promotionProducts: PromotionInsuranceProduct[] | null
 }

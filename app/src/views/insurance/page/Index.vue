@@ -13,13 +13,20 @@ const opinions: ComponentOption = {
   async asyncData(ctx) {
     const { error, route, store } = ctx
     const insurance = route.meta[route.meta.length - 1].insurance
+    const currentInsurance = (store.state as InsuranceVuexState).insurance.id
+
+    const fetchPageData: Promise<any>[] = []
+
+    if (insurance !== currentInsurance) {
+      fetchPageData.push(
+        store.dispatch(`insurance/${FETCH_PAGE_DATA}`, insurance)
+      )
+    }
 
     try {
-      await Promise.all([
-        ...Content.requests(ctx),
-        store.dispatch(`insurance/${FETCH_PAGE_DATA}`, insurance),
-      ])
+      await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
+      // @TODO: 補上 422 redirect error handler
       const statusCode = err.response.status === 404 ? err.response.status : 500
       const message =
         err.response.status === 404
