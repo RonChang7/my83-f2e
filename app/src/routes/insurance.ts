@@ -11,7 +11,6 @@ const insurancePageList = [
   { name: 'life', path: '/life' },
   { name: 'cancer', path: '/cancer' },
   { name: 'disability', path: '/disability' },
-  { name: 'endowment', path: '/endowment' },
   { name: 'car', path: '/car' },
   { name: 'motor', path: '/motor' },
   { name: 'pet', path: '/pet' },
