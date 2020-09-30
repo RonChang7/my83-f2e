@@ -1,5 +1,14 @@
 <template>
-  <canvas ref="ring" :style="styleObject"></canvas>
+  <div class="Ring">
+    <canvas ref="ring" :style="styleObject"></canvas>
+    <div
+      v-if="wording"
+      class="Ring__wording"
+      :style="{ ...styleObject, ...wordingStyle }"
+    >
+      {{ wording }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -29,6 +38,14 @@ const options: ComponentOption = {
       type: Number,
       default: 0,
     },
+    wording: {
+      type: String,
+      default: '',
+    },
+    wordingStyle: {
+      type: Object as PropType<Props['wordingStyle']>,
+      default: null,
+    },
   },
   computed: {
     styleObject() {
@@ -41,12 +58,21 @@ const options: ComponentOption = {
   mounted() {
     const canvas = this.$refs.ring
     const ring = new RingCanvasGenerator(this.ringType)
+    const ctx = canvas.getContext('2d')!
 
-    canvas.width = this.length
-    canvas.height = this.length
+    /**
+     * 提高 canvas 繪圖解析度
+     * ref: https://stackoverflow.com/a/26047748
+     */
+
+    const scaleFactor = 2
+
+    canvas.width = this.length * scaleFactor
+    canvas.height = this.length * scaleFactor
+    ctx.scale(scaleFactor, scaleFactor)
 
     ring.create({
-      ctx: canvas.getContext('2d')!,
+      ctx,
       length: this.length,
       lineWidth: this.lineWidth,
       radius: this.length / 2,
@@ -90,7 +116,23 @@ export interface Props {
   lineWidth: number
   ringType: RingType
   percentage: number
+  wording: string
+  wordingStyle: Partial<CSSStyleDeclaration>
 }
 
 export default options
 </script>
+<style lang="scss" scoped>
+.Ring {
+  display: flex;
+
+  &__wording {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    text-align: center;
+  }
+}
+</style>
