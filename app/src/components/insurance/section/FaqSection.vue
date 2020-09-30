@@ -264,6 +264,7 @@ export default options
       @include max-media('xl') {
         background: url('#{$image-bucket-url}/front/insurance/reminder-bubble-mobile.svg');
         background-size: cover;
+        max-width: 338px;
         width: 100%;
         height: auto;
         padding: 32px 28px 38px;
