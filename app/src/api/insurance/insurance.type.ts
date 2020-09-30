@@ -61,6 +61,12 @@ export interface InsuranceListResponse {
   meta: InsuranceListMeta
 }
 
+export interface FetchInsuranceListPayload {
+  insurance: string
+  page: number
+  fetchIdealCoverages: 1 | 0
+}
+
 export interface PromotionInsuranceProductResponse {
   data: PromotionInsuranceProduct[]
 }

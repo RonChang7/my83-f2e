@@ -1,5 +1,6 @@
 import { Module } from 'vuex'
 import * as types from './insurance.type'
+import { UPDATE_PAGE_META } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/insurance'
 import {
   InsurancePageStaticData,
@@ -7,15 +8,26 @@ import {
   Principle,
   Faq,
   PromotionInsuranceProduct,
+  FetchInsuranceListPayload,
+  InsuranceListData,
+  InsuranceProduct,
+  IdealCoverage,
+  InsuranceListMeta,
 } from '@/api/insurance/insurance.type'
-import { RelatedBlog, RelatedQuestion } from '@/api/type'
+import { RelatedBlog, RelatedQuestion, Pagination } from '@/api/type'
+import { paginationResponseDataTransform } from '@/utils/api-data-transform'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
     namespaced: true,
     state() {
       return {
+        currentParam: {
+          page: 0,
+        },
+        meta: null,
         id: '',
+        title: '',
         abbr: '',
         queryForMoreQuestion: '',
         image: '',
@@ -26,6 +38,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         relatedBlogs: null,
         relatedQuestions: null,
         promotionProducts: null,
+        insuranceList: null,
+        insuranceIdealCoverages: null,
       }
     },
     getters: {},
@@ -52,6 +66,25 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 resolve()
               }
             )
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_INSURANCE_LIST](
+        { commit },
+        payload: FetchInsuranceListPayload
+      ) {
+        return new Promise((resolve, reject) => {
+          api
+            .fetchInsuranceList(payload)
+            .then(({ data, meta, page_meta }) => {
+              commit(types.UPDATE_INSURANCE_LIST_DATA, data)
+              commit(types.UPDATE_INSURANCE_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              resolve()
+            })
             .catch((error) => reject(error))
         })
       },
@@ -102,6 +135,18 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.principle = data.principle
         state.faq = data.faq
       },
+      [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
+        state.title = data.title
+        data.ideal_coverages &&
+          (state.insuranceIdealCoverages = data.ideal_coverages)
+
+        state.insuranceList = data.products
+      },
+      [types.UPDATE_INSURANCE_LIST_META](state, meta: InsuranceListMeta) {
+        state.meta = {
+          pagination: paginationResponseDataTransform(meta.pagination),
+        }
+      },
       [types.UPDATE_PROMOTION_PRODUCTS](
         state,
         data: PromotionInsuranceProduct[]
@@ -114,12 +159,22 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_RELATED_QUESTIONS](state, data: RelatedQuestion[]) {
         state.relatedQuestions = data
       },
+      [types.UPDATE_CURRENT_PAGE](state, page: number) {
+        state.currentParam.page = page
+      },
     },
   }
 }
 
 export interface State {
+  currentParam: {
+    page: number
+  }
+  meta: {
+    pagination: Pagination
+  } | null
   id: string
+  title: string
   abbr: string
   queryForMoreQuestion: string
   image: string
@@ -130,4 +185,6 @@ export interface State {
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   promotionProducts: PromotionInsuranceProduct[] | null
+  insuranceList: InsuranceProduct[] | null
+  insuranceIdealCoverages: IdealCoverage[] | null
 }
