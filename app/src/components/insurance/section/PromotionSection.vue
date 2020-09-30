@@ -1,22 +1,24 @@
 <template>
-  <div class="PromotionSection">
-    <div class="PromotionSection__title">想買保險，但不知道怎麼挑？</div>
-    <div class="PromotionSection__content">
-      <div class="PromotionSection__description">
-        直接到 MY83 保險達人榜，
-        <br class="newline" />
-        免費詢問站上活躍的業務員，
-        <br class="newline" />
-        讓專業、好評、回覆迅速的業務員來幫你！
+  <div class="PromotionSection__wrapper">
+    <div class="PromotionSection">
+      <div class="PromotionSection__title">想買保險，但不知道怎麼挑？</div>
+      <div class="PromotionSection__content">
+        <div class="PromotionSection__description">
+          直接到 MY83 保險達人榜，
+          <br class="newline" />
+          免費詢問站上活躍的業務員，
+          <br class="newline" />
+          讓專業、好評、回覆迅速的業務員來幫你！
+        </div>
+        <BaseButton
+          size="l-b"
+          type="quaternary"
+          to="/searchSales"
+          :is-full-width="!isDesktop"
+        >
+          找業務員
+        </BaseButton>
       </div>
-      <BaseButton
-        size="l-b"
-        type="quaternary"
-        to="/searchSales"
-        :is-full-width="isMobile"
-      >
-        找業務員
-      </BaseButton>
     </div>
   </div>
 </template>
@@ -86,6 +88,15 @@ export default options
 
   @include max-media('xl') {
     margin: 0 20px 20px;
+    max-width: 420px;
+    width: 100%;
+
+    &__wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 0 auto;
+    }
   }
 
   &__title {

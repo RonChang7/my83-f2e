@@ -200,8 +200,11 @@ export default options
     center top no-repeat;
   background-color: $primary-bg;
 
-  @include max-media('xl') {
+  @include max-media('sm') {
     padding-top: 32px;
+    background: url('#{$image-bucket-url}/front/insurance/bg-cloud-mobile.png')
+      center top no-repeat;
+    background-color: $primary-bg;
   }
 
   &__row,

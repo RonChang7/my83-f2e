@@ -157,7 +157,7 @@ export default options
 
     h1 {
       font-size: 1.75rem;
-      margin: 0 0 42px;
+      margin: 0 92px 42px 0;
     }
 
     &__content {
