@@ -162,6 +162,7 @@ export interface Config {
   lineWidth: number
   radius: number
   deg?: number
+  scale?: number
 }
 
 interface arcConfig {
