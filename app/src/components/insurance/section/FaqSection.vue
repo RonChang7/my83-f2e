@@ -85,7 +85,7 @@ const options: ComponentOption = {
   },
   computed: {
     faqs() {
-      return this.$store.state.insurance?.faq
+      return this.$store.state.insurance.staticData.faq
     },
   },
   methods: {

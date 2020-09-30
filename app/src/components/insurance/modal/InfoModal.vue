@@ -69,7 +69,7 @@ const options: ComponentOption = {
       return [
         {
           key: 'glossary',
-          value: `${this.$store.state.insurance.abbr}的名詞解釋`,
+          value: `${this.$store.state.insurance.staticData.abbr}的名詞解釋`,
         },
         {
           key: 'principle',
@@ -78,10 +78,10 @@ const options: ComponentOption = {
       ]
     },
     glossary() {
-      return this.$store.state.insurance.glossary
+      return this.$store.state.insurance.staticData.glossary
     },
     principle() {
-      return this.$store.state.insurance.principle
+      return this.$store.state.insurance.staticData.principle
     },
   },
   watch: {

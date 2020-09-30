@@ -22,7 +22,7 @@ const opinions: ComponentOption = {
     const { error, route, query, store, redirect } = ctx
     const insurance = route.meta[route.meta.length - 1].insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
-    const currentInsurance = insuranceStore.id
+    const currentInsurance = insuranceStore.staticData.id
 
     const fetchPageData: Promise<any>[] = []
 
@@ -95,7 +95,7 @@ const fetchList = (insurance: string, { query, store }: Context) => {
     : 1
   const currentParam = insuranceStore.currentParam
   const hasIdealCoverages = !!insuranceStore.insuranceIdealCoverages
-  const currentInsurance = insuranceStore.id
+  const currentInsurance = insuranceStore.staticData.id
 
   const payload: FetchInsuranceListPayload = {
     insurance,

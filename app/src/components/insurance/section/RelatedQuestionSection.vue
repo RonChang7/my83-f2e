@@ -41,7 +41,7 @@ const options: ComponentOption = {
   },
   computed: {
     title() {
-      return `${this.$store.state.insurance.abbr}熱門討論`
+      return `${this.$store.state.insurance.staticData.abbr}熱門討論`
     },
     relatedQuestions() {
       return this.$store.state.insurance.relatedQuestions || []
@@ -49,7 +49,9 @@ const options: ComponentOption = {
     linkLocation() {
       return {
         name: 'questionSearch',
-        query: { q: this.$store.state.insurance.queryForMoreQuestion },
+        query: {
+          q: this.$store.state.insurance.staticData.queryForMoreQuestion,
+        },
       }
     },
   },

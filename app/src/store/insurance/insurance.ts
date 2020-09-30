@@ -26,15 +26,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
           page: 0,
         },
         meta: null,
-        id: '',
+        staticData: {
+          id: '',
+          abbr: '',
+          queryForMoreQuestion: '',
+          image: '',
+          description: '',
+          glossary: null,
+          principle: null,
+          faq: null,
+        },
         title: '',
-        abbr: '',
-        queryForMoreQuestion: '',
-        image: '',
-        description: '',
-        glossary: null,
-        principle: null,
-        faq: null,
         relatedBlogs: null,
         relatedQuestions: null,
         promotionProducts: null,
@@ -126,14 +128,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     mutations: {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
-        state.id = data.id
-        state.abbr = data.name
-        state.queryForMoreQuestion = data.query_for_more_question
-        state.image = data.image
-        state.description = data.description
-        state.glossary = data.glossary
-        state.principle = data.principle
-        state.faq = data.faq
+        state.staticData.id = data.id
+        state.staticData.abbr = data.name
+        state.staticData.queryForMoreQuestion = data.query_for_more_question
+        state.staticData.image = data.image
+        state.staticData.description = data.description
+        state.staticData.glossary = data.glossary
+        state.staticData.principle = data.principle
+        state.staticData.faq = data.faq
       },
       [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
         state.title = data.title
@@ -173,15 +175,17 @@ export interface State {
   meta: {
     pagination: Pagination
   } | null
-  id: string
+  staticData: {
+    id: string
+    abbr: string
+    queryForMoreQuestion: string
+    image: string
+    description: string
+    glossary: Glossary | null
+    principle: Principle | null
+    faq: Faq[] | null
+  }
   title: string
-  abbr: string
-  queryForMoreQuestion: string
-  image: string
-  description: string
-  glossary: Glossary | null
-  principle: Principle | null
-  faq: Faq[] | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   promotionProducts: PromotionInsuranceProduct[] | null
