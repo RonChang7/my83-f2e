@@ -4,7 +4,7 @@
   "author": "upn",
   "private": true,
   "scripts": {
-    "dev": "nuxt-ts",
+    "dev": "nuxt-ts --dotenv false",
     "build": "nuxt-ts build",
     "generate": "nuxt-ts generate",
     "start": "nuxt-ts start",
