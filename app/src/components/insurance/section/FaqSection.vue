@@ -253,7 +253,7 @@ export default options
     }
 
     &__bubble {
-      background: url('https://images.my83.com.tw/front/insurance/reminder-bubble-desktop.svg');
+      background: url('#{$image-bucket-url}/front/insurance/reminder-bubble-desktop.svg');
       width: 641px;
       height: 133px;
       margin-left: 12px;
@@ -262,7 +262,7 @@ export default options
       font-weight: 500;
 
       @include max-media('xl') {
-        background: url('https://images.my83.com.tw/front/insurance/reminder-bubble-mobile.svg');
+        background: url('#{$image-bucket-url}/front/insurance/reminder-bubble-mobile.svg');
         background-size: cover;
         width: 100%;
         height: auto;
