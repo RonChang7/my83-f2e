@@ -76,7 +76,7 @@ export default options
 .PromotionSection {
   @include card-primary;
 
-  background: url('https://images.my83.com.tw/front/insurance/bg-ad-sales-desktop@2x.png')
+  background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-desktop@2x.png')
     center -1px / contain no-repeat;
   background-color: #ffccb1;
   border: 0;
@@ -103,7 +103,7 @@ export default options
   }
 
   @include max-media('xl') {
-    background: url('https://images.my83.com.tw/front/insurance/bg-ad-sales-mobile@2x.png')
+    background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-mobile@2x.png')
       center top / contain no-repeat;
     background-color: #ffccb1;
     padding: 16px;

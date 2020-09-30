@@ -196,7 +196,7 @@ export default options
   display: flex;
   flex-direction: column;
   padding-top: 40px;
-  background: url('https://images.my83.com.tw/front/insurance/bg-cloud-desktop.png')
+  background: url('#{$image-bucket-url}/front/insurance/bg-cloud-desktop.png')
     center top no-repeat;
   background-color: $primary-bg;
 

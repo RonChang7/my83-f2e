@@ -87,7 +87,7 @@ export interface Props {}
 
   &:before {
     content: '';
-    background: url('https://images.my83.com.tw/front/question/forumrules-sales@2x.png');
+    background: url('#{$image-bucket-url}/front/question/forumrules-sales@2x.png');
     display: inline-block;
     height: 98px;
     width: 46px;
