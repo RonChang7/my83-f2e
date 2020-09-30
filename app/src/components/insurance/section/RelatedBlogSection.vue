@@ -40,7 +40,7 @@ const options: ComponentOption = {
   },
   computed: {
     title() {
-      return `${this.$store.state.insurance.abbr}相關文章`
+      return `${this.$store.state.insurance.staticData.abbr}相關文章`
     },
     relatedBlogs() {
       return this.$store.state.insurance.relatedBlogs || []

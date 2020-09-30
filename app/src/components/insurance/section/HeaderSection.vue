@@ -47,13 +47,13 @@ const options: ComponentOption = {
       return this.$store.state.insurance.title
     },
     description() {
-      return this.$store.state.insurance.description
+      return this.$store.state.insurance.staticData.description
     },
     name() {
-      return this.$store.state.insurance.abbr
+      return this.$store.state.insurance.staticData.abbr
     },
     image() {
-      return this.$store.state.insurance.image
+      return this.$store.state.insurance.staticData.image
     },
   },
   methods: {
