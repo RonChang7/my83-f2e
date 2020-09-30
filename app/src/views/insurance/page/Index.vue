@@ -14,6 +14,7 @@ import {
   FETCH_INSURANCE_LIST,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
+import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 const InsurancePage = () => import('./InsurancePage.vue')
 
 const opinions: ComponentOption = {
@@ -41,7 +42,12 @@ const opinions: ComponentOption = {
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
-      // @TODO: 補上 422 redirect error handler
+      if (err instanceof OnRedirectingException) {
+        const redirectLink = err.getRedirectLink()
+        redirect(redirectLink)
+        return
+      }
+
       const statusCode = err.response.status === 404 ? err.response.status : 500
       const message =
         err.response.status === 404

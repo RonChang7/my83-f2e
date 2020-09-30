@@ -1,10 +1,15 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
-import { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import request, { Request } from '@/api/request'
 import { sentryLog } from '@/api/sentry'
 import { Auth } from '@/services/auth/auth'
 import { Suspect } from '@/services/user/suspect'
 import { JWT } from '@/services/auth/jwt'
+import {
+  checkRedirectResponse,
+  RedirectErrorResponseBody,
+} from '@/api/errors/response'
+import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 
 export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
@@ -39,6 +44,15 @@ export default (({ app, req }) => {
           return res
         },
         (err) => {
+          if (err.response) {
+            if (checkRedirectResponse(err.response)) {
+              const res: AxiosResponse<RedirectErrorResponseBody> = err.response
+              return Promise.reject(
+                new OnRedirectingException(res.data.data.link.path)
+              )
+            }
+          }
+
           sentryLog(app.$sentry, err, {
             statusCode: err?.response?.status || '',
             method: err.config.method,
@@ -117,6 +131,13 @@ export default (({ app, req }) => {
             auth.logout()
             return Promise.reject(err)
           } else {
+            if (checkRedirectResponse(err.response)) {
+              const res: AxiosResponse<RedirectErrorResponseBody> = err.response
+              return Promise.reject(
+                new OnRedirectingException(res.data.data.link.path)
+              )
+            }
+
             sentryLog(app.$sentry, err, {
               statusCode: err?.response?.status || '',
               method: err.config.method,
