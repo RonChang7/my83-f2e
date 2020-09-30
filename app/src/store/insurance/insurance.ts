@@ -47,7 +47,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     getters: {},
     actions: {
       [types.FETCH_PAGE_DATA]({ dispatch, commit }, insurance: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           Promise.all([
             dispatch(types.FETCH_STATIC_DATA, insurance),
             dispatch(types.FETCH_PROMOTION_PRODUCTS, insurance),
@@ -68,7 +68,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 resolve()
               }
             )
-            .catch((error) => reject(error))
+            .catch(() => resolve())
         })
       },
       [types.FETCH_INSURANCE_LIST](
@@ -91,14 +91,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_STATIC_DATA](_, insurance: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           api
             .fetchInsurancePageStaticData({
               host: this.$env.HOST_URL as string,
               insurance,
             })
             .then((data) => resolve(data))
-            .catch((error) => reject(error))
+            .catch(() => resolve())
         })
       },
       [types.FETCH_PROMOTION_PRODUCTS](_, insurance: string) {
