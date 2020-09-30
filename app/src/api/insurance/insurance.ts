@@ -21,10 +21,7 @@ export const fetchInsurancePageStaticData = async ({
     // eslint-disable-next-line no-undef
     const fs = __non_webpack_require__('fs')
     const data = JSON.parse(
-      fs.readFileSync(
-        `src/static/static/insurance-page/${insurance}.json`,
-        'utf8'
-      )
+      fs.readFileSync(`src/static/static/insurance/${insurance}.json`, 'utf8')
     )
     return data
   }
