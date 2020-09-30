@@ -21,7 +21,7 @@ const opinions: ComponentOption = {
   watchQuery: ['page'],
   async asyncData(ctx) {
     const { error, route, query, store, redirect } = ctx
-    const insurance = route.meta[route.meta.length - 1].insurance
+    const insurance = route.params.insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
     const currentInsurance = insuranceStore.staticData.id
 
