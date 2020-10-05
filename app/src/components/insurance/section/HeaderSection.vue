@@ -4,24 +4,20 @@
       <h1 class="HeaderSection__title">{{ title }}</h1>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="HeaderSection__description" v-html="description" />
-      <div class="HeaderSection__link">
+      <div
+        class="HeaderSection__link"
+        :class="{ single: buttonInfo.length === 1 }"
+      >
         <BaseButton
+          v-for="button in buttonInfo"
+          :key="button.value"
           class="HeaderSection__button"
           size="l-a"
           type="tertiary"
           :is-full-width="true"
-          @click.native="openInfoModal('glossary')"
+          @click.native="openInfoModal(button.value)"
         >
-          {{ name }}的名詞解釋
-        </BaseButton>
-        <BaseButton
-          class="HeaderSection__button"
-          size="l-a"
-          type="tertiary"
-          :is-full-width="true"
-          @click.native="openInfoModal('principle')"
-        >
-          黃金投保原則
+          {{ button.key }}
         </BaseButton>
       </div>
     </div>
@@ -34,7 +30,7 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Props as InfoModalProps } from '../modal/InfoModal.vue'
+import { NavTab, Props as InfoModalProps } from '../modal/InfoModal.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
@@ -54,6 +50,27 @@ const options: ComponentOption = {
     },
     image() {
       return this.$store.state.insurance.staticData.image
+    },
+    buttonInfo() {
+      if (this.$store.state.insurance.staticData.isExternal) {
+        return [
+          {
+            key: '重點險種',
+            value: 'glossary',
+          },
+        ]
+      }
+
+      return [
+        {
+          key: `${this.name}的名詞解釋`,
+          value: 'glossary',
+        },
+        {
+          key: '黃金投保原則',
+          value: 'principle',
+        },
+      ]
     },
   },
   methods: {
@@ -95,6 +112,7 @@ export interface Computed {
   description: string
   name: string
   image: string
+  buttonInfo: NavTab[]
 }
 
 export interface Props {}
@@ -136,8 +154,14 @@ export default options
   }
 
   &__link {
+    $width: 476px;
+
     display: flex;
-    width: 476px;
+    width: $width;
+
+    &.single {
+      width: $width / 2;
+    }
 
     ::v-deep #{$self}__button {
       &:not(:last-child) {
@@ -170,7 +194,13 @@ export default options
     }
 
     &__link {
-      width: 100%;
+      $width: 100%;
+
+      width: $width;
+
+      &.single {
+        width: $width / 2;
+      }
     }
 
     &__image {

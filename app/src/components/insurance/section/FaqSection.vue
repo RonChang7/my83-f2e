@@ -44,10 +44,11 @@
         />
       </div>
       <div class="FaqSection__footer__bubble">
-        MY83
-        保險網知道，保險是會陪伴大家很久的商品！投保前務必謹慎小心，如果有任何問題，歡迎在
-        <GlobalLink :to="{ name: 'questionList' }">MY83 討論區</GlobalLink>
-        和其他保戶以及專業業務員討論哦！
+        <span>
+          {{ bubbleWording }}投保前務必謹慎小心，如果有任何問題，歡迎在
+          <GlobalLink :to="{ name: 'questionList' }">MY83 討論區</GlobalLink>
+          和其他保戶以及專業業務員討論哦！
+        </span>
       </div>
     </section>
   </div>
@@ -86,6 +87,11 @@ const options: ComponentOption = {
   computed: {
     faqs() {
       return this.$store.state.insurance.staticData.faq
+    },
+    bubbleWording() {
+      return this.$store.state.insurance.staticData.isExternal
+        ? 'MY83 保險網提醒大家，'
+        : 'MY83 保險網知道，保險是會陪伴大家很久的商品！'
     },
   },
   methods: {
@@ -141,6 +147,7 @@ export type Methods = {
 
 export interface Computed {
   faqs: Faq[] | null
+  bubbleWording: string
 }
 
 export interface Props {}
@@ -167,7 +174,8 @@ export default options
     @include emphasize;
   }
 
-  ::v-deep ul {
+  ::v-deep ul,
+  ::v-deep ol {
     padding: 0 0 0 1.5em;
   }
 
@@ -253,6 +261,8 @@ export default options
     }
 
     &__bubble {
+      display: flex;
+      align-items: center;
       background: url('#{$image-bucket-url}/front/insurance/reminder-bubble-desktop.svg');
       width: 641px;
       height: 133px;
@@ -264,9 +274,8 @@ export default options
       @include max-media('xl') {
         background: url('#{$image-bucket-url}/front/insurance/reminder-bubble-mobile.svg');
         background-size: cover;
-        max-width: 338px;
-        width: 100%;
-        height: auto;
+        width: 338px;
+        height: 156px;
         padding: 32px 28px 38px;
         margin: -24px 0 0;
       }

@@ -9,9 +9,11 @@ import {
 export interface InsurancePageStaticData {
   id: string
   name: string
-  query_for_more_question: string
+  query_for_more_question?: string
+  is_external?: boolean
   image: string
   description: string
+  promotion_wording?: string
   glossary: Glossary
   principle: Principle
   faq: Faq[]

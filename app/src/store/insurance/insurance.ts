@@ -30,8 +30,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
           id: '',
           abbr: '',
           queryForMoreQuestion: '',
+          isExternal: false,
           image: '',
           description: '',
+          promotionWording: '',
           glossary: null,
           principle: null,
           faq: null,
@@ -130,9 +132,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
         state.staticData.id = data.id
         state.staticData.abbr = data.name
-        state.staticData.queryForMoreQuestion = data.query_for_more_question
+        state.staticData.queryForMoreQuestion =
+          data.query_for_more_question || data.name
+        state.staticData.isExternal = data.is_external || false
         state.staticData.image = data.image
         state.staticData.description = data.description
+        state.staticData.promotionWording = data.promotion_wording || ''
         state.staticData.glossary = data.glossary
         state.staticData.principle = data.principle
         state.staticData.faq = data.faq
@@ -179,8 +184,10 @@ export interface State {
     id: string
     abbr: string
     queryForMoreQuestion: string
+    isExternal: boolean
     image: string
     description: string
+    promotionWording: string
     glossary: Glossary | null
     principle: Principle | null
     faq: Faq[] | null
