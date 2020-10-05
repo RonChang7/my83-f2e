@@ -128,7 +128,7 @@ export default options
     justify-content: center;
     align-self: flex-start;
     flex: 0 0 160px;
-    padding: 12px 44px;
+    padding: 12px 15px;
     background: $secondary-bright-color;
     border-radius: 30px;
     margin-right: 30px;
@@ -158,16 +158,21 @@ export default options
       position: relative;
       margin-left: -12px;
       top: 6px;
-      left: 54px;
+      left: 25px;
 
       @include max-media('xl') {
         border-width: 12px 6px 0 6px;
         border-color: $secondary-bright-color transparent transparent
           transparent;
-        left: calc((-100vw + 86px * 2 + 6px) / 2);
+        left: calc((-100vw + 57px * 2 + 6px) / 2);
         top: 35px;
       }
     }
+  }
+
+  &__definition {
+    display: inline-block;
+    margin: auto 0;
   }
 
   &__recommendBlog {

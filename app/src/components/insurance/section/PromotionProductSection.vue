@@ -2,9 +2,9 @@
   <div class="PromotionProductSection">
     <h2 class="PromotionProductSection__title">推薦商品</h2>
     <div class="PromotionProductSection__description">
-      MY83 嚴選的高保障的保單，讓你挑選保險商品不再耗時傷神！
+      {{ description }}
     </div>
-    <BaseHorizontalList v-if="promotionProducts">
+    <BaseHorizontalList>
       <PromotionProductCard
         v-for="product in promotionProducts"
         :key="product.id"
@@ -31,6 +31,11 @@ const options: ComponentOption = {
     PromotionProductCard,
   },
   computed: {
+    description() {
+      return this.$store.state.insurance.staticData.isExternal
+        ? this.$store.state.insurance.staticData.promotionWording
+        : 'MY83 嚴選的高保障的保單，讓你挑選保險商品不再耗時傷神！'
+    },
     promotionProducts() {
       return this.$store.state.insurance.promotionProducts
     },
@@ -62,6 +67,7 @@ export interface Data {}
 export type Methods = {}
 
 export interface Computed {
+  description: string
   promotionProducts: PromotionInsuranceProduct[] | null
 }
 

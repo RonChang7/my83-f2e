@@ -5,7 +5,7 @@
     @close="closePanel"
   >
     <div ref="infoModal" class="InfoModal">
-      <div class="InfoModal__navbar">
+      <div v-if="navTabs.length > 1" class="InfoModal__navbar">
         <div
           v-for="tab in navTabs"
           :key="tab.key"
@@ -16,9 +16,22 @@
           <span>{{ tab.value }}</span>
         </div>
       </div>
+      <div v-else class="InfoModal__navbar">
+        <div class="InfoModal__navbar__singleItem">
+          {{ navTabs[0].value }}
+        </div>
+      </div>
       <div class="InfoModal__panel">
-        <GlossaryPanel v-show="activeTab === 'glossary'" :data="glossary" />
-        <PrinciplePanel v-show="activeTab === 'principle'" :data="principle" />
+        <GlossaryPanel
+          v-if="glossary"
+          v-show="activeTab === 'glossary'"
+          :data="glossary"
+        />
+        <PrinciplePanel
+          v-if="principle"
+          v-show="activeTab === 'principle'"
+          :data="principle"
+        />
       </div>
     </div>
   </BaseInfoModal>
@@ -66,6 +79,15 @@ const options: ComponentOption = {
   },
   computed: {
     navTabs() {
+      if (this.$store.state.insurance.staticData.isExternal) {
+        return [
+          {
+            key: 'glossary',
+            value: `重點險種`,
+          },
+        ]
+      }
+
       return [
         {
           key: 'glossary',
@@ -136,7 +158,7 @@ export interface Props {
   activeTab: 'glossary' | 'principle'
 }
 
-interface NavTab {
+export interface NavTab {
   key: string
   value: string
 }
@@ -161,13 +183,17 @@ export default options
 
   &__navbar {
     display: flex;
-    border-bottom: 1px solid $gray-quaternary;
-    color: $text-default-color;
+    font-size: 1.375rem;
+
+    &__singleItem {
+      font-weight: 500;
+    }
 
     &__item {
       flex: 1 1 50%;
       text-align: center;
-      font-size: 1.375rem;
+      color: $text-default-color;
+      border-bottom: 1px solid $gray-quaternary;
       cursor: pointer;
 
       @include max-media('lg') {

@@ -13,7 +13,7 @@
       />
     </div>
 
-    <div class="InsurancePage__row promotion">
+    <div v-if="shouldShowPromotionProduct" class="InsurancePage__row promotion">
       <PromotionProductSection />
     </div>
 
@@ -103,6 +103,9 @@ const options: ComponentOption = {
       const { meta } = this.$store.state.insurance
       return meta ? meta.pagination : null
     },
+    shouldShowPromotionProduct() {
+      return !!this.$store.state.insurance.promotionProducts?.length
+    },
     shouldShowPagination() {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
@@ -179,6 +182,7 @@ export type Methods = {
 
 export interface Computed {
   pagination: Pagination | null
+  shouldShowPromotionProduct: boolean
   shouldShowPagination: boolean
 }
 

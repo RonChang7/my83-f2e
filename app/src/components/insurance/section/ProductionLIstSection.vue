@@ -12,7 +12,10 @@
         常見問題
       </a>
     </div>
-    <div class="ProductionLIstSection__idealCoverage">
+    <div
+      v-if="idealCoverages.length"
+      class="ProductionLIstSection__idealCoverage"
+    >
       <div class="ProductionLIstSection__idealCoverage__title">
         <span>MY83 建議</span>
         理想保額
