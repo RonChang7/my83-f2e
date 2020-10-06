@@ -19,6 +19,7 @@
         :to="product.btn.link"
         size="l-a"
         :is-full-width="true"
+        @click.native="$emit('click-button')"
       >
         {{ product.btn.text }}
       </BaseButton>

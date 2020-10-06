@@ -36,6 +36,7 @@
       :key="product.id"
       class="ProductionLIstSection__product"
       :product="product"
+      @click-button="clickProductButton(`${product.company}${product.name}`)"
     />
   </div>
 </template>
@@ -51,6 +52,7 @@ import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseFAQ from '@/components/base/icon/24/BaseFAQ.vue'
 import { scrollToElement } from '@/utils/scroll'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 const options: ComponentOption = {
   components: {
@@ -72,6 +74,15 @@ const options: ComponentOption = {
         el: document.querySelector('#faq')! as HTMLElement,
         vertical: true,
         offset: 32,
+      })
+    },
+    clickProductButton(productName) {
+      const insuranceType = this.$store.state.insurance.staticData.abbr
+
+      this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '險種頁商品CTA',
+        action: '全部商品',
+        label: `${insuranceType} ${productName}`,
       })
     },
   },
@@ -101,6 +112,7 @@ export interface Data {}
 
 export type Methods = {
   scrollToFAQ(): void
+  clickProductButton(productName: string): void
 }
 
 export interface Computed {
