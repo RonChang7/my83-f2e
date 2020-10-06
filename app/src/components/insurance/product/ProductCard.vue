@@ -5,21 +5,21 @@
         <div class="ProductCard__section">
           <div class="ProductCard__subSection">
             <div class="ProductCard__company">
-              {{ insuranceProduct.company }}
+              {{ product.company }}
             </div>
-            <h3 class="ProductCard__name">{{ insuranceProduct.name }}</h3>
+            <h3 class="ProductCard__name">{{ product.name }}</h3>
             <div class="ProductCard__features">{{ features }}</div>
             <div class="ProductCard__coverageAge">
-              {{ insuranceProduct.coverage_age }}
+              {{ product.coverage_age }}
             </div>
           </div>
           <div
-            v-if="insuranceProduct.coverage_charts.length"
+            v-if="product.coverage_charts.length"
             class="ProductCard__subSection"
           >
             <div class="ProductCard__coverages">
               <CoverageBadge
-                v-for="(coverage, index) in insuranceProduct.coverage_charts"
+                v-for="(coverage, index) in product.coverage_charts"
                 :key="index"
                 :percentage="coverage.amount_percentage"
                 :wording="`${coverage.amount_percentage}%`"
@@ -33,33 +33,30 @@
             <div class="ProductCard__plan">
               推薦計畫：
               <br />
-              {{ insuranceProduct.plan }}
+              {{ product.plan }}
             </div>
             <div class="ProductCard__fee">
-              <span
-                v-if="insuranceProduct.fee_prefix"
-                class="ProductCard__fee__prefix"
-              >
-                {{ insuranceProduct.fee_prefix }}
+              <span v-if="product.fee_prefix" class="ProductCard__fee__prefix">
+                {{ product.fee_prefix }}
               </span>
-              {{ insuranceProduct.fee }}
+              {{ product.fee }}
             </div>
           </div>
           <div class="ProductCard__subSection">
             <div class="ProductCard__viewCount">{{ viewCount }}</div>
             <BaseButton
               class="ProductCard__btn"
-              :to="insuranceProduct.btn.link"
+              :to="product.btn.link"
               size="l-a"
             >
-              {{ insuranceProduct.btn.text }}
+              {{ product.btn.text }}
             </BaseButton>
           </div>
         </div>
       </div>
     </template>
-    <template v-if="insuranceProduct.description" v-slot:footer>
-      {{ insuranceProduct.description }}
+    <template v-if="product.description" v-slot:footer>
+      {{ product.description }}
     </template>
   </BaseCard>
 </template>
@@ -80,18 +77,18 @@ const options: ComponentOption = {
     CoverageBadge,
   },
   props: {
-    insuranceProduct: {
+    product: {
       type: Object,
       required: true,
     },
   },
   computed: {
     features() {
-      return this.insuranceProduct.features.join('．')
+      return this.product.features.join('．')
     },
     viewCount() {
-      return this.insuranceProduct.view_count
-        ? `有 ${this.insuranceProduct.view_count} 人有興趣`
+      return this.product.view_count
+        ? `有 ${this.product.view_count} 人有興趣`
         : ''
     },
   },
@@ -125,7 +122,7 @@ export interface Computed {
 }
 
 export interface Props {
-  insuranceProduct: InsuranceProduct
+  product: InsuranceProduct
 }
 
 export default options
