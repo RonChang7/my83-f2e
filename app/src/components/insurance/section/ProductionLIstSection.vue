@@ -99,7 +99,9 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  scrollToFAQ(): void
+}
 
 export interface Computed {
   idealCoverages: IdealCoverage[]
