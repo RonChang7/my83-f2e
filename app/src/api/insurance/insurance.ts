@@ -27,7 +27,7 @@ export const fetchInsurancePageStaticData = async ({
   }
 
   const { data } = await request.get(
-    `${host}/static/insurance-page/${insurance}.json`
+    `${host}/static/insurance/${insurance}.json`
   )
   return data
 }
