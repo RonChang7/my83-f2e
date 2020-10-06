@@ -10,6 +10,9 @@
         :key="product.id"
         class="product"
         :product="product"
+        @click-button="
+          clickPromotionProductButton(`${product.company}${product.name}`)
+        "
       />
     </BaseHorizontalList>
   </div>
@@ -24,6 +27,7 @@ import PromotionProductCard from '../product/PromotionProductCard.vue'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 const options: ComponentOption = {
   components: {
@@ -38,6 +42,17 @@ const options: ComponentOption = {
     },
     promotionProducts() {
       return this.$store.state.insurance.promotionProducts
+    },
+  },
+  methods: {
+    clickPromotionProductButton(productName) {
+      const insuranceType = this.$store.state.insurance.staticData.abbr
+
+      this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '險種頁商品CTA',
+        action: '推薦商品',
+        label: `${insuranceType} ${productName}`,
+      })
     },
   },
 }
@@ -64,7 +79,9 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  clickPromotionProductButton(productName: string): void
+}
 
 export interface Computed {
   description: string
