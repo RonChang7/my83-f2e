@@ -32,10 +32,10 @@
       </div>
     </div>
     <ProductCard
-      v-for="insuranceProduct in insuranceProducts"
-      :key="insuranceProduct.id"
+      v-for="product in insuranceProducts"
+      :key="product.id"
       class="ProductionLIstSection__product"
-      :insurance-product="insuranceProduct"
+      :product="product"
     />
   </div>
 </template>
