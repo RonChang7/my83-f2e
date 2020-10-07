@@ -39,8 +39,8 @@ export default {
   },
   props: {
     to: {
-      type: [String, Object],
-      default: '',
+      type: [String, Object, null],
+      default: null,
     },
     size: {
       type: String,
@@ -110,7 +110,7 @@ export interface Computed {
 }
 
 export interface Props {
-  to: RawLocation
+  to: RawLocation | null
   size: 's' | 'm' | 'l-a' | 'l-b' | 'xl'
   type: 'primary' | 'secondary'
   state: string

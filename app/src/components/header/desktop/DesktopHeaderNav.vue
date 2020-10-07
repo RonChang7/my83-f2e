@@ -3,7 +3,7 @@
     <li v-for="(item, index) in headerNavItems" :key="index">
       <component
         :is="item.link ? 'GlobalLink' : 'span'"
-        :to="item.link ? item.link.path : ''"
+        :to="item.link ? item.link.path : null"
         class="DesktopHeaderNav__name"
       >
         {{ item.name }}
