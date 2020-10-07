@@ -5,23 +5,23 @@
       class="FacebookLoginButton"
       @click="login(facebookLogin)"
     >
-      <div v-if="!isLoading" class="FacebookLoginButton__wrapper">
-        <div class="FacebookLoginButton__icon" />
-        <div
+      <span v-if="!isLoading" class="FacebookLoginButton__wrapper">
+        <span class="FacebookLoginButton__icon" />
+        <span
           :class="{ 'ml-2': user ? !user.avatar : false }"
           class="FacebookLoginButton__content"
         >
           {{ user ? buttonText(user.name) : buttonText() }}
-        </div>
+        </span>
         <img
           :src="user ? user.avatar : ''"
           alt=""
           class="FacebookLoginButton__avatar"
         />
-      </div>
-      <div v-show="isLoading">
+      </span>
+      <span v-show="isLoading">
         <LoadingIcon size="18px" color="#fff" />
-      </div>
+      </span>
     </button>
   </FacebookLogin>
 </template>
