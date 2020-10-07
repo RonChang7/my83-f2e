@@ -7,15 +7,15 @@
     type="button"
     class="BaseButton"
   >
-    <div
+    <span
       :class="{ hasIcon: hasIcon, isLoading: isLoading || state === 'loading' }"
       class="BaseButton__text"
     >
-      <div v-if="hasIcon" :class="{ BaseButton__icon: hasIcon }">
+      <span v-if="hasIcon" :class="{ BaseButton__icon: hasIcon }">
         <slot name="icon"></slot>
-      </div>
+      </span>
       <slot></slot>
-    </div>
+    </span>
     <LoadingIcon
       v-if="isLoading || state === 'loading'"
       :class="[`BaseButton__${size}__loading`, `BaseButton__${type}__loading`]"
