@@ -40,16 +40,10 @@
     <div v-if="!isMobile" id="faq" class="InsurancePage__row faq">
       <FaqSection />
     </div>
-    <BaseScrollToTopButton
-      v-if="shouldShowScrollToTop"
-      class="scrollToTop"
-      @click="scrollToTop"
-    />
   </div>
 </template>
 
 <script lang="ts">
-import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -64,7 +58,6 @@ import InsuranceLinkSection from '@/components/insurance/section/InsuranceLinkSe
 import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSection.vue'
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
-import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import { Pagination } from '@/api/type'
 import InfoModal, {
   Props as InfoModalProps,
@@ -72,7 +65,6 @@ import InfoModal, {
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
-import { scrollToElement } from '@/utils/scroll'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin],
@@ -87,7 +79,6 @@ const options: ComponentOption = {
     RelatedBlogSection,
     RelatedQuestionSection,
     BasePagination,
-    BaseScrollToTopButton,
   },
   data() {
     return {
@@ -95,7 +86,6 @@ const options: ComponentOption = {
         visible: false,
         activeTab: '',
       },
-      shouldShowScrollToTop: false,
     }
   },
   computed: {
@@ -112,34 +102,12 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    scrollToTop() {
-      const body = document.querySelector('body')
-      scrollToElement({
-        el: body!,
-        vertical: true,
-      })
-    },
-    checkShouldShowScrollToTop: _.debounce(function () {
-      const screenInnerHeight = window.innerHeight
-      const pageYScroll =
-        window.pageYOffset || document.documentElement.scrollTop
-
-      this.shouldShowScrollToTop = pageYScroll >= screenInnerHeight * 2
-    }, 200),
     updateInfoModalActiveTab(tab) {
       this.infoModal.activeTab = tab
     },
     openInfoModal() {
       this.infoModal.visible = true
     },
-  },
-  mounted() {
-    window.addEventListener('scroll', this.checkShouldShowScrollToTop, {
-      passive: true,
-    })
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.checkShouldShowScrollToTop)
   },
 }
 
@@ -170,12 +138,9 @@ export interface Data {
     visible: boolean
     activeTab: InfoModalProps['activeTab'] | ''
   }
-  shouldShowScrollToTop: boolean
 }
 
 export type Methods = {
-  checkShouldShowScrollToTop: DebouncedFunc<(this: ComponentInstance) => void>
-  scrollToTop(): void
   updateInfoModalActiveTab(tab: InfoModalProps['activeTab']): void
   openInfoModal(): void
 }
@@ -239,19 +204,6 @@ export default options
 
   .pagination {
     margin-top: 40px;
-  }
-
-  &::v-deep .scrollToTop {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-
-    @include min-media('xl') {
-      width: 56px;
-      height: 56px;
-      bottom: 40px;
-      right: 40px;
-    }
   }
 
   &__rowWithTowColumns {
