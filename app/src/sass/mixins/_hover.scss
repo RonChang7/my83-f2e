@@ -1,0 +1,66 @@
+@import 'helper';
+
+$valid-style-types: primary, secondary, gray-secondary-lighter, gray-secondary-darker, gray-primary;
+
+$primary-style: (
+  "color": $primary-color,
+  "hover-color": $primary-dark-color
+);
+
+$secondary-style: (
+  "color": $secondary-color,
+  "hover-color": $secondary-dark-color
+);
+
+$gray-secondary-lighter-style: (
+  "color": $gray-secondary,
+  "hover-color": $primary-color
+);
+
+$gray-secondary-darker-style: (
+  "color": $gray-secondary,
+  "hover-color": $gray-primary
+);
+
+$gray-primary-style: (
+  "color": $gray-primary,
+  "hover-color": $primary-color
+);
+
+$style-map: (
+  "primary-style": $primary-style,
+  "secondary-style": $secondary-style,
+  "gray-secondary-lighter-style": $gray-secondary-lighter-style,
+  "gray-secondary-darker-style": $gray-secondary-darker-style,
+  "gray-primary-style": $gray-primary-style
+);
+
+@mixin hover($style-type, $has-svg: false) {
+  @if not index($valid-style-types, $style-type) {
+    @error "#{$style-type} is not a valid hover style. Expected one of #{$valid-style-types}.";
+  }
+
+  $style: map-get($style-map, "#{$style-type}-style");
+
+  color: map-get($style, "color");
+
+  @if $has-svg {
+    &::v-deep svg > path {
+      fill: map-get($style, "color");
+    }
+  }
+
+  @include hover-supported {
+    &:hover {
+      color: map-get($style, "hover-color");
+
+      @if $has-svg {
+        &::v-deep svg > path {
+          fill: map-get($style, "hover-color");
+        }
+      }
+
+      @content;
+    }
+  }
+}
