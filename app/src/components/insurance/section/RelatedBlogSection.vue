@@ -89,6 +89,10 @@ export default options
 @import '@/sass/rwd.scss';
 
 .RelatedBlogSection {
+  @include max-media('xl') {
+    margin-top: 20px;
+  }
+
   &__footer {
     display: flex;
     align-items: center;
