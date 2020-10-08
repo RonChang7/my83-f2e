@@ -15,7 +15,9 @@
           :key="blog.title"
           class="PrinciplePanel__recommendBlog"
         >
-          <GlobalLink :to="blog.link">{{ blog.title }}</GlobalLink>
+          <GlobalLink :to="blog.link" target="_blank">
+            {{ blog.title }}
+          </GlobalLink>
         </div>
       </div>
     </div>
