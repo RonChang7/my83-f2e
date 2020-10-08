@@ -240,6 +240,12 @@ export default {
       })
     },
   },
+  beforeDestroy() {
+    if (this.observer.scrollToTopObserver) {
+      this.observer.scrollToTopObserver.disconnect()
+      this.observer.scrollToTopObserver = null
+    }
+  },
 } as ComponentOption
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
