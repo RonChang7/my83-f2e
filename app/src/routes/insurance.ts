@@ -7,6 +7,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       path: '/insurance/:insurance',
       component: resolve('@/views/insurance/page/Index.vue'),
       meta: {
+        showScrollToTop: true,
         requiredStoreModules: ['insurance'],
       },
     },

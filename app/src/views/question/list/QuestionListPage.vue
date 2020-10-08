@@ -67,17 +67,11 @@
         </span>
         <HotServiceSection />
       </div>
-      <BaseScrollToTopButton
-        v-if="shouldShowScrollToTop"
-        class="scrollToTop"
-        @click="scrollToTop"
-      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -93,7 +87,6 @@ import HotServiceSection from '@/components/question/section/HotServiceSection.v
 import PopularBlogSection from '@/components/question/section/PopularBlogSection.vue'
 import PopularQuestionSection from '@/components/question/section/PopularQuestionSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
-import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import { Pagination } from '@/api/type'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import DeviceMixin, {
@@ -102,7 +95,6 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
-import { scrollToElement } from '@/utils/scroll'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin, UserMetaMixin],
@@ -118,29 +110,11 @@ const options: ComponentOption = {
     PopularBlogSection,
     PopularQuestionSection,
     BasePagination,
-    BaseScrollToTopButton,
   },
   data() {
     return {
       isMounted: false,
-      shouldShowScrollToTop: false,
     }
-  },
-  methods: {
-    scrollToTop() {
-      const body = document.querySelector('body')
-      scrollToElement({
-        el: body!,
-        vertical: true,
-      })
-    },
-    checkShouldShowScrollToTop: _.debounce(function () {
-      const screenInnerHeight = window.innerHeight
-      const pageYScroll =
-        window.pageYOffset || document.documentElement.scrollTop
-
-      this.shouldShowScrollToTop = pageYScroll >= screenInnerHeight * 2
-    }, 200),
   },
   computed: {
     pageType() {
@@ -182,12 +156,6 @@ const options: ComponentOption = {
   },
   mounted() {
     this.isMounted = true
-    window.addEventListener('scroll', this.checkShouldShowScrollToTop, {
-      passive: true,
-    })
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.checkShouldShowScrollToTop)
   },
 }
 
@@ -216,13 +184,9 @@ export interface Instance
 
 export interface Data {
   isMounted: boolean
-  shouldShowScrollToTop: boolean
 }
 
-export type Methods = {
-  checkShouldShowScrollToTop: DebouncedFunc<(this: ComponentInstance) => void>
-  scrollToTop(): void
-}
+export type Methods = {}
 
 export interface Computed {
   pageType: string
@@ -340,19 +304,6 @@ export default options
   .pagination {
     @include max-media('xl') {
       margin: 30px 0;
-    }
-  }
-
-  &::v-deep .scrollToTop {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-
-    @include min-media('xl') {
-      width: 56px;
-      height: 56px;
-      bottom: 40px;
-      right: 40px;
     }
   }
 
