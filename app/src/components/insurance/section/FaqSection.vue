@@ -27,6 +27,7 @@
                   v-for="link in faq.recommend_blogs"
                   :key="link.title"
                   :to="link.link"
+                  target="_blank"
                 >
                   {{ link.title }}
                 </GlobalLink>
