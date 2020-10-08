@@ -154,11 +154,8 @@ export default options
   &__link {
     padding: 16px 0 16px 24px;
     font-size: 1.125rem;
-    color: $gray-primary;
 
-    &:hover {
-      color: $primary-color;
-    }
+    @include hover('gray-primary');
 
     &:not(:last-child) {
       border-bottom: 1px solid $gray-quaternary;
@@ -174,15 +171,8 @@ export default options
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      color: $gray-secondary;
 
-      &:hover {
-        color: $gray-primary;
-
-        ::v-deep svg > path {
-          fill: $gray-primary;
-        }
-      }
+      @include hover('gray-secondary-darker', $has-svg: true);
     }
   }
 

@@ -157,11 +157,7 @@ export interface Props {
 
   &__notVerify,
   &__vipCountdown {
-    color: $primary-color;
-
-    &:hover {
-      color: $primary-hover-color;
-    }
+    @include hover('primary');
   }
 
   &__vipCountdown {
@@ -176,7 +172,6 @@ export interface Props {
 
   &__reward {
     font-weight: 400;
-    color: $gray-primary;
 
     > span {
       color: $primary-color;
@@ -185,9 +180,7 @@ export interface Props {
       margin: 0 4px;
     }
 
-    &:hover {
-      color: $primary-hover-color;
-    }
+    @include hover('gray-primary');
   }
 
   .digital {

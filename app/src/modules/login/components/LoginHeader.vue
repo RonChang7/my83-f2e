@@ -67,6 +67,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 .LoginHeader {
@@ -97,24 +98,14 @@ export interface Props {
       font-size: 0.875rem;
       cursor: pointer;
 
-      &:hover {
-        color: $gray-primary;
-
-        &::v-deep svg > path {
-          fill: $gray-primary;
-        }
-      }
+      @include hover('gray-secondary-darker', $has-svg: true);
     }
   }
 
   &__close {
     text-align: right;
 
-    &:hover {
-      &::v-deep svg > path {
-        fill: $gray-primary;
-      }
-    }
+    @include hover('gray-secondary-darker', $has-svg: true);
   }
 }
 </style>
