@@ -8,7 +8,7 @@
       >
         <template v-slot:title>
           <div class="FaqSection__collapse__title">
-            <span>{{ index + 1 }}. {{ faq.question }}</span>
+            <h3>{{ index + 1 }}. {{ faq.question }}</h3>
             <BaseArrowTop v-if="activeList[index]" />
             <BaseArrowDown v-else />
           </div>
@@ -200,13 +200,20 @@ export default options
     &__title {
       display: flex;
       justify-content: space-between;
-      font-size: 1.125rem;
-      font-weight: 500;
       cursor: pointer;
 
+      > h3 {
+        margin: 0;
+        font-size: 1.125rem;
+        font-weight: 500;
+      }
+
       @include max-media('xl') {
-        font-size: 1rem;
         margin-left: 4px;
+
+        > h3 {
+          font-size: 1rem;
+        }
       }
     }
 
