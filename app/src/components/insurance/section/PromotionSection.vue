@@ -1,6 +1,6 @@
 <template>
   <div class="PromotionSection__wrapper">
-    <div class="PromotionSection">
+    <div ref="section" class="PromotionSection">
       <div class="PromotionSection__title">想買保險，但不知道怎麼挑？</div>
       <div class="PromotionSection__content">
         <div class="PromotionSection__description">
@@ -37,6 +37,21 @@ const options: ComponentOption = {
   components: {
     BaseButton,
   },
+  methods: {
+    calcMobileBackgroundPositionY() {
+      const maxWidth = 420
+      const elWidth = this.$refs.section.offsetWidth
+
+      return Math.round((maxWidth - elWidth) / 4.8) - 16
+    },
+  },
+  mounted() {
+    if (!this.isDesktop) {
+      this.$nextTick(() => {
+        this.$refs.section.style.backgroundPositionY = `${this.calcMobileBackgroundPositionY()}px`
+      })
+    }
+  },
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -57,11 +72,17 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance
   extends Vue,
-    Omit<DeviceMixinComponentInstance, keyof Vue> {}
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
+  $refs: {
+    section: HTMLElement
+  }
+}
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  calcMobileBackgroundPositionY(): number
+}
 
 export interface Computed {}
 
@@ -82,22 +103,9 @@ export default options
     center -1px / contain no-repeat;
   background-color: #ffccb1;
   border: 0;
-  padding: 30px;
+  padding: 30px 30px 24px;
   text-align: center;
   margin-bottom: 20px;
-
-  @include max-media('xl') {
-    margin: 0 20px 20px;
-    max-width: 420px;
-    width: 100%;
-
-    &__wrapper {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      margin: 0 auto;
-    }
-  }
 
   &__title {
     color: #fff;
@@ -109,16 +117,24 @@ export default options
     width: 192px;
     font-size: 0.875rem;
     color: $gray-primary;
-    margin: 60px 0 24px;
+    margin: 40px 0 20px;
     text-align: left;
   }
 
   @include max-media('xl') {
+    margin: 16px 16px 20px;
+    max-width: 420px;
+    width: 100%;
     background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-mobile@2x.png')
       center top / contain no-repeat;
     background-color: #ffccb1;
     padding: 16px;
     text-align: left;
+
+    &__wrapper {
+      display: flex;
+      justify-content: center;
+    }
 
     &__title {
       font-size: 1.125rem;
@@ -136,6 +152,7 @@ export default options
     }
   }
 }
+
 @include max-media('xl') {
   .newline {
     display: none;
