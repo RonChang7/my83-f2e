@@ -137,6 +137,7 @@ export default options
 
     &:before {
       @include counter-list-type($prefix: '原則 ');
+      flex: 0 0 auto;
       font-size: 1rem;
       margin-right: 10px;
 

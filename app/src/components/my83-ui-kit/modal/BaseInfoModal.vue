@@ -105,9 +105,8 @@ export default options
   overflow: auto;
 
   @include max-media('lg') {
-    left: calc(50% - 12px);
-    top: calc(50% - 10px);
-    margin: 10px 12px;
+    width: calc(100% - 24px);
+    height: calc(100% - 20px);
     overflow: hidden;
   }
 
