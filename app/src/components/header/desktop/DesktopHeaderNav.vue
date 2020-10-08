@@ -105,11 +105,7 @@ export interface Props {
   display: flex;
 
   a {
-    color: $gray-secondary;
-
-    &:hover {
-      color: $primary-color;
-    }
+    @include hover('gray-secondary-lighter');
   }
 
   &.sales {
@@ -128,13 +124,7 @@ export interface Props {
     padding: 0 15px;
     cursor: pointer;
 
-    &:hover {
-      color: $primary-color;
-
-      &::v-deep svg > path {
-        fill: $primary-color;
-      }
-
+    @include hover('gray-secondary-lighter', $has-svg: true) {
       #{$self}__menu {
         display: flex;
       }

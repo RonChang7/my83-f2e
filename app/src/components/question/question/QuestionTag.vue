@@ -26,15 +26,13 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 
 .QuestionTag {
-  color: $secondary-color;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 24px;
 
-  &:hover {
-    color: $secondary-hover-color;
-  }
+  @include hover('secondary');
 }
 </style>
