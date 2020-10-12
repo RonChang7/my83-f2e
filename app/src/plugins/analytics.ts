@@ -22,7 +22,7 @@ export default (({ app }, inject) => {
   facebook.init({
     trackingLogEnable,
     trackingEnable,
-    id: FACEBOOK_PIXEL_ID,
+    ids: FACEBOOK_PIXEL_ID.split(','),
   })
 
   googleAnalytics.init({
