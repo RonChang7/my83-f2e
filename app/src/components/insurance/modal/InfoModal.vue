@@ -178,6 +178,7 @@ export default options
     padding: 5px 15px 29px;
     width: calc(100vw - 54px);
     max-height: calc(100vh - 76px);
+    height: 100%;
     overflow: auto;
   }
 

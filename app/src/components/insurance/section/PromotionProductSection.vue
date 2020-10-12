@@ -99,7 +99,11 @@ export default options
 
 .PromotionProductSection {
   width: 1120px;
-  color: $gray-primary;
+
+  &__title,
+  &__description {
+    color: $gray-primary;
+  }
 
   &__title {
     margin: 0 0 8px 0;
