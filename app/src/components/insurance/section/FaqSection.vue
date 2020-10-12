@@ -180,6 +180,10 @@ export default options
     padding: 0 0 0 1.5em;
   }
 
+  ::v-deep a {
+    font-weight: 500;
+  }
+
   h2 {
     font-size: 1.75rem;
     font-weight: 500;
