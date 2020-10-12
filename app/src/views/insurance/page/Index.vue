@@ -93,7 +93,6 @@ const opinions: ComponentOption = {
   },
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const fetchList = (insurance: string, { query, store }: Context) => {
   const insuranceStore = (store.state as InsuranceVuexState).insurance
   const page = /^\d+$/.test(getFirstQuery(query.page))
@@ -106,7 +105,8 @@ const fetchList = (insurance: string, { query, store }: Context) => {
   const payload: FetchInsuranceListPayload = {
     insurance,
     page,
-    fetchIdealCoverages: hasIdealCoverages ? 0 : 1,
+    fetchIdealCoverages:
+      hasIdealCoverages && insurance === currentInsurance ? 0 : 1,
   }
 
   if (insurance !== currentInsurance || page !== currentParam.page) {
