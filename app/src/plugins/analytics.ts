@@ -8,7 +8,7 @@ export default (({ app }, inject) => {
     APP_ENV,
     TRACKING_ENABLE,
     TRACKING_DEV_LOG_ENABLE,
-    FACEBOOK_PIXEL_ID,
+    FACEBOOK_PIXEL_IDS,
     GOOGLE_ANALYTICS_ID,
   } = app.$env
 
@@ -22,7 +22,7 @@ export default (({ app }, inject) => {
   facebook.init({
     trackingLogEnable,
     trackingEnable,
-    ids: FACEBOOK_PIXEL_ID.split(','),
+    ids: FACEBOOK_PIXEL_IDS.split(',').map((e) => e.trim()),
   })
 
   googleAnalytics.init({
