@@ -102,20 +102,22 @@ export default options
 .CoverageBadge {
   display: flex;
   align-items: center;
-  width: 120px;
   color: $secondary-color;
   font-size: 0.75rem;
   font-weight: 500;
+  flex: 0 1 auto;
 
   > span {
-    padding-left: 8px;
+    margin: 0 8px;
+    min-width: 4.5em;
+    max-width: 6em;
   }
 
   @include max-media('xl') {
-    width: 105px;
+    max-width: 130px;
 
     > span {
-      padding-left: 6px;
+      margin: 0 0 0 6px;
     }
   }
 }

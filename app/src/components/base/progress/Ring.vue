@@ -4,7 +4,7 @@
     <div
       v-if="wording"
       class="Ring__wording"
-      :style="{ ...styleObject, ...wordingStyle }"
+      :style="{ ...wordStyleObject, ...wordingStyle }"
     >
       {{ wording }}
     </div>
@@ -52,6 +52,13 @@ const options: ComponentOption = {
       return {
         width: `${this.length}px`,
         height: `${this.length}px`,
+      }
+    },
+    wordStyleObject() {
+      return {
+        width: `${this.length}px`,
+        height: `${this.length}px`,
+        padding: `0 ${this.lineWidth * 2}px`,
       }
     },
   },
@@ -109,6 +116,7 @@ export type Methods = {}
 
 export interface Computed {
   styleObject: Partial<CSSStyleDeclaration>
+  wordStyleObject: Partial<CSSStyleDeclaration>
 }
 
 export interface Props {
