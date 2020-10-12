@@ -116,7 +116,7 @@ const config: NuxtConfig = {
           { key: 'ZENDESK_CHAT_ID' },
           { key: 'TRACKING_ENABLE' },
           { key: 'TRACKING_DEV_LOG_ENABLE' },
-          { key: 'FACEBOOK_PIXEL_ID' },
+          { key: 'FACEBOOK_PIXEL_IDS' },
           { key: 'GOOGLE_ANALYTICS_ID' },
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
