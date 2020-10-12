@@ -3,6 +3,7 @@ import { AnalyticsEventManager } from '../../event-manager/AnalyticsEventManager
 import { EventTypes } from '../../event-listeners/event.type'
 import { facebookPixelSetup } from './facebook-pixel-sdk'
 
+type FBQ = any
 export class FacebookPixel {
   private static instance: FacebookPixel
 
@@ -10,11 +11,11 @@ export class FacebookPixel {
 
   private trackingLogEnable: boolean
 
-  private id: string
+  private pixelIds: string[]
 
-  private fbq: any
+  private fbq: FBQ
 
-  private fbqPromise: Promise<any>
+  private fbqPromise: Promise<FBQ>
 
   private constructor() {}
 
@@ -26,14 +27,14 @@ export class FacebookPixel {
   }
 
   public init(payload: InitPayload) {
-    if (payload.trackingEnable && !payload.id) {
+    if (payload.trackingEnable && !payload.ids) {
       throw new Error('FacebookPixel error: No Facebook Pixel id')
     }
 
-    const { trackingEnable, trackingLogEnable, id } = payload
+    const { trackingEnable, trackingLogEnable, ids } = payload
     this.trackingEnable = trackingEnable
     this.trackingLogEnable = trackingLogEnable
-    this.id = id
+    this.pixelIds = ids
 
     this.setup()
   }
@@ -53,7 +54,10 @@ export class FacebookPixel {
       this.trackingLogEnable
     )
     this.fbq = await this.fbqPromise
-    this.fbq('init', this.id)
+
+    this.pixelIds.forEach((id) => {
+      this.fbq('init', id)
+    })
 
     return this.fbq
   }
@@ -68,5 +72,5 @@ export class FacebookPixel {
 interface InitPayload {
   trackingEnable: boolean
   trackingLogEnable: boolean
-  id: string
+  ids: string[]
 }
