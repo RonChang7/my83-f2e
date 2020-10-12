@@ -21,6 +21,7 @@
               <CoverageBadge
                 v-for="(coverage, index) in product.coverage_charts"
                 :key="index"
+                class="ProductCard__coverages__chart"
                 :percentage="coverage.amount_percentage"
                 :wording="`${coverage.amount_percentage}%`"
                 :legend="coverage.name"
@@ -197,6 +198,18 @@ export default options
 
     @include max-media('xl') {
       margin: 24px 0 0 0;
+    }
+
+    &__chart {
+      &:not(:last-child) {
+        margin-right: 12px;
+      }
+
+      @include max-media('xl') {
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
     }
   }
 
