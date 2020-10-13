@@ -43,3 +43,8 @@ export interface Pagination {
   currentPage: number
   totalCount: number
 }
+
+export interface LinkButton {
+  text: string
+  link: Link
+}
