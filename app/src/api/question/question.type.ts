@@ -1,4 +1,4 @@
-import { Link, SimpleResponse, Role, PageMeta } from '../type'
+import { Link, SimpleResponse, Role, PageMeta, LinkButton } from '../type'
 
 export interface QuestionDataResponse {
   data: QuestionData
@@ -177,11 +177,7 @@ export interface RelatedQuestion extends RelatedBlog {
 export interface RecommendProduct {
   header: string
   title: string
+  description: string
   image_url: string
-  action_text: string
-  link: Link
-}
-
-export interface RecommendProductTransform extends RecommendProduct {
-  consultations_count: number
+  btn: LinkButton
 }
