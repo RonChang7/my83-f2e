@@ -4,6 +4,7 @@ import {
   RelatedQuestion,
   PageMeta,
   PaginationResponse,
+  LinkButton,
 } from '../type'
 
 export interface InsurancePageStaticData {
@@ -94,7 +95,7 @@ export interface BaseInsuranceProduct {
   name: string
   plan: string
   fee: string
-  btn: InsuranceProductButton
+  btn: LinkButton
   features: string[]
   coverage_age: string
   view_count: number
@@ -109,11 +110,6 @@ export interface InsuranceProduct extends BaseInsuranceProduct {
 }
 
 export interface PromotionInsuranceProduct extends BaseInsuranceProduct {}
-
-export interface InsuranceProductButton {
-  text: string
-  link: Link
-}
 
 export interface InsuranceProductCoverageChart {
   name: string

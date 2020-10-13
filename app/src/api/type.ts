@@ -44,6 +44,11 @@ export interface Pagination {
   totalCount: number
 }
 
+export interface LinkButton {
+  text: string
+  link: Link
+}
+
 export interface RelatedBlog {
   title: string
   link: Link
