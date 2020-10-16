@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      buttonTypes: ['like', 'dislike', 'response'],
+      buttonTypes: ['like', 'response'],
     }
   },
   methods: {
