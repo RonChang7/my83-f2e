@@ -62,6 +62,7 @@ export interface InsuranceListResponse {
   data: InsuranceListData
   page_meta: PageMeta
   meta: InsuranceListMeta
+  json_ld?: []
 }
 
 export interface FetchInsuranceListPayload {
