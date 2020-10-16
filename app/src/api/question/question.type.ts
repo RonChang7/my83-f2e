@@ -11,7 +11,7 @@ import {
 export interface QuestionDataResponse {
   data: QuestionData
   page_meta: PageMeta
-  json_ld?: []
+  json_ld?: any[]
 }
 
 export interface AnswerDataResponse {
