@@ -8,6 +8,7 @@ import {
   FetchInsuranceListPayload,
 } from './insurance.type'
 import request from '@/api/request'
+import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 
 /**
  * @description 取得險種頁靜態資料
@@ -55,7 +56,7 @@ export const fetchInsuranceList = async (
   const { insurance, page, fetchIdealCoverages } = payload
 
   const { data } = await request.get<InsuranceListResponse>(
-    `/api/insurance/${insurance}/products`,
+    decorateSeoQueryString(`/api/insurance/${insurance}/products`),
     {
       params: {
         page,

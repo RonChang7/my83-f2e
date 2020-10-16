@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import * as types from './insurance.type'
-import { UPDATE_PAGE_META } from '@/store/seo/seo.type'
+import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/insurance'
 import {
   InsurancePageStaticData,
@@ -80,12 +80,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
         return new Promise((resolve, reject) => {
           api
             .fetchInsuranceList(payload)
-            .then(({ data, meta, page_meta }) => {
+            .then(({ data, meta, page_meta, json_ld }) => {
               commit(types.UPDATE_INSURANCE_LIST_DATA, data)
               commit(types.UPDATE_INSURANCE_LIST_META, meta)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
                 root: true,
               })
+              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
               commit(types.UPDATE_CURRENT_PAGE, payload.page)
               resolve()
             })
