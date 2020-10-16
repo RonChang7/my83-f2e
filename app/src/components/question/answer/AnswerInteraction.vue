@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      buttonTypes: ['like', 'dislike', 'response'],
+      buttonTypes: ['like', 'response'],
     }
   },
   methods: {
@@ -92,7 +92,7 @@ export interface Props {
 
 .AnswerInteraction {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: 45px;
   margin-top: 16px;
