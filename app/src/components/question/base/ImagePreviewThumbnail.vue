@@ -10,7 +10,8 @@
         class="ImagePreviewThumbnail__image"
         :image-url="imageUrl"
         :image-alt="imageAlt"
-        :ignore-placeholder="true"
+        :ignore-placeholder="!isSquare"
+        :fit="isSquare ? 'contain' : ''"
       />
     </figure>
   </div>
@@ -42,6 +43,10 @@ export default {
       default: true,
     },
     showCloseButton: {
+      type: Boolean,
+      default: false,
+    },
+    isSquare: {
       type: Boolean,
       default: false,
     },
@@ -77,6 +82,7 @@ export interface Props {
   imageAlt: string
   enableHover: boolean
   showCloseButton: boolean
+  isSquare: boolean
 }
 </script>
 
