@@ -134,7 +134,7 @@ const config: NuxtConfig = {
   typescript: {
     typeCheck: {
       typescript: {
-        memoryLimit: Number(process.env.TYPESCRIPT_MEMORY_LIMIT) || 2048, // default: 2048MB
+        memoryLimit: Number(process.env.TS_TYPE_CHECK_MEMORY_LIMIT) || 2048, // default: 2048MB
       },
     },
   },
