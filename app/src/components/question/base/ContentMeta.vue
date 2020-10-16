@@ -13,10 +13,6 @@
           {{ likeCount }}
         </div>
         <div class="ContentMeta__count">
-          <BaseThumbDown />
-          {{ dislikeCount }}
-        </div>
-        <div class="ContentMeta__count">
           <BaseComment18 />
           {{ answerCount }}
         </div>
