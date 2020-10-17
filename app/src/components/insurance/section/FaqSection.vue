@@ -104,11 +104,9 @@ const options: ComponentOption = {
     faqs: {
       immediate: true,
       handler() {
-        let defaultActiveList = Array(this.faqs?.length).fill(true)
-
-        if (this.isMobile) {
-          defaultActiveList = defaultActiveList.fill(false, 1)
-        }
+        const defaultValue = !this.isMobile
+        const defaultActiveList = Array(this.faqs?.length).fill(defaultValue)
+        defaultActiveList[0] = true // 不管哪個裝置，第一個區塊預設都是展開的
 
         this.activeList = defaultActiveList
       },
