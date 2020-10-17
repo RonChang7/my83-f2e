@@ -21,7 +21,7 @@
         </BaseButton>
       </div>
     </div>
-    <img v-if="image" :src="image" class="HeaderSection__image" />
+    <img v-if="image" :src="image" :alt="name" class="HeaderSection__image" />
   </div>
 </template>
 
