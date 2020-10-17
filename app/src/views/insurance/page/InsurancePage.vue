@@ -1,6 +1,6 @@
 <template>
   <div class="InsurancePage">
-    <InfoModal
+    <InsuranceTipModal
       :visible.sync="infoModal.visible"
       :active-tab.sync="infoModal.activeTab"
       @update-active-tab="updateInfoModalActiveTab"
@@ -59,9 +59,9 @@ import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSectio
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
-import InfoModal, {
-  Props as InfoModalProps,
-} from '@/components/insurance/modal/InfoModal.vue'
+import InsuranceTipModal, {
+  Props as InsuranceTipModalProps,
+} from '@/components/insurance/modal/InsuranceTipModal.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -73,7 +73,7 @@ const options: ComponentOption = {
     ProductionLIstSection,
     PromotionProductSection,
     PromotionSection,
-    InfoModal,
+    InsuranceTipModal,
     FaqSection,
     InsuranceLinkSection,
     RelatedBlogSection,
@@ -136,12 +136,12 @@ export interface Instance
 export interface Data {
   infoModal: {
     visible: boolean
-    activeTab: InfoModalProps['activeTab'] | ''
+    activeTab: InsuranceTipModalProps['activeTab'] | ''
   }
 }
 
 export type Methods = {
-  updateInfoModalActiveTab(tab: InfoModalProps['activeTab']): void
+  updateInfoModalActiveTab(tab: InsuranceTipModalProps['activeTab']): void
   openInfoModal(): void
 }
 
