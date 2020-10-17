@@ -4,24 +4,24 @@
     :lock-scroll="lockScroll"
     @close="closePanel"
   >
-    <div ref="infoModal" class="InfoModal">
-      <div v-if="navTabs.length > 1" class="InfoModal__navbar">
+    <div ref="insuranceTipModal" class="InsuranceTipModal">
+      <div v-if="navTabs.length > 1" class="InsuranceTipModal__navbar">
         <div
           v-for="tab in navTabs"
           :key="tab.key"
-          class="InfoModal__navbar__item"
+          class="InsuranceTipModal__navbar__item"
           :class="{ active: tab.key === activeTab }"
           @click="() => $emit('update-active-tab', tab.key)"
         >
           <span>{{ tab.value }}</span>
         </div>
       </div>
-      <div v-else class="InfoModal__navbar">
-        <div class="InfoModal__navbar__singleItem">
+      <div v-else class="InsuranceTipModal__navbar">
+        <div class="InsuranceTipModal__navbar__singleItem">
           {{ navTabs[0].value }}
         </div>
       </div>
-      <div class="InfoModal__panel">
+      <div class="InsuranceTipModal__panel">
         <GlossaryPanel
           v-if="glossary"
           v-show="activeTab === 'glossary'"
@@ -110,7 +110,7 @@ const options: ComponentOption = {
     visible(val) {
       if (val) {
         this.$nextTick(() => {
-          this.$refs.infoModal.scrollTop = 0
+          this.$refs.insuranceTipModal.scrollTop = 0
         })
       }
     },
@@ -135,7 +135,7 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {
   $refs: {
-    infoModal: HTMLElement
+    insuranceTipModal: HTMLElement
   }
   $store: Store<InsuranceVuexState>
 }
@@ -170,7 +170,7 @@ export default options
 @import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
-.InfoModal {
+.InsuranceTipModal {
   padding: 9px 41px 33px;
   width: 770px;
 

@@ -30,7 +30,7 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { NavTab, Props as InfoModalProps } from '../modal/InfoModal.vue'
+import { NavTab, Props as InfoModalProps } from '../modal/InsuranceTipModal.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
