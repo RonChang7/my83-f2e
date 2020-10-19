@@ -74,7 +74,7 @@ export class RingCanvasGenerator {
 
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private ringConfig?: RingConfig[]
+    private ringConfig?: Partial<RingConfig>[]
   ) {}
 
   private static convertAngleToCoordinate(
@@ -122,9 +122,12 @@ export class RingCanvasGenerator {
     }: RingConfig) => {
       this.ctx.beginPath()
       this.ctx.arc(length / 2, length / 2, radius, startAngle, endAngle, true)
-      const linearGradient = this.ctx.createLinearGradient(
-        ...gradientPoint(length / 2)
-      )
+      const lineGradientPoint =
+        typeof gradientPoint === 'function'
+          ? gradientPoint(length / 2)
+          : gradientPoint
+
+      const linearGradient = this.ctx.createLinearGradient(...lineGradientPoint)
       linearGradient.addColorStop(0, color[0])
       linearGradient.addColorStop(1, color[1])
       this.ctx.strokeStyle = linearGradient
@@ -136,7 +139,6 @@ export class RingCanvasGenerator {
         const payload = this.ringConfig
           ? { ...ringConfig, ...this.ringConfig[index] }
           : ringConfig
-
         drawRing(payload)
       }
     )
@@ -146,9 +148,9 @@ export class RingCanvasGenerator {
 interface RingConfig {
   startAngle: number
   endAngle: number
-  gradientPoint: (
-    radius: number
-  ) => [number, number, number, number] | [number, number, number, number]
+  gradientPoint:
+    | ((radius: number) => [number, number, number, number])
+    | [number, number, number, number]
   color: [string, string]
 }
 
