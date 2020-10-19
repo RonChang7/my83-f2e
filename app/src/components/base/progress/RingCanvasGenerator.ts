@@ -1,137 +1,84 @@
+const enum RingType {
+  OVER = 'OVER',
+  LOWER = 'LOWER',
+  FILL = 'Fill',
+}
+
 export class RingCanvasGenerator {
-  constructor(public type: RingType) {}
-
-  static overRingCanvasGenerator(config: Config) {
-    const { ctx, length, lineWidth } = config
-    const radius = config.radius - lineWidth / 2
-    ctx.lineWidth = lineWidth
-    ctx.lineCap = 'round'
-
-    const arcConfigs: arcConfig[] = [
+  private static defaultRingConfig: Record<
+    RingType,
+    (deg: number) => RingConfig[]
+  > = {
+    [RingType.OVER]: () => [
       // leftTop
       {
-        x: length / 2,
-        y: length / 2,
-        radius,
-        startAngle: -0.5 * Math.PI,
-        endAngle: 1 * Math.PI,
-        gradientPoint: [radius, 0, 0, radius],
+        startAngle: RingCanvasGenerator.degree(0),
+        endAngle: RingCanvasGenerator.degree(90),
+        gradientPoint: (radius) => [radius, 0, 0, radius],
         color: ['#6980D1', '#4C6AD5'],
       },
       // leftBottom
       {
-        x: length / 2,
-        y: length / 2,
-        radius,
-        startAngle: 1 * Math.PI,
-        endAngle: 0.5 * Math.PI,
-        gradientPoint: [0, radius, radius, radius * 2],
+        startAngle: RingCanvasGenerator.degree(90),
+        endAngle: RingCanvasGenerator.degree(180),
+        gradientPoint: (radius) => [0, radius, radius, radius * 2],
         color: ['#4C6AD5', '#8C75AF'],
       },
       // rightBottom
       {
-        x: length / 2,
-        y: length / 2,
-        radius,
-        startAngle: 0.5 * Math.PI,
-        endAngle: 0 * Math.PI,
-        gradientPoint: [radius, radius * 2, radius * 2, radius],
+        startAngle: RingCanvasGenerator.degree(180),
+        endAngle: RingCanvasGenerator.degree(270),
+        gradientPoint: (radius) => [radius, radius * 2, radius * 2, radius],
         color: ['#8C75AF', '#D07F86'],
       },
       // rightTop
       {
-        x: length / 2,
-        y: length / 2,
-        radius,
-        startAngle: 0 * Math.PI,
-        endAngle: -0.5 * Math.PI,
-        gradientPoint: [radius * 2, radius, radius, 0],
+        startAngle: RingCanvasGenerator.degree(270),
+        endAngle: RingCanvasGenerator.degree(360),
+        gradientPoint: (radius) => [radius * 2, radius, radius, 0],
         color: ['#D07F86', '#FF8659'],
       },
-    ]
-
-    arcConfigs.forEach(
-      ({ x, y, radius, startAngle, endAngle, gradientPoint, color }) => {
-        ctx.beginPath()
-        ctx.arc(x, y, radius, startAngle, endAngle, true)
-        const linearGradient = ctx.createLinearGradient(...gradientPoint)
-        linearGradient.addColorStop(0, color[0])
-        linearGradient.addColorStop(1, color[1])
-        ctx.strokeStyle = linearGradient
-        ctx.stroke()
-      }
-    )
+    ],
+    [RingType.LOWER]: (deg) => [
+      {
+        startAngle: RingCanvasGenerator.degree(0),
+        endAngle: RingCanvasGenerator.degree(deg),
+        gradientPoint: (radius) => [
+          radius,
+          0,
+          RingCanvasGenerator.convertAngleToCoordinate({
+            x: radius,
+            y: radius,
+            radius,
+            deg,
+          }).x,
+          RingCanvasGenerator.convertAngleToCoordinate({
+            x: radius,
+            y: radius,
+            radius,
+            deg,
+          }).y,
+        ],
+        color: ['#899fe6', '#506ed0'],
+      },
+    ],
+    [RingType.FILL]: () => [
+      {
+        startAngle: 0,
+        endAngle: 2 * Math.PI,
+        gradientPoint: (radius) => [radius, 0, radius, radius * 2],
+        color: ['#899fe6', '#506ed0'],
+      },
+    ],
   }
 
-  static lowerRingCanvasGenerator(config: Config) {
-    if (config.deg && config.deg > 360) {
-      return RingCanvasGenerator.overRingCanvasGenerator(config)
-    } else if (config.deg && !(config.deg % 360)) {
-      return RingCanvasGenerator.fillRingCanvasGenerator(config)
-    }
-
-    const { ctx, length, lineWidth } = config
-    const deg = Number(config.deg)
-    const radius = config.radius - lineWidth / 2
-    const degShift = -0.5 * Math.PI
-    ctx.lineWidth = lineWidth
-    ctx.lineCap = 'round'
-
-    ctx.beginPath()
-    ctx.arc(length / 2, length / 2, radius, 0, 2 * Math.PI, true)
-    ctx.strokeStyle = '#edf2ff'
-    ctx.stroke()
-
-    ctx.beginPath()
-    ctx.arc(
-      length / 2,
-      length / 2,
-      radius,
-      0 + degShift,
-      -(deg / 180) * Math.PI + degShift,
-      true
-    )
-    const endPoint = RingCanvasGenerator.convertAngleToCoordinate({
-      x: length / 2,
-      y: length / 2,
-      radius: config.radius,
-      deg,
-    })
-
-    const linearGradient = ctx.createLinearGradient(
-      length / 2,
-      0,
-      endPoint.x,
-      endPoint.y
-    )
-    linearGradient.addColorStop(0, '#899fe6')
-    linearGradient.addColorStop(1, '#506ed0')
-    ctx.strokeStyle = linearGradient
-    ctx.stroke()
-  }
-
-  static fillRingCanvasGenerator(config: Config) {
-    const { ctx, length, lineWidth } = config
-    const radius = config.radius - lineWidth / 2
-    ctx.lineWidth = lineWidth
-    ctx.lineCap = 'round'
-
-    ctx.beginPath()
-    ctx.arc(length / 2, length / 2, radius, 0, 2 * Math.PI, true)
-    const linearGradient = ctx.createLinearGradient(
-      length / 2,
-      0,
-      length / 2,
-      length
-    )
-    linearGradient.addColorStop(0, '#899fe6')
-    linearGradient.addColorStop(1, '#506ed0')
-    ctx.strokeStyle = linearGradient
-    ctx.stroke()
-  }
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private ringConfig?: RingConfig[]
+  ) {}
 
   private static convertAngleToCoordinate(
-    parma: convertAngleToCoordinateParam
+    parma: ConvertAngleToCoordinateParam
   ) {
     const deg = parma.deg + 90
     return {
@@ -140,42 +87,78 @@ export class RingCanvasGenerator {
     }
   }
 
-  create(config: Config) {
-    switch (this.type) {
-      case 'over':
-        RingCanvasGenerator.overRingCanvasGenerator(config)
-        return
-      case 'lower':
-        RingCanvasGenerator.lowerRingCanvasGenerator(config)
-        return
-      case 'fill':
-        RingCanvasGenerator.fillRingCanvasGenerator(config)
+  private static degree(deg: number) {
+    const degShift = -90
+    return ((-deg + degShift) / 180) * Math.PI
+  }
+
+  public draw({ length, lineWidth, deg }: RingInstance) {
+    const radius = length / 2 - lineWidth / 2
+    this.ctx.lineWidth = lineWidth
+    this.ctx.lineCap = 'round'
+
+    const ringType =
+      deg > 360 ? RingType.OVER : deg < 360 ? RingType.LOWER : RingType.FILL
+
+    if (ringType === RingType.LOWER) {
+      this.ctx.beginPath()
+      this.ctx.arc(
+        length / 2,
+        length / 2,
+        radius,
+        RingCanvasGenerator.degree(0),
+        RingCanvasGenerator.degree(360),
+        true
+      )
+      this.ctx.strokeStyle = '#edf2ff'
+      this.ctx.stroke()
     }
+
+    const drawRing = ({
+      startAngle,
+      endAngle,
+      gradientPoint,
+      color,
+    }: RingConfig) => {
+      this.ctx.beginPath()
+      this.ctx.arc(length / 2, length / 2, radius, startAngle, endAngle, true)
+      const linearGradient = this.ctx.createLinearGradient(
+        ...gradientPoint(length / 2)
+      )
+      linearGradient.addColorStop(0, color[0])
+      linearGradient.addColorStop(1, color[1])
+      this.ctx.strokeStyle = linearGradient
+      this.ctx.stroke()
+    }
+
+    RingCanvasGenerator.defaultRingConfig[ringType](deg).forEach(
+      (ringConfig, index) => {
+        const payload = this.ringConfig
+          ? { ...ringConfig, ...this.ringConfig[index] }
+          : ringConfig
+
+        drawRing(payload)
+      }
+    )
   }
 }
 
-export type RingType = 'over' | 'lower' | 'fill'
-
-export interface Config {
-  ctx: CanvasRenderingContext2D
-  length: number
-  lineWidth: number
-  radius: number
-  deg?: number
-  scale?: number
-}
-
-interface arcConfig {
-  x: number
-  y: number
-  radius: number
+interface RingConfig {
   startAngle: number
   endAngle: number
-  gradientPoint: [number, number, number, number]
+  gradientPoint: (
+    radius: number
+  ) => [number, number, number, number] | [number, number, number, number]
   color: [string, string]
 }
 
-interface convertAngleToCoordinateParam {
+interface RingInstance {
+  length: number
+  lineWidth: number
+  deg: number
+}
+
+interface ConvertAngleToCoordinateParam {
   x: number
   y: number
   deg: number

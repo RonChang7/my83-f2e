@@ -18,7 +18,7 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { RingCanvasGenerator, RingType } from './RingCanvasGenerator'
+import { RingCanvasGenerator } from './RingCanvasGenerator'
 
 const options: ComponentOption = {
   props: {
@@ -29,10 +29,6 @@ const options: ComponentOption = {
     lineWidth: {
       type: Number,
       default: 5,
-    },
-    ringType: {
-      type: String as PropType<Props['ringType']>,
-      default: 'lower',
     },
     percentage: {
       type: Number,
@@ -64,8 +60,8 @@ const options: ComponentOption = {
   },
   mounted() {
     const canvas = this.$refs.ring
-    const ring = new RingCanvasGenerator(this.ringType)
     const ctx = canvas.getContext('2d')!
+    const ring = new RingCanvasGenerator(ctx)
 
     /**
      * 提高 canvas 繪圖解析度
@@ -78,11 +74,9 @@ const options: ComponentOption = {
     canvas.height = this.length * scaleFactor
     ctx.scale(scaleFactor, scaleFactor)
 
-    ring.create({
-      ctx,
+    ring.draw({
       length: this.length,
       lineWidth: this.lineWidth,
-      radius: this.length / 2,
       deg: (this.percentage / 100) * 360,
     })
   },
@@ -122,7 +116,6 @@ export interface Computed {
 export interface Props {
   length: number
   lineWidth: number
-  ringType: RingType
   percentage: number
   wording: string
   wordingStyle: Partial<CSSStyleDeclaration>
