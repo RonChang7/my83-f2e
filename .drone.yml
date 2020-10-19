@@ -105,7 +105,7 @@ steps:
   - name: notify-deploy-staging
     image: plugins/slack
     settings:
-      channel: deploy
+      channel: my83-deploy
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
@@ -179,7 +179,7 @@ steps:
   - name: notify-deploy-prod
     image: plugins/slack
     settings:
-      channel: deploy
+      channel: my83-deploy
       webhook:
         from_secret: NOTIFY_SLACK_WEBHOOK
       template: >
