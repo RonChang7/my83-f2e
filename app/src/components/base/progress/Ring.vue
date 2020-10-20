@@ -61,7 +61,7 @@ const options: ComponentOption = {
   mounted() {
     const canvas = this.$refs.ring
     const ctx = canvas.getContext('2d')!
-    const ring = new RingCanvasGenerator(ctx)
+    const ring = new RingCanvasGenerator({ ctx })
 
     /**
      * 提高 canvas 繪圖解析度
