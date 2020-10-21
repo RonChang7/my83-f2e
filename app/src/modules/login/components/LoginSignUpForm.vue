@@ -30,6 +30,7 @@ import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vu
 import { facebookSignUp } from '@/api/login/login'
 import { User } from '@/services/user/user'
 import { Auth } from '@/services/auth/auth'
+import { Suspect } from '@/services/user/suspect'
 
 const auth = Auth.getInstance()
 
@@ -61,6 +62,7 @@ export default {
           fbToken,
           role: 'client',
           ...user.landingUrl,
+          roleSession: Suspect.getRoleCode(),
         })
         this.login(token!, expired_time!)
 
