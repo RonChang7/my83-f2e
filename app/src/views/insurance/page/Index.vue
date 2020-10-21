@@ -99,14 +99,11 @@ const fetchList = (insurance: string, { query, store }: Context) => {
     ? Number(getFirstQuery(query.page))
     : 1
   const currentParam = insuranceStore.currentParam
-  const hasIdealCoverages = !!insuranceStore.insuranceIdealCoverages
   const currentInsurance = insuranceStore.staticData.id
 
   const payload: FetchInsuranceListPayload = {
     insurance,
     page,
-    fetchIdealCoverages:
-      hasIdealCoverages && insurance === currentInsurance ? 0 : 1,
   }
 
   if (insurance !== currentInsurance || page !== currentParam.page) {
