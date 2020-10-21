@@ -19,7 +19,7 @@
 
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column left">
-        <ProductionLIstSection />
+        <ProductListSection />
         <div class="pagination">
           <BasePagination
             v-if="shouldShowPagination"
@@ -50,7 +50,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from './Index.vue'
 import HeaderSection from '@/components/insurance/section/HeaderSection.vue'
-import ProductionLIstSection from '@/components/insurance/section/ProductionLIstSection.vue'
+import ProductListSection from '@/components/insurance/section/ProductListSection.vue'
 import PromotionProductSection from '@/components/insurance/section/PromotionProductSection.vue'
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import FaqSection from '@/components/insurance/section/FaqSection.vue'
@@ -70,7 +70,7 @@ const options: ComponentOption = {
   mixins: [DeviceMixin],
   components: {
     HeaderSection,
-    ProductionLIstSection,
+    ProductListSection,
     PromotionProductSection,
     PromotionSection,
     InsuranceTipModal,

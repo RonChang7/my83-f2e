@@ -1,10 +1,10 @@
 <template>
-  <div class="ProductionLIstSection">
-    <h2 class="ProductionLIstSection__title">全部商品</h2>
-    <div class="ProductionLIstSection__description">
+  <div class="ProductListSection">
+    <h2 class="ProductListSection__title">全部商品</h2>
+    <div class="ProductListSection__description">
       依熱門度排序
       <a
-        class="ProductionLIstSection__faq"
+        class="ProductListSection__faq"
         href="#faq"
         @click.prevent="scrollToFAQ"
       >
@@ -12,19 +12,16 @@
         常見問題
       </a>
     </div>
-    <div
-      v-if="idealCoverages.length"
-      class="ProductionLIstSection__idealCoverage"
-    >
-      <div class="ProductionLIstSection__idealCoverage__title">
+    <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
+      <div class="ProductListSection__idealCoverage__title">
         <span>MY83 建議</span>
         理想保額
       </div>
-      <div class="ProductionLIstSection__idealCoverage__wrapper">
+      <div class="ProductListSection__idealCoverage__wrapper">
         <CoverageBadge
           v-for="(coverage, index) in idealCoverages"
           :key="index"
-          class="ProductionLIstSection__idealCoverage__chart"
+          class="ProductListSection__idealCoverage__chart"
           :percentage="100"
           :wording="coverage.amount"
           :legend="coverage.name"
@@ -34,7 +31,7 @@
     <ProductCard
       v-for="product in insuranceProducts"
       :key="product.id"
-      class="ProductionLIstSection__product"
+      class="ProductListSection__product"
       :product="product"
       @click-button="clickProductButton(`${product.company}${product.name}`)"
     />
@@ -130,7 +127,7 @@ export default options
 @import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
-.ProductionLIstSection {
+.ProductListSection {
   margin-top: 30px;
 
   &__title {
