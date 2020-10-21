@@ -10,4 +10,8 @@ export class Suspect {
       Cookies.set(RoleTokenKey, user.userState.roleCode.toString())
     }
   }
+
+  public static getRoleCode() {
+    return Cookies.get(RoleTokenKey)
+  }
 }
