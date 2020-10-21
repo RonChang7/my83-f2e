@@ -53,14 +53,13 @@ export const fetchPromotionProducts = async (
 export const fetchInsuranceList = async (
   payload: FetchInsuranceListPayload
 ): Promise<InsuranceListResponse> => {
-  const { insurance, page, fetchIdealCoverages } = payload
+  const { insurance, page } = payload
 
   const { data } = await request.get<InsuranceListResponse>(
     decorateSeoQueryString(`/api/insurance/${insurance}/products`),
     {
       params: {
         page,
-        fetch_ideal_coverages: fetchIdealCoverages,
       },
     }
   )

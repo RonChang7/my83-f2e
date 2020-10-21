@@ -68,7 +68,6 @@ export interface InsuranceListResponse {
 export interface FetchInsuranceListPayload {
   insurance: string
   page: number
-  fetchIdealCoverages: 1 | 0
 }
 
 export interface PromotionInsuranceProductResponse {
