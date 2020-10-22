@@ -1,4 +1,5 @@
 @import 'helper';
+@import 'shadow';
 
 $button-height: (
   's': 26px,
@@ -131,5 +132,53 @@ $button-font: (
     &::v-deep svg > path {
       fill: $secondary-bg;
     }
+  }
+}
+
+@mixin button-tertiary {
+  color: $tertiary-button-text-color;
+  background: $secondary-color;
+  border-color: $secondary-color;
+
+  &::v-deep svg > path {
+    fill: $tertiary-button-text-color;
+  }
+
+  @include hover-supported {
+    &:hover:not([disabled]) {
+      background: $secondary-hover-color;
+      border-color: $secondary-hover-color;
+    }
+  }
+
+  &:disabled {
+    background: $secondary-disabled-color;
+    border-color: $secondary-disabled-color;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-quaternary {
+  color: $quaternary-button-text-color;
+  background: $default-bg;
+  border-color: $default-bg;
+  @include shadow-01;
+
+  &::v-deep svg > path {
+    fill: $quaternary-button-text-color;
+  }
+
+  @include hover-supported {
+    &:hover:not([disabled]) {
+      background: $primary-bg;
+      border-color: $primary-bg;
+    }
+  }
+
+  &:disabled {
+    background: $default-bg;
+    border-color: $default-bg;
+    color: $primary-disabled-color;
+    cursor: not-allowed;
   }
 }

@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="AnswerEditor__content">
-      <BaseRickTextEditor :content.sync="form.content" @paste="paste" />
+      <BaseRichTextEditor :content.sync="form.content" @paste="paste" />
     </div>
     <div class="AnswerEditor__function">
       <BaseButton size="m" type="secondary" @click.native="cancel">
@@ -51,7 +51,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
-import BaseRickTextEditor from '@/components/my83-ui-kit/editor/BaseRickTextEditor.vue'
+import BaseRichTextEditor from '@/components/my83-ui-kit/editor/BaseRichTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { ADD_ANSWER } from '@/store/question/question.type'
@@ -66,7 +66,7 @@ import {
   AnswerFormData,
 } from '@/services/question/form/AnswerFormService'
 import { AddAnswerResponse } from '@/api/question/question.type'
-import { scrollTo } from '@/utils/element'
+import { scrollToElement } from '@/utils/scroll'
 import { htmlStrip } from '@/utils/text-parser'
 import { UserRole } from '@/services/user/user'
 const BaseCheckbox = () =>
@@ -78,7 +78,7 @@ const AnswerSalesRule = () => import('./AnswerSalesRule.vue')
 export default {
   components: {
     BaseInputText,
-    BaseRickTextEditor,
+    BaseRichTextEditor,
     BaseButton,
     BaseCheckbox,
     BaseInputMessage,
@@ -177,7 +177,11 @@ export default {
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#answer-${id}`) as HTMLElement
-      el && scrollTo(el, window)
+      el &&
+        scrollToElement({
+          el,
+          vertical: true,
+        })
     },
     isContentEmpty(content) {
       /**

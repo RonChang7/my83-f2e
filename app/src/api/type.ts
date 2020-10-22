@@ -43,3 +43,18 @@ export interface Pagination {
   currentPage: number
   totalCount: number
 }
+
+export interface LinkButton {
+  text: string
+  link: Link
+}
+
+export interface RelatedBlog {
+  title: string
+  link: Link
+  view_count: number
+}
+
+export interface RelatedQuestion extends RelatedBlog {
+  answer_count: number
+}

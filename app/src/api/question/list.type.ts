@@ -1,5 +1,11 @@
-import { PaginationResponse, PageMeta, Link } from '../type'
-import { RelatedBlog, RelatedQuestion, QuestionData } from './question.type'
+import {
+  PaginationResponse,
+  PageMeta,
+  Link,
+  RelatedBlog,
+  RelatedQuestion,
+} from '../type'
+import { QuestionData } from './question.type'
 
 export interface QuestionListResponse {
   data: QuestionListData[]
