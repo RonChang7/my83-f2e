@@ -80,7 +80,7 @@ import {
   ResponseFormService,
   ResponseFormData,
 } from '@/services/question/form/ResponseFormService'
-import { scrollTo } from '@/utils/element'
+import { scrollToElement } from '@/utils/scroll'
 import { nl2br } from '@/utils/text-parser'
 import { User } from '@/services/user/user'
 
@@ -207,7 +207,11 @@ export default {
     },
     scrollToNewPost(id) {
       const el = document.querySelector(`#response-${id}`) as HTMLElement
-      el && scrollTo(el, window)
+      el &&
+        scrollToElement({
+          el,
+          vertical: true,
+        })
     },
     focusHandler(status) {
       this.$emit('update:isFocus', status)
