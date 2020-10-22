@@ -1,7 +1,7 @@
 <template>
   <BaseCard v-if="recommendProduct" class="DesktopRecommendProductSection">
     <template v-slot:title>{{ recommendProduct.header }}</template>
-    <GlobalLink :to="recommendProduct.link.path">
+    <GlobalLink :to="recommendProduct.btn.link.path">
       <div class="DesktopRecommendProductSection__content">
         <div
           v-if="recommendProduct.image_url"
@@ -12,15 +12,15 @@
         <div class="DesktopRecommendProductSection__text">
           {{ recommendProduct.title }}
           <span
-            v-if="promotionConsultationCount"
+            v-if="recommendProduct.description"
             class="DesktopRecommendProductSection__count"
           >
-            {{ promotionConsultationCount }}
+            {{ recommendProduct.description }}
           </span>
         </div>
       </div>
       <BaseButton size="l-a" :is-full-width="true">
-        {{ recommendProduct.action_text }}
+        {{ recommendProduct.btn.text }}
       </BaseButton>
     </GlobalLink>
   </BaseCard>
@@ -36,7 +36,7 @@ import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RecommendProductTransform } from '@/api/question/question.type'
+import { RecommendProduct } from '@/api/question/question.type'
 
 export default {
   components: {
@@ -48,16 +48,6 @@ export default {
   computed: {
     recommendProduct() {
       return this.$store.state.question.recommendProduct
-    },
-    promotionConsultationCount() {
-      if (
-        !this.recommendProduct ||
-        !this.recommendProduct.consultations_count ||
-        this.recommendProduct.consultations_count <= 50
-      ) {
-        return ''
-      }
-      return `已經有 ${this.recommendProduct.consultations_count} 人購買`
     },
   },
 } as ComponentOption
@@ -87,8 +77,7 @@ export interface Data {}
 export type Methods = {}
 
 export interface Computed {
-  recommendProduct: RecommendProductTransform | null
-  promotionConsultationCount: string
+  recommendProduct: RecommendProduct | null
 }
 
 export interface Props {}
