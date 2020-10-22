@@ -1,8 +1,16 @@
-import { Link, SimpleResponse, Role, PageMeta, LinkButton } from '../type'
+import {
+  Link,
+  SimpleResponse,
+  Role,
+  PageMeta,
+  RelatedBlog,
+  RelatedQuestion,
+  LinkButton,
+} from '../type'
 
 export interface QuestionDataResponse {
   data: QuestionData
-  page_meta?: PageMeta
+  page_meta: PageMeta
   json_ld?: []
 }
 
@@ -163,16 +171,6 @@ export interface AnswerPersonalize {
 }
 
 export type LikeStatus = -1 | 0 | 1
-
-export interface RelatedBlog {
-  title: string
-  link: Link
-  view_count: number
-}
-
-export interface RelatedQuestion extends RelatedBlog {
-  answer_count: number
-}
 
 export interface RecommendProduct {
   header: string

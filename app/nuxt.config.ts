@@ -149,6 +149,12 @@ const config: NuxtConfig = {
       ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || undefined,
       ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || undefined,
     ],
+    loaders: {
+      scss: {
+        // Doc: https://github.com/vuejs/vue-loader/blob/master/docs/guide/pre-processors.md#sharing-global-variables
+        prependData: '$image-bucket-url: "https://images.my83.com.tw";',
+      },
+    },
     // extend(config, ctx) {},
   },
   telemetry: false,

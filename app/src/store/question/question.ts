@@ -21,13 +21,11 @@ import {
   UpdateLikeStatuePayload,
   AnswerMeta,
   LikeStatus,
-  RelatedQuestion,
-  RelatedBlog,
   RecommendProduct,
   QuestionPersonalizeResponse,
   QuestionDataResponse,
 } from '@/api/question/question.type'
-import { SimpleResponse } from '@/api/type'
+import { SimpleResponse, RelatedQuestion, RelatedBlog } from '@/api/type'
 
 export const DefaultQuestionPersonalize: QuestionPersonalize = {
   is_owner: false,

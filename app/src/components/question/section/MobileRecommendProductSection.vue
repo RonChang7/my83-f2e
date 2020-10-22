@@ -77,9 +77,9 @@ export default {
 
     this.recommendProductObserver.observe(this.$refs.recommendProduct)
   },
-  destroyed() {
+  beforeDestroy() {
     if (this.recommendProductObserver) {
-      ;(this.recommendProductObserver as IntersectionObserver).disconnect()
+      this.recommendProductObserver.disconnect()
       this.recommendProductObserver = null
     }
   },

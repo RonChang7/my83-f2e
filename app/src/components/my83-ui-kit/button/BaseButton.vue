@@ -112,7 +112,7 @@ export interface Computed {
 export interface Props {
   to: RawLocation | null
   size: 's' | 'm' | 'l-a' | 'l-b' | 'xl'
-  type: 'primary' | 'secondary'
+  type: 'primary' | 'secondary' | 'tertiary' | 'quaternary'
   state: string
   isLoading: boolean
   isFullWidth: boolean
@@ -165,6 +165,22 @@ export interface Props {
 
     &::v-deep &__loading {
       @include loading-color($secondary-button-text-color);
+    }
+  }
+
+  &__tertiary {
+    @include button-tertiary;
+
+    &::v-deep &__loading {
+      @include loading-color($tertiary-button-text-color);
+    }
+  }
+
+  &__quaternary {
+    @include button-quaternary;
+
+    &::v-deep &__loading {
+      @include loading-color($quaternary-button-text-color);
     }
   }
 

@@ -8,6 +8,7 @@ $primary-dark-color: #b95523;
 
 $secondary-color: #344b97;
 $secondary-light-color: #e8ebf3;
+$secondary-bright-color: #edf2ff;
 $secondary-dark-color: #223161;
 
 $gray-primary: #333;
@@ -61,6 +62,8 @@ $border-radius: 4px;
 // Button text
 $primary-button-text-color: $default-bg;
 $secondary-button-text-color: $gray-secondary;
+$tertiary-button-text-color: $default-bg;
+$quaternary-button-text-color: $primary-color;
 
 // line-height
 $line-height: 1.5

@@ -3,7 +3,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { getScroll, getRect } from '@/utils/element'
+import { getScroll, getRect } from '@/utils/dom'
 
 const options: ComponentOption = {
   props: {
@@ -62,8 +62,8 @@ const options: ComponentOption = {
         const elRect = getRect(el)
         const targetRect = getRect(target)
 
-        const scrollTop = getScroll(target, true)
-        const scrollLeft = getScroll(target, false)
+        const scrollTop = getScroll(target, true) || 0
+        const scrollLeft = getScroll(target, false) || 0
 
         const clientTop = window.document.body.clientTop || 0
         const clientLeft = window.document.body.clientLeft || 0

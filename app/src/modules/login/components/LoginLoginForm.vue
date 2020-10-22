@@ -80,6 +80,7 @@ import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse, Role } from '@/api/type'
 import { Auth } from '@/services/auth/auth'
+import { Suspect } from '@/services/user/suspect'
 
 const auth = Auth.getInstance()
 
@@ -146,6 +147,7 @@ export default {
           email: this.form.email,
           password: this.form.password,
           ...this.landingUrl(),
+          roleSession: Suspect.getRoleCode(),
         })
 
         this.login(token!, expired_time!)
@@ -168,6 +170,7 @@ export default {
           fbToken,
           role,
           ...this.landingUrl(),
+          roleSession: Suspect.getRoleCode(),
         })
 
         this.login(token!, expired_time!)
@@ -191,6 +194,7 @@ export default {
         const { token, expired_time } = await login.facebookLogin({
           fbToken,
           ...this.landingUrl(),
+          roleSession: Suspect.getRoleCode(),
         })
 
         this.login(token!, expired_time!)

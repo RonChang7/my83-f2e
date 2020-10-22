@@ -1,13 +1,14 @@
-import { Role } from '../type'
 import {
   FacebookSignUpResponse,
   FacebookLoginResponse,
   EmailLoginResponse,
   LogoutResponse,
   ForgetPasswordResponse,
+  FacebookSignUpPayload,
+  FacebookLoginPayload,
+  EmailLoginPayload,
 } from './login.type'
 import request from '@/api/request'
-import { LandingUrlInfo } from '@/services/user/user'
 
 /**
  * @description Facebook 註冊
@@ -18,6 +19,7 @@ export const facebookSignUp = async ({
   role,
   firstHttpReferrer,
   firstUrl,
+  roleSession,
 }: FacebookSignUpPayload): Promise<FacebookSignUpResponse> => {
   const { data, status } = await request.post<FacebookSignUpResponse>(
     '/api/auth/facebook-signup',
@@ -26,6 +28,7 @@ export const facebookSignUp = async ({
       role,
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
+      role_session: roleSession,
     }
   )
 
@@ -43,6 +46,7 @@ export const facebookLogin = async ({
   fbToken,
   firstHttpReferrer,
   firstUrl,
+  roleSession,
 }: FacebookLoginPayload): Promise<FacebookLoginResponse> => {
   const { data, status } = await request.post<FacebookLoginResponse>(
     '/api/auth/facebook-login',
@@ -50,6 +54,7 @@ export const facebookLogin = async ({
       fb_token: fbToken,
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
+      role_session: roleSession,
     }
   )
 
@@ -68,6 +73,7 @@ export const emailLogin = async ({
   password,
   firstHttpReferrer,
   firstUrl,
+  roleSession,
 }: EmailLoginPayload): Promise<EmailLoginResponse> => {
   const { data, status } = await request.post<EmailLoginResponse>(
     '/api/auth/email-login',
@@ -76,6 +82,7 @@ export const emailLogin = async ({
       password,
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
+      role_session: roleSession,
     }
   )
 
@@ -111,20 +118,6 @@ export const forgetPassword = async (
 export const logout = async (): Promise<boolean> => {
   const { data } = await request.get<LogoutResponse>('/api/auth/logout')
   return data.success
-}
-
-export interface FacebookLoginPayload extends LandingUrlInfo {
-  fbToken: string
-}
-
-export interface FacebookSignUpPayload extends LandingUrlInfo {
-  fbToken: string
-  role: Role
-}
-
-export interface EmailLoginPayload extends LandingUrlInfo {
-  email: string
-  password: string
 }
 
 export const login = {
