@@ -5,6 +5,7 @@
         :is="item.link ? 'GlobalLink' : 'span'"
         :to="item.link ? item.link.path : ''"
         class="DesktopHeaderNav__name"
+        :class="{ new: shouldAddNewBadge(item.name) }"
       >
         {{ item.name }}
       </component>
@@ -30,6 +31,7 @@ import { HeaderNavItem } from '@/api/header/header.type'
 import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { UserRole } from '@/services/user/user'
+import { headerNewBadgeList } from '@/config/header-new-badge-list'
 
 export default {
   components: {
@@ -45,6 +47,11 @@ export default {
   },
   computed: {
     ...mapState('header', ['headerNavItems']),
+  },
+  methods: {
+    shouldAddNewBadge(text) {
+      return headerNewBadgeList.includes(text)
+    },
   },
 } as ComponentOption
 
@@ -68,7 +75,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  shouldAddNewBadge(text: string): boolean
+}
 
 export interface Computed {
   headerNavItems: HeaderNavItem[]
@@ -83,6 +92,7 @@ export interface Props {
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
+@import '@/sass/elements.scss';
 
 .DesktopHeaderNav {
   $self: &;
@@ -135,6 +145,10 @@ export interface Props {
     display: flex;
     align-items: center;
     height: 60px;
+
+    &.new:after {
+      @include header-new-badge;
+    }
   }
 
   &__menu {

@@ -9,6 +9,7 @@
         :is="item.link ? 'GlobalLink' : 'span'"
         :to="item.link ? item.link.path : ''"
         class="MobileHeaderNav__name"
+        :class="{ new: shouldAddNewBadge(item.name) }"
       >
         {{ item.name }}
       </component>
@@ -36,6 +37,7 @@ import { HeaderNavItem } from '@/api/header/header.type'
 import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
 import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { headerNewBadgeList } from '@/config/header-new-badge-list'
 
 export default {
   components: {
@@ -50,6 +52,9 @@ export default {
     }
   },
   methods: {
+    shouldAddNewBadge(text) {
+      return headerNewBadgeList.includes(text)
+    },
     menuToggle(index) {
       this.displayMenuIndex = this.shouldShowMenu(index) ? null : index
     },
@@ -87,6 +92,7 @@ export interface Data {
 export type Methods = {
   menuToggle(index: number): void
   shouldShowMenu(index: number): boolean
+  shouldAddNewBadge(text: string): boolean
 }
 
 export interface Computed {
@@ -99,6 +105,7 @@ export interface Props {}
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/elements.scss';
 
 .MobileHeaderNav {
   $self: &;
@@ -143,6 +150,10 @@ export interface Props {}
     display: flex;
     align-items: center;
     height: 45px;
+
+    &.new:after {
+      @include header-new-badge;
+    }
   }
 
   &__menu {
