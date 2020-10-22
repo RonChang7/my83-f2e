@@ -22,3 +22,11 @@
   color: $color;
   font-weight: 700;
 }
+
+@mixin header-new-badge {
+  content: 'NEW';
+  color: $primary-color;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 2px 0 4px;
+}
