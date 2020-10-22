@@ -1,15 +1,18 @@
 <template>
   <div class="QuestionImages">
-    <PhotoSwipeGallery
-      :index.sync="currentImageIndex"
-      :images="galleryImages"
-      thumbnail-class-name="QuestionImages__thumbnail"
-    />
+    <client-only>
+      <PhotoSwipeGallery
+        :index.sync="currentImageIndex"
+        :images="galleryImages"
+        thumbnail-class-name="QuestionImages__thumbnail"
+      />
+    </client-only>
     <ImagePreviewThumbnail
       v-for="(image, index) in images"
       :key="index"
       :image-url="image"
       :image-alt="image"
+      :is-square="true"
       class="QuestionImages__thumbnail"
       @click.native="currentImageIndex = index"
     />

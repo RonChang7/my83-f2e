@@ -35,7 +35,7 @@ $background-max-width: 1600px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: url('https://images.my83.com.tw/front/question/banner.png') center
+  background: url('#{$image-bucket-url}/front/question/banner.png') center
     bottom no-repeat;
   background-size: contain;
   width: 100%;

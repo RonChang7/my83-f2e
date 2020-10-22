@@ -38,6 +38,7 @@ declare module 'vuex/types/index' {
     $analytics: AnalyticsEventManager
     $recaptcha: ReCaptchaInstance
     readonly $ua: UA
+    readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
   }
 }
