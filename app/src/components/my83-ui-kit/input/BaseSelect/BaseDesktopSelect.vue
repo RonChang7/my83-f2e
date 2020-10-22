@@ -40,8 +40,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Props as BaseSelectProps } from '../BaseSelect.vue'
-import { getOffsetTop } from '@/utils/element'
-import { hasClass } from '@/utils/dom'
+import { getOffsetTop, hasClass } from '@/utils/dom'
 
 export default {
   props: {

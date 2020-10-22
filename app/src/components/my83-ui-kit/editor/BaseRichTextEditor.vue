@@ -1,5 +1,5 @@
 <template>
-  <div class="BaseRickTextEditor">
+  <div class="BaseRichTextEditor">
     <Editor
       ref="editor"
       v-model="editorContent"
@@ -168,7 +168,7 @@ export interface Props {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 
-.BaseRickTextEditor {
+.BaseRichTextEditor {
   &::v-deep .tox-toolbar__primary,
   &::v-deep .tox-toolbar,
   &::v-deep .tox-edit-area > iframe,

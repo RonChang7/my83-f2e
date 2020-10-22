@@ -6,6 +6,9 @@
     <div class="BaseCard__content">
       <slot></slot>
     </div>
+    <div v-if="hasFooter" class="BaseCard__footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
@@ -19,6 +22,9 @@ export default {
   computed: {
     hasTitle() {
       return isSlotExist('title', this)
+    },
+    hasFooter() {
+      return isSlotExist('footer', this)
     },
   },
 } as ComponentOption
@@ -47,6 +53,7 @@ export type Methods = {}
 
 export interface Computed {
   hasTitle: boolean
+  hasFooter: boolean
 }
 
 export interface Props {}
@@ -59,6 +66,7 @@ export interface Props {}
 
 .BaseCard {
   @include card-primary;
+  $border-style: 1px solid $gray-quaternary;
 
   & > * {
     padding: 0 30px;
@@ -69,7 +77,17 @@ export interface Props {}
     align-items: center;
     color: $gray-primary;
     height: 50px;
-    border-bottom: 1px solid $gray-quaternary;
+    border-bottom: $border-style;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    color: $gray-secondary;
+    font-size: 0.875rem;
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    border-top: $border-style;
   }
 
   @include max-media('md') {
@@ -83,6 +101,12 @@ export interface Props {}
       color: $gray-secondary;
       font-size: 0.875rem;
       height: 36px;
+    }
+
+    &__footer {
+      font-size: 0.875rem;
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
     }
   }
 }

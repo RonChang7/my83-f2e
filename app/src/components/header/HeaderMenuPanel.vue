@@ -8,7 +8,11 @@
         :key="columnIndex"
         class="HeaderMenuPanel__column"
       >
-        <div v-if="column.children" class="HeaderMenuPanel__column__title">
+        <div
+          v-if="column.children"
+          class="HeaderMenuPanel__column__title"
+          :class="{ new: shouldAddNewBadge(column.name) }"
+        >
           {{ column.name }}
         </div>
         <div
@@ -67,6 +71,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { headerNewBadgeList } from '@/config/header-new-badge-list'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
@@ -83,6 +88,9 @@ export default {
     },
   },
   methods: {
+    shouldAddNewBadge(text) {
+      return headerNewBadgeList.includes(text)
+    },
     columnWidthHandler() {
       if (!this.isDesktop || !this.$refs.column) return
       const columns = this.$refs.column.filter(Boolean)
@@ -145,6 +153,7 @@ export interface Data {}
 
 export type Methods = {
   columnWidthHandler(): void
+  shouldAddNewBadge(text: string): boolean
 }
 
 export interface Computed {
@@ -160,6 +169,7 @@ export interface Props {
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
+@import '@/sass/elements.scss';
 
 .HeaderMenuPanel {
   padding: 20px 35px;
@@ -206,9 +216,15 @@ export interface Props {
     }
 
     &__title {
+      display: flex;
+      align-items: center;
       padding-bottom: 10px;
       margin-bottom: 15px;
       border-bottom: 1px solid $secondary-bg;
+
+      &.new:after {
+        @include header-new-badge;
+      }
     }
 
     &__link {

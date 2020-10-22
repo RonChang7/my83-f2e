@@ -27,3 +27,12 @@ export const pageView: Handlers[EventTypes.PageView] = () => {
   const ga = GoogleAnalytics.getInstance()
   ga.pageView()
 }
+
+export const clickAction: Handlers[EventTypes.ClickAction] = (payload) => {
+  const ga = GoogleAnalytics.getInstance()
+  ga.event({
+    eventCategory: payload.category,
+    eventAction: payload.action,
+    eventLabel: payload.label,
+  })
+}

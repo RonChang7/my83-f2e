@@ -57,6 +57,19 @@ export class GoogleAnalytics {
     ga('set', fieldName, fieldValue)
   }
 
+  public async event(payload: EventPayload) {
+    const ga = await this.getGa()
+
+    ga(
+      'send',
+      'event',
+      payload.eventCategory,
+      payload.eventAction,
+      payload.eventLabel,
+      payload.eventValue
+    )
+  }
+
   private async getGa() {
     if (this.ga) return this.ga
 
@@ -92,6 +105,10 @@ export class GoogleAnalytics {
       listeners.setUserId
     )
     AEM.subscribe<EventTypes.PageView>(EventTypes.PageView, listeners.pageView)
+    AEM.subscribe<EventTypes.ClickAction>(
+      EventTypes.ClickAction,
+      listeners.clickAction
+    )
   }
 }
 
@@ -105,4 +122,11 @@ interface InitPayload {
 interface SetPayload {
   fieldName: string
   fieldValue: string
+}
+
+interface EventPayload {
+  eventCategory: string
+  eventAction: string
+  eventLabel?: string
+  eventValue?: number
 }
