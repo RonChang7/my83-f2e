@@ -21,7 +21,7 @@ import {
   UpdateLikeStatuePayload,
   AnswerMeta,
   LikeStatus,
-  RecommendProductTransform,
+  RecommendProduct,
   QuestionPersonalizeResponse,
   QuestionDataResponse,
 } from '@/api/question/question.type'
@@ -537,10 +537,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           state.question!.personalize!.is_reporter = reportStatus
         }
       },
-      [types.UPDATE_RECOMMEND_PRODUCT](
-        state,
-        data: RecommendProductTransform | null
-      ) {
+      [types.UPDATE_RECOMMEND_PRODUCT](state, data: RecommendProduct | null) {
         state.recommendProduct = data
       },
     },
@@ -550,7 +547,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   question: QuestionData | null
   answers: AnswerData[] | null
-  recommendProduct: RecommendProductTransform | null
+  recommendProduct: RecommendProduct | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   dropdownMenu: DropdownMenu

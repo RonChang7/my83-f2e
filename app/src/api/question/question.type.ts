@@ -5,6 +5,7 @@ import {
   PageMeta,
   RelatedBlog,
   RelatedQuestion,
+  LinkButton,
 } from '../type'
 
 export interface QuestionDataResponse {
@@ -174,11 +175,7 @@ export type LikeStatus = -1 | 0 | 1
 export interface RecommendProduct {
   header: string
   title: string
+  description: string
   image_url: string
-  action_text: string
-  link: Link
-}
-
-export interface RecommendProductTransform extends RecommendProduct {
-  consultations_count: number
+  btn: LinkButton
 }
