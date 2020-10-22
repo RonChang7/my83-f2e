@@ -72,17 +72,10 @@ export class RingCanvasGenerator {
     ],
   }
 
-  private ctx: CanvasRenderingContext2D
-
-  private ringConfig?: Partial<RingConfig>[]
-
-  private bottomRingConfig?: Partial<BottomRingConfig>
-
-  constructor({ ctx, ringConfig, bottomRingConfig }: initOption) {
-    this.ctx = ctx
-    this.ringConfig = ringConfig
-    this.bottomRingConfig = bottomRingConfig
-  }
+  constructor(
+    private ctx: CanvasRenderingContext2D,
+    private ringConfig?: Partial<RingConfig>[]
+  ) {}
 
   private static convertAngleToCoordinate(
     parma: ConvertAngleToCoordinateParam
@@ -107,7 +100,7 @@ export class RingCanvasGenerator {
     const ringType =
       deg > 360 ? RingType.OVER : deg < 360 ? RingType.LOWER : RingType.FILL
 
-    if (ringType === RingType.LOWER || this.bottomRingConfig) {
+    if (ringType === RingType.LOWER || this.ringConfig?.[0]?.backgroundColor) {
       this.ctx.beginPath()
       this.ctx.arc(
         length / 2,
@@ -117,7 +110,7 @@ export class RingCanvasGenerator {
         RingCanvasGenerator.degree(360),
         true
       )
-      this.ctx.strokeStyle = this.bottomRingConfig?.color || '#edf2ff'
+      this.ctx.strokeStyle = this.ringConfig?.[0]?.backgroundColor || '#edf2ff'
       this.ctx.stroke()
     }
 
@@ -159,22 +152,13 @@ interface RingConfig {
     | ((radius: number) => [number, number, number, number])
     | [number, number, number, number]
   color: [string, string]
-}
-
-interface BottomRingConfig {
-  color: string
+  backgroundColor?: string
 }
 
 interface RingInstance {
   length: number
   lineWidth: number
   deg: number
-}
-
-interface initOption {
-  ctx: CanvasRenderingContext2D
-  ringConfig?: Partial<RingConfig>[]
-  bottomRingConfig?: BottomRingConfig
 }
 
 interface ConvertAngleToCoordinateParam {
