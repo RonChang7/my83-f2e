@@ -20,9 +20,8 @@
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column left">
         <ProductListSection />
-        <div class="pagination">
+        <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
-            v-if="shouldShowPagination"
             :pagination="pagination"
             @to-page="(index) => $emit('to-page', index)"
           />
@@ -183,6 +182,10 @@ export default options
     margin-bottom: 40px;
   }
 
+  &__rowWithTowColumns {
+    margin-bottom: 50px;
+  }
+
   &__row {
     &.faq {
       background: #fff;
@@ -204,6 +207,10 @@ export default options
 
   .pagination {
     margin-top: 40px;
+
+    @include max-media('xl') {
+      margin: 30px 0 20px;
+    }
   }
 
   &__rowWithTowColumns {
@@ -234,7 +241,7 @@ export default options
         }
 
         @include max-media('xl') {
-          margin-top: 30px;
+          margin-top: 0px;
         }
       }
 
