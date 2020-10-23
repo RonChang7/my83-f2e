@@ -29,6 +29,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const user = User.getInstance()
 
           user.updateUserState({
+            id: data.personalize.id,
             role: data.personalize.role,
             roleCode: data.personalize.role_code,
           })

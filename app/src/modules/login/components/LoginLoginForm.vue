@@ -148,6 +148,7 @@ export default {
           password: this.form.password,
           ...this.landingUrl(),
           roleSession: Suspect.getRoleCode(),
+          memberSession: Suspect.getMemberId(),
         })
 
         this.login(token!, expired_time!)
@@ -171,6 +172,7 @@ export default {
           role,
           ...this.landingUrl(),
           roleSession: Suspect.getRoleCode(),
+          memberSession: Suspect.getMemberId(),
         })
 
         this.login(token!, expired_time!)
@@ -195,6 +197,7 @@ export default {
           fbToken,
           ...this.landingUrl(),
           roleSession: Suspect.getRoleCode(),
+          memberSession: Suspect.getMemberId(),
         })
 
         this.login(token!, expired_time!)
