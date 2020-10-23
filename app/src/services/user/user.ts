@@ -5,6 +5,8 @@ import { Suspect } from '@/services/user/suspect'
 export class User {
   private static instance: User
 
+  private id: number
+
   private role: UserRole
 
   private roleCode: UserRoleCode
@@ -30,6 +32,7 @@ export class User {
 
   public get userState(): UserState {
     return {
+      id: this.id,
       role: this.role,
       roleCode: this.roleCode,
     }
@@ -50,7 +53,7 @@ export class User {
   public updateUserState(userState: UserState) {
     if (this.isLogin()) {
       this.setUser(userState)
-      Suspect.setRoleCode()
+      Suspect.init()
     } else {
       this.resetUser()
     }
@@ -62,11 +65,13 @@ export class User {
   }
 
   private resetUser() {
+    this.id = 0
     this.role = 'guest'
     this.roleCode = -1
   }
 
-  private setUser({ role, roleCode }: UserState) {
+  private setUser({ id, role, roleCode }: UserState) {
+    this.id = id
     this.role = role
     this.roleCode = roleCode
   }
@@ -87,6 +92,7 @@ export interface LandingUrlInfo {
   firstUrl: string
 }
 export interface UserState {
+  id: number
   role: UserRole
   roleCode: UserRoleCode
 }

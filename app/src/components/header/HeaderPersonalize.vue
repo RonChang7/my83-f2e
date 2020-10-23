@@ -135,7 +135,7 @@ export default {
         await logout()
       } catch (err) {
       } finally {
-        Suspect.setRoleCode()
+        Suspect.init()
         auth.logout()
         this.reloadHandler()
       }

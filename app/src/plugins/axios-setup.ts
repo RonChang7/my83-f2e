@@ -121,13 +121,13 @@ export default (({ app, req }) => {
                   refreshTokenStatus === 401 &&
                   refreshTokenError === 'invalid_token'
                 ) {
-                  Suspect.setRoleCode()
+                  Suspect.init()
                   auth.logout()
                 }
                 return Promise.reject(err)
               })
           } else if (status === 401 && error === 'invalid_token') {
-            Suspect.setRoleCode()
+            Suspect.init()
             auth.logout()
             return Promise.reject(err)
           } else {

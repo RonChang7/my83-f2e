@@ -63,6 +63,7 @@ export default {
           role: 'client',
           ...user.landingUrl,
           roleSession: Suspect.getRoleCode(),
+          memberSession: Suspect.getMemberId(),
         })
         this.login(token!, expired_time!)
 
