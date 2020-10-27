@@ -1,7 +1,6 @@
 <template>
-  <div class="RelatedQuestionSection">
+  <div v-if="relatedQuestions.length" class="RelatedQuestionSection">
     <RelatedSection
-      v-if="relatedQuestions.length"
       :related-data="relatedQuestions"
       :max-post="maxPost"
       :title="title"
