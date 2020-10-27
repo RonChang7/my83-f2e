@@ -89,7 +89,6 @@ export interface HotProductList {
 
 export interface HotProduct {
   title: string
-  focus_count: number
   link: Link
 }
 
