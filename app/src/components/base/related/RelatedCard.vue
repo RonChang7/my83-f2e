@@ -4,7 +4,7 @@
     <div class="RelatedCard__content">
       <div class="RelatedCard__title">{{ title }}</div>
       <div class="RelatedCard__meta">
-        <span class="RelatedCard__count">
+        <span v-if="viewCount !== null" class="RelatedCard__count">
           <BaseView />
           {{ numberTransform(viewCount) }}
         </span>
@@ -40,11 +40,11 @@ export default {
       required: true,
     },
     viewCount: {
-      type: Number,
-      required: true,
+      type: [Number, null],
+      default: null,
     },
     answerCount: {
-      type: Number,
+      type: [Number, null],
       default: null,
     },
     last: {
