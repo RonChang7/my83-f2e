@@ -33,6 +33,6 @@ export interface Props {
   font-weight: 500;
   line-height: 24px;
 
-  @include hover('secondary');
+  @include hover('_secondary');
 }
 </style>

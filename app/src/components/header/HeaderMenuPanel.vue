@@ -185,7 +185,7 @@ export interface Props {
   }
 
   a {
-    @include hover('gray-secondary-lighter');
+    @include hover('_gray-secondary-lighter');
 
     @include max-media('xl') {
       &:active {

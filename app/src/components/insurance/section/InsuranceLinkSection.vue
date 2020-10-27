@@ -155,7 +155,7 @@ export default options
     padding: 16px 0 16px 24px;
     font-size: 1.125rem;
 
-    @include hover('gray-primary');
+    @include hover('_gray-primary');
 
     &:not(:last-child) {
       border-bottom: 1px solid $gray-quaternary;
@@ -172,7 +172,7 @@ export default options
       align-items: center;
       justify-content: flex-end;
 
-      @include hover('gray-secondary-darker', $has-svg: true);
+      @include hover('_gray-secondary-darker', $has-svg: true);
     }
   }
 

@@ -117,7 +117,7 @@ export default options
     justify-content: space-between;
     padding: 16px 0;
 
-    @include hover('gray-primary');
+    @include hover('_gray-primary');
 
     &:not(:last-child) {
       border-bottom: 1px solid $gray-quaternary;

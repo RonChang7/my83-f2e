@@ -109,7 +109,7 @@ export default options
     > a {
       margin-right: 4px;
 
-      @include hover('gray-secondary-darker', $has-svg: true);
+      @include hover('_gray-secondary-darker', $has-svg: true);
     }
   }
 }

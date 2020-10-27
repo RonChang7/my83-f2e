@@ -277,7 +277,7 @@ footer {
         color: $text-default-color;
 
         a {
-          @include hover('gray-secondary-darker');
+          @include hover('_gray-secondary-darker');
         }
 
         .content {

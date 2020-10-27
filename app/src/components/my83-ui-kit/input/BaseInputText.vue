@@ -155,7 +155,7 @@ export interface Props {
     height: 40px;
     cursor: pointer;
 
-    @include hover('gray-secondary-darker', $has-svg: true);
+    @include hover('_gray-secondary-darker', $has-svg: true);
 
     &.displayPassword {
       &::v-deep svg > path {

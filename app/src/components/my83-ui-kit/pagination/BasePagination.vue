@@ -185,7 +185,7 @@ export default options
   }
 
   &__page.link {
-    @include hover('gray-secondary-darker');
+    @include hover('_gray-secondary-darker');
   }
 
   &__page {

@@ -18,7 +18,7 @@ body {
 a {
   text-decoration: none;
 
-  @include hover('primary') {
+  @include hover('_primary') {
     cursor: pointer;
   }
 }
