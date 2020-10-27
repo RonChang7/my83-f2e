@@ -148,7 +148,7 @@ export default options
       font-weight: 500;
       margin-right: 10px;
 
-      @include hover('secondary', $has-svg: true);
+      @include hover('_secondary', $has-svg: true);
     }
   }
 

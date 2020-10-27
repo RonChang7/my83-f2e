@@ -157,7 +157,7 @@ export interface Props {
 
   &__notVerify,
   &__vipCountdown {
-    @include hover('primary');
+    @include hover('_primary');
   }
 
   &__vipCountdown {
@@ -180,7 +180,7 @@ export interface Props {
       margin: 0 4px;
     }
 
-    @include hover('gray-primary');
+    @include hover('_gray-primary');
   }
 
   .digital {

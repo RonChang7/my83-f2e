@@ -98,14 +98,14 @@ export interface Props {
       font-size: 0.875rem;
       cursor: pointer;
 
-      @include hover('gray-secondary-darker', $has-svg: true);
+      @include hover('_gray-secondary-darker', $has-svg: true);
     }
   }
 
   &__close {
     text-align: right;
 
-    @include hover('gray-secondary-darker', $has-svg: true);
+    @include hover('_gray-secondary-darker', $has-svg: true);
   }
 }
 </style>
