@@ -44,7 +44,7 @@ export interface Level {
 export interface DefaultPremiumConfig {
   age: number
   gender: Gender
-  id: number
+  plan_id: number
   job_level?: number
   amount?: number
   fee: number
@@ -91,4 +91,13 @@ export interface HotProduct {
   title: string
   focus_count: number
   link: Link
+}
+
+export interface PremiumQuery {
+  productId: string
+  age: number
+  gender: Gender
+  planId: number
+  jobLevel?: number
+  amount?: number
 }
