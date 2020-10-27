@@ -1,12 +1,12 @@
 <template>
   <ProductPromotion
-    v-slot="{ formattedFee, requestPath, openPanel }"
+    v-slot="{ formattedFee, openPanel }"
     @open-panel="$emit('open-panel', true)"
   >
     <div class="ProductPromotionSection">
       <div class="ProductPromotionSection__fee">{{ formattedFee(fee) }}</div>
       <div class="ProductPromotionSection__action">
-        <BaseButton size="xl" type="quaternary" :to="requestPath(productName)">
+        <BaseButton size="xl" type="quaternary" :to="consultPath.path">
           免費找業務員
         </BaseButton>
         <div class="ProductPromotionSection__faq" @click="openPanel">
@@ -34,10 +34,9 @@ export default class ProductPromotionSection extends Vue {
     return (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
   }
 
-  get productName() {
-    const product = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product
-    return `${product?.company}${product?.name}`
+  get consultPath() {
+    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
+      .product?.consult_path
   }
 }
 </script>
