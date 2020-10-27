@@ -38,8 +38,11 @@ export default class ProductDescription extends Vue {
       left: 8px;
       width: 8px;
       margin-left: -8px;
-      // @TODO: update color to variable config
-      background: linear-gradient(to top, #f78b56, #ffa77c);
+      background: linear-gradient(
+        to bottom,
+        lighten($primary-color, 20),
+        lighten($primary-color, 10)
+      );
     }
   }
 }
