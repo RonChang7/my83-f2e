@@ -61,9 +61,8 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
-import BaseSelect, {
-  Option,
-} from '@/components/my83-ui-kit/input/BaseSelect.vue'
+import BaseSelect from '@/components/my83-ui-kit/input/BaseSelect.vue'
+import { Option } from '@/components/my83-ui-kit/input/type'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseButton, {
   Props as BaseButtonProps,
