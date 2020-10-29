@@ -10,8 +10,8 @@
     </div>
     <div v-if="coverageRate" class="ProductCoverageCard__coverage">
       <Ring
-        :length="70"
-        :line-width="5"
+        :length="isMobile ? 60 : 70"
+        :line-width="isMobile ? 4 : 5"
         :percentage="coverageRate"
         :wording="`${coverageRate}%`"
       />
@@ -44,16 +44,17 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Coverage } from '@/api/insurance/product.type'
 import Ring from '@/components/base/progress/Ring.vue'
+import DeviceMixin from '@/mixins/device/device-mixins'
 
 @Component({
   components: {
     Ring,
   },
 })
-export default class ProductCoverageCard extends Vue {
+export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   @Prop({ required: true })
   coverage!: Coverage
 
@@ -82,11 +83,18 @@ export default class ProductCoverageCard extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ProductCoverageCard {
   @include card-primary;
 
   padding: 20px 30px;
+
+  @include max-media('xl') {
+    @include card-secondary;
+
+    padding: 16px 20px;
+  }
 
   &__header {
     display: flex;
@@ -115,6 +123,11 @@ export default class ProductCoverageCard extends Vue {
     color: $secondary-color;
     font-size: 1.125rem;
     margin-bottom: 16px;
+
+    @include max-media('xl') {
+      font-size: 1rem;
+      padding-top: 8px;
+    }
   }
 
   &__coverageWording {
