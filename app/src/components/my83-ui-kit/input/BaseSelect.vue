@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { Option } from './type'
 import BaseMobileSelect from './BaseSelect/BaseMobileSelect.vue'
 import BaseDesktopSelect from './BaseSelect/BaseDesktopSelect.vue'
 import DeviceMixin, {
@@ -88,10 +89,5 @@ export interface Props {
   placeholder: string
   state: string
   disabled: boolean
-}
-
-export interface Option {
-  text: string
-  value: string | number
 }
 </script>
