@@ -2,25 +2,27 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { Vue as VuePropertyDecorator, Component } from 'vue-property-decorator'
 import { GlobalVuexState } from '@/store/global-state'
 import { UserAgent } from '@/store/global/index'
 
-export default {
-  computed: {
-    isDesktop() {
-      const { userAgent } = this.$store.state.global
-      return userAgent ? userAgent.isDesktop : null
-    },
-    isMobile() {
-      const { userAgent } = this.$store.state.global
-      return userAgent ? userAgent.isMobile : null
-    },
-    isTablet() {
-      const { userAgent } = this.$store.state.global
-      return userAgent ? userAgent.isTablet : null
-    },
-  },
-} as ComponentOption
+@Component
+export default class DeviceMixin extends VuePropertyDecorator {
+  get isDesktop() {
+    const { userAgent } = (this.$store.state as GlobalVuexState).global
+    return userAgent ? userAgent.isDesktop : null
+  }
+
+  get isMobile() {
+    const { userAgent } = (this.$store.state as GlobalVuexState).global
+    return userAgent ? userAgent.isMobile : null
+  }
+
+  get isTablet() {
+    const { userAgent } = (this.$store.state as GlobalVuexState).global
+    return userAgent ? userAgent.isTablet : null
+  }
+}
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,
