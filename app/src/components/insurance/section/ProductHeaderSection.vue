@@ -18,7 +18,7 @@
           v-for="(file, index) in files"
           :key="index"
           :to="file.link.url"
-          size="m"
+          :size="isMobile ? 's' : 'm'"
           type="tertiary"
           target="_blank"
         >
@@ -30,10 +30,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import DeviceMixin from '@/mixins/device/device-mixins'
 
 @Component({
   components: {
@@ -41,7 +42,7 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
     BaseButton,
   },
 })
-export default class ProductHeaderSection extends Vue {
+export default class ProductHeaderSection extends Mixins(DeviceMixin) {
   get breadcrumbs() {
     return (this.$store.state as InsuranceProductVuexState).pageMeta.pageMeta
       ?.breadcrumbs
@@ -72,6 +73,7 @@ export default class ProductHeaderSection extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ProductHeaderSection {
   display: flex;
@@ -118,6 +120,30 @@ export default class ProductHeaderSection extends Vue {
 
     > [type='button']:not(:last-child) {
       margin-right: 12px;
+    }
+  }
+
+  @include max-media('xl') {
+    padding: 0 20px;
+    flex-direction: column;
+
+    &__company {
+      font-size: 1.125rem;
+      margin-top: 4px;
+    }
+
+    &__name {
+      font-size: 1.375rem;
+      margin-bottom: 8px;
+    }
+
+    &__features {
+      font-size: 0.75rem;
+    }
+
+    &__files {
+      text-align: left;
+      margin-top: 14px;
     }
   }
 }

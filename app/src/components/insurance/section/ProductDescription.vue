@@ -20,6 +20,7 @@ export default class ProductDescription extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ProductDescription {
   @include card-primary;
@@ -28,8 +29,16 @@ export default class ProductDescription extends Vue {
   font-size: 0.875rem;
   color: $gray-primary;
 
+  @include max-media('xl') {
+    padding: 12px 16px 12px 20px;
+  }
+
   &__wrapper {
     display: flex;
+
+    @include max-media('xl') {
+      padding: 0 20px;
+    }
 
     &:before {
       content: '';
@@ -43,6 +52,12 @@ export default class ProductDescription extends Vue {
         lighten($primary-color, 20),
         lighten($primary-color, 10)
       );
+
+      @include max-media('xl') {
+        left: 4px;
+        width: 4px;
+        margin-left: -4px;
+      }
     }
   }
 }

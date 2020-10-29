@@ -83,13 +83,22 @@ export default class ProductCoverageSection extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ProductCoverageSection {
+  @include max-media('xl') {
+    width: 100vw;
+  }
+
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
+
+    @include max-media('xl') {
+      padding: 0 20px;
+    }
   }
 
   &__title {
@@ -113,6 +122,10 @@ export default class ProductCoverageSection extends Vue {
 
   &__row {
     display: flex;
+
+    @include max-media('xl') {
+      flex-direction: column;
+    }
   }
 
   &__column {
@@ -133,6 +146,13 @@ export default class ProductCoverageSection extends Vue {
     width: 100%;
     padding: 20px 30px;
     color: $gray-primary;
+
+    @include max-media('xl') {
+      @include card-secondary;
+
+      width: 100vw;
+      padding: 16px 20px;
+    }
 
     h3 {
       margin: 0;

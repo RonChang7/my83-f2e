@@ -38,14 +38,23 @@ export default class ProductRuleSection extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .ProductRuleSection {
+  @include max-media('xl') {
+    width: 100vw;
+  }
+
   &__header {
     margin: 0;
     margin-bottom: 16px;
     color: $gray-primary;
     font-size: 1.375rem;
     font-weight: 500;
+
+    @include max-media('xl') {
+      margin: 0 0 10px 20px;
+    }
   }
 
   &__content {
@@ -53,6 +62,11 @@ export default class ProductRuleSection extends Vue {
 
     padding: 20px 30px;
     color: $gray-primary;
+
+    @include max-media('xl') {
+      @include card-secondary;
+      padding: 16px 20px;
+    }
 
     ul,
     ol {

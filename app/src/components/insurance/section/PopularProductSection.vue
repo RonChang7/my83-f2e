@@ -50,6 +50,7 @@ export default class PopularProductSection extends Vue {
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
+@import '@/sass/rwd.scss';
 
 .PopularProductSection {
   &__footer {
@@ -59,6 +60,11 @@ export default class PopularProductSection extends Vue {
     font-size: 0.875rem;
     margin: 0 0px 20px;
     margin-top: -8px;
+
+    @include max-media('xl') {
+      margin: 0;
+      margin-right: 20px;
+    }
 
     > a {
       @include hover('_gray-secondary-darker', $has-svg: true);
