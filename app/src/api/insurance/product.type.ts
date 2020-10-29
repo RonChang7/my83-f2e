@@ -15,7 +15,7 @@ export interface Product {
   whole_life_type: WholeLifeType
   insurance_type: string
   files: LinkButton[]
-  consult_path: Link
+  consult_link: Link
   premium_config: PremiumConfig
   default_premium_config: DefaultPremiumConfig
   coverages: Coverage[]
@@ -56,7 +56,7 @@ export interface PremiumConfig {
 }
 
 export interface Plan {
-  id: number
+  plan_id: number
   name: string
   age: Option<IntervalType>
   amount?: Option<IntervalType>
