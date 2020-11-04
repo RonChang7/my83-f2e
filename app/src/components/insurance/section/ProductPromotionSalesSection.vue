@@ -47,8 +47,7 @@ export default class ProductPromotionSalesSection extends Mixins(DeviceMixin) {
   mounted() {
     if (!this.isDesktop) {
       this.$nextTick(() => {
-        ;(this.$refs
-          .section as HTMLElement).style.backgroundPositionY = `${this.calcMobileBackgroundPositionY()}px`
+        this.$refs.section.style.backgroundPositionY = `${this.calcMobileBackgroundPositionY()}px`
       })
     }
   }
