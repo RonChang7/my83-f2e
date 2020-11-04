@@ -6,6 +6,16 @@ export interface ProductResponse {
   json_ld?: any[]
 }
 
+export interface FetchProductFeePayload extends PremiumQuery {
+  productId: string
+}
+
+export interface ProductFeeResponse {
+  data: {
+    fee: number
+  }
+}
+
 export interface Product {
   name: string
   description: string
@@ -47,6 +57,7 @@ export interface DefaultPremiumConfig {
   plan_id: number
   job_level?: number
   amount?: number
+  amount_unit?: number
   fee: number
 }
 
@@ -66,8 +77,10 @@ export interface Plan {
 
 export interface Option<T> {
   type: T
-  value: OptionValue<T>
+  values: OptionValue<T>
 }
+
+export type OptionValueType = IntervalType | OptionType
 
 export type IntervalType = 'interval'
 
@@ -93,10 +106,10 @@ export interface HotProduct {
 }
 
 export interface PremiumQuery {
-  productId: string
   age: number
   gender: Gender
-  planId: number
+  plan: number
   jobLevel?: number
   amount?: number
+  amountUnit?: number
 }

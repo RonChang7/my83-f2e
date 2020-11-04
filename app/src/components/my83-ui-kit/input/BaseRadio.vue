@@ -1,5 +1,5 @@
 <template>
-  <label class="BaseRadio">
+  <label v-if="type === 'radio'" class="BaseRadio">
     <input
       :value="value"
       :checked="value === currentSelectedValue"
@@ -10,14 +10,29 @@
     <span class="icon"></span>
     <span class="label">{{ label }}</span>
   </label>
+  <BaseButton
+    v-else-if="type === 'button'"
+    type="secondary"
+    size="l-a"
+    :is-full-width="true"
+    :class="{ active: value === currentSelectedValue }"
+    :disabled="disabled"
+    @click.native="change(value)"
+  >
+    {{ label }}
+  </BaseButton>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
 export default {
+  components: {
+    BaseButton,
+  },
   props: {
     currentSelectedValue: {
       type: [String, Number],
@@ -35,12 +50,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      default: 'radio',
+    },
   },
   methods: {
     change(e) {
-      const el = e.target as HTMLInputElement
-      this.$emit('update:currentSelectedValue', el.value)
-      this.$emit('update', el.value)
+      const value =
+        this.type === 'radio' ? (e.target as HTMLInputElement).value : e
+      this.$emit('update:currentSelectedValue', value)
+      this.$emit('update', value)
     },
   },
 } as ComponentOption
@@ -76,6 +96,7 @@ export interface Props {
   value: string | number
   label: string
   disabled: Boolean
+  type: 'radio' | 'button'
 }
 </script>
 
