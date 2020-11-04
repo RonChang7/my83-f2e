@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Module } from 'vuex'
 import * as types from './product.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
@@ -13,9 +14,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
         fee: 0,
         product: null,
         premiumQuery: null,
+        fieldValidated: {},
       }
     },
-    getters: {},
+    getters: {
+      isFieldValidated: (state) =>
+        _.values(state.fieldValidated).every((value) => value),
+    },
     actions: {
       [types.FETCH_PRODUCT]({ commit }, id: string) {
         return new Promise((resolve, reject) => {
@@ -25,12 +30,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
               commit(types.UPDATE_PRODUCT, data)
               commit(types.UPDATE_PRODUCT_ID, id)
               commit(types.UPDATE_PREMIUM_QUERY, {
-                productId: id,
                 age: data.default_premium_config.age,
                 gender: data.default_premium_config.gender,
-                planId: data.default_premium_config.plan_id,
+                plan: data.default_premium_config.plan_id,
                 jobLevel: data.default_premium_config.job_level,
                 amount: data.default_premium_config.amount,
+                amountUnit: data.default_premium_config.amount_unit,
               })
               commit(types.UPDATE_FEE, data.default_premium_config.fee)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
@@ -42,6 +47,40 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
+      [types.FETCH_PRODUCT_FEE]({ commit, state }) {
+        return new Promise((resolve) => {
+          api
+            .fetchProductFee({
+              productId: state.id,
+              ...(state.premiumQuery as PremiumQuery),
+            })
+            .then(({ data }) => {
+              commit(types.UPDATE_FEE, data.fee)
+              resolve()
+            })
+            .catch(() => {
+              commit(types.UPDATE_FEE, -1)
+
+              resolve()
+            })
+        })
+      },
+      [types.UPDATE_PREMIUM_QUERY_KEY](
+        { commit, state },
+        payload: UpdatePremiumQueryPayload
+      ) {
+        if (state.premiumQuery?.[payload.id] !== payload.value) {
+          commit(types.UPDATE_PREMIUM_QUERY_KEY, {
+            [payload.id]: payload.value,
+          })
+        }
+      },
+      [types.UPDATE_PREMIUM_QUERY_VALIDATE](
+        { commit },
+        payload: UpdatePremiumQueryValidatePayload
+      ) {
+        commit(types.UPDATE_PREMIUM_QUERY_VALIDATE, payload)
+      },
     },
     mutations: {
       [types.UPDATE_PRODUCT](state, data: Product) {
@@ -51,7 +90,30 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.id = id
       },
       [types.UPDATE_PREMIUM_QUERY](state, query: PremiumQuery) {
-        state.premiumQuery = query
+        state.premiumQuery = _.omitBy<PremiumQuery>(
+          query,
+          _.isUndefined
+        ) as PremiumQuery
+      },
+      [types.UPDATE_PREMIUM_QUERY_KEY](
+        state,
+        payload: {
+          [K in keyof PremiumQuery]: PremiumQuery[K]
+        }
+      ) {
+        state.premiumQuery = {
+          ...state.premiumQuery,
+          ...payload,
+        }
+      },
+      [types.UPDATE_PREMIUM_QUERY_VALIDATE](
+        state,
+        payload: Partial<Record<keyof PremiumQuery, boolean>>
+      ) {
+        state.fieldValidated = {
+          ...state.fieldValidated,
+          ...payload,
+        }
       },
       [types.UPDATE_FEE](state, fee: number) {
         state.fee = fee
@@ -65,4 +127,15 @@ export interface State {
   fee: number
   product: Product | null
   premiumQuery: PremiumQuery | null
+  fieldValidated: Partial<Record<keyof PremiumQuery, boolean>>
+}
+
+export interface UpdatePremiumQueryPayload {
+  id: string
+  value: string | number
+}
+
+export interface UpdatePremiumQueryValidatePayload {
+  id: string
+  value: boolean
 }

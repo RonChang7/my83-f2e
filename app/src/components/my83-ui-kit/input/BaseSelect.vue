@@ -36,6 +36,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     input(e) {
@@ -89,5 +93,6 @@ export interface Props {
   placeholder: string
   state: string
   disabled: boolean
+  hideIcon: boolean
 }
 </script>

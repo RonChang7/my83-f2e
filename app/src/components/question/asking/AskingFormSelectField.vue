@@ -72,6 +72,10 @@ const options: ComponentOption = {
       type: Boolean,
       default: false,
     },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
     input(value) {

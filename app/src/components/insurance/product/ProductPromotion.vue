@@ -11,7 +11,7 @@ export default class ProductPromotion extends Vue {
   }
 
   formattedFee(fee: number) {
-    return `$ ${fee} /年`
+    return fee < 0 ? '$ - /年' : `$ ${fee} /年`
   }
 
   get slot() {

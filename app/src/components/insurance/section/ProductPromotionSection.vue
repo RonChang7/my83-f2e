@@ -6,7 +6,7 @@
     <div class="ProductPromotionSection">
       <div class="ProductPromotionSection__fee">{{ formattedFee(fee) }}</div>
       <div class="ProductPromotionSection__action">
-        <BaseButton size="xl" type="quaternary" :to="consultPath.path">
+        <BaseButton size="xl" type="quaternary" :to="consultLink.path">
           免費找業務員
         </BaseButton>
         <div class="ProductPromotionSection__faq" @click="openPanel">
@@ -30,13 +30,19 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
   },
 })
 export default class ProductPromotionSection extends Vue {
-  get fee() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
+  get isFieldValidated(): boolean {
+    return this.$store.getters['insuranceProduct/isFieldValidated']
   }
 
-  get consultPath() {
+  get fee() {
+    return this.isFieldValidated
+      ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
+      : -1
+  }
+
+  get consultLink() {
     return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.consult_path
+      .product?.consult_link
   }
 }
 </script>
