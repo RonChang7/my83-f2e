@@ -3,6 +3,7 @@
     <div class="ProductCoverageSection__header">
       <h2 class="ProductCoverageSection__title">理賠項目</h2>
       <div
+        v-if="shouldShowCoverageDetail"
         class="ProductCoverageSection__action"
         @click="isPanelActive = !isPanelActive"
       >
@@ -65,6 +66,13 @@ export default class ProductCoverageSection extends Vue {
       (this.$store.state as InsuranceProductVuexState).insuranceProduct.product
         ?.claims || []
     )
+  }
+
+  get shouldShowCoverageDetail() {
+    const coverages = (this.$store.state as InsuranceProductVuexState)
+      .insuranceProduct.product?.coverages
+
+    return !!coverages?.find((coverage) => coverage.levels.length > 0)
   }
 
   filteredCoverages(filterIndex: number) {
