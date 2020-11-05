@@ -231,6 +231,7 @@ export interface Props extends BaseSelectProps {}
     padding: 12px 0;
     height: auto;
     overflow: auto;
+    z-index: 1;
 
     &:focus {
       outline: 0;
