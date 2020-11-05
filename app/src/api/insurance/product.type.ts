@@ -36,7 +36,7 @@ export interface Product {
 
 type ContractType = '主約' | '附約'
 
-type WholeLifeType = '終身險' | '定期險' | '一年期險'
+type WholeLifeType = '終身險' | '定期險'
 
 export interface Coverage {
   name: string

@@ -16,16 +16,36 @@
         :card-height="feeCardHeight"
         :fee="fee"
         :consult-link="consultLink"
-        @open-panel="$emit('open-panel', true)"
+        @open-modal="$emit('open-modal')"
       />
     </div>
     <div class="ProductQuerySection__footer">
       <div class="ProductQuerySection__column">
         商品類型
+        <BaseTooltip :offset="8" placement="bottom-start">
+          <template v-slot:button>
+            <div class="ProductQuerySection__column__icon">
+              <BaseInfo />
+            </div>
+          </template>
+          <template v-slot:content>
+            <ProductQueryTooltipCard :info="contractTypeInfo" />
+          </template>
+        </BaseTooltip>
         <span>{{ contractType }}</span>
       </div>
       <div class="ProductQuerySection__column">
         保障類型
+        <BaseTooltip :offset="8" placement="bottom-start">
+          <template v-slot:button>
+            <div class="ProductQuerySection__column__icon">
+              <BaseInfo />
+            </div>
+          </template>
+          <template v-slot:content>
+            <ProductQueryTooltipCard :info="wholeLifeTypeInfo" />
+          </template>
+        </BaseTooltip>
         <span>{{ wholeLifeType }}</span>
       </div>
     </div>
@@ -37,6 +57,7 @@ import _ from 'lodash'
 import { Component } from 'vue-property-decorator'
 import ProductQueryField from '../product/ProductQueryField.vue'
 import ProductFee from '../product/ProductFee.vue'
+import ProductQueryTooltipCard from '../product/ProductQueryTooltipCard.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { UpdatePremiumQueryPayload } from '@/store/insurance/product'
 import {
@@ -52,11 +73,16 @@ import {
 import { ZHTWUnitMap } from '@/utils/number-converter'
 import { camelToSnakeCase } from '@/utils/text-parser'
 import DeviceMixin from '@/mixins/device/device-mixins'
+import BaseInfo from '@/components/base/icon/18/BaseInfo.svg'
+import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
 @Component({
   components: {
     ProductQueryField,
     ProductFee,
+    BaseInfo,
+    BaseTooltip,
+    ProductQueryTooltipCard,
   },
 })
 export default class ProductQuerySection extends DeviceMixin {
@@ -75,6 +101,29 @@ export default class ProductQuerySection extends DeviceMixin {
   )
 
   feeCardHeight: number = 0
+
+  contractTypeInfo = [
+    {
+      title: '主約',
+      content: '可以單獨購買的保險契約。',
+    },
+    {
+      title: '附約',
+      content: '不能單獨購買、需搭配著主約一起購買的保險契約。',
+    },
+  ]
+
+  wholeLifeTypeInfo = [
+    {
+      title: '終身險',
+      content: '保障終身。通常繳費 20 年後即可不須再繳保費。',
+    },
+    {
+      title: '定期險',
+      content:
+        '保障一定年期，如：10 年定期壽險，即保障 10 年，到期後契約終止。',
+    },
+  ]
 
   get contractType() {
     return (this.$store.state as InsuranceProductVuexState).insuranceProduct
@@ -235,6 +284,14 @@ export default class ProductQuerySection extends DeviceMixin {
 
   &__column {
     flex: 0 0 50%;
+    display: flex;
+    align-items: center;
+
+    &__icon {
+      @include hover('_gray-secondary-darker', $has-svg: true);
+
+      margin: -2px 8px 0 2px;
+    }
 
     @include max-media('xl') {
       flex: 1 1 auto;
