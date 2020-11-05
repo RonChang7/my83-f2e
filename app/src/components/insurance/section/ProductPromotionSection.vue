@@ -1,7 +1,7 @@
 <template>
   <ProductPromotion
-    v-slot="{ formattedFee, openPanel }"
-    @open-panel="$emit('open-panel', true)"
+    v-slot="{ formattedFee, openModal }"
+    @open-modal="$emit('open-modal')"
   >
     <div class="ProductPromotionSection">
       <div class="ProductPromotionSection__fee">{{ formattedFee(fee) }}</div>
@@ -9,7 +9,7 @@
         <BaseButton size="xl" type="quaternary" :to="consultLink.path">
           免費找業務員
         </BaseButton>
-        <div class="ProductPromotionSection__faq" @click="openPanel">
+        <div class="ProductPromotionSection__faq" @click="openModal">
           如何在 MY83 購買保險？
         </div>
       </div>

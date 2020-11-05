@@ -6,7 +6,7 @@ import { renderlessComponentWrapper } from '@/utils/render-helper'
 @Component
 export default class ProductPromotion extends Vue {
   @Emit()
-  openPanel() {
+  openModal() {
     return true
   }
 
@@ -17,7 +17,7 @@ export default class ProductPromotion extends Vue {
   get slot() {
     return {
       formattedFee: this.formattedFee,
-      openPanel: this.openPanel,
+      openModal: this.openModal,
     }
   }
 
