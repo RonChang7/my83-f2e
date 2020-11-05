@@ -1,5 +1,6 @@
 import { Module } from 'vuex'
 import * as types from './global.type'
+import { LinkButton } from '@/api/type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -15,6 +16,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         globalDialogVisible: false,
         globalDialogContent: null,
         userAgent: null,
+        errorPageCTA: null,
       }
     },
     getters: {},
@@ -53,6 +55,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_GLOBAL_DIALOG]({ commit }, data: GlobalDialogContent) {
         commit(types.UPDATE_GLOBAL_DIALOG_CONTENT, data)
       },
+      [types.ADD_CUSTOM_ERROR_PAGE_CTA]({ commit }, payload: LinkButton) {
+        commit(types.UPDATE_ERROR_PAGE_CTA, payload)
+      },
+      [types.REMOVE_CUSTOM_ERROR_PAGE_CTA]({ commit }) {
+        commit(types.UPDATE_ERROR_PAGE_CTA, null)
+      },
     },
     mutations: {
       [types.UPDATE_LOGIN_PANEL_STATUS](
@@ -83,6 +91,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_USER_AGENT](state, data: UserAgent) {
         state.userAgent = data
       },
+      [types.UPDATE_ERROR_PAGE_CTA](state, payload: LinkButton | null) {
+        state.errorPageCTA = payload
+      },
     },
   }
 }
@@ -94,6 +105,7 @@ export interface State {
   globalDialogVisible: boolean
   globalDialogContent: GlobalDialogContent | null
   userAgent: UserAgent | null
+  errorPageCTA: LinkButton | null
 }
 
 export interface LoginPanelState {
