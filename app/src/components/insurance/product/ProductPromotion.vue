@@ -2,6 +2,7 @@
 import { Vue, Component, Emit } from 'vue-property-decorator'
 import { CreateElement } from 'vue/types/vue'
 import { renderlessComponentWrapper } from '@/utils/render-helper'
+import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 @Component
 export default class ProductPromotion extends Vue {
@@ -11,7 +12,8 @@ export default class ProductPromotion extends Vue {
   }
 
   formattedFee(fee: number) {
-    return fee < 0 ? '$ - /年' : `$ ${fee} /年`
+    const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
+    return `${feeString}元 /年`
   }
 
   get slot() {

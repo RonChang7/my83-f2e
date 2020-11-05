@@ -40,7 +40,7 @@
               <span v-if="product.fee_prefix" class="ProductCard__fee__prefix">
                 {{ product.fee_prefix }}
               </span>
-              {{ product.fee }}
+              {{ formattedFee(product.fee) }}
             </div>
           </div>
           <div class="ProductCard__subSection">
@@ -71,6 +71,7 @@ import CoverageBadge from '../coverages/CoverageBadge.vue'
 import { InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 const options: ComponentOption = {
   components: {
@@ -92,6 +93,12 @@ const options: ComponentOption = {
       return this.product.view_count
         ? `有 ${this.product.view_count} 人有興趣`
         : ''
+    },
+  },
+  methods: {
+    formattedFee(fee) {
+      const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
+      return `${feeString}元 /年`
     },
   },
 }
@@ -116,7 +123,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  formattedFee(fee: number): string
+}
 
 export interface Computed {
   features: string

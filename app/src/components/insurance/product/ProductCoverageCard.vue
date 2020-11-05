@@ -5,7 +5,7 @@
         {{ coverage.name }}
       </h3>
       <div class="ProductCoverageCard__amount">
-        {{ numberConverter(coverage.amount) }} 元
+        {{ amountConvert(coverage.amount) }} 元
       </div>
     </div>
     <div v-if="coverageRate" class="ProductCoverageCard__coverage">
@@ -36,7 +36,7 @@
       >
         <div class="ProductCoverageCard__level__name">{{ level.name }}</div>
         <div class="ProductCoverageCard__level__amount">
-          {{ level.amount }} 元
+          {{ amountConvert(level.amount) }} 元
         </div>
       </div>
     </div>
@@ -48,6 +48,7 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Coverage } from '@/api/insurance/product.type'
 import Ring from '@/components/base/progress/Ring.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
+import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 @Component({
   components: {
@@ -61,9 +62,8 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   @Prop({ default: false })
   isActive!: boolean
 
-  numberConverter(number: number) {
-    const cutPoint = 100000
-    return number >= cutPoint ? `${number / 10000}萬` : `${number}`
+  amountConvert(amount: number) {
+    return delimitIntegerWithSymbol(amount)
   }
 
   get coverageRate() {
@@ -73,9 +73,11 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   }
 
   get idealCoverageWording() {
-    return `MY83 建議理想保額 ${this.numberConverter(
-      this.coverage.ideal_amount
-    )} 元`
+    const cutPoint = 100000
+    const numberConverter = (number: number) =>
+      number >= cutPoint ? `${number / 10000}萬` : `${number}`
+
+    return `MY83 建議理想保額 ${numberConverter(this.coverage.ideal_amount)} 元`
   }
 }
 </script>
