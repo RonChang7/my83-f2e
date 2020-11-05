@@ -94,6 +94,7 @@ const config: NuxtConfig = {
     ],
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
+    'nuxt-svg-loader',
   ],
   /*
    ** Nuxt.js modules
