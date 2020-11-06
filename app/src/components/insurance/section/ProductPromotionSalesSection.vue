@@ -41,7 +41,7 @@ export default class ProductPromotionSalesSection extends Mixins(DeviceMixin) {
     const maxWidth = 420
     const elWidth = this.$refs.section.offsetWidth
 
-    return Math.round((maxWidth - elWidth) / 2.875) - 28
+    return Math.round((maxWidth - elWidth) / 2.875) - 30
   }
 
   mounted() {
