@@ -14,7 +14,10 @@
 
     <div class="InsuranceProduct__row thin">
       <div class="column left">
-        <ProductQuerySection @open-modal="openInfoModal" />
+        <ProductQuerySection
+          ref="productQuerySection"
+          @open-modal="openInfoModal"
+        />
       </div>
     </div>
 
@@ -22,13 +25,22 @@
       <div class="column left">
         <ProductCoverageSection />
         <ProductRuleSection />
-        <ProductPromotionSection v-if="isDesktop" @open-modal="openInfoModal" />
+        <ProductPromotionSection
+          v-if="shouldShowProductPromotionSection"
+          @open-modal="openInfoModal"
+        />
       </div>
       <div class="column right">
         <ProductPromotionSalesSection />
         <PopularProductSection />
       </div>
     </div>
+
+    <BaseScrollToTopButton
+      v-if="isMobile && shouldShowScrollToTop"
+      class="scrollToTop"
+      @click="scrollToTop"
+    />
   </div>
 </template>
 
@@ -43,7 +55,9 @@ import ProductPromotionSection from '@/components/insurance/section/ProductPromo
 import ProductPromotionSalesSection from '@/components/insurance/section/ProductPromotionSalesSection.vue'
 import PopularProductSection from '@/components/insurance/section/PopularProductSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
+import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
+import { scrollToElement } from '@/utils/scroll'
 
 @Component({
   mixins: [DeviceMixin],
@@ -57,13 +71,56 @@ import DeviceMixin from '@/mixins/device/device-mixins'
     ProductPromotionSalesSection,
     PopularProductSection,
     ProductQuerySection,
+    BaseScrollToTopButton,
   },
 })
-export default class InsuranceProduct extends Vue {
+export default class InsuranceProduct extends DeviceMixin {
   infoModalVisible: boolean = false
+
+  scrollToTopObserver: IntersectionObserver | null = null
+
+  shouldShowScrollToTop: boolean = false
+
+  $refs: {
+    productQuerySection: Vue
+  }
+
+  get shouldShowProductPromotionSection() {
+    return !(this.isMobile && !this.shouldShowScrollToTop)
+  }
+
+  scrollToTop() {
+    const body = document.querySelector('body')
+    scrollToElement({
+      el: body!,
+      vertical: true,
+    })
+  }
+
+  createScrollToTopIntersectionObserver() {
+    return new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        this.shouldShowScrollToTop = entry.boundingClientRect.bottom < 0
+      })
+    })
+  }
 
   openInfoModal() {
     this.infoModalVisible = true
+  }
+
+  mounted() {
+    if (this.$refs.productQuerySection) {
+      this.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
+      this.scrollToTopObserver.observe(this.$refs.productQuerySection.$el)
+    }
+  }
+
+  beforeDestroy() {
+    if (this.scrollToTopObserver) {
+      this.scrollToTopObserver.disconnect()
+      this.scrollToTopObserver = null
+    }
   }
 }
 </script>
@@ -149,5 +206,11 @@ export default class InsuranceProduct extends Vue {
       }
     }
   }
+}
+
+::v-deep .scrollToTop {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
 }
 </style>
