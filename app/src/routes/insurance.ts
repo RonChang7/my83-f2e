@@ -7,6 +7,10 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
       path: '/insurance/:id(\\d+)',
       component: resolve('@/views/insurance/product/Index.vue'),
       meta: {
+        // mobile 有自己獨立的 scroll to top 規則ˋ，故這邊只在 desktop 上開啟 global 的 scroll to top 功能
+        showScrollToTop: {
+          desktop: true,
+        },
         requiredStoreModules: ['insuranceProduct'],
       },
     },
