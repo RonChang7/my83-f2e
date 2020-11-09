@@ -11,13 +11,13 @@ const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
 
 @Component({
   async asyncData(ctx) {
-    const { store, params, error } = ctx
+    const { store, params, error, from, route } = ctx
     const insuranceProductStore = (store.state as InsuranceProductVuexState)
       .insuranceProduct
 
     const fetchPageData: Promise<any>[] = []
 
-    if (insuranceProductStore.id !== params.id) {
+    if (from?.name !== route?.name || insuranceProductStore.id !== params.id) {
       fetchPageData.push(
         store.dispatch(`insuranceProduct/${FETCH_PRODUCT}`, params.id)
       )
