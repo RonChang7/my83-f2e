@@ -101,6 +101,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 .ListRecommendProductSection {
@@ -115,11 +116,8 @@ export default options
     align-items: center;
     justify-content: space-between;
     padding: 16px 0;
-    color: $gray-primary;
 
-    &:hover {
-      color: $primary-color;
-    }
+    @include hover('_gray-primary');
 
     &:not(:last-child) {
       border-bottom: 1px solid $gray-quaternary;

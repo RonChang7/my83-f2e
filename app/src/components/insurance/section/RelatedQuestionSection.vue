@@ -96,6 +96,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 .RelatedQuestionSection {
@@ -112,16 +113,9 @@ export default options
     }
 
     > a {
-      color: $gray-secondary;
       margin-right: 4px;
 
-      &:hover {
-        color: $gray-primary;
-
-        ::v-deep svg > path {
-          color: $gray-primary;
-        }
-      }
+      @include hover('_gray-secondary-darker', $has-svg: true);
     }
   }
 }
