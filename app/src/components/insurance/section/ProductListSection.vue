@@ -1,8 +1,7 @@
 <template>
   <div class="ProductListSection">
-    <h2 class="ProductListSection__title">全部商品</h2>
-    <div class="ProductListSection__description">
-      依熱門度排序
+    <h2 class="ProductListSection__title">
+      全部商品
       <a
         class="ProductListSection__faq"
         href="#faq"
@@ -11,6 +10,9 @@
         <BaseFAQ />
         常見問題
       </a>
+    </h2>
+    <div class="ProductListSection__description">
+      依熱門度排序。費率以 30 歲女性為基準。
     </div>
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
@@ -131,10 +133,24 @@ export default options
   margin-top: 30px;
 
   &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin: 0;
     color: $gray-primary;
     font-size: 1.75rem;
     font-weight: 500;
+
+    > a {
+      font-weight: 500;
+      margin-right: 10px;
+
+      @include hover('_secondary', $has-svg: true);
+
+      @include max-media('xl') {
+        margin: 0;
+      }
+    }
   }
 
   &__description {
@@ -144,11 +160,8 @@ export default options
     color: $gray-primary;
     margin-bottom: 20px;
 
-    > a {
-      font-weight: 500;
-      margin-right: 10px;
-
-      @include hover('_secondary', $has-svg: true);
+    @include max-media('xl') {
+      margin-top: 8px;
     }
   }
 
