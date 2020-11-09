@@ -8,8 +8,11 @@ const options: ComponentOption = {
   render(h) {
     return h('div', { staticClass: 'BannerSection' }, [
       h('h1', '保險討論區'),
-      h('h2', '全台最大保險討論平台'),
-      h('p', '只要是保險，什麼都能問'),
+      h('div', [
+        h('h2', '全台最大保險討論平台'),
+        h('span', '，'),
+        h('p', '只要是保險，什麼都能問'),
+      ]),
     ])
   },
 }
@@ -43,40 +46,55 @@ $background-max-width: 1600px;
   color: $gray-primary;
   font-size: 1.125rem;
 
+  @media (min-width: $background-max-width) {
+    background-size: $background-max-width;
+  }
+
+  > *,
+  div > * {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  span {
+    display: none;
+  }
+
   @include max-media('xl') {
     height: 120px;
     justify-content: flex-start;
     padding-top: 7px;
 
-    p {
-      font-size: 0.857rem;
+    div {
+      display: flex;
+      flex-direction: row;
+    }
+
+    h1 {
+      font-size: 1.375rem;
+    }
+
+    h2,
+    p,
+    span {
+      display: inline-block;
+      font-size: 0.875rem;
       font-weight: 400;
       color: $gray-secondary;
-    }
-  }
-
-  @media (min-width: $background-max-width) {
-    background-size: $background-max-width;
-  }
-
-  > * {
-    margin: 0;
-    font-weight: 500;
-  }
-
-  h1 {
-    font-size: 2.25rem;
-
-    @include max-media('xl') {
-      display: none;
-    }
-  }
-
-  h2 {
-    font-size: 1.75rem;
-
-    @include max-media('xl') {
-      font-size: 1.375rem;
     }
   }
 }
