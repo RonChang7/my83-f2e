@@ -6,6 +6,8 @@ import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 @Component
 export default class ProductPromotion extends Vue {
+  $scopedSlots: import('vue/types/vue').Vue['$scopedSlots']
+
   @Emit()
   openModal() {
     return true
