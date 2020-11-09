@@ -3,7 +3,7 @@ import { Module } from 'vuex'
 import * as types from './product.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/product'
-import { Product, PremiumQuery } from '@/api/insurance/product.type'
+import { Product, PremiumQuery, Coverage } from '@/api/insurance/product.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -56,6 +56,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
             })
             .then(({ data }) => {
               commit(types.UPDATE_FEE, data.fee)
+              if (data.coverages) {
+                commit(types.UPDATE_COVERAGE, data.coverages)
+              }
               resolve()
             })
             .catch(() => {
@@ -117,6 +120,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_FEE](state, fee: number) {
         state.fee = fee
+      },
+      [types.UPDATE_COVERAGE](state, coverages: Coverage[]) {
+        state.product!.coverages = coverages
       },
     },
   }

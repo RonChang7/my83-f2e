@@ -13,6 +13,7 @@ export interface FetchProductFeePayload extends PremiumQuery {
 export interface ProductFeeResponse {
   data: {
     fee: number
+    coverages: Coverage[]
   }
 }
 
