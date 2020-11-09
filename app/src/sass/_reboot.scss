@@ -1,4 +1,5 @@
 @import 'normalize.css/normalize.css';
+@import 'mixins.scss';
 
 *, :after, :before {
   box-sizing: border-box;
@@ -15,11 +16,9 @@ body {
 }
 
 a {
-  color: $primary-color;
   text-decoration: none;
 
-  &:hover {
-    color: $primary-hover-color;
+  @include hover('_primary') {
     cursor: pointer;
   }
 }

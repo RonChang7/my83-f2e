@@ -94,6 +94,7 @@ export interface Props {
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 
 .QuestionAuthorInfo {
   display: flex;
@@ -106,12 +107,8 @@ export interface Props {
     margin-right: 8px;
   }
 
-  &::v-deep a {
-    color: $gray-secondary;
-
-    &:hover {
-      color: $primary-color;
-    }
+  a {
+    @include hover('_gray-secondary-lighter');
   }
 }
 </style>
