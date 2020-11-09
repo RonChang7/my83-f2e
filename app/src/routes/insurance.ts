@@ -4,7 +4,7 @@ export const createRoutes: CreateRouteFunction = (resolve) => {
   return [
     {
       name: 'insuranceProduct',
-      path: '/insurance/:id(\\d+)',
+      path: '/product/:id(\\d+)',
       component: resolve('@/views/insurance/product/Index.vue'),
       meta: {
         // mobile 有自己獨立的 scroll to top 規則ˋ，故這邊只在 desktop 上開啟 global 的 scroll to top 功能
