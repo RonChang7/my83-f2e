@@ -200,6 +200,7 @@ export interface Props {}
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 footer {
@@ -276,11 +277,7 @@ footer {
         color: $text-default-color;
 
         a {
-          color: $text-default-color;
-
-          &:hover {
-            color: $gray-primary;
-          }
+          @include hover('_gray-secondary-darker');
         }
 
         .content {

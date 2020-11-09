@@ -146,22 +146,9 @@ export default options
 
     > a {
       font-weight: 500;
-      color: $secondary-color;
       margin-right: 10px;
 
-      ::v-deep svg > path {
-        fill: $secondary-color;
-      }
-
-      @include hover-supported {
-        &:hover {
-          color: $secondary-hover-color;
-
-          ::v-deep svg > path {
-            fill: $secondary-hover-color;
-          }
-        }
-      }
+      @include hover('_secondary', $has-svg: true);
     }
   }
 

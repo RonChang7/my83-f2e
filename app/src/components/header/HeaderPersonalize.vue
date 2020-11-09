@@ -239,13 +239,7 @@ interface Menu extends HeaderNavItem {
   font-weight: 500;
 
   a {
-    color: $gray-secondary;
-
-    @include min-media('xl') {
-      &:hover {
-        color: $primary-color;
-      }
-    }
+    @include hover('_gray-secondary-lighter');
 
     @include max-media('xl') {
       &:active {

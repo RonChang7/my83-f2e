@@ -159,6 +159,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 
 .BasePagination {
   display: flex;
@@ -184,9 +185,7 @@ export default options
   }
 
   &__page.link {
-    &:hover {
-      color: $gray-primary;
-    }
+    @include hover('_gray-secondary-darker');
   }
 
   &__page {
