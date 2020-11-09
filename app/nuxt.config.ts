@@ -145,6 +145,7 @@ const config: NuxtConfig = {
     /*
      ** You can extend webpack config here
      */
+    corejs: 3,
     transpile: [
       ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || undefined,
       ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || undefined,
