@@ -187,10 +187,10 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   updatePremiumQuery(payload: UpdatePremiumQueryPayload) {
-    this.$store.dispatch(
-      `insuranceProduct/${UPDATE_PREMIUM_QUERY_KEY}`,
-      payload
-    )
+    this.$store.dispatch(`insuranceProduct/${UPDATE_PREMIUM_QUERY_KEY}`, {
+      id: this.fieldValueMap[payload.id],
+      value: payload.value,
+    })
   }
 
   created() {
