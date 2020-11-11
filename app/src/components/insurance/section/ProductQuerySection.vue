@@ -64,6 +64,7 @@ import {
   UPDATE_PREMIUM_QUERY_KEY,
   FETCH_PRODUCT_FEE,
   UPDATE_PREMIUM_QUERY_VALIDATE,
+  UPDATE_FEE,
 } from '@/store/insurance/product.type'
 import { OptionValueType } from '@/api/insurance/product.type'
 import {
@@ -94,9 +95,9 @@ export default class ProductQuerySection extends DeviceMixin {
 
   options: FieldOption<OptionValueType>[] = []
 
-  fetchProductFeeAction = _.throttle(
+  fetchProductFeeAction = _.debounce(
     () => this.$store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`),
-    500
+    50
   )
 
   feeCardHeight: number = 0
@@ -135,9 +136,7 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   get fee() {
-    return this.isFieldValidated
-      ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
-      : -1
+    return (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
   }
 
   get consultLink() {
@@ -175,9 +174,13 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   fetchProductFee() {
-    if (this.isFieldValidated) {
-      this.fetchProductFeeAction()
-    }
+    this.$nextTick(() => {
+      if (this.isFieldValidated) {
+        this.fetchProductFeeAction()
+      } else if (this.fee !== -1) {
+        this.$store.commit(`insuranceProduct/${UPDATE_FEE}`, -1)
+      }
+    })
   }
 
   updateFieldValidate(key: string, status: boolean) {
@@ -191,6 +194,10 @@ export default class ProductQuerySection extends DeviceMixin {
       id: this.fieldValueMap[payload.id],
       value: payload.value,
     })
+
+    if (this.fieldValueMap[payload.id] === 'plan') {
+      this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
+    }
   }
 
   created() {
