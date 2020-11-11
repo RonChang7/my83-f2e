@@ -6,6 +6,7 @@
   >
     <component :is="icon" />
     {{ buttonText }}
+    <span v-if="count" class="ml-2">{{ count }}</span>
   </div>
 </template>
 
@@ -47,6 +48,10 @@ export default {
     isSelected: {
       type: Boolean,
       default: false,
+    },
+    count: {
+      type: Number,
+      required: true,
     },
   },
   computed: {
@@ -96,6 +101,7 @@ export interface Computed {
 export interface Props {
   type: Type
   isSelected: boolean
+  count: number
 }
 </script>
 
