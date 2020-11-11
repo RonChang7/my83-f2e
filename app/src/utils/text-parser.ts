@@ -28,6 +28,3 @@ export const br2nl = (content: string) =>
 
 export const htmlStrip = (content: string) =>
   content.replace(/(<([^>]+)>)/gi, '')
-
-export const camelToSnakeCase = (str: string) =>
-  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`)
