@@ -19,14 +19,11 @@
         />
       </div>
       <BaseContent :content="answer.content" />
-      <ContentMeta
+      <ContentMeta :created-at="answer.created_at" meta-type="answer" />
+      <AnswerInteraction
         :like-count="likeCount"
         :dislike-count="dislikeCount"
-        :answer-count="answer.answer_meta.response_count"
-        :created-at="answer.created_at"
-        meta-type="answer"
-      />
-      <AnswerInteraction
+        :response-count="answer.answer_meta.response_count"
         :like-status="likeStatus"
         @action="buttonActionHandler"
       />
