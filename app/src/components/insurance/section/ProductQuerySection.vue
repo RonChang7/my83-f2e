@@ -71,7 +71,6 @@ import {
   ProductQueryFormService,
 } from '@/services/product/ProductQueryFormService'
 import { ZHTWUnitMap } from '@/utils/number-converter'
-import { camelToSnakeCase } from '@/utils/text-parser'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import BaseInfo from '@/components/base/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
@@ -162,7 +161,7 @@ export default class ProductQuerySection extends DeviceMixin {
         if (!this.premiumConfig?.is_fixed_rate && key === 'plan') {
           acc.period = key
         } else {
-          acc[camelToSnakeCase(key)] = key
+          acc[_.snakeCase(key)] = key
         }
 
         return acc
