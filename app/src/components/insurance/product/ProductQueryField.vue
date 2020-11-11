@@ -64,7 +64,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
 import { FieldOption } from '@/services/product/ProductQueryFormService'
 import { IntervalType, OptionValueType } from '@/api/insurance/product.type'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
@@ -88,6 +88,11 @@ export default class ProductQueryField extends Vue {
   value!: string | number
 
   isValidated: boolean = true
+
+  @Watch('option')
+  onOptionChange() {
+    this.inputValidate(Number(this.value))
+  }
 
   get unit() {
     return this.option.unit || ''
