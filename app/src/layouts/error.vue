@@ -12,9 +12,9 @@
         size="l-a"
         :type="errorContent.enableZendesk ? 'secondary' : 'primary'"
         :is-full-width="isMobile && errorContent.enableZendesk"
-        @click.native="redirectTo(customErrorCTA.redirectUrl)"
+        @click.native="redirectTo(errorContent.redirectUrl)"
       >
-        {{ customErrorCTA.text }}
+        {{ errorContent.buttonText }}
       </BaseButton>
       <BaseButton
         v-if="errorContent.enableZendesk"
@@ -49,7 +49,6 @@ import { GlobalVuexState } from '@/store/global-state'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
-import { REMOVE_CUSTOM_ERROR_PAGE_CTA } from '@/store/global/global.type'
 
 export default {
   name: 'ErrorLayout',
@@ -96,16 +95,6 @@ export default {
         ? errorPageContent[ErrorPageType[message]]
         : errorPageContent[ErrorPageType.DEFAULT]
     },
-    customErrorCTA() {
-      const customErrorCTA = this.$store.state.global.errorPageCTA
-      return {
-        text: customErrorCTA?.text || this.errorContent.buttonText,
-        redirectUrl: customErrorCTA?.link.url || this.errorContent.redirectUrl,
-      }
-    },
-  },
-  destroyed() {
-    this.$store.dispatch(`global/${REMOVE_CUSTOM_ERROR_PAGE_CTA}`)
   },
 } as ComponentOption
 
@@ -138,10 +127,6 @@ export type Methods = {
 
 export interface Computed {
   errorContent: ErrorContent
-  customErrorCTA: {
-    text: string
-    redirectUrl: string
-  } | null
 }
 
 export interface Props {
