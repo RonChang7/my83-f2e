@@ -6,5 +6,4 @@ export interface ResponseBody<D> {
 
 export const enum ErrorCode {
   Redirect = 'GEN_000001',
-  ProductOffline = 'PRD_000001',
 }

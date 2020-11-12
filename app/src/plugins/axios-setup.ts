@@ -8,11 +8,8 @@ import { JWT } from '@/services/auth/jwt'
 import {
   checkRedirectResponse,
   RedirectErrorResponseBody,
-  checkProductOfflineResponse,
-  ProductOfflineErrorResponseBody,
 } from '@/api/errors/response'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
-import { OnProductOfflineException } from '@/api/errors/OnProductOfflineException'
 
 export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
@@ -52,14 +49,6 @@ export default (({ app, req }) => {
               const res: AxiosResponse<RedirectErrorResponseBody> = err.response
               return Promise.reject(
                 new OnRedirectingException(res.data.data.link.path)
-              )
-            }
-
-            if (checkProductOfflineResponse(err.response)) {
-              const res: AxiosResponse<ProductOfflineErrorResponseBody> =
-                err.response
-              return Promise.reject(
-                new OnProductOfflineException(res.data.data.btn)
               )
             }
           }
@@ -146,14 +135,6 @@ export default (({ app, req }) => {
               const res: AxiosResponse<RedirectErrorResponseBody> = err.response
               return Promise.reject(
                 new OnRedirectingException(res.data.data.link.path)
-              )
-            }
-
-            if (checkProductOfflineResponse(err.response)) {
-              const res: AxiosResponse<ProductOfflineErrorResponseBody> =
-                err.response
-              return Promise.reject(
-                new OnProductOfflineException(res.data.data.btn)
               )
             }
 

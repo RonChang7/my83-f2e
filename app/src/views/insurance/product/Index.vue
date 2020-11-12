@@ -5,8 +5,6 @@ import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/product'
 import { ErrorPageType } from '@/config/error-page.config'
 import { Content } from '@/services/page/Content'
-import { OnProductOfflineException } from '@/api/errors/OnProductOfflineException'
-import { ADD_CUSTOM_ERROR_PAGE_CTA } from '@/store/global/global.type'
 const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
 
 @Component({
@@ -26,15 +24,6 @@ const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
-      if (err instanceof OnProductOfflineException) {
-        const linkButton = err.getLinkButton()
-        store.dispatch(`global/${ADD_CUSTOM_ERROR_PAGE_CTA}`, linkButton)
-        return error({
-          statusCode: 404,
-          message: ErrorPageType.PRODUCT,
-        })
-      }
-
       const statusCode = err.response.status === 404 ? err.response.status : 500
       const message =
         err.response.status === 404
