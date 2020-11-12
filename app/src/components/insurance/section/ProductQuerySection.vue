@@ -127,12 +127,12 @@ export default class ProductQuerySection extends DeviceMixin {
 
   get contractType() {
     return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.contract_type
+      .product?.product.contract_type
   }
 
   get wholeLifeType() {
     return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.whole_life_type
+      .product?.product.whole_life_type
   }
 
   get fee() {
@@ -152,6 +152,11 @@ export default class ProductQuerySection extends DeviceMixin {
   get premiumQuery() {
     const state = this.$store.state as InsuranceProductVuexState
     return state.insuranceProduct.premiumQuery
+  }
+
+  get amountUnit() {
+    const state = this.$store.state as InsuranceProductVuexState
+    return state.insuranceProduct.product?.premium_config.amount_unit
   }
 
   get fieldValueMap() {
@@ -201,9 +206,13 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   created() {
+    const displayAmountUnit = this.amountUnit
+      ? ZHTWUnitMap[this.amountUnit] || '元'
+      : undefined
+
     this.queryForm = new ProductQueryFormService(this.premiumConfig!, {
       age: '歲',
-      amount: ZHTWUnitMap[this.premiumQuery!.amountUnit!],
+      amount: displayAmountUnit,
     })
     this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
   }

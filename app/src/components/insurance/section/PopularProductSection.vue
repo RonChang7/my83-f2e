@@ -41,7 +41,7 @@ export default class PopularProductSection extends Vue {
 
   get moreLink() {
     const insuranceType = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product?.insurance_type
+      .insuranceProduct.product?.product.insurance_type
     return `/insurance/${insuranceType}`
   }
 }

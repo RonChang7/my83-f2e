@@ -12,7 +12,7 @@ import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 export default class ProductDescription extends Vue {
   get description() {
     const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.description
+    return state.insuranceProduct.product?.product.description
   }
 }
 </script>

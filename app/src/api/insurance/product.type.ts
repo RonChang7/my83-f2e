@@ -8,6 +8,7 @@ export interface ProductResponse {
 
 export interface FetchProductFeePayload extends PremiumQuery {
   productId: string
+  amountUnit?: number
 }
 
 export interface ProductFeeResponse {
@@ -18,13 +19,7 @@ export interface ProductFeeResponse {
 }
 
 export interface Product {
-  name: string
-  description: string
-  company: string
-  features: string[]
-  contract_type: ContractType
-  whole_life_type: WholeLifeType
-  insurance_type: string
+  product: ProductData
   files: LinkButton[]
   consult_link: Link
   premium_config: PremiumConfig
@@ -38,6 +33,16 @@ export interface Product {
 type ContractType = '主約' | '附約'
 
 type WholeLifeType = '終身險' | '定期險'
+
+export interface ProductData {
+  name: string
+  description: string
+  company: string
+  features: string[]
+  contract_type: ContractType
+  whole_life_type: WholeLifeType
+  insurance_type: string
+}
 
 export interface Coverage {
   name: string
@@ -58,12 +63,12 @@ export interface DefaultPremiumConfig {
   plan_id: number
   job_level?: number
   amount?: number
-  amount_unit?: number
   fee: number
 }
 
 export interface PremiumConfig {
   is_fixed_rate: boolean
+  amount_unit?: number
   plans: Plan[]
 }
 
@@ -112,5 +117,4 @@ export interface PremiumQuery {
   plan: number
   jobLevel?: number
   amount?: number
-  amountUnit?: number
 }

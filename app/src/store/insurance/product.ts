@@ -35,7 +35,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 plan: data.default_premium_config.plan_id,
                 jobLevel: data.default_premium_config.job_level,
                 amount: data.default_premium_config.amount,
-                amountUnit: data.default_premium_config.amount_unit,
               })
               commit(types.UPDATE_FEE, data.default_premium_config.fee)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
@@ -52,6 +51,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchProductFee({
               productId: state.id,
+              amountUnit: state.product?.premium_config.amount_unit,
               ...(state.premiumQuery as PremiumQuery),
             })
             .then(({ data }) => {
