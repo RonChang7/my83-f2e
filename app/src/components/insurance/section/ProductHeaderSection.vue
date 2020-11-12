@@ -50,17 +50,17 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
 
   get company() {
     const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.company
+    return state.insuranceProduct.product?.product.company
   }
 
   get name() {
     const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.name
+    return state.insuranceProduct.product?.product.name
   }
 
   get features() {
     const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.features.join('．')
+    return state.insuranceProduct.product?.product.features.join('．')
   }
 
   get files() {
