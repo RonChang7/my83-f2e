@@ -1,6 +1,10 @@
 <template>
   <div class="ResponseEditor" :class="{ hasResponse }">
     <template v-if="activePanel">
+      <div v-if="isDislikeResponse" class="ResponseEditor__dislikeInfo">
+        MY83
+        鼓勵不同意見的交流討論，請基於尊重彼此的前提，具體說明你提出不滿的理由，方便讓對方與保戶知道原因。送出後，若取消「不滿」，你的留言會保留，並轉為一般留言。
+      </div>
       <div class="ResponseEditor__header">
         <img class="ResponseEditor__avatar" :src="avatar" />
         <div
@@ -66,7 +70,10 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
-import { AddResponseResponse } from '@/api/question/question.type'
+import {
+  AddResponsePayload,
+  AddResponseResponse,
+} from '@/api/question/question.type'
 import { ADD_RESPONSE } from '@/store/question/question.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { FETCH_HEADER_PERSONALIZED_DATA } from '@/store/header/header.type'
@@ -122,6 +129,10 @@ export default {
       type: Number,
       required: true,
     },
+    isDislikeResponse: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
@@ -148,13 +159,15 @@ export default {
       }
 
       this.$emit('update:activePanel', status)
+      this.$emit('update:isDislikeResponse', false)
     },
     async submit() {
-      const payload = {
+      const payload: AddResponsePayload = {
         questionId: this.questionId,
         answerId: this.answerId,
         nickname: this.nickname ? this.nickname : this.form?.nickname,
         content: nl2br(this.form!.content.trim()), // @TODO: 相容舊版，所以新增 response 要補上 <br />
+        isDislikeResponse: this.isDislikeResponse,
       }
 
       this.submitState = 'loading'
@@ -173,6 +186,7 @@ export default {
           this.$store.dispatch(`header/${FETCH_HEADER_PERSONALIZED_DATA}`)
         }
 
+        this.isDislikeResponse && this.$emit('add-dislike-response')
         this.reset()
       } else {
         const { success, message } = response as AddResponseResponse
@@ -306,6 +320,7 @@ export interface Props {
   isFocus: boolean
   questionId: number
   answerId: number
+  isDislikeResponse: boolean
 }
 </script>
 
@@ -325,6 +340,10 @@ export interface Props {
 
   &.hasResponse {
     margin-left: 30px;
+  }
+
+  &__dislikeInfo {
+    margin-bottom: 16px;
   }
 
   &__header {
