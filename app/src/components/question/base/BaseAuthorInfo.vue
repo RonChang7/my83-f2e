@@ -10,6 +10,7 @@
     <div class="BaseAuthorInfo__detail">
       <div class="BaseAuthorInfo__name">
         {{ authorName }}
+        <span v-if="isDislike" class="BaseAuthorInfo__badge">不滿</span>
       </div>
       <div v-if="authorInfo.role === 'sales'" class="BaseAuthorInfo__medal">
         <GlobalLink to="/medal" target="_blank">
@@ -56,6 +57,10 @@ export default {
     authorInfo: {
       type: Object,
       required: true,
+    },
+    isDislike: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -112,6 +117,7 @@ export interface Computed {
 
 export interface Props {
   authorInfo: AuthorInfo
+  isDislike: boolean
 }
 </script>
 
@@ -131,11 +137,22 @@ export interface Props {
   }
 
   &__name {
+    display: inline-flex;
+    align-items: center;
     color: $gray-primary;
     font-size: 1.125rem;
     font-weight: 500;
     margin-bottom: 8px;
     line-height: 1.33;
+  }
+
+  &__badge {
+    color: $primary-color;
+    background: $primary-bright-color;
+    padding: 3px 10px;
+    font-size: 0.75rem;
+    line-height: 1.17;
+    margin-left: 8px;
   }
 
   &__role {

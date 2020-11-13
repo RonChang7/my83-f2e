@@ -337,7 +337,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       ) {
         try {
           const res = await api.likeAnswer(payload)
-          const { success, answer_meta: data, like_status: likeStatus } = res
+          const {
+            success,
+            answer_meta: data,
+            like_status: likeStatus,
+            personalize,
+          } = res
           if (success) {
             const answerIndex = _.findIndex(
               state.answers,
@@ -349,6 +354,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
               data,
               likeStatus,
             })
+
+            if (likeStatus !== -1 && personalize) {
+              const userResponseIds = personalize.response_ids
+
+              userResponseIds.length &&
+                commit(types.UPDATE_RESPONSE_DISLIKE_STATUS, {
+                  answerIndex,
+                  responseIds: userResponseIds,
+                  status: false,
+                })
+            }
           } else {
             return res
           }
@@ -515,6 +531,16 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.answers![answerIndex].answer_meta = data
         state.answers![answerIndex].personalize!.like_status = likeStatus
       },
+      [types.UPDATE_RESPONSE_DISLIKE_STATUS](
+        state,
+        { answerIndex, responseIds, status }: MutateResponseDislikePayload
+      ) {
+        state.answers![answerIndex].responses.forEach((response) => {
+          if (responseIds.includes(response.response_id)) {
+            response.is_dislike = status
+          }
+        })
+      },
       [types.UPDATE_RELATED_QUESTIONS](state, data: RelatedQuestion[]) {
         state.relatedQuestions = data
       },
@@ -568,6 +594,12 @@ interface MutateAnswerLikePayload {
   answerIndex: number
   data: AnswerMeta
   likeStatus: LikeStatus
+}
+
+interface MutateResponseDislikePayload {
+  answerIndex: number
+  responseIds: number[]
+  status: boolean
 }
 
 interface MutateReportPayload {

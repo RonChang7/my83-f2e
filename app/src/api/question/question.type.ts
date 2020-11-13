@@ -43,6 +43,7 @@ export interface AddAnswerPayload {
 
 export interface AddResponsePayload extends AddAnswerPayload {
   answerId: number
+  isDislikeResponse: boolean
 }
 
 export interface AddAnswerResponse extends SimpleResponse {
@@ -62,6 +63,9 @@ export interface UpdateLikeStatuePayload {
 export interface UpdateLikeStatueResponse extends SimpleResponse {
   answer_meta?: AnswerMeta
   like_status?: LikeStatus
+  personalize?: {
+    response_ids: number[]
+  }
 }
 
 export interface RelatedBlogsResponse {
@@ -156,6 +160,7 @@ export interface ResponseData {
   content: string
   author_info: AuthorInfo
   created_at: number
+  is_dislike: boolean
 }
 
 export interface QuestionPersonalize {
