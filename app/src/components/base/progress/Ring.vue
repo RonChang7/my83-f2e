@@ -58,27 +58,37 @@ const options: ComponentOption = {
       }
     },
   },
+  methods: {
+    draw() {
+      const canvas = this.$refs.ring
+      const ctx = canvas.getContext('2d')!
+      const ring = new RingCanvasGenerator(ctx)
+
+      /**
+       * 提高 canvas 繪圖解析度
+       * ref: https://stackoverflow.com/a/26047748
+       */
+
+      const scaleFactor = 2
+
+      canvas.width = this.length * scaleFactor
+      canvas.height = this.length * scaleFactor
+      ctx.scale(scaleFactor, scaleFactor)
+
+      ring.draw({
+        length: this.length,
+        lineWidth: this.lineWidth,
+        deg: (this.percentage / 100) * 360,
+      })
+    },
+  },
+  watch: {
+    percentage() {
+      this.draw()
+    },
+  },
   mounted() {
-    const canvas = this.$refs.ring
-    const ctx = canvas.getContext('2d')!
-    const ring = new RingCanvasGenerator(ctx)
-
-    /**
-     * 提高 canvas 繪圖解析度
-     * ref: https://stackoverflow.com/a/26047748
-     */
-
-    const scaleFactor = 2
-
-    canvas.width = this.length * scaleFactor
-    canvas.height = this.length * scaleFactor
-    ctx.scale(scaleFactor, scaleFactor)
-
-    ring.draw({
-      length: this.length,
-      lineWidth: this.lineWidth,
-      deg: (this.percentage / 100) * 360,
-    })
+    this.draw()
   },
 }
 
@@ -106,7 +116,9 @@ export interface Instance extends Vue {
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  draw(): void
+}
 
 export interface Computed {
   styleObject: Partial<CSSStyleDeclaration>
