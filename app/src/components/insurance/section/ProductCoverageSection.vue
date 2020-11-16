@@ -102,7 +102,7 @@ export default class ProductCoverageSection extends Vue {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 
     @include max-media('xl') {
       padding: 0 20px;
@@ -114,6 +114,10 @@ export default class ProductCoverageSection extends Vue {
     color: $gray-primary;
     font-size: 1.375rem;
     font-weight: 500;
+
+    @include max-media('xl') {
+      font-size: 1.25rem;
+    }
   }
 
   &__action {

@@ -277,7 +277,7 @@ export default class ProductQuerySection extends DeviceMixin {
 
     @include max-media('xl') {
       position: relative;
-      margin: -160px auto 16px;
+      margin: -160px auto 10px;
       top: 160px;
       left: -20px;
     }

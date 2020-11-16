@@ -21,7 +21,7 @@
         的比例
       </div>
     </div>
-    <div class="ProductCoverageCard__content">
+    <div v-if="coverage.content" class="ProductCoverageCard__content">
       {{ coverage.content }}
     </div>
     <div
@@ -101,7 +101,6 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   &__header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
   }
 
   &__name,
@@ -124,7 +123,7 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
     align-items: center;
     color: $secondary-color;
     font-size: 1.125rem;
-    margin-bottom: 16px;
+    margin-top: 16px;
 
     @include max-media('xl') {
       font-size: 1rem;
@@ -146,6 +145,7 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
 
   &__content {
     font-size: 0.875rem;
+    margin-top: 16px;
   }
 
   &__level {

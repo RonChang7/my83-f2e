@@ -113,9 +113,11 @@ export default class ProductPromotionSection extends DeviceMixin {
 
     @include max-media('sm') {
       font-size: 1.125rem;
+      font-weight: 500;
 
       &:before {
         display: inline-block;
+        margin-right: 0.5em;
       }
     }
   }
