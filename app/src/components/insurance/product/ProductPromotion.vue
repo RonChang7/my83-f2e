@@ -1,13 +1,10 @@
 <script lang="ts">
 import { Vue, Component, Emit } from 'vue-property-decorator'
-import { CreateElement } from 'vue/types/vue'
 import { renderlessComponentWrapper } from '@/utils/render-helper'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 @Component
 export default class ProductPromotion extends Vue {
-  $scopedSlots: import('vue/types/vue').Vue['$scopedSlots']
-
   @Emit()
   openModal() {
     return true
@@ -25,7 +22,7 @@ export default class ProductPromotion extends Vue {
     }
   }
 
-  render(h: CreateElement) {
+  render(h) {
     if (this.$scopedSlots.default) {
       return renderlessComponentWrapper(this.$scopedSlots.default(this.slot), h)
     }
