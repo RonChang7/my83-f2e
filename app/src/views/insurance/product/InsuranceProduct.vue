@@ -6,13 +6,16 @@
       <ProductHeaderSection />
     </div>
 
-    <div class="InsuranceProduct__row thin">
+    <div
+      v-if="shouldDisplayProductDescription"
+      class="InsuranceProduct__row thin"
+    >
       <div class="column left">
         <ProductDescription />
       </div>
     </div>
 
-    <div class="InsuranceProduct__row thin">
+    <div class="InsuranceProduct__row">
       <div class="column left">
         <ProductQuerySection
           ref="productQuerySection"
@@ -31,7 +34,8 @@
         />
       </div>
       <div class="column right">
-        <ProductPromotionSalesSection />
+        <ProductPromotionSalesSection v-if="isDesktop" />
+        <PromotionSection v-else />
         <PopularProductSection />
       </div>
     </div>
@@ -46,6 +50,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { InsuranceProductVuexState } from './Index.vue'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
 import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
@@ -53,6 +58,7 @@ import ProductCoverageSection from '@/components/insurance/section/ProductCovera
 import ProductRuleSection from '@/components/insurance/section/ProductRuleSection.vue'
 import ProductPromotionSection from '@/components/insurance/section/ProductPromotionSection.vue'
 import ProductPromotionSalesSection from '@/components/insurance/section/ProductPromotionSalesSection.vue'
+import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import PopularProductSection from '@/components/insurance/section/PopularProductSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
@@ -69,6 +75,7 @@ import { scrollToElement } from '@/utils/scroll'
     ProductRuleSection,
     ProductPromotionSection,
     ProductPromotionSalesSection,
+    PromotionSection,
     PopularProductSection,
     ProductQuerySection,
     BaseScrollToTopButton,
@@ -87,6 +94,11 @@ export default class InsuranceProduct extends DeviceMixin {
 
   get shouldShowProductPromotionSection() {
     return !(this.isMobile && !this.shouldShowScrollToTop)
+  }
+
+  get shouldDisplayProductDescription() {
+    return !!(this.$store.state as InsuranceProductVuexState).insuranceProduct
+      .product?.product.description
   }
 
   scrollToTop() {
@@ -150,21 +162,32 @@ export default class InsuranceProduct extends DeviceMixin {
     margin: 0 auto;
     margin-bottom: 32px;
 
+    &:last-of-type {
+      margin-bottom: 100px;
+    }
+
     @include max-media('xl') {
       width: 100vw;
+      margin-bottom: 24px;
     }
 
     &.thin {
       margin-bottom: 20px;
 
       @include max-media('xl') {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
       }
     }
 
     &.withColumns {
       @include max-media('xl') {
         flex-direction: column;
+
+        .left {
+          > div:first-child {
+            margin-bottom: 24px;
+          }
+        }
       }
     }
 
@@ -174,7 +197,7 @@ export default class InsuranceProduct extends DeviceMixin {
       }
 
       > div:not(:last-child) {
-        margin-bottom: 20px;
+        margin-bottom: 32px;
       }
 
       &.left {
@@ -192,7 +215,7 @@ export default class InsuranceProduct extends DeviceMixin {
         }
 
         > div:not(:last-child) {
-          margin-bottom: 24px;
+          margin-bottom: 0;
         }
 
         &.left,
@@ -201,7 +224,7 @@ export default class InsuranceProduct extends DeviceMixin {
         }
 
         &.right {
-          margin-top: 20px;
+          margin-top: 0;
         }
       }
     }

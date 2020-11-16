@@ -70,5 +70,11 @@ export default class PopularProductSection extends Vue {
       @include hover('_gray-secondary-darker', $has-svg: true);
     }
   }
+
+  @include min-media('xl') {
+    &::v-deep .RelatedCard__index {
+      padding-right: 10px;
+    }
+  }
 }
 </style>

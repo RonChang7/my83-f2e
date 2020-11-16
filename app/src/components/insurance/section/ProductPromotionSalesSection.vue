@@ -1,5 +1,5 @@
 <template>
-  <div ref="section" class="ProductPromotionSalesSection">
+  <div class="ProductPromotionSalesSection">
     <div class="ProductPromotionSalesSection__title">
       想買保險，
       <br />
@@ -14,7 +14,7 @@
         to="/searchSales"
         size="l-a"
         type="quaternary"
-        :is-full-width="!isDesktop"
+        :is-full-width="false"
       >
         找業務員
       </BaseButton>
@@ -23,35 +23,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin from '@/mixins/device/device-mixins'
 
 @Component({
   components: {
     BaseButton,
   },
 })
-export default class ProductPromotionSalesSection extends Mixins(DeviceMixin) {
-  $refs: {
-    section: HTMLElement
-  }
-
-  calcMobileBackgroundPositionY() {
-    const maxWidth = 420
-    const elWidth = this.$refs.section.offsetWidth
-
-    return Math.round((maxWidth - elWidth) / 2.875) - 30
-  }
-
-  mounted() {
-    if (!this.isDesktop) {
-      this.$nextTick(() => {
-        this.$refs.section.style.backgroundPositionY = `${this.calcMobileBackgroundPositionY()}px`
-      })
-    }
-  }
-}
+export default class ProductPromotionSalesSection extends Vue {}
 </script>
 
 <style lang="scss" scoped>
@@ -87,39 +67,6 @@ export default class ProductPromotionSalesSection extends Mixins(DeviceMixin) {
     color: $gray-primary;
     font-size: 0.875rem;
     margin-bottom: 18px;
-  }
-
-  @include max-media('xl') {
-    margin: 0 auto;
-    max-width: 420px;
-    width: calc(100% - 40px);
-    background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-mobile@2x.png')
-      center top / contain no-repeat;
-    background-color: #ffccb1;
-    padding: 16px;
-
-    &__title {
-      font-size: 1.125rem;
-      font-weight: 500;
-      margin-bottom: 24px;
-      text-align: left;
-
-      > br {
-        display: none;
-      }
-    }
-
-    &__content {
-      flex-direction: row;
-      align-items: flex-end;
-    }
-
-    &__description {
-      width: 170px;
-      flex: 0 0 auto;
-      margin: 0;
-      margin-right: 16px;
-    }
   }
 }
 </style>

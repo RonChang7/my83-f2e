@@ -244,6 +244,7 @@ export interface Props extends BaseSelectProps {}
     height: 40px;
     padding: 0 30px 0 42px;
     color: $gray-primary;
+    font-weight: 400;
 
     &:hover {
       background: $primary-bg;

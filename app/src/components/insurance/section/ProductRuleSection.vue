@@ -54,6 +54,7 @@ export default class ProductRuleSection extends Vue {
 
     @include max-media('xl') {
       margin: 0 0 10px 20px;
+      font-size: 1.25rem;
     }
   }
 

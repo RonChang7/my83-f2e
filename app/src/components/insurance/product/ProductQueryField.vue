@@ -161,7 +161,7 @@ export default class ProductQueryField extends Vue {
     }
 
     .input {
-      width: 64px;
+      width: 80px;
     }
 
     .select {
