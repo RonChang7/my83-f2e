@@ -22,6 +22,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import ProductPromotion from './ProductPromotion.vue'
+import { Link } from '@/api/type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
 @Component({
@@ -31,14 +32,14 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
   },
 })
 export default class ProductFee extends Vue {
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   cardHeight: number
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   fee: number
 
-  @Prop({ required: true })
-  consultLink: string
+  @Prop({ type: Object, required: true })
+  consultLink: Link
 }
 </script>
 

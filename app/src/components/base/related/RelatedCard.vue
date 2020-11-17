@@ -40,11 +40,11 @@ export default {
       required: true,
     },
     viewCount: {
-      type: [Number, null],
+      type: Number,
       default: null,
     },
     answerCount: {
-      type: [Number, null],
+      type: Number,
       default: null,
     },
     last: {

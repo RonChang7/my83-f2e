@@ -23,10 +23,10 @@ import { createPopper, Instance, Placement } from '@popperjs/core'
 
 @Component
 export default class BaseTooltip extends Vue {
-  @Prop({ default: 'bottom' })
+  @Prop({ type: String, default: 'bottom' })
   placement: Placement
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   offset: number
 
   $refs: {
