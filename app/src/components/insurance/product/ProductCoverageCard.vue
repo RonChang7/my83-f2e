@@ -56,10 +56,10 @@ import { delimitIntegerWithSymbol } from '@/utils/digital'
   },
 })
 export default class ProductCoverageCard extends Mixins(DeviceMixin) {
-  @Prop({ required: true })
+  @Prop({ type: Object, required: true })
   coverage!: Coverage
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   isActive!: boolean
 
   amountConvert(amount: number) {

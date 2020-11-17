@@ -81,10 +81,10 @@ import BaseRadio from '@/components/my83-ui-kit/input/BaseRadio.vue'
   },
 })
 export default class ProductQueryField extends Vue {
-  @Prop({ required: true })
+  @Prop({ type: Object, required: true })
   option!: FieldOption<OptionValueType>
 
-  @Prop({ required: true })
+  @Prop({ type: [String, Number], required: true })
   value!: string | number
 
   isValidated: boolean = true

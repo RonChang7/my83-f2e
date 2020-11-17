@@ -39,10 +39,10 @@ import BaseInfoModal from '@/components/my83-ui-kit/modal/BaseInfoModal.vue'
   },
 })
 export default class ProductHowToBuyModal extends Vue {
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   visible: boolean
 
-  @Prop({ default: true })
+  @Prop({ type: Boolean, default: true })
   lockScroll: boolean
 
   productHowToBuyInfo = [
