@@ -8,12 +8,13 @@
         {{ amountConvert(coverage.amount) }} 元
       </div>
     </div>
-    <div v-if="coverageRate" class="ProductCoverageCard__coverage">
+    <div v-if="coverage.ideal_amount" class="ProductCoverageCard__coverage">
       <Ring
-        :length="isMobile ? 60 : 70"
-        :line-width="isMobile ? 4 : 5"
+        :length="60"
+        :line-width="4"
         :percentage="coverageRate"
         :wording="`${coverageRate}%`"
+        :wording-style="{ 'font-size': '16px' }"
       />
       <div class="ProductCoverageCard__coverageWording">
         與

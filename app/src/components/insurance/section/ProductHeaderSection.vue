@@ -108,6 +108,7 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
     color: $gray-primary;
     font-size: 1.75rem;
     font-weight: 500;
+    margin-bottom: 6px;
   }
 
   &__features {

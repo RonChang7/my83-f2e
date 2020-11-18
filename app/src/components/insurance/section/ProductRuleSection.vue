@@ -47,7 +47,7 @@ export default class ProductRuleSection extends Vue {
 
   &__header {
     margin: 0;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     color: $gray-primary;
     font-size: 1.375rem;
     font-weight: 500;

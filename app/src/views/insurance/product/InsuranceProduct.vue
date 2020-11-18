@@ -6,10 +6,7 @@
       <ProductHeaderSection />
     </div>
 
-    <div
-      v-if="shouldDisplayProductDescription"
-      class="InsuranceProduct__row thin"
-    >
+    <div class="InsuranceProduct__row thin">
       <div class="column left">
         <ProductDescription />
       </div>
@@ -50,7 +47,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { InsuranceProductVuexState } from './Index.vue'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
 import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
@@ -94,11 +90,6 @@ export default class InsuranceProduct extends DeviceMixin {
 
   get shouldShowProductPromotionSection() {
     return !(this.isMobile && !this.shouldShowScrollToTop)
-  }
-
-  get shouldDisplayProductDescription() {
-    return !!(this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.product.description
   }
 
   scrollToTop() {
@@ -207,6 +198,10 @@ export default class InsuranceProduct extends DeviceMixin {
       &.right {
         width: 264px;
         margin-top: 49px;
+
+        > div:not(:last-child) {
+          margin-bottom: 20px;
+        }
       }
 
       @include max-media('xl') {
@@ -225,6 +220,10 @@ export default class InsuranceProduct extends DeviceMixin {
 
         &.right {
           margin-top: 0;
+
+          > div:not(:last-child) {
+            margin-bottom: 0;
+          }
         }
       }
     }
