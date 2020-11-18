@@ -1,5 +1,5 @@
 <template>
-  <div class="ProductDescription__wrapper">
+  <div class="ProductDescription__wrapper" :class="{ hide: !description }">
     <div class="ProductDescription">{{ description }}</div>
   </div>
 </template>
@@ -25,6 +25,7 @@ export default class ProductDescription extends Vue {
 .ProductDescription {
   @include card-primary;
 
+  min-height: 47px;
   padding: 12px 20px 12px 24px;
   font-size: 0.875rem;
   color: $gray-primary;
@@ -38,6 +39,16 @@ export default class ProductDescription extends Vue {
 
     @include max-media('xl') {
       padding: 0 20px;
+    }
+
+    &.hide {
+      @include min-media('xl') {
+        visibility: hidden;
+      }
+
+      @include max-media('xl') {
+        display: none;
+      }
     }
 
     &:before {

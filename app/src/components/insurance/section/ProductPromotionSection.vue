@@ -128,7 +128,7 @@ export default class ProductPromotionSection extends DeviceMixin {
 
     @include max-media('sm') {
       margin: 0;
-      width: 108px;
+      width: 128px;
     }
   }
 
