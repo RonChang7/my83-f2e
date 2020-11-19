@@ -7,6 +7,7 @@ import {
   FieldOption,
   JobLevel,
   IntervalScheme,
+  Validator,
 } from './field.type'
 import {
   PremiumConfig,
@@ -52,6 +53,8 @@ export class ProductQueryFormService {
   ]
 
   private option: Record<string, Scheme<OptionValueType>> = {}
+
+  private validateRules: Record<string, Validator> = {}
 
   constructor(config: PremiumConfig, unit: Record<string, string>) {
     this.plans = config.plans
@@ -105,7 +108,7 @@ export class ProductQueryFormService {
       this.option.period = this.planField
     }
 
-    return this.filedList.reduce<FieldOption<OptionValueType>[]>(
+    const options = this.filedList.reduce<FieldOption<OptionValueType>[]>(
       (acc, field) => {
         if (this.option[field.id]) {
           acc.push({
@@ -119,6 +122,36 @@ export class ProductQueryFormService {
         return acc
       },
       []
+    )
+    this.createValidateRules(options)
+
+    return options
+  }
+
+  validate(id: string, value: number | string) {
+    if (!this.validateRules[id]) return true
+    return this.validateRules[id](Number(value))
+  }
+
+  private createValidateRules(options: FieldOption<OptionValueType>[]) {
+    this.validateRules = options.reduce<Record<string, Validator>>(
+      (acc, cur) => {
+        if (cur.type === InputType.NUMBER) {
+          acc[cur.id] = (value) => {
+            const range = {
+              max: cur.max,
+              min: cur.min,
+            }
+
+            if (_.isUndefined(range.min) || _.isUndefined(range.max))
+              return true
+
+            return !(value < range.min || value > range.max)
+          }
+        }
+        return acc
+      },
+      {}
     )
   }
 

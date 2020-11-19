@@ -17,6 +17,8 @@ export enum JobLevel {
   LEVEL_6 = '職等6（消防隊隊員、機上服務員等）',
 }
 
+export type Validator = (value: number) => boolean
+
 export type Scheme<T> = T extends IntervalType ? IntervalScheme : OptionScheme
 
 export type FieldListObject = {

@@ -74,8 +74,6 @@ import DeviceMixin from '@/mixins/device/device-mixins'
 import BaseInfo from '@/components/base/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
-type Validator = (value: number) => boolean
-
 @Component({
   components: {
     ProductQueryField,
@@ -94,8 +92,6 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   options: FieldOption<OptionValueType>[] = []
-
-  validateRules: Record<string, Validator> = {}
 
   fetchProductFeeAction = _.debounce(
     () => this.$store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`),
@@ -193,10 +189,10 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   validateAllField() {
-    _.forEach(this.validateRules, (validator, id) => {
+    _.forEach(this.premiumQuery!, (value, id) => {
       this.updateFieldValidate(
         this.fieldValueMap[id],
-        validator(this.premiumQuery![this.fieldValueMap[id]])
+        this.queryForm.validate(id, value!)
       )
     })
   }
@@ -208,19 +204,20 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   updatePremiumQuery(payload: UpdatePremiumQueryPayload) {
-    const { id } = payload
-    const value = this.validateRules[id] ? Number(payload.value) : payload.value
+    const { id, value } = payload
 
-    if (this.validateRules[id]) {
-      const result = this.validateRules[id](value as number)
-      this.updateFieldValidate(this.fieldValueMap[id], result)
-    }
+    this.updateFieldValidate(
+      this.fieldValueMap[id],
+      this.queryForm.validate(id, value)
+    )
 
     if (!this.fieldValueMap[id]) return
 
+    const optionType = this.options.find((option) => option.id === id)!.type
+
     this.$store.dispatch(`insuranceProduct/${UPDATE_PREMIUM_QUERY_KEY}`, {
       id: this.fieldValueMap[id],
-      value,
+      value: optionType === InputType.NUMBER ? Number(value) : value,
     })
 
     if (this.fieldValueMap[id] === 'plan') {
@@ -231,29 +228,6 @@ export default class ProductQuerySection extends DeviceMixin {
 
   updateOptions() {
     this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
-    this.updateValidateRules()
-  }
-
-  updateValidateRules() {
-    this.validateRules = this.options.reduce<Record<string, Validator>>(
-      (acc, cur) => {
-        if (cur.type === InputType.NUMBER) {
-          acc[cur.id] = (value) => {
-            const range = {
-              max: cur.max,
-              min: cur.min,
-            }
-
-            if (_.isUndefined(range.min) || _.isUndefined(range.max))
-              return true
-
-            return !(value < range.min || value > range.max)
-          }
-        }
-        return acc
-      },
-      {}
-    )
   }
 
   created() {
