@@ -64,7 +64,7 @@ import {
   UPDATE_PREMIUM_QUERY_KEY,
   FETCH_PRODUCT_FEE,
   UPDATE_PREMIUM_QUERY_VALIDATE,
-  UPDATE_FEE,
+  CLEAR_FEE,
 } from '@/store/insurance/product.type'
 import { OptionValueType } from '@/api/insurance/product.type'
 import {
@@ -182,8 +182,8 @@ export default class ProductQuerySection extends DeviceMixin {
     this.$nextTick(() => {
       if (this.isFieldValidated) {
         this.fetchProductFeeAction()
-      } else if (this.fee !== -1) {
-        this.$store.commit(`insuranceProduct/${UPDATE_FEE}`, -1)
+      } else if (this.fee !== null) {
+        this.$store.commit(`insuranceProduct/${CLEAR_FEE}`)
       }
     })
   }

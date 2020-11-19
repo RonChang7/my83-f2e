@@ -10,8 +10,8 @@ export default class ProductPromotion extends Vue {
     return true
   }
 
-  getFormattedFee(fee: number) {
-    const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
+  getFormattedFee(fee: number | null) {
+    const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
     return `${feeString}元 /年`
   }
 

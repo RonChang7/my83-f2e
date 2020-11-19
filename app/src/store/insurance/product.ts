@@ -55,15 +55,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
               ...(state.premiumQuery as PremiumQuery),
             })
             .then(({ data }) => {
-              commit(types.UPDATE_FEE, data.fee)
+              data.fee >= 0
+                ? commit(types.UPDATE_FEE, data.fee)
+                : commit(types.CLEAR_FEE)
+
               if (data.coverages) {
                 commit(types.UPDATE_COVERAGE, data.coverages)
               }
               resolve()
             })
             .catch(() => {
-              commit(types.UPDATE_FEE, -1)
-
+              commit(types.CLEAR_FEE)
               resolve()
             })
         })
@@ -87,7 +89,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     mutations: {
       [types.UPDATE_PRODUCT](state, data: Product) {
-        state.product = data
+        state.product = _.omit(data, 'default_premium_config')
       },
       [types.UPDATE_PRODUCT_ID](state, id: string) {
         state.id = id
@@ -121,6 +123,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_FEE](state, fee: number) {
         state.fee = fee
       },
+      [types.CLEAR_FEE](state) {
+        state.fee = null
+      },
       [types.UPDATE_COVERAGE](state, coverages: Coverage[]) {
         state.product!.coverages = coverages
       },
@@ -130,8 +135,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
 
 export interface State {
   id: string
-  fee: number
-  product: Product | null
+  fee: number | null
+  product: Omit<Product, 'default_premium_config'> | null
   premiumQuery: PremiumQuery | null
   fieldValidated: Partial<Record<keyof PremiumQuery, boolean>>
 }

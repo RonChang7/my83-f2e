@@ -97,7 +97,7 @@ const options: ComponentOption = {
   },
   methods: {
     getFormattedFee(fee) {
-      const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
+      const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
     },
   },
@@ -124,7 +124,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export type Methods = {
-  getFormattedFee(fee: number): string
+  getFormattedFee(fee: number | null): string
 }
 
 export interface Computed {
