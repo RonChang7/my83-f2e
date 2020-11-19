@@ -5,15 +5,17 @@
       class="BaseTooltip__button"
       tabindex="0"
       @mouseenter="show"
-      @focus="show"
+      @click="show"
       @mouseleave="hide"
       @blur="hide"
     >
       <slot name="button"></slot>
     </div>
-    <div ref="content" class="BaseTooltip__content">
-      <slot name="content"></slot>
-    </div>
+    <client-only>
+      <div ref="content" class="BaseTooltip__content">
+        <slot name="content"></slot>
+      </div>
+    </client-only>
   </div>
 </template>
 
@@ -58,7 +60,7 @@ export default class BaseTooltip extends Vue {
   }
 
   show(e: Event) {
-    this.isFocused = e.type === 'focus'
+    this.isFocused = e.type === 'click'
     this.$refs.content.setAttribute('data-show', '')
     this.createPopperInstance()
   }
