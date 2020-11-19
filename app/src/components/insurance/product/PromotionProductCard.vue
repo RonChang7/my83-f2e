@@ -59,7 +59,7 @@ const options: ComponentOption = {
   },
   methods: {
     getFormattedFee(fee) {
-      const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
+      const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
     },
   },

@@ -58,7 +58,7 @@ export default class ProductPromotionSection extends DeviceMixin {
   get fee() {
     return this.isFieldValidated
       ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
-      : -1
+      : null
   }
 
   get consultLink() {

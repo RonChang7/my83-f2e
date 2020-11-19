@@ -35,8 +35,8 @@ export default class ProductFee extends Vue {
   @Prop({ type: Number, default: 0 })
   cardHeight: number
 
-  @Prop({ type: Number, required: true })
-  fee: number
+  @Prop({ type: Number })
+  fee: number | null
 
   @Prop({ type: Object, required: true })
   consultLink: Link
