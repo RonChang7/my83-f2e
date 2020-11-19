@@ -6,10 +6,10 @@
         :key="option.id"
         class="ProductQuerySection__field"
         :option="option"
-        :value="premiumQuery[fieldValueMap[option.id]]"
+        :value="premiumQuery[fieldValueMap[option.id]] || 0"
+        :is-validated="fieldValidated[fieldValueMap[option.id]]"
         @update="updatePremiumQuery"
         @blur="fetchProductFee"
-        @validate="(e) => updateFieldValidate(option.id, e)"
       />
       <ProductFee
         class="ProductQuerySection__fee"
@@ -67,14 +67,14 @@ import {
   CLEAR_FEE,
 } from '@/store/insurance/product.type'
 import { OptionValueType } from '@/api/insurance/product.type'
-import {
-  FieldOption,
-  ProductQueryFormService,
-} from '@/services/product/ProductQueryFormService'
+import { ProductQueryFormService } from '@/services/product/ProductQueryFormService'
+import { FieldOption, InputType } from '@/services/product/field.type'
 import { ZHTWUnitMap } from '@/utils/number-converter'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import BaseInfo from '@/components/base/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
+
+type Validator = (value: number) => boolean
 
 @Component({
   components: {
@@ -94,6 +94,8 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   options: FieldOption<OptionValueType>[] = []
+
+  validateRules: Record<string, Validator> = {}
 
   fetchProductFeeAction = _.debounce(
     () => this.$store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`),
@@ -125,38 +127,36 @@ export default class ProductQuerySection extends DeviceMixin {
     },
   ]
 
+  get storeState() {
+    return this.$store.state as InsuranceProductVuexState
+  }
+
   get contractType() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.product.contract_type
+    return this.storeState.insuranceProduct.product?.product.contract_type
   }
 
   get wholeLifeType() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.product.whole_life_type
+    return this.storeState.insuranceProduct.product?.product.whole_life_type
   }
 
   get fee() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
+    return this.storeState.insuranceProduct.fee
   }
 
   get consultLink() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.consult_link
+    return this.storeState.insuranceProduct.product?.consult_link
   }
 
   get premiumConfig() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.premium_config
+    return this.storeState.insuranceProduct.product?.premium_config
   }
 
   get premiumQuery() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.premiumQuery
+    return this.storeState.insuranceProduct.premiumQuery
   }
 
   get amountUnit() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.premium_config.amount_unit
+    return this.storeState.insuranceProduct.product?.premium_config.amount_unit
   }
 
   get fieldValueMap() {
@@ -174,17 +174,30 @@ export default class ProductQuerySection extends DeviceMixin {
     )
   }
 
-  get isFieldValidated(): boolean {
-    return this.$store.getters['insuranceProduct/isFieldValidated']
+  get fieldValidated() {
+    return this.storeState.insuranceProduct.fieldValidated
+  }
+
+  get isFieldsValidated(): boolean {
+    return this.$store.getters['insuranceProduct/isFieldsValidated']
   }
 
   fetchProductFee() {
     this.$nextTick(() => {
-      if (this.isFieldValidated) {
+      if (this.isFieldsValidated) {
         this.fetchProductFeeAction()
       } else if (this.fee !== null) {
         this.$store.commit(`insuranceProduct/${CLEAR_FEE}`)
       }
+    })
+  }
+
+  validateAllField() {
+    _.forEach(this.validateRules, (validator, id) => {
+      this.updateFieldValidate(
+        this.fieldValueMap[id],
+        validator(this.premiumQuery![this.fieldValueMap[id]])
+      )
     })
   }
 
@@ -195,14 +208,52 @@ export default class ProductQuerySection extends DeviceMixin {
   }
 
   updatePremiumQuery(payload: UpdatePremiumQueryPayload) {
+    const { id } = payload
+    const value = this.validateRules[id] ? Number(payload.value) : payload.value
+
+    if (this.validateRules[id]) {
+      const result = this.validateRules[id](value as number)
+      this.updateFieldValidate(this.fieldValueMap[id], result)
+    }
+
+    if (!this.fieldValueMap[id]) return
+
     this.$store.dispatch(`insuranceProduct/${UPDATE_PREMIUM_QUERY_KEY}`, {
-      id: this.fieldValueMap[payload.id],
-      value: payload.value,
+      id: this.fieldValueMap[id],
+      value,
     })
 
-    if (this.fieldValueMap[payload.id] === 'plan') {
-      this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
+    if (this.fieldValueMap[id] === 'plan') {
+      this.updateOptions()
+      this.validateAllField()
     }
+  }
+
+  updateOptions() {
+    this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
+    this.updateValidateRules()
+  }
+
+  updateValidateRules() {
+    this.validateRules = this.options.reduce<Record<string, Validator>>(
+      (acc, cur) => {
+        if (cur.type === InputType.NUMBER) {
+          acc[cur.id] = (value) => {
+            const range = {
+              max: cur.max,
+              min: cur.min,
+            }
+
+            if (_.isUndefined(range.min) || _.isUndefined(range.max))
+              return true
+
+            return !(value < range.min || value > range.max)
+          }
+        }
+        return acc
+      },
+      {}
+    )
   }
 
   created() {
@@ -214,7 +265,7 @@ export default class ProductQuerySection extends DeviceMixin {
       age: '歲',
       amount: displayAmountUnit,
     })
-    this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
+    this.updateOptions()
   }
 
   mounted() {
