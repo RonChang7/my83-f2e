@@ -14,13 +14,13 @@
     </div>
     <div class="ProductCoverageSection__row">
       <div
-        v-for="column in columnNumber"
-        :key="column"
+        v-for="columnIndex in columnCount"
+        :key="columnIndex"
         class="ProductCoverageSection__column"
       >
         <ProductCoverageCard
-          v-for="(coverage, index) in filteredCoverages(column - 1)"
-          :key="index"
+          v-for="(coverage, rowIndex) in coverageGroup[columnIndex - 1]"
+          :key="rowIndex"
           class="card"
           :coverage="coverage"
           :is-active="isPanelActive"
@@ -42,6 +42,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import ProductCoverageCard from '../product/ProductCoverageCard.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
+import { Coverage } from '@/api/insurance/product.type'
 import BaseArrowDown from '@/components/base/icon/24/BaseArrowDown.vue'
 import BaseArrowTop from '@/components/base/icon/24/BaseArrowTop.vue'
 
@@ -55,7 +56,7 @@ import BaseArrowTop from '@/components/base/icon/24/BaseArrowTop.vue'
 export default class ProductCoverageSection extends Vue {
   isPanelActive: boolean = false
 
-  columnNumber: number = 2
+  columnCount: number = 2
 
   get panelActionText() {
     return this.isPanelActive ? '收合細項' : '查看細項'
@@ -75,14 +76,18 @@ export default class ProductCoverageSection extends Vue {
     return !!coverages?.find((coverage) => coverage.levels.length > 0)
   }
 
-  filteredCoverages(filterIndex: number) {
+  get coverageGroup() {
     const coverages = (this.$store.state as InsuranceProductVuexState)
       .insuranceProduct.product?.coverages
 
     return coverages
-      ? coverages.filter(
-          (_, index) => index % this.columnNumber === filterIndex
-        )
+      ? coverages.reduce<Array<Array<Coverage>>>((acc, cur, index) => {
+          if (typeof acc[index % this.columnCount] === 'undefined')
+            acc[index % this.columnCount] = []
+
+          acc[index % this.columnCount].push(cur)
+          return acc
+        }, [])
       : []
   }
 }
