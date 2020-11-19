@@ -1,11 +1,13 @@
 <template>
   <ProductPromotion
-    v-slot="{ formattedFee, openModal }"
+    v-slot="{ getFormattedFee, openModal }"
     @open-modal="$emit('open-modal')"
   >
     <div class="ProductPromotionSection">
       <div class="ProductPromotionSection__content">
-        <div class="ProductPromotionSection__fee">{{ formattedFee(fee) }}</div>
+        <div class="ProductPromotionSection__fee">
+          {{ getFormattedFee(fee) }}
+        </div>
         <div
           v-if="isMobile"
           class="ProductPromotionSection__faq"
