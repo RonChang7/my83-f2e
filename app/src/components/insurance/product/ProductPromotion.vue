@@ -10,14 +10,14 @@ export default class ProductPromotion extends Vue {
     return true
   }
 
-  formattedFee(fee: number) {
+  getFormattedFee(fee: number) {
     const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
     return `${feeString}元 /年`
   }
 
   get slot() {
     return {
-      formattedFee: this.formattedFee,
+      getFormattedFee: this.getFormattedFee,
       openModal: this.openModal,
     }
   }

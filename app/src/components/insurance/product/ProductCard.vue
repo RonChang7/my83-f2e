@@ -40,7 +40,7 @@
               <span v-if="product.fee_prefix" class="ProductCard__fee__prefix">
                 {{ product.fee_prefix }}
               </span>
-              {{ formattedFee(product.fee) }}
+              {{ getFormattedFee(product.fee) }}
             </div>
           </div>
           <div class="ProductCard__subSection">
@@ -96,7 +96,7 @@ const options: ComponentOption = {
     },
   },
   methods: {
-    formattedFee(fee) {
+    getFormattedFee(fee) {
       const feeString = fee < 0 ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
     },
@@ -124,7 +124,7 @@ export interface Instance extends Vue {}
 export interface Data {}
 
 export type Methods = {
-  formattedFee(fee: number): string
+  getFormattedFee(fee: number): string
 }
 
 export interface Computed {

@@ -1,11 +1,11 @@
 <template>
   <ProductPromotion
-    v-slot="{ formattedFee, openModal }"
+    v-slot="{ getFormattedFee, openModal }"
     @open-modal="$emit('open-modal')"
   >
     <div class="ProductFee">
       <div class="ProductFee__content" :style="{ height: `${cardHeight}px` }">
-        <div class="ProductFee__fee">{{ formattedFee(fee) }}</div>
+        <div class="ProductFee__fee">{{ getFormattedFee(fee) }}</div>
         <div class="ProductFee__action">
           <BaseButton size="l-a" type="quaternary" :to="consultLink.path">
             免費找業務員
