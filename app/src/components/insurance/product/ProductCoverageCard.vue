@@ -50,6 +50,7 @@ import { Coverage } from '@/api/insurance/product.type'
 import Ring from '@/components/base/progress/Ring.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
+import { numberConverterWithUnit } from '@/utils/number-converter'
 
 @Component({
   components: {
@@ -75,10 +76,11 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
 
   get idealCoverageWording() {
     const cutPoint = 100000
-    const numberConverter = (number: number) =>
-      number >= cutPoint ? `${number / 10000}萬` : `${number}`
 
-    return `MY83 建議理想保額 ${numberConverter(this.coverage.ideal_amount)} 元`
+    return `MY83 建議理想保額 ${numberConverterWithUnit(
+      this.coverage.ideal_amount,
+      cutPoint
+    )} 元`
   }
 }
 </script>
