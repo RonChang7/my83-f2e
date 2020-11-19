@@ -51,12 +51,12 @@ import DeviceMixin from '@/mixins/device/device-mixins'
   },
 })
 export default class ProductPromotionSection extends DeviceMixin {
-  get isFieldValidated(): boolean {
-    return this.$store.getters['insuranceProduct/isFieldValidated']
+  get isFieldsValidated(): boolean {
+    return this.$store.getters['insuranceProduct/isFieldsValidated']
   }
 
   get fee() {
-    return this.isFieldValidated
+    return this.isFieldsValidated
       ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
       : null
   }

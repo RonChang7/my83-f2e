@@ -18,7 +18,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
       }
     },
     getters: {
-      isFieldValidated: (state) =>
+      isFieldsValidated: (state) =>
         _.values(state.fieldValidated).every((value) => value),
     },
     actions: {
@@ -37,6 +37,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 amount: data.default_premium_config.amount,
               })
               commit(types.UPDATE_FEE, data.default_premium_config.fee)
+              commit(types.CLEAR_VALIDATE_FIELD)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
                 root: true,
               })
@@ -128,6 +129,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_COVERAGE](state, coverages: Coverage[]) {
         state.product!.coverages = coverages
+      },
+      [types.CLEAR_VALIDATE_FIELD](state) {
+        state.fieldValidated = {}
       },
     },
   }
