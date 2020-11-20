@@ -6,7 +6,7 @@
         :key="option.id"
         class="ProductQuerySection__field"
         :option="option"
-        :value="premiumQuery[fieldValueMap[option.id]] || 0"
+        :value="premiumQuery[fieldValueMap[option.id]]"
         :is-validated="fieldValidated[fieldValueMap[option.id]]"
         @update="updatePremiumQuery"
         @blur="fetchProductFee"
@@ -210,8 +210,6 @@ export default class ProductQuerySection extends DeviceMixin {
       this.fieldValueMap[id],
       this.queryForm.validate(id, value)
     )
-
-    if (!this.fieldValueMap[id]) return
 
     const optionType = this.options.find((option) => option.id === id)!.type
 
