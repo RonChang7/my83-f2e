@@ -4,6 +4,7 @@
       :class="{
         state,
         placeholder: isPlaceholder,
+        hideIcon,
       }"
       :disabled="disabled"
       @input="input"
@@ -50,6 +51,10 @@ export default {
       default: '',
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    hideIcon: {
       type: Boolean,
       default: false,
     },
@@ -115,6 +120,14 @@ export interface Props extends BaseSelectProps {}
   select {
     @include select;
     appearance: none;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &.hideIcon {
+      background-image: none;
+    }
 
     &::-ms-expand {
       display: none; /* Hide the default arrow in Internet Explorer 10 and Internet Explorer 11 */

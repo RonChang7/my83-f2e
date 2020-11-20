@@ -1,6 +1,6 @@
 @import 'helper';
 
-$valid-style-types: _primary, _secondary, _gray-secondary-lighter, _gray-secondary-darker, _gray-primary;
+$valid-style-types: _primary, _secondary, _gray-secondary-lighter, _gray-secondary-darker, _gray-primary, _white;
 
 $primary-style: (
   "color": $primary-color,
@@ -27,12 +27,18 @@ $gray-primary-style: (
   "hover-color": $primary-color
 );
 
+$white-style: (
+  "color": #fff,
+  "hover-color": $secondary-bg
+);
+
 $style-map: (
   "_primary-style": $primary-style,
   "_secondary-style": $secondary-style,
   "_gray-secondary-lighter-style": $gray-secondary-lighter-style,
   "_gray-secondary-darker-style": $gray-secondary-darker-style,
-  "_gray-primary-style": $gray-primary-style
+  "_gray-primary-style": $gray-primary-style,
+  "_white-style": $white-style
 );
 
 @mixin hover($style-type, $has-svg: false) {

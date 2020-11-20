@@ -31,7 +31,7 @@ import {
   AskingFormOptionResponse,
   EditQuestionContent,
 } from '@/api/question/asking.type'
-import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
+import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 
 const options: ComponentOption = {
   components: {
