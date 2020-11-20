@@ -24,7 +24,7 @@ export default class Select extends Vue {
   @Prop({ type: Array, required: true })
   options!: FieldOption<OptionType>['options']
 
-  @Prop({ type: [String, Number], required: true })
+  @Prop({ type: [String, Number] })
   value!: string | number
 }
 </script>

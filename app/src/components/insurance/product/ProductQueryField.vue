@@ -12,7 +12,7 @@
       />
       <Select
         v-if="option.type === 'OPTION' && option.options"
-        :value="value || 0"
+        :value="value"
         :options="option.options"
         @update="
           (e) => {
@@ -59,7 +59,7 @@ export default class ProductQueryField extends Vue {
   @Prop({ type: Object, required: true })
   option!: FieldOption<OptionValueType>
 
-  @Prop({ type: [String, Number], required: true })
+  @Prop({ type: [String, Number] })
   value!: string | number
 
   @Prop({ type: Boolean, default: true })
