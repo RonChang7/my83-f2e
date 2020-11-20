@@ -64,6 +64,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    hideIcon: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -84,6 +88,7 @@ export default {
         [`placeholder`]: this.selectedText === this.placeholder,
         [`disabled`]: this.disabled,
         [`${this.state}`]: this.state,
+        [`hideIcon`]: this.hideIcon,
       }
     },
   },
@@ -206,8 +211,13 @@ export interface Props extends BaseSelectProps {}
 .BaseDesktopSelect {
   @include select;
 
-  display: flex;
-  align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &.hideIcon {
+    background-image: none;
+  }
 
   &__wrapper {
     user-select: none;
@@ -221,6 +231,7 @@ export interface Props extends BaseSelectProps {}
     padding: 12px 0;
     height: auto;
     overflow: auto;
+    z-index: 1;
 
     &:focus {
       outline: 0;
@@ -233,6 +244,7 @@ export interface Props extends BaseSelectProps {}
     height: 40px;
     padding: 0 30px 0 42px;
     color: $gray-primary;
+    font-weight: 400;
 
     &:hover {
       background: $primary-bg;

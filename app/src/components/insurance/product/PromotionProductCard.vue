@@ -10,7 +10,9 @@
     </div>
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__plan">{{ product.plan }}</div>
-      <div class="PromotionProductCard__fee">{{ product.fee }}</div>
+      <div class="PromotionProductCard__fee">
+        {{ getFormattedFee(product.fee) }}
+      </div>
       <div v-if="viewCount" class="PromotionProductCard__viewCount">
         {{ viewCount }}
       </div>
@@ -33,6 +35,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 const options: ComponentOption = {
   components: {
@@ -52,6 +55,12 @@ const options: ComponentOption = {
       return this.product.view_count
         ? `有 ${this.product.view_count} 人有興趣`
         : ''
+    },
+  },
+  methods: {
+    getFormattedFee(fee) {
+      const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
+      return `${feeString}元 /年`
     },
   },
 }
@@ -76,7 +85,9 @@ export interface Instance extends Vue {}
 
 export interface Data {}
 
-export type Methods = {}
+export type Methods = {
+  getFormattedFee(fee: number): string
+}
 
 export interface Computed {
   features: string
