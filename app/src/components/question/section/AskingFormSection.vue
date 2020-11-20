@@ -143,7 +143,7 @@ import {
   IsUserSuspectDialogContent,
   HasDuplicatedPostDialogContent,
 } from '@/config/question-asking-dialog-info'
-import { Option as SelectOption } from '@/components/my83-ui-kit/input/BaseSelect.vue'
+import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'

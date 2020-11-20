@@ -1,6 +1,7 @@
 const DEFAULT_IMAGE = 'error-page@2x.png'
 
 export const ErrorPageType = {
+  PRODUCT: 'PRODUCT',
   QUESTION: 'QUESTION',
   SERVER: 'SERVER',
   DEFAULT: 'DEFAULT',
@@ -31,6 +32,15 @@ export const errorPageContent: Record<string, ErrorContent> = {
     content: '有保險問題嗎？快到討論區發問，讓專業的業務員來幫你吧！',
     buttonText: '回討論區',
     redirectUrl: '/question',
+    enableZendesk: false,
+  },
+  [ErrorPageType.PRODUCT]: {
+    image: DEFAULT_IMAGE,
+    title: '這支保險商品不存在喔',
+    content:
+      '想知道最熱門的保險商品有哪些嗎？快去看看我們的推薦，有問題就交給業務員馬上解答！',
+    buttonText: '回保險商品排行榜',
+    redirectUrl: '/product/leaderboard',
     enableZendesk: false,
   },
 }

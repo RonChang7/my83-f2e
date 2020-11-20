@@ -18,6 +18,7 @@ export interface PageMeta {
   keywords: string
   description: string
   image: PageMetaImage | null
+  breadcrumbs?: Breadcrumb[]
 }
 
 export interface PageMetaImage {
@@ -57,4 +58,11 @@ export interface RelatedBlog {
 
 export interface RelatedQuestion extends RelatedBlog {
   answer_count: number
+}
+
+export type Gender = 'male' | 'female'
+
+export interface Breadcrumb {
+  name: string
+  link: Link
 }

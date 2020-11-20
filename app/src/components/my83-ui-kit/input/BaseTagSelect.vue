@@ -33,7 +33,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseTagOption from '../tag/BaseTagOption.vue'
-import { Option } from './BaseSelect.vue'
+import { Option } from './type'
 const BaseArrowDown = () =>
   import('@/components/base/icon/18/BaseArrowDown.vue')
 const BaseArrowUp = () => import('@/components/base/icon/18/BaseArrowUp.vue')

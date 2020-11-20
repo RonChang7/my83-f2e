@@ -1,7 +1,9 @@
 <template>
   <BaseModal :visible="visible" :lock-scroll="lockScroll" @close="closePanel">
     <div ref="info" class="BaseInfoModal" tabindex="0" @keyup.esc="closePanel">
-      <BaseClose class="BaseInfoModal__close" @click.native="closePanel" />
+      <div class="BaseInfoModal__close">
+        <BaseClose @click.native="closePanel" />
+      </div>
       <slot></slot>
     </div>
   </BaseModal>
@@ -115,6 +117,8 @@ export default options
     top: 15px;
     right: 15px;
     cursor: pointer;
+
+    @include hover('_gray-secondary-darker', $has-svg: true);
   }
 }
 </style>

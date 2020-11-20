@@ -10,6 +10,7 @@ export const delimitIntegerWithSymbol = (
   digital: number = 3,
   symbol: string = ','
 ) => {
-  const re = new RegExp(`(\\d)(?=(\\d{${digital}})+(?!\\d))`, 'g')
-  return number.toString().replace(re, `$1${symbol}`)
+  // ref: https://blog.kalan.dev/2020-10-20-how-to-add-comma-into-number/
+  const re = new RegExp(`\\B(?=(\\d{${digital}})+$)`, 'g')
+  return number.toString().replace(re, `${symbol}`)
 }

@@ -93,7 +93,10 @@ const opinions: ComponentOption = {
   },
 }
 
-const fetchList = (insurance: string, { query, store }: Context) => {
+const fetchList = (
+  insurance: string,
+  { query, store, from, route }: Context
+) => {
   const insuranceStore = (store.state as InsuranceVuexState).insurance
   const page = /^\d+$/.test(getFirstQuery(query.page))
     ? Number(getFirstQuery(query.page))
@@ -106,7 +109,11 @@ const fetchList = (insurance: string, { query, store }: Context) => {
     page,
   }
 
-  if (insurance !== currentInsurance || page !== currentParam.page) {
+  if (
+    from?.name !== route?.name ||
+    insurance !== currentInsurance ||
+    page !== currentParam.page
+  ) {
     return store.dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
   }
 }

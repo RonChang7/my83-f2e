@@ -15,7 +15,7 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Option } from '../input/BaseSelect.vue'
+import { Option } from '../input/type'
 import BaseTag from './BaseTag.vue'
 
 const options: ComponentOption = {
