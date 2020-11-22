@@ -142,11 +142,16 @@ export interface Props {
   }
 
   &__menu {
+    $margin-left: -17px;
     display: none;
     position: absolute;
     top: 54px;
-    margin-left: -17px;
+    margin-left: $margin-left;
     z-index: 10;
+
+    @include only_ie {
+      margin-left: calc(-75px + #{$margin-left});
+    }
   }
 }
 </style>
