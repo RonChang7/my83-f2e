@@ -9,12 +9,20 @@
 }
 
 @mixin hover-supported {
+  @include only_ie {
+    @content;
+  }
+
   @media (hover: hover) {
     @content;
   }
 }
 
 @mixin hover-unsupported {
+  @include only_ie {
+    @content;
+  }
+
   @media (hover: none) {
     @content;
   }

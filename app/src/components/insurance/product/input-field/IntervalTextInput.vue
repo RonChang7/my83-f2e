@@ -79,7 +79,7 @@ export default class IntervalTextInput extends Vue {
   }
 
   .input {
-    width: 80px;
+    width: 100px;
   }
 
   .unit {
