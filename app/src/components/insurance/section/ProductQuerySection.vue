@@ -274,6 +274,7 @@ export default class ProductQuerySection extends DeviceMixin {
   &__content {
     padding: 32px 116px 4px 40px;
     flex-wrap: wrap;
+    position: relative;
 
     @include max-media('xl') {
       padding: 20px;
@@ -297,6 +298,8 @@ export default class ProductQuerySection extends DeviceMixin {
     position: absolute;
     margin-top: -20px;
     margin-left: 675px;
+    left: 40px;
+    top: 32px;
 
     @include max-media('xl') {
       position: relative;
