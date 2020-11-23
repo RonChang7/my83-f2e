@@ -138,6 +138,7 @@ export default options
 <style lang="scss" scoped>
 .Ring {
   display: flex;
+  position: relative;
 
   &__wording {
     position: absolute;
@@ -146,6 +147,7 @@ export default options
     justify-content: center;
     padding: 0 10px;
     text-align: center;
+    left: 0;
   }
 }
 </style>
