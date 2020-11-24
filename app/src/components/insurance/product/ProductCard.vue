@@ -1,5 +1,5 @@
 <template>
-  <BaseCard class="ProductCard">
+  <BaseCard class="ProductCard" :enable-hover="true">
     <template v-slot:default>
       <div class="ProductCard__content">
         <div class="ProductCard__section">

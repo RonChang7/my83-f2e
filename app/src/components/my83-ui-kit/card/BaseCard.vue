@@ -1,5 +1,5 @@
 <template>
-  <div class="BaseCard">
+  <div class="BaseCard" :class="{ enableHover }">
     <div v-if="hasTitle" class="BaseCard__title">
       <slot name="title"></slot>
     </div>
@@ -19,6 +19,12 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { isSlotExist } from '@/utils/render-helper'
 
 export default {
+  props: {
+    enableHover: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     hasTitle() {
       return isSlotExist('title', this)
@@ -56,7 +62,9 @@ export interface Computed {
   hasFooter: boolean
 }
 
-export interface Props {}
+export interface Props {
+  enableHover: boolean
+}
 </script>
 
 <style lang="scss" scoped>
@@ -67,6 +75,10 @@ export interface Props {}
 .BaseCard {
   @include card-primary;
   $border-style: 1px solid $gray-quaternary;
+
+  &.enableHover {
+    @include card-primary($hover: true);
+  }
 
   & > * {
     padding: 0 30px;
