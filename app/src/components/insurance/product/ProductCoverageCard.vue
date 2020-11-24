@@ -76,13 +76,12 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
 
   get idealCoverageWording() {
     const cutPoint = 100000
+    const amount =
+      this.coverage.ideal_amount > cutPoint
+        ? numberConverterWithUnit(this.coverage.ideal_amount, 10000)
+        : this.coverage.ideal_amount
 
-    return this.coverage.ideal_amount > cutPoint
-      ? `MY83 建議理想保額 ${numberConverterWithUnit(
-          this.coverage.ideal_amount,
-          10000
-        )} 元`
-      : this.coverage.ideal_amount
+    return `MY83 建議理想保額 ${amount} 元`
   }
 }
 </script>
