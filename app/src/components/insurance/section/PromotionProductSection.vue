@@ -16,6 +16,7 @@
         @click-button="
           clickPromotionProductButton(`${product.company}${product.name}`)
         "
+        @click.native="$router.push(product.btn.link.path)"
       />
     </BaseHorizontalList>
   </div>
@@ -120,8 +121,12 @@ export default options
     margin-bottom: 0;
   }
 
-  .product:not(:last-of-type) {
-    margin-right: 16px;
+  .product {
+    cursor: pointer;
+
+    &:not(:last-of-type) {
+      margin-right: 16px;
+    }
   }
 
   @include max-media('xl') {
