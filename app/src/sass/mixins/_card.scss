@@ -1,14 +1,24 @@
 // Card (Panel)
-@mixin card-primary($background: $default-bg) {
+@mixin card-primary($background: $default-bg, $hover: false) {
   background: $background;
   border: 1px solid $gray-quaternary;
   border-radius: $border-radius;
-  @include shadow-01;
+  @include shadow('01');
+
+  @if $hover {
+    @include hover-supported {
+      transition: box-shadow 0.3s;
+
+      &:hover {
+        @include shadow('01', '03');
+      }
+    }
+  }
 }
 
 @mixin card-secondary($background: $default-bg) {
   background: $background;
   border: 0;
   border-radius: 0;
-  @include shadow-02;
+  @include shadow('02');
 }

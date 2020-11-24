@@ -79,7 +79,8 @@ export interface Props {
 .DesktopHeader {
   $header-resize-cut-point: 1360px;
 
-  @include shadow-02;
+  @include shadow('02');
+
   background: $default-bg;
   display: flex;
   align-items: center;
