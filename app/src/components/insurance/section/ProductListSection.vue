@@ -36,6 +36,7 @@
       class="ProductListSection__product"
       :product="product"
       @click-button="clickProductButton(`${product.company}${product.name}`)"
+      @click.native="$router.push(product.btn.link.path)"
     />
   </div>
 </template>
@@ -218,8 +219,12 @@ export default options
     font-size: 1rem;
   }
 
-  &__product:not(:last-child) {
-    margin-bottom: 16px;
+  &__product {
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
   }
 
   @include max-media('xl') {
