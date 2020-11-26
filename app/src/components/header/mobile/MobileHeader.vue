@@ -126,7 +126,7 @@ export interface Props {
 @import '@/sass/rwd.scss';
 
 .MobileHeader {
-  @include shadow-02;
+  @include shadow('02');
   background: $default-bg;
   display: flex;
   align-items: center;

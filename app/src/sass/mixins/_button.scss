@@ -162,7 +162,7 @@ $button-font: (
   color: $quaternary-button-text-color;
   background: $default-bg;
   border-color: $default-bg;
-  @include shadow-01;
+  @include shadow('01');
 
   &::v-deep svg > path {
     fill: $quaternary-button-text-color;
