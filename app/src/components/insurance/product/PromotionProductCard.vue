@@ -106,7 +106,7 @@ export default options
 @import '@/sass/rwd.scss';
 
 .PromotionProductCard {
-  @include card-primary;
+  @include card-primary($hover: true);
 
   width: 240px;
   padding: 24px 20px;
@@ -115,6 +115,10 @@ export default options
   flex-direction: column;
   justify-content: space-between;
   flex: 0 0 auto;
+
+  @include hover-supported {
+    margin: 20px 0;
+  }
 
   &__company {
     color: $secondary-color;
