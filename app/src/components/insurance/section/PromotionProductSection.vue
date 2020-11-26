@@ -4,7 +4,10 @@
     <div class="PromotionProductSection__description">
       {{ description }}
     </div>
-    <BaseHorizontalList>
+    <BaseHorizontalList
+      class="PromotionProductSection__list"
+      :offset="isDesktop ? 20 : 0"
+    >
       <PromotionProductCard
         v-for="product in promotionProducts"
         :key="product.id"
@@ -13,6 +16,7 @@
         @click-button="
           clickPromotionProductButton(`${product.company}${product.name}`)
         "
+        @click.native="$router.push(product.btn.link.path)"
       />
     </BaseHorizontalList>
   </div>
@@ -28,8 +32,10 @@ import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
+import DeviceMixin from '@/mixins/device/device-mixins'
 
 const options: ComponentOption = {
+  mixins: [DeviceMixin],
   components: {
     BaseHorizontalList,
     PromotionProductCard,
@@ -112,11 +118,15 @@ export default options
   }
 
   &__description {
-    margin-bottom: 20px;
+    margin-bottom: 0;
   }
 
-  .product:not(:last-child) {
-    margin-right: 16px;
+  .product {
+    cursor: pointer;
+
+    &:not(:last-of-type) {
+      margin-right: 16px;
+    }
   }
 
   @include max-media('xl') {
@@ -132,7 +142,7 @@ export default options
       margin: 0 10px 12px 0;
     }
 
-    .product:not(:last-child) {
+    .product:not(:last-of-type) {
       margin-right: 10px;
     }
   }

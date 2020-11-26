@@ -202,6 +202,10 @@ export default options
 
     &.promotion {
       overflow: hidden;
+
+      @include min-media('xl') {
+        margin-bottom: 20px;
+      }
     }
   }
 

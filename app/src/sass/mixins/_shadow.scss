@@ -1,8 +1,15 @@
 // Shadow
-@mixin shadow-01 {
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-}
+$shadow-list: (
+  '01': 0 2px 4px 0 rgba(0, 0, 0, 0.1),
+  '02': inset 0 -1px 0 0 rgba(0, 0, 0, 0.15),
+  '03': 0 0 20px 0 rgba(0, 0, 0, 0.15)
+);
 
-@mixin shadow-02 {
-  box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.15);
+@mixin shadow($numbers...) {
+  $shadow-styles: '';
+  @each $number in $numbers {
+    $shadow-styles: $shadow-styles + map-get($shadow-list, $number) + ','
+  }
+  // Remove redundant comma
+  box-shadow: #{str-slice($shadow-styles, 1, -2)};
 }
