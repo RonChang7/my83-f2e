@@ -147,6 +147,7 @@ export interface Props {
   }
 
   &__badge {
+    flex: 0 0 auto;
     color: $primary-color;
     background: $primary-bright-color;
     padding: 3px 10px;
