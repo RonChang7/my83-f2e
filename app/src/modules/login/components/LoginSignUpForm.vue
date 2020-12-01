@@ -28,11 +28,13 @@ import FacebookLoginButton from './FacebookLoginButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { facebookSignUp } from '@/api/login/login'
-import { User } from '@/services/user/user'
+import { LandingUrlInfo } from '@/store/user/index'
+import { GET_LANDING_URL } from '@/store/user/user.type'
 import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/user/suspect'
+import { Suspect } from '@/services/auth/suspect'
 
 const auth = Auth.getInstance()
+const suspect = Suspect.getInstance()
 
 export default {
   components: {
@@ -54,16 +56,19 @@ export default {
       })
     },
     async facebookSignUp(fbToken) {
-      const user = User.getInstance()
+      const landingUrl = this.$store.getters[
+        `user/${GET_LANDING_URL}`
+      ] as LandingUrlInfo
+
       this.state = 'loading'
 
       try {
         const { token, expired_time } = await facebookSignUp({
           fbToken,
           role: 'client',
-          ...user.landingUrl,
-          roleSession: Suspect.getRoleCode(),
-          memberSession: Suspect.getMemberId(),
+          ...landingUrl,
+          roleSession: suspect.get(this.$cookiesKey.ROLE),
+          memberSession: suspect.get(this.$cookiesKey.MEMBER),
         })
         this.login(token!, expired_time!)
 

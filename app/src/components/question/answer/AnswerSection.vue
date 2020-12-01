@@ -62,7 +62,8 @@ import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import AnswerInteraction from './AnswerInteraction.vue'
 import { Type } from './AnswerInteractionButton.vue'
 import { AnswerData } from '@/api/question/question.type'
-import { User, UserRole } from '@/services/user/user'
+import { Auth } from '@/services/auth/auth'
+import { UserRole } from '@/store/user/index'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
 import {
   OPEN_LOGIN_PANEL,
@@ -70,7 +71,7 @@ import {
 } from '@/store/global/global.type'
 const ResponseEditor = () => import('../response/ResponseEditor.vue')
 
-const user = User.getInstance()
+const auth = Auth.getInstance()
 const enum LikeStatus {
   LIKE = 1,
   NONE = 0,
@@ -167,7 +168,7 @@ export default {
       })
     },
     buttonActionHandler(type) {
-      if (!user.isLogin()) {
+      if (!auth.isLogin) {
         this.showLoginPanel()
         return
       }

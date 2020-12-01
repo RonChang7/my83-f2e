@@ -12,10 +12,11 @@ import {
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/question'
-import { User } from '@/services/user/user'
 import { Content } from '@/services/page/Content'
+import { Auth } from '@/services/auth/auth'
 const QuestionPage = () => import('./QuestionPage.vue')
-const user = User.getInstance()
+
+const auth = Auth.getInstance()
 
 export default {
   async asyncData(ctx) {
@@ -60,7 +61,7 @@ export default {
     }
   },
   mounted() {
-    if (user.isLogin()) {
+    if (auth.isLogin) {
       const id = this.$route.params.id
       this.$store.dispatch(`question/${FETCH_QUESTION_PERSONALIZE_DATA}`, id)
       this.$store.dispatch(`question/${FETCH_ANSWER_PERSONALIZE_DATA}`, id)

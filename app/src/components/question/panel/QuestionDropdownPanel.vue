@@ -16,13 +16,13 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseDropdownOption from '../base/BaseDropdownOption.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { User } from '@/services/user/user'
+import { Auth } from '@/services/auth/auth'
 import {
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
 } from '@/store/global/global.type'
 
-const user = User.getInstance()
+const auth = Auth.getInstance()
 
 export default {
   components: {
@@ -42,7 +42,7 @@ export default {
       })
     },
     clickHandler(action) {
-      if (!user.isLogin()) {
+      if (!auth.isLogin) {
         this.showLoginPanel()
         return
       }

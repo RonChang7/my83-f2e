@@ -4,9 +4,10 @@ import { createStoreModule as createGlobalStoreModule } from '@/store/global/ind
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
 import { createStoreModule as createPageMetaStoreModule } from '@/store/seo/page-meta'
 import { createStoreModule as createJsonLdStoreModule } from '@/store/seo/json-ld'
+import { createStoreModule as createUserStoreModule } from '@/store/user/index'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
-import { User } from '@/services/user/user'
 import { Auth } from '@/services/auth/auth'
+import { UPDATE_LANDING_URL } from '@/store/user/user.type'
 
 const storeModules: Record<string, StoreModule> = {
   global: {
@@ -25,15 +26,13 @@ const storeModules: Record<string, StoreModule> = {
     moduleName: 'jsonLd',
     createModule: () => createJsonLdStoreModule(),
   },
+  user: {
+    moduleName: 'user',
+    createModule: () => createUserStoreModule(),
+  },
 }
 
 export default (({ app, store }, inject) => {
-  // 設定 my83 token name
-  const auth = Auth.getInstance()
-  auth.setTokenKey(app.$env.JWT_TOKEN_NAME)
-
-  const user = User.getInstance()
-
   // Set image bucket url
   inject('imageBucketUrl', app.$env.IMAGE_BUCKET_URL)
 
@@ -52,8 +51,9 @@ export default (({ app, store }, inject) => {
     isTablet: app.$ua.isFromTablet(),
   })
 
-  if (process.client && !user.isLogin()) {
-    user.updateLandingUrl()
+  const auth = Auth.getInstance()
+  if (process.client && !auth.isLogin) {
+    store.dispatch(`user/${UPDATE_LANDING_URL}`)
   }
 }) as NuxtPlugin
 

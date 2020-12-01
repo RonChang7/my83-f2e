@@ -88,7 +88,7 @@ import MobileRecommendProductSection from '@/components/question/section/MobileR
 import QuestionLayoutWithFixedColumn, {
   ComponentInstance as QuestionLayoutWithFixedColumnComponentInstance,
 } from '@/components/question/layout/QuestionLayoutWithFixedColumn.vue'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/store/user/index'
 import { UPDATE_QUESTION_DROPDOWN_MENU_STATUS } from '@/store/question/question.type'
 import { scrollToElement } from '@/utils/scroll'
 

@@ -1,9 +1,10 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import request, { Request } from '@/api/request'
+import { GlobalVuexState } from '@/store/global-state'
 import { sentryLog } from '@/api/sentry'
 import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/user/suspect'
+import { Suspect } from '@/services/auth/suspect'
 import { JWT } from '@/services/auth/jwt'
 import {
   checkRedirectResponse,
@@ -11,7 +12,7 @@ import {
 } from '@/api/errors/response'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 
-export default (({ app, req }) => {
+export default (({ app, store, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
   const { APP_ENV, API_URL } = app.$env
   const requestInstance = Request.getInstance()
@@ -98,6 +99,8 @@ export default (({ app, req }) => {
 
           const originalRequest = config as AxiosRequestConfig
           const auth = Auth.getInstance()
+          const suspect = Suspect.getInstance()
+          const { id, roleCode } = (store.state as GlobalVuexState).user
 
           if (
             preventInterceptorsList.find(
@@ -121,13 +124,15 @@ export default (({ app, req }) => {
                   refreshTokenStatus === 401 &&
                   refreshTokenError === 'invalid_token'
                 ) {
-                  Suspect.init()
+                  suspect.set(app.$cookiesKey.ROLE, roleCode.toString())
+                  suspect.set(app.$cookiesKey.MEMBER, id.toString())
                   auth.logout()
                 }
                 return Promise.reject(err)
               })
           } else if (status === 401 && error === 'invalid_token') {
-            Suspect.init()
+            suspect.set(app.$cookiesKey.ROLE, roleCode.toString())
+            suspect.set(app.$cookiesKey.MEMBER, id.toString())
             auth.logout()
             return Promise.reject(err)
           } else {
