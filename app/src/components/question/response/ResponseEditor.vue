@@ -82,9 +82,9 @@ import {
 } from '@/services/question/form/ResponseFormService'
 import { scrollToElement } from '@/utils/scroll'
 import { nl2br } from '@/utils/text-parser'
-import { User } from '@/services/user/user'
+import { Auth } from '@/services/auth/auth'
 
-const user = User.getInstance()
+const auth = Auth.getInstance()
 
 export default {
   components: {
@@ -142,7 +142,7 @@ export default {
       this.$emit('close-editor')
     },
     activePanelHandler(status) {
-      if (status && !user.isLogin()) {
+      if (status && !auth.isLogin) {
         this.showLoginPanel()
         return
       }

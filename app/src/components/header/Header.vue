@@ -19,7 +19,7 @@ import MobileHeader from './mobile/MobileHeader.vue'
 import Affix from '@/components/base/affix/Affix.vue'
 import * as types from '@/store/header/header.type'
 import { GlobalVuexState } from '@/store/global-state'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/store/user/index'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
