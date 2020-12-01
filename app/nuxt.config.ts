@@ -127,6 +127,7 @@ const config: NuxtConfig = {
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
+    'cookie-universal-nuxt',
   ],
   webfontloader: {
     google: {
