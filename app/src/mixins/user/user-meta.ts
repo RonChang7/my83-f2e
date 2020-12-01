@@ -2,22 +2,19 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { Vue as VuePropertyDecorator, Component } from 'vue-property-decorator'
 import { GlobalVuexState } from '@/store/global-state'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/store/user/index'
 
-const options: ComponentOption = {
-  computed: {
-    nickname() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
-      )
-    },
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
-  },
+@Component
+export default class UserMetaMixin extends VuePropertyDecorator {
+  get nickname() {
+    return (this.$store.state as GlobalVuexState).user.nickname
+  }
+
+  get userRole() {
+    return (this.$store.state as GlobalVuexState).user.role
+  }
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -50,5 +47,3 @@ export interface Computed {
 }
 
 export interface Props {}
-
-export default options
