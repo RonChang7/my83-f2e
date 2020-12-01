@@ -1,4 +1,3 @@
-import Cookies, { CookieAttributes } from 'js-cookie'
 import { jwtParser, Response } from '@/utils/jwt-parser'
 
 export class Auth {
@@ -6,10 +5,12 @@ export class Auth {
 
   private jwtTokenKey: string
 
-  private cookieAttributes: CookieAttributes
+  private store: Store
+
+  private storeOption: StoreOption
 
   private constructor() {
-    this.cookieAttributes = {
+    this.storeOption = {
       path: '/',
       secure: true,
     }
@@ -21,6 +22,14 @@ export class Auth {
     }
 
     return Auth.instance
+  }
+
+  get isLogin() {
+    return !!this.getToken()
+  }
+
+  public setStore(store: Store) {
+    this.store = store
   }
 
   public login(payload: payload) {
@@ -40,7 +49,9 @@ export class Auth {
   }
 
   public getToken() {
-    return Cookies.get(this.jwtTokenKey)
+    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
+
+    return this.store.get(this.jwtTokenKey)
   }
 
   public get expiredTime() {
@@ -52,18 +63,38 @@ export class Auth {
   }
 
   private setToken({ jwtToken, expiredTime }: payload) {
-    Cookies.set(this.jwtTokenKey, jwtToken, {
+    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
+
+    this.store.set(this.jwtTokenKey, jwtToken, {
       expires: new Date(expiredTime * 1000),
-      ...this.cookieAttributes,
+      ...this.storeOption,
     })
   }
 
   private removeToken() {
-    Cookies.remove(this.jwtTokenKey, this.cookieAttributes)
+    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
+
+    this.store.remove(this.jwtTokenKey, this.storeOption)
+  }
+
+  private checkIfStoreExisted() {
+    return !!this.store
   }
 }
 
 interface payload {
   jwtToken: string
   expiredTime: number
+}
+
+interface Store {
+  get(key: string): string | undefined
+  set(key: string, value: string | object, option?: StoreOption): void
+  remove(key: string, option?: StoreOption): void
+}
+
+interface StoreOption {
+  path?: string
+  expires?: Date
+  secure?: boolean
 }
