@@ -57,6 +57,10 @@ const config: NuxtConfig = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
+    {
+      src: '@/plugins/cookies',
+      mode: 'client',
+    },
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {
