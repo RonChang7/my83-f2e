@@ -5,6 +5,7 @@
       :key="index"
       :type="buttonType"
       :is-selected="likeStatusType === buttonType"
+      :count="count(buttonType)"
       @action="actionHandler"
     />
   </div>
@@ -22,6 +23,18 @@ export default {
     AnswerInteractionButton,
   },
   props: {
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
+    dislikeCount: {
+      type: Number,
+      default: 0,
+    },
+    responseCount: {
+      type: Number,
+      default: 0,
+    },
     likeStatus: {
       type: Number,
       required: true,
@@ -29,12 +42,15 @@ export default {
   },
   data() {
     return {
-      buttonTypes: ['like', 'response'],
+      buttonTypes: ['like', 'dislike', 'response'],
     }
   },
   methods: {
     actionHandler(type) {
       this.$emit('action', type)
+    },
+    count(type) {
+      return this[`${type}Count`] || 0
     },
   },
   computed: {
@@ -75,6 +91,7 @@ export interface Data {
 
 export type Methods = {
   actionHandler(type: Type): void
+  count(type: Type): number
 }
 
 export interface Computed {
@@ -82,6 +99,9 @@ export interface Computed {
 }
 
 export interface Props {
+  likeCount: number
+  dislikeCount: number
+  responseCount: number
   likeStatus: LikeStatus
 }
 </script>
@@ -92,7 +112,7 @@ export interface Props {
 
 .AnswerInteraction {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   height: 45px;
   margin-top: 16px;

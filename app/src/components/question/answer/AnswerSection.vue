@@ -19,14 +19,11 @@
         />
       </div>
       <BaseContent :content="answer.content" />
-      <ContentMeta
+      <ContentMeta :created-at="answer.created_at" meta-type="answer" />
+      <AnswerInteraction
         :like-count="likeCount"
         :dislike-count="dislikeCount"
-        :answer-count="answer.answer_meta.response_count"
-        :created-at="answer.created_at"
-        meta-type="answer"
-      />
-      <AnswerInteraction
+        :response-count="answer.answer_meta.response_count"
         :like-status="likeStatus"
         @action="buttonActionHandler"
       />
@@ -43,6 +40,8 @@
         :is-focus.sync="isResponsePanelFocus"
         :question-id="questionId"
         :answer-id="answer.answer_id"
+        :is-dislike-response.sync="isDislikeResponse"
+        @add-dislike-response="toggleLikeStatus(-1)"
       />
     </div>
   </div>
@@ -61,21 +60,20 @@ import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import AnswerInteraction from './AnswerInteraction.vue'
 import { Type } from './AnswerInteractionButton.vue'
-import { AnswerData } from '@/api/question/question.type'
+import { CancelDislikeDialogContent } from './cancel-dislike-dialog-info'
+import { AnswerData, LikeStatus } from '@/api/question/question.type'
 import { User, UserRole } from '@/services/user/user'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
 import {
+  OPEN_GLOBAL_DIALOG,
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
+  UPDATE_GLOBAL_DIALOG,
 } from '@/store/global/global.type'
+import { GlobalDialogContent } from '@/store/global'
 const ResponseEditor = () => import('../response/ResponseEditor.vue')
 
 const user = User.getInstance()
-const enum LikeStatus {
-  LIKE = 1,
-  NONE = 0,
-  UNLIKE = -1,
-}
 
 export default {
   components: {
@@ -126,6 +124,7 @@ export default {
       openEditor: false,
       activeResponsePanel: false,
       isResponsePanelFocus: false,
+      isDislikeResponse: false,
       temporarilyLikeCount: null,
       temporarilyDislikeCount: null,
       temporarilyLikeStatus: null,
@@ -174,15 +173,34 @@ export default {
 
       switch (type) {
         case 'response':
+          this.isDislikeResponse = false
           this.openResponsePanel()
           break
         case 'like':
-          this.toggleLikeStatus(LikeStatus.LIKE)
+          this.likeStatus === -1
+            ? this.cancelDislike(type)
+            : this.toggleLikeStatus(LikeStatus.LIKE)
           break
         case 'dislike':
-          this.toggleLikeStatus(LikeStatus.UNLIKE)
+          this.likeStatus === -1
+            ? this.cancelDislike(type)
+            : (() => {
+                this.isDislikeResponse = true
+                this.openResponsePanel()
+              })()
           break
       }
+    },
+    cancelDislike(type) {
+      const likeStatus = type === 'like' ? LikeStatus.LIKE : LikeStatus.DISLIKE
+
+      const payload: GlobalDialogContent = {
+        ...CancelDislikeDialogContent,
+        rightConfirmFn: () => this.toggleLikeStatus(likeStatus),
+      }
+
+      this.$store.dispatch(`global/${UPDATE_GLOBAL_DIALOG}`, payload)
+      this.$store.dispatch(`global/${OPEN_GLOBAL_DIALOG}`)
     },
     openResponsePanel() {
       this.openEditor = true
@@ -269,6 +287,7 @@ export interface Data {
   openEditor: boolean
   activeResponsePanel: boolean
   isResponsePanelFocus: boolean
+  isDislikeResponse: boolean
   temporarilyLikeCount: number | null
   temporarilyDislikeCount: number | null
   temporarilyLikeStatus: number | null
@@ -280,6 +299,7 @@ export type Methods = {
   >
   showLoginPanel(): void
   buttonActionHandler(type: Type): void
+  cancelDislike(type: Exclude<Type, 'response'>): void
   openResponsePanel(): void
   toggleLikeStatus(status: LikeStatus): void
   resetTempState(): void
