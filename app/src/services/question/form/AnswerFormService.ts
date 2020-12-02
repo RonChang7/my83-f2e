@@ -1,4 +1,4 @@
-import { UserRole } from '@/store/user/index'
+import { UserRole } from '@/services/auth/auth'
 
 export class AnswerFormService {
   public form: AnswerFormData

@@ -21,7 +21,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderPersonalize from '../HeaderPersonalize.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { UserRole } from '@/store/user/index'
+import { UserRole } from '@/services/auth/auth'
 
 export default {
   components: {

@@ -26,10 +26,7 @@ import {
 } from '@/config/question-asking-dialog-info'
 import { ErrorPageType } from '@/config/error-page.config'
 import { Content } from '@/services/page/Content'
-import { Auth } from '@/services/auth/auth'
 const AskingPage = () => import('./AskingPage.vue')
-
-const auth = Auth.getInstance()
 
 const options: ComponentOption = {
   async asyncData(ctx) {
@@ -50,7 +47,7 @@ const options: ComponentOption = {
     const { id } = this.$route.params
     const { purpose_tag_id: purposeTagId } = this.$route.query
 
-    if (!auth.isLogin) {
+    if (!this.$auth.isLogin) {
       this.showLoginPanel()
       return
     }
