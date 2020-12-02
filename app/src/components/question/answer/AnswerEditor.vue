@@ -181,6 +181,7 @@ export default {
         scrollToElement({
           el,
           vertical: true,
+          offset: 60,
         })
     },
     isContentEmpty(content) {
