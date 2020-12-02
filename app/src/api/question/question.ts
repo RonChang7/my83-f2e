@@ -157,12 +157,14 @@ export const addResponse = async ({
   answerId,
   nickname,
   content,
+  isDislikeResponse,
 }: AddResponsePayload): Promise<AddResponseResponse> => {
   const { data } = await request.post<AddResponseResponse>(
     `/api/v1/question/${questionId}/answer/${answerId}/create-response`,
     {
       nickname,
       content,
+      is_dislike: isDislikeResponse,
     }
   )
   return data
