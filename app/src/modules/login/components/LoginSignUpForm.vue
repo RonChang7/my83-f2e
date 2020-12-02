@@ -46,11 +46,10 @@ export default {
       this.state = 'loading'
 
       try {
-        const landingUrl = this.$auth.landingUrl
         const { token, expired_time } = await facebookSignUp({
           fbToken,
           role: 'client',
-          ...landingUrl,
+          ...this.$auth.landingUrl,
           roleSession: this.$auth.suspectRole,
           memberSession: this.$auth.suspectMemberId,
         })
