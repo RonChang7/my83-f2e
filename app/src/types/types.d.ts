@@ -2,6 +2,7 @@ import { UA } from 'nuxt-user-agent/lib/plugin.template'
 import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventManager'
 import { ReCaptchaInstance } from '@/services/recaptcha'
 import { CookiesKey } from '@/plugins/cookies'
+import { Auth } from '@/services/auth/auth'
 import '@nuxtjs/sentry'
 import 'cookie-universal-nuxt'
 
@@ -16,6 +17,7 @@ declare module 'vue/types/vue' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $cookiesKey: CookiesKey
+    readonly $auth: Auth
   }
 }
 declare module '@nuxt/types' {
@@ -26,6 +28,7 @@ declare module '@nuxt/types' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $cookiesKey: CookiesKey
+    readonly $auth: Auth
   }
 
   interface NuxtAppOptions {
@@ -35,6 +38,7 @@ declare module '@nuxt/types' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $cookiesKey: CookiesKey
+    readonly $auth: Auth
   }
 }
 
@@ -46,5 +50,6 @@ declare module 'vuex/types/index' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $cookiesKey: CookiesKey
+    readonly $auth: Auth
   }
 }
