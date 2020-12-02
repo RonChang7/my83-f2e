@@ -3,17 +3,7 @@
     <div class="ContentMeta__meta">
       <template v-if="metaType === 'question'">
         <div class="ContentMeta__count">
-          <BaseComment24 />
-          {{ answerCount }}
-        </div>
-      </template>
-      <template v-else-if="metaType === 'answer'">
-        <div class="ContentMeta__count">
-          <BaseThumbUp />
-          {{ likeCount }}
-        </div>
-        <div class="ContentMeta__count">
-          <BaseComment18 />
+          <BaseComment />
           {{ answerCount }}
         </div>
       </template>
@@ -28,28 +18,13 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { PostType } from '../helpers/type'
 import { postingTimeParser } from '@/utils/time-parser'
-const BaseThumbUp = () => import('@/components/base/icon/18/BaseThumbUp.vue')
-const BaseThumbDown = () =>
-  import('@/components/base/icon/18/BaseThumbDown.vue')
-const BaseComment18 = () => import('@/components/base/icon/18/BaseComment.vue')
-const BaseComment24 = () => import('@/components/base/icon/24/BaseComment.vue')
+const BaseComment = () => import('@/components/base/icon/24/BaseComment.vue')
 
 export default {
   components: {
-    BaseThumbUp,
-    BaseThumbDown,
-    BaseComment18,
-    BaseComment24,
+    BaseComment,
   },
   props: {
-    likeCount: {
-      type: Number,
-      default: null,
-    },
-    dislikeCount: {
-      type: Number,
-      default: null,
-    },
     answerCount: {
       type: Number,
       default: null,
@@ -97,8 +72,6 @@ export interface Computed {
 }
 
 export interface Props {
-  likeCount: number | null
-  dislikeCount: number | null
   answerCount: number | null
   createdAt: number
   metaType: PostType
