@@ -169,13 +169,17 @@ export interface QuestionPersonalize {
   is_follower: boolean
 }
 
+export const enum LikeStatus {
+  LIKE = 1,
+  NONE = 0,
+  DISLIKE = -1,
+}
+
 export interface AnswerPersonalize {
   is_owner: boolean
   is_reporter: boolean
   like_status: LikeStatus
 }
-
-export type LikeStatus = -1 | 0 | 1
 
 export interface RecommendProduct {
   header: string

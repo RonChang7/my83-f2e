@@ -61,7 +61,7 @@ import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import AnswerInteraction from './AnswerInteraction.vue'
 import { Type } from './AnswerInteractionButton.vue'
 import { CancelDislikeDialogContent } from './cancel-dislike-dialog-info'
-import { AnswerData } from '@/api/question/question.type'
+import { AnswerData, LikeStatus } from '@/api/question/question.type'
 import { User, UserRole } from '@/services/user/user'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
 import {
@@ -74,11 +74,6 @@ import { GlobalDialogContent } from '@/store/global'
 const ResponseEditor = () => import('../response/ResponseEditor.vue')
 
 const user = User.getInstance()
-const enum LikeStatus {
-  LIKE = 1,
-  NONE = 0,
-  DISLIKE = -1,
-}
 
 export default {
   components: {
