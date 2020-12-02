@@ -187,15 +187,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
           )
         })
       },
-      [types.HIGHLIGHT_BEST_ANSWER]({ commit, state }, bestAnswerId: number) {
-        const bestAnswerIndex = _.findIndex(
-          state.answers,
-          (answer) => answer.answer_id === bestAnswerId
-        )
-
-        if (bestAnswerIndex !== -1) {
-          commit(types.UPDATE_TOP_ANSWER_ORDER, bestAnswerIndex)
-        }
+      [types.HIGHLIGHT_BEST_ANSWER]({ commit }, bestAnswerId: number) {
+        commit(types.UPDATE_TOP_ANSWER_ORDER, bestAnswerId)
       },
       async [types.FETCH_QUESTION_PERSONALIZE_DATA]({ commit }, id: number) {
         try {
@@ -305,21 +298,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      async [types.ADD_RESPONSE](
-        { commit, state },
-        payload: AddResponsePayload
-      ) {
+      async [types.ADD_RESPONSE]({ commit }, payload: AddResponsePayload) {
         try {
           const res = await api.addResponse(payload)
           const { success, data } = res
           if (success) {
-            const answerIndex = _.findIndex(
-              state.answers,
-              (answer) => answer.answer_id === payload.answerId
-            )
-
             commit(types.UPDATE_NEW_RESPONSE, {
-              answerIndex,
+              answerId: payload.answerId,
               data,
             })
             return data!.response_id
@@ -332,7 +317,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         }
       },
       async [types.SET_LIKE_STATUS](
-        { commit, state },
+        { commit, dispatch },
         payload: UpdateLikeStatuePayload
       ) {
         try {
@@ -344,26 +329,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
             personalize,
           } = res
           if (success) {
-            const answerIndex = _.findIndex(
-              state.answers,
-              (answer) => answer.answer_id === payload.answerId
-            )
-
             commit(types.UPDATE_LIKE_STATUS, {
-              answerIndex,
+              answerId: payload.answerId,
               data,
               likeStatus,
             })
 
-            if (likeStatus !== -1 && personalize) {
-              const userResponseIds = personalize.response_ids
-
-              userResponseIds.length &&
-                commit(types.UPDATE_RESPONSE_DISLIKE_STATUS, {
-                  answerIndex,
-                  responseIds: userResponseIds,
-                  status: false,
-                })
+            if (likeStatus !== LikeStatus.DISLIKE && personalize) {
+              dispatch(types.REMOVE_RESPONSE_DISLIKE_BADGE, {
+                answerId: payload.answerId,
+                responseIds: personalize.response_ids,
+              })
             }
           } else {
             return res
@@ -371,6 +347,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
         } catch (err) {
           const res = err.response.data as AddResponseResponse
           return res
+        }
+      },
+      [types.REMOVE_RESPONSE_DISLIKE_BADGE](
+        { commit },
+        payload: RemoveResponseDislikeBadge
+      ) {
+        if (payload.responseIds.length) {
+          commit(types.REMOVE_RESPONSE_DISLIKE_BADGE, payload)
         }
       },
       [types.UPDATE_QUESTION_DROPDOWN_MENU_STATUS](
@@ -401,12 +385,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
             const { success } = res
 
             if (success) {
-              const answerIndex = _.findIndex(
-                state.answers,
-                (answer) => answer.answer_id === answerId
-              )
               commit(types.UPDATE_REPORT_STATUS, {
-                answerIndex,
+                answerId,
                 reportStatus: true,
               })
               return success
@@ -434,10 +414,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           return res
         }
       },
-      async [types.CANCEL_REPORT](
-        { state, commit },
-        payload: CancelReportPayload
-      ) {
+      async [types.CANCEL_REPORT]({ commit }, payload: CancelReportPayload) {
         const { questionId, answerId } = payload
         try {
           if (answerId) {
@@ -448,12 +425,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
             const { success } = res
 
             if (success) {
-              const answerIndex = _.findIndex(
-                state.answers,
-                (answer) => answer.answer_id === answerId
-              )
               commit(types.UPDATE_REPORT_STATUS, {
-                answerIndex,
+                answerId,
                 reportStatus: false,
               })
               return success
@@ -488,9 +461,19 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_ANSWER_DATA](state, data: AnswerData[] | null) {
         state.answers = data
       },
-      [types.UPDATE_TOP_ANSWER_ORDER](state, index: number) {
-        const bestAnswer: AnswerData = state.answers!.splice(index, 1)[0]
-        state.answers!.unshift(bestAnswer)
+      [types.UPDATE_TOP_ANSWER_ORDER](state, bestAnswerId: number) {
+        const bestAnswerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === bestAnswerId
+        )
+
+        if (bestAnswerIndex >= 0) {
+          const bestAnswer: AnswerData = state.answers!.splice(
+            bestAnswerIndex,
+            1
+          )[0]
+          state.answers!.unshift(bestAnswer)
+        }
       },
       [types.UPDATE_QUESTION_PERSONALIZE_DATA](
         state,
@@ -519,25 +502,40 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_NEW_RESPONSE](
         state,
-        { answerIndex, data }: MutateResponsePayload
+        { answerId, data }: MutateResponsePayload
       ) {
+        const answerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === answerId
+        )
+
         state.answers![answerIndex].responses.push(data)
         state.answers![answerIndex].answer_meta.response_count += 1
       },
       [types.UPDATE_LIKE_STATUS](
         state,
-        { answerIndex, data, likeStatus }: MutateAnswerLikePayload
+        { answerId, data, likeStatus }: MutateAnswerLikePayload
       ) {
+        const answerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === answerId
+        )
+
         state.answers![answerIndex].answer_meta = data
         state.answers![answerIndex].personalize!.like_status = likeStatus
       },
-      [types.UPDATE_RESPONSE_DISLIKE_STATUS](
+      [types.REMOVE_RESPONSE_DISLIKE_BADGE](
         state,
-        { answerIndex, responseIds, status }: MutateResponseDislikePayload
+        { answerId, responseIds }: RemoveResponseDislikeBadge
       ) {
+        const answerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === answerId
+        )
+
         state.answers![answerIndex].responses.forEach((response) => {
           if (responseIds.includes(response.response_id)) {
-            response.is_dislike = status
+            response.is_dislike = false
           }
         })
       },
@@ -555,8 +553,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_REPORT_STATUS](
         state,
-        { answerIndex, reportStatus }: MutateReportPayload
+        { answerId, reportStatus }: MutateReportPayload
       ) {
+        const answerIndex = _.findIndex(
+          state.answers,
+          (answer) => answer.answer_id === answerId
+        )
+
         if (typeof answerIndex !== 'undefined') {
           state.answers![answerIndex].personalize!.is_reporter = reportStatus
         } else {
@@ -585,25 +588,24 @@ interface setQuestionBestAnswerPayload {
   answerId: number
 }
 
+interface RemoveResponseDislikeBadge {
+  answerId: number
+  responseIds: number[]
+}
+
 interface MutateResponsePayload {
-  answerIndex: number
+  answerId: number
   data: ResponseData
 }
 
 interface MutateAnswerLikePayload {
-  answerIndex: number
+  answerId: number
   data: AnswerMeta
   likeStatus: LikeStatus
 }
 
-interface MutateResponseDislikePayload {
-  answerIndex: number
-  responseIds: number[]
-  status: boolean
-}
-
 interface MutateReportPayload {
-  answerIndex?: number
+  answerId?: number
   reportStatus: boolean
 }
 
