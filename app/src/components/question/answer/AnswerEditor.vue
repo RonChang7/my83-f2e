@@ -68,7 +68,7 @@ import {
 import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollToElement } from '@/utils/scroll'
 import { htmlStrip } from '@/utils/text-parser'
-import { UserRole } from '@/store/user/index'
+import { UserRole } from '@/services/auth/auth'
 const BaseCheckbox = () =>
   import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
 const BaseInputText = () =>

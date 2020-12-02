@@ -78,11 +78,6 @@ import { logout } from '@/api/login/login'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
-import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/auth/suspect'
-
-const auth = Auth.getInstance()
-const suspect = Suspect.getInstance()
 
 export default {
   mixins: [DeviceMixin],
@@ -132,14 +127,11 @@ export default {
       })
     },
     async logout() {
-      const { id, roleCode } = this.$store.state.user
       try {
         await logout()
       } catch (err) {
       } finally {
-        suspect.set(this.$cookiesKey.ROLE, roleCode.toString())
-        suspect.set(this.$cookiesKey.MEMBER, id.toString())
-        auth.logout()
+        this.$auth.logout()
         this.reloadHandler()
       }
     },

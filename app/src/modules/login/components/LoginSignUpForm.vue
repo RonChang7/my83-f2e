@@ -28,13 +28,6 @@ import FacebookLoginButton from './FacebookLoginButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { facebookSignUp } from '@/api/login/login'
-import { LandingUrlInfo } from '@/store/user/index'
-import { GET_LANDING_URL } from '@/store/user/user.type'
-import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/auth/suspect'
-
-const auth = Auth.getInstance()
-const suspect = Suspect.getInstance()
 
 export default {
   components: {
@@ -49,28 +42,23 @@ export default {
     }
   },
   methods: {
-    login(jwtToken, expiredTime) {
-      auth.login({
-        jwtToken,
-        expiredTime,
-      })
-    },
     async facebookSignUp(fbToken) {
-      const landingUrl = this.$store.getters[
-        `user/${GET_LANDING_URL}`
-      ] as LandingUrlInfo
-
       this.state = 'loading'
 
       try {
+        const landingUrl = this.$auth.landingUrl
         const { token, expired_time } = await facebookSignUp({
           fbToken,
           role: 'client',
           ...landingUrl,
-          roleSession: suspect.get(this.$cookiesKey.ROLE),
-          memberSession: suspect.get(this.$cookiesKey.MEMBER),
+          roleSession: this.$auth.suspectRole,
+          memberSession: this.$auth.suspectMemberId,
         })
-        this.login(token!, expired_time!)
+
+        this.$auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
+        })
 
         // @todo: Change path after migrate to Nuxt.js
         window.location.href = '/clientCenter'
@@ -110,7 +98,6 @@ export interface Data {
 }
 
 export type Methods = {
-  login(jwtToken: string, expiredTime: number): void
   facebookSignUp(fbToken: string): void
 }
 
