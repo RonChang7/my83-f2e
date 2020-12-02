@@ -5,7 +5,10 @@
     class="ResponseSection"
   >
     <div class="ResponseSection__header">
-      <BaseAuthorInfo :author-info="response.author_info" />
+      <BaseAuthorInfo
+        :author-info="response.author_info"
+        :is-dislike="response.is_dislike"
+      />
       <BaseHeaderFunction
         section-type="response"
         :section-id="response.response_id"
