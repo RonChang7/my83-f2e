@@ -61,6 +61,10 @@ const config: NuxtConfig = {
       src: '@/plugins/cookies',
       mode: 'client',
     },
+    {
+      src: '@/plugins/auth',
+      mode: 'client',
+    },
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {

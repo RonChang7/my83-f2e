@@ -1,60 +1,68 @@
+import { Suspect } from './suspect'
+import { JWT } from './jwt'
+import { CookiesKey } from '@/plugins/cookies'
 import { jwtParser, Response } from '@/utils/jwt-parser'
+import { Role, RoleCode } from '@/api/type'
 
 export class Auth {
-  private static instance: Auth
-
   private jwtTokenKey: string
-
   private store: Store
+  private suspect: Suspect
+  private storeOption: StoreOption = {
+    path: '/',
+    secure: true,
+  }
 
-  private storeOption: StoreOption
+  private suspectStoreKeyMap: Partial<CookiesKey>
 
-  private constructor() {
-    this.storeOption = {
-      path: '/',
-      secure: true,
+  private _userState: UserState
+
+  private _landingUrlInfo: LandingUrlInfo
+
+  constructor({
+    jwtTokenKey,
+    store,
+    suspectStoreKeyMap,
+  }: AuthConstructPayload) {
+    this.jwtTokenKey = jwtTokenKey
+    this.store = store
+    this.suspectStoreKeyMap = suspectStoreKeyMap
+    this.suspect = new Suspect(store, suspectStoreKeyMap)
+
+    this._userState = {
+      id: 0,
+      role: 'guest',
+      roleCode: -1,
+      nickname: '',
+    }
+
+    this._landingUrlInfo = {
+      firstHttpReferrer: '',
+      firstUrl: '',
     }
   }
 
-  public static getInstance(): Auth {
-    if (!Auth.instance) {
-      Auth.instance = new Auth()
-    }
-
-    return Auth.instance
-  }
-
-  get isLogin() {
+  public get isLogin() {
     return !!this.getToken()
   }
 
-  public setStore(store: Store) {
-    this.store = store
+  public get userState() {
+    return this._userState
   }
 
-  public login(payload: payload) {
-    this.setToken(payload)
+  public get landingUrl() {
+    return this._landingUrlInfo
   }
 
-  public logout() {
-    this.removeToken()
+  public get suspectRole() {
+    return this.suspect.get(this.suspectStoreKeyMap.ROLE!)
   }
 
-  public refresh(payload: payload) {
-    this.setToken(payload)
+  public get suspectMemberId() {
+    return this.suspect.get(this.suspectStoreKeyMap.MEMBER_ID!)
   }
 
-  public setTokenKey(key: string) {
-    this.jwtTokenKey = key
-  }
-
-  public getToken() {
-    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
-
-    return this.store.get(this.jwtTokenKey)
-  }
-
-  public get expiredTime() {
+  private get expiredTime() {
     const result = jwtParser(this.getToken())
     if (result.success) {
       return (result as Response<true>).exp
@@ -62,9 +70,69 @@ export class Auth {
     return null
   }
 
-  private setToken({ jwtToken, expiredTime }: payload) {
-    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
+  public login(payload: payload) {
+    this.setToken(payload)
+  }
 
+  public logout() {
+    if (this.userState.id > 0) {
+      this.suspect.set({
+        [this.suspectStoreKeyMap.ROLE!]: this.userState.roleCode.toString(),
+        [this.suspectStoreKeyMap.MEMBER_ID!]: this.userState.id.toString(),
+      })
+    }
+    this.removeToken()
+  }
+
+  public refreshToken(baseURL: string) {
+    return new Promise((resolve, reject) => {
+      JWT.refreshToken(baseURL, {
+        jwtToken: this.getToken() || '',
+        expiredTime: this.expiredTime || 0,
+      })
+        .then((data) => {
+          this.setToken(data)
+          resolve()
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
+  public getToken() {
+    return this.store.get(this.jwtTokenKey)
+  }
+
+  public setTokenKey(key: string) {
+    this.jwtTokenKey = key
+  }
+
+  public setUserState(userState: UserState) {
+    if (this.isLogin) {
+      this._userState = userState
+    } else {
+      this.resetUserState()
+    }
+  }
+
+  public setLandingUrl() {
+    this._landingUrlInfo = {
+      firstHttpReferrer: document.referrer,
+      firstUrl: window.location.href,
+    }
+  }
+
+  private resetUserState() {
+    this._userState = {
+      id: 0,
+      role: 'guest',
+      roleCode: -1,
+      nickname: '',
+    }
+  }
+
+  private setToken({ jwtToken, expiredTime }: payload) {
     this.store.set(this.jwtTokenKey, jwtToken, {
       expires: new Date(expiredTime * 1000),
       ...this.storeOption,
@@ -72,14 +140,14 @@ export class Auth {
   }
 
   private removeToken() {
-    if (!this.checkIfStoreExisted()) throw new Error('Store is not exist!')
-
     this.store.remove(this.jwtTokenKey, this.storeOption)
   }
+}
 
-  private checkIfStoreExisted() {
-    return !!this.store
-  }
+interface AuthConstructPayload {
+  jwtTokenKey: string
+  store: Store
+  suspectStoreKeyMap: Partial<CookiesKey>
 }
 
 interface payload {
@@ -97,4 +165,25 @@ interface StoreOption {
   path?: string
   expires?: Date
   secure?: boolean
+}
+
+export type UserRole = Role | 'guest'
+
+export type UserRoleCode = RoleCode | -1
+
+export const UserRoleMap: Record<UserRole, string> = {
+  client: '保戶',
+  sales: '業務員',
+  guest: '訪客',
+}
+
+export interface LandingUrlInfo {
+  firstHttpReferrer: string
+  firstUrl: string
+}
+export interface UserState {
+  id: number
+  role: UserRole
+  roleCode: UserRoleCode
+  nickname: string
 }

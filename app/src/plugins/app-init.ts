@@ -4,10 +4,7 @@ import { createStoreModule as createGlobalStoreModule } from '@/store/global/ind
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
 import { createStoreModule as createPageMetaStoreModule } from '@/store/seo/page-meta'
 import { createStoreModule as createJsonLdStoreModule } from '@/store/seo/json-ld'
-import { createStoreModule as createUserStoreModule } from '@/store/user/index'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
-import { Auth } from '@/services/auth/auth'
-import { UPDATE_LANDING_URL } from '@/store/user/user.type'
 
 const storeModules: Record<string, StoreModule> = {
   global: {
@@ -25,10 +22,6 @@ const storeModules: Record<string, StoreModule> = {
   jsonLd: {
     moduleName: 'jsonLd',
     createModule: () => createJsonLdStoreModule(),
-  },
-  user: {
-    moduleName: 'user',
-    createModule: () => createUserStoreModule(),
   },
 }
 
@@ -51,9 +44,8 @@ export default (({ app, store }, inject) => {
     isTablet: app.$ua.isFromTablet(),
   })
 
-  const auth = Auth.getInstance()
-  if (process.client && !auth.isLogin) {
-    store.dispatch(`user/${UPDATE_LANDING_URL}`)
+  if (process.client && !app.$auth.isLogin) {
+    app.$auth.setLandingUrl()
   }
 }) as NuxtPlugin
 

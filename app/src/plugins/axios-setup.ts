@@ -1,18 +1,14 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import request, { Request } from '@/api/request'
-import { GlobalVuexState } from '@/store/global-state'
 import { sentryLog } from '@/api/sentry'
-import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/auth/suspect'
-import { JWT } from '@/services/auth/jwt'
 import {
   checkRedirectResponse,
   RedirectErrorResponseBody,
 } from '@/api/errors/response'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 
-export default (({ app, store, req }) => {
+export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
   const { APP_ENV, API_URL } = app.$env
   const requestInstance = Request.getInstance()
@@ -72,8 +68,7 @@ export default (({ app, store, req }) => {
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
     request.interceptors.request.use((config) => {
-      const auth = Auth.getInstance()
-      const jwtToken = auth.getToken()
+      const jwtToken = app.$auth.getToken()
 
       if (jwtToken) {
         config.headers.Authorization = `Bearer ${jwtToken}`
@@ -98,9 +93,6 @@ export default (({ app, store, req }) => {
           } = err
 
           const originalRequest = config as AxiosRequestConfig
-          const auth = Auth.getInstance()
-          const suspect = Suspect.getInstance()
-          const { id, roleCode } = (store.state as GlobalVuexState).user
 
           if (
             preventInterceptorsList.find(
@@ -109,9 +101,10 @@ export default (({ app, store, req }) => {
           ) {
             return Promise.reject(err)
           } else if (status === 401 && error === 'expired_token') {
-            return JWT.refreshToken(API_URL)
+            return app.$auth
+              .refreshToken(API_URL)
               .then(() => {
-                const jwtToken = auth.getToken()
+                const jwtToken = app.$auth.getToken()
                 originalRequest.headers.Authorization = `Bearer ${jwtToken}`
                 return request(originalRequest)
               })
@@ -124,16 +117,12 @@ export default (({ app, store, req }) => {
                   refreshTokenStatus === 401 &&
                   refreshTokenError === 'invalid_token'
                 ) {
-                  suspect.set(app.$cookiesKey.ROLE, roleCode.toString())
-                  suspect.set(app.$cookiesKey.MEMBER, id.toString())
-                  auth.logout()
+                  app.$auth.logout()
                 }
                 return Promise.reject(err)
               })
           } else if (status === 401 && error === 'invalid_token') {
-            suspect.set(app.$cookiesKey.ROLE, roleCode.toString())
-            suspect.set(app.$cookiesKey.MEMBER, id.toString())
-            auth.logout()
+            app.$auth.logout()
             return Promise.reject(err)
           } else {
             if (checkRedirectResponse(err.response)) {

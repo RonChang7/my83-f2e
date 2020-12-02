@@ -1,35 +1,31 @@
+import _ from 'lodash'
+import { CookiesKey } from '@/plugins/cookies'
+
 // 嫌疑犯檢查功能
 export class Suspect {
-  private static instance: Suspect
-
-  private store: Store
-
-  private storeOption: StoreOption
-
-  private constructor() {
-    this.storeOption = {
-      path: '/',
-    }
+  private storeOption: StoreOption = {
+    path: '/',
   }
 
-  public static getInstance(): Suspect {
-    if (!Suspect.instance) {
-      Suspect.instance = new Suspect()
-    }
+  constructor(private store: Store, private storeKeyMap: Partial<CookiesKey>) {}
 
-    return Suspect.instance
-  }
+  public set(payload: Record<string, string>) {
+    _.forEach(payload, (value, key) => {
+      if (!_.includes(this.storeKeyMap, key))
+        throw new Error(`${key} is not exist in list!`)
 
-  public setStore(store: Store) {
-    this.store = store
+      this._set(key, value)
+    })
   }
 
   public get(key: string) {
     return this.store.get(key)
   }
 
-  public set(key: string, value: string) {
-    this.store.set(key, value, this.storeOption)
+  private _set(key: string, value: string) {
+    if (!this.get(key)) {
+      this.store.set(key, value, this.storeOption)
+    }
   }
 }
 
