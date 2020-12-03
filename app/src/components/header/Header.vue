@@ -1,5 +1,7 @@
 <template>
   <Affix placeholder-class="Header__wrapper" content-class="Header__content">
+    <!-- eslint-disable-next-line prettier/prettier -->
+    <div class="ie-info">注意：MY83 保險網不支援 Internet Explorer，為了確保良好的服務體驗，建議您使用其他瀏覽器，例如 Google Chrome、Firefox、Safari、Microsoft Edge。</div>
     <header>
       <template v-if="isDesktop">
         <DesktopHeader :enable-rwd="true" :user-role="userRole" />
@@ -82,5 +84,20 @@ export interface Props {}
   ::v-deep &__content {
     z-index: map-get($z-index, 'header');
   }
+}
+
+.ie-info {
+  @supports (display: grid) {
+    display: none;
+  }
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  background-color: $info-color;
+  color: #fff;
+  font-size: 0.875rem;
 }
 </style>
