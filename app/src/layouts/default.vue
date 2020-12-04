@@ -24,13 +24,15 @@
 <script lang="ts">
 import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
-import { mapState } from 'vuex'
+import { Store, mapState } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import Header from '@/components/header/Header.vue'
 import Footer from '@/components/footer/Footer.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import { LoginPanelState } from '@/store/global/index'
+import { GlobalVuexState } from '@/store/global-state'
+import { FETCH_ACTIVE_SALES_COUNT } from '@/store/meta/meta.type'
 import PageMetaMixin, {
   ComponentInstance as PageMetaMixinComponentInstance,
 } from '@/mixins/seo/page-meta'
@@ -102,6 +104,19 @@ export default {
 
       this.shouldShowScrollToTop = pageYScroll >= screenInnerHeight * 2
     }, 200),
+    fetchActiveSalesCount() {
+      const lastUpdateActiveSalesCount = this.$cookies.get(
+        this.$cookiesKey.LAST_UPDATE_ACTIVE_SALES_COUNT
+      )
+
+      if (
+        !lastUpdateActiveSalesCount ||
+        lastUpdateActiveSalesCount + 60 * 60 * 24 < Date.now() ||
+        !this.$store.state.meta.activeSalesCount
+      ) {
+        this.$store.dispatch(`meta/${FETCH_ACTIVE_SALES_COUNT}`)
+      }
+    },
   },
   watch: {
     '$route.meta.hideFooter': {
@@ -135,6 +150,8 @@ export default {
     },
   },
   mounted() {
+    this.fetchActiveSalesCount()
+
     window.addEventListener('scroll', this.checkShouldShowScrollToTop, {
       passive: true,
     })
@@ -163,7 +180,9 @@ export type ComponentInstance = CombinedVueInstance<
 export interface Instance
   extends Vue,
     Omit<PageMetaMixinComponentInstance, keyof Vue>,
-    Omit<DeviceMixinComponentInstance, keyof Vue> {}
+    Omit<DeviceMixinComponentInstance, keyof Vue> {
+  $store: Store<GlobalVuexState>
+}
 
 export interface Data {
   shouldShowFooter: boolean
@@ -178,6 +197,7 @@ export interface Data {
 export type Methods = {
   checkShouldShowScrollToTop: DebouncedFunc<(this: ComponentInstance) => void>
   scrollToTop(): void
+  fetchActiveSalesCount(): void
 }
 
 export interface Computed {
