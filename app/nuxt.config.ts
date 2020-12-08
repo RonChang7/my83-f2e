@@ -84,14 +84,7 @@ const config: NuxtConfig = {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
-    [
-      '@nuxt/typescript-build',
-      {
-        typescript: {
-          memoryLimit: 2048, // default: 2048 MB
-        },
-      },
-    ],
+    '@nuxt/typescript-build',
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
     'nuxt-svg-loader',
@@ -139,6 +132,13 @@ const config: NuxtConfig = {
     middleware: 'index',
   },
   serverMiddleware: ['~/server/middleware/logger.ts'],
+  typescript: {
+    typeCheck: {
+      typescript: {
+        memoryLimit: Number(process.env.TS_TYPE_CHECK_MEMORY_LIMIT) || 2048, // default: 2048MB
+      },
+    },
+  },
   /*
    ** Build configuration
    */
@@ -146,6 +146,7 @@ const config: NuxtConfig = {
     /*
      ** You can extend webpack config here
      */
+    corejs: 3,
     transpile: [
       ({ isDev, isClient }) => (!isDev && isClient && 'dom-utils') || undefined,
       ({ isDev, isClient }) => (!isDev && isClient && 'autotrack') || undefined,
