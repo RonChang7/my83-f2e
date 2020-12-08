@@ -21,8 +21,8 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseView from '@/components/base/icon/18/BaseView.svg'
-import BaseComment from '@/components/base/icon/18/BaseComment.svg'
+import BaseView from '@/assets/icon/18/BaseView.svg'
+import BaseComment from '@/assets/icon/18/BaseComment.svg'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
 
 export default {

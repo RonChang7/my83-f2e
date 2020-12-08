@@ -23,8 +23,8 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import QuestionTag from './QuestionTag.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { Tag } from '@/api/question/question.type'
-import BaseCompany from '@/components/base/icon/24/BaseCompany.svg'
-import BaseTag from '@/components/base/icon/24/BaseTag.svg'
+import BaseCompany from '@/assets/icon/24/BaseCompany.svg'
+import BaseTag from '@/assets/icon/24/BaseTag.svg'
 
 export default {
   components: {

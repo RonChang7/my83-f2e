@@ -33,7 +33,7 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseEyeOutline from '@/components/base/icon/24/BaseEyeOutline.svg'
+import BaseEyeOutline from '@/assets/icon/24/BaseEyeOutline.svg'
 
 export default {
   components: {

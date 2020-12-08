@@ -29,8 +29,8 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
-import BaseMenu from '@/components/base/icon/24/BaseMenu.svg'
-import BaseClose from '@/components/base/icon/24/BaseClose.svg'
+import BaseMenu from '@/assets/icon/24/BaseMenu.svg'
+import BaseClose from '@/assets/icon/24/BaseClose.svg'
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'

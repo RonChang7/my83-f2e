@@ -14,9 +14,9 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseComment from '@/components/base/icon/24/BaseComment.svg'
-import BaseLike from '@/components/base/icon/24/BaseLike.svg'
-import BaseDislike from '@/components/base/icon/24/BaseDislike.svg'
+import BaseComment from '@/assets/icon/24/BaseComment.svg'
+import BaseLike from '@/assets/icon/24/BaseLike.svg'
+import BaseDislike from '@/assets/icon/24/BaseDislike.svg'
 
 export type Type = 'like' | 'dislike' | 'response'
 type ButtonTextType = '讚' | '不滿' | '留言'

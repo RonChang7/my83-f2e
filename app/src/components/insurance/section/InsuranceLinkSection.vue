@@ -31,7 +31,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.svg'
+import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 
 const options: ComponentOption = {
   components: {
