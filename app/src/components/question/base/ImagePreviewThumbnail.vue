@@ -22,7 +22,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
-import BaseRoundClose from '@/components/base/icon/18/BaseRoundClose.svg'
+import BaseRoundClose from '@/assets/icon/18/BaseRoundClose.svg'
 
 export default {
   components: {

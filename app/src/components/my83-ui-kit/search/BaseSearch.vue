@@ -16,7 +16,7 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseSearchIcon from '@/components/base/icon/24/BaseSearch.svg'
+import BaseSearchIcon from '@/assets/icon/24/BaseSearch.svg'
 
 const options: ComponentOption = {
   components: {

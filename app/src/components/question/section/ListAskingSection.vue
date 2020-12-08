@@ -6,7 +6,7 @@ import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BasePencil from '@/components/base/icon/24/BasePencil.svg'
+import BasePencil from '@/assets/icon/24/BasePencil.svg'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin],

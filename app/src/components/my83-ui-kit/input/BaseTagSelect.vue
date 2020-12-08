@@ -34,8 +34,8 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseTagOption from '../tag/BaseTagOption.vue'
 import { Option } from './type'
-import BaseArrowDown from '@/components/base/icon/18/BaseArrowDown.svg'
-import BaseArrowUp from '@/components/base/icon/18/BaseArrowUp.svg'
+import BaseArrowDown from '@/assets/icon/18/BaseArrowDown.svg'
+import BaseArrowUp from '@/assets/icon/18/BaseArrowUp.svg'
 
 const options: ComponentOption = {
   components: {
