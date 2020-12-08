@@ -14,7 +14,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
-import BaseClose from '@/components/base/icon/24/BaseClose.vue'
+import BaseClose from '@/components/base/icon/24/BaseClose.svg'
 
 const options: ComponentOption = {
   components: {

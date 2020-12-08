@@ -20,8 +20,8 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseClose from '@/components/base/icon/24/BaseClose.vue'
-import BaseArrowLeft from '@/components/base/icon/24/BaseArrowLeft.vue'
+import BaseClose from '@/components/base/icon/24/BaseClose.svg'
+import BaseArrowLeft from '@/components/base/icon/24/BaseArrowLeft.svg'
 
 export default {
   components: {

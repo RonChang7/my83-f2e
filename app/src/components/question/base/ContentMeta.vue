@@ -18,7 +18,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { PostType } from '../helpers/type'
 import { postingTimeParser } from '@/utils/time-parser'
-const BaseComment = () => import('@/components/base/icon/24/BaseComment.vue')
+import BaseComment from '@/components/base/icon/24/BaseComment.svg'
 
 export default {
   components: {

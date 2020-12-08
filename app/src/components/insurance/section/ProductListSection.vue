@@ -50,7 +50,7 @@ import ProductCard from '../product/ProductCard.vue'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
-import BaseFAQ from '@/components/base/icon/24/BaseFAQ.vue'
+import BaseFAQ from '@/components/base/icon/24/BaseFAQ.svg'
 import { scrollToElement } from '@/utils/scroll'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
