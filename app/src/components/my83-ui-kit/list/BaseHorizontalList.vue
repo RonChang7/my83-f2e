@@ -39,8 +39,8 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import HorizontalList from '@/components/base/list/HorizontalList.vue'
-import BaseArrowNext from '@/components/base/icon/others/BaseArrowNext.vue'
-import BaseArrowPrevious from '@/components/base/icon/others/BaseArrowPrevious.vue'
+import BaseArrowNext from '@/components/base/icon/others/BaseArrowNext.svg'
+import BaseArrowPrevious from '@/components/base/icon/others/BaseArrowPrevious.svg'
 
 @Component({
   components: {

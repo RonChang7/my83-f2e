@@ -15,7 +15,7 @@ import { Vue, Component } from 'vue-property-decorator'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.vue'
+import BaseArrowRight from '@/components/base/icon/18/BaseArrowRight.svg'
 
 @Component({
   components: {

@@ -42,8 +42,8 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseComment from '@/components/base/icon/24/BaseComment.vue'
-import BasePencil from '@/components/base/icon/24/BasePencil.vue'
+import BaseComment from '@/components/base/icon/24/BaseComment.svg'
+import BasePencil from '@/components/base/icon/24/BasePencil.svg'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
