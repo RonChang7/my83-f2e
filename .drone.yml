@@ -177,13 +177,15 @@ steps:
       event: tag
 
   - name: add-sentry-release-tag
-    image: urbint/drone-sentry
+    image: getsentry/sentry-cli:1.60.1
     environment:
-      sentry_auth_token:
+      SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
-      sentry_organization: upn-1r
-      sentry_project: my83-front
-      sentry_release_version: $${DRONE_TAG}
+      SENTRY_ORG: upn-1r
+      SENTRY_PROJECT: my83-front
+    commands:
+      - releases new $${DRONE_TAG}
+      - releases finalize $${DRONE_TAG}
     depends_on:
       - deploy-production
     when:
@@ -211,7 +213,7 @@ steps:
         Author: {{ build.author }}
         <{{ build.link }}|Visit build page ↗>
     depends_on:
-      - deploy-production
+      - add-sentry-release-tag
     when:
       status:
         - success
