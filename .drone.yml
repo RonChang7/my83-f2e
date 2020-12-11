@@ -186,6 +186,11 @@ steps:
       sentry_release_version: $${DRONE_TAG}
     depends_on:
       - deploy-production
+    when:
+      branch: master
+      ref:
+        - refs/tags/v*
+      event: tag
 
   - name: notify-deploy-prod
     image: plugins/slack
