@@ -184,8 +184,8 @@ steps:
       SENTRY_ORG: upn-1r
       SENTRY_PROJECT: my83-front
     commands:
-      - releases new $${DRONE_TAG}
-      - releases finalize $${DRONE_TAG}
+      - sentry-cli releases new $${DRONE_TAG}
+      - sentry-cli releases finalize $${DRONE_TAG}
     depends_on:
       - deploy-production
     when:
