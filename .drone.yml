@@ -176,6 +176,15 @@ steps:
         - refs/tags/v*
       event: tag
 
+  - name: add-sentry-release-tag
+    image: urbint/drone-sentry
+    environment:
+      sentry_auth_token:
+        from_secret: SENTRY_AUTH_TOKEN
+      sentry_organization: upn-1r
+      sentry_project: my83-front
+      sentry_release_version: $${DRONE_TAG}
+
   - name: notify-deploy-prod
     image: plugins/slack
     settings:
