@@ -184,6 +184,8 @@ steps:
       sentry_organization: upn-1r
       sentry_project: my83-front
       sentry_release_version: $${DRONE_TAG}
+    depends_on:
+      - deploy-production
 
   - name: notify-deploy-prod
     image: plugins/slack
