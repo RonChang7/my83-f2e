@@ -57,6 +57,7 @@ const config: NuxtConfig = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
+    '@/plugins/sentry',
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {
@@ -115,6 +116,8 @@ const config: NuxtConfig = {
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
           { key: 'IMAGE_BUCKET_URL' },
+          { key: 'SENTRY_DSN' },
+          { key: 'SENTRY_DISABLED' },
         ],
       },
     ],
