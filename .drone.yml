@@ -185,7 +185,7 @@ steps:
       SENTRY_PROJECT: my83-front
     commands:
       - sentry-cli releases new $${DRONE_COMMIT_SHA} --finalize
-      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_TAG}
+      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
     depends_on:
       - deploy-production
     when:
