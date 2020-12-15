@@ -94,6 +94,7 @@ const config: NuxtConfig = {
    ** Nuxt.js modules
    */
   modules: [
+    '@/nuxt-modules/sentry/module',
     '@nuxtjs/sentry',
     [
       // ref: https://github.com/samtgarson/nuxt-env
