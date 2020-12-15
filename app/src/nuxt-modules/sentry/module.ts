@@ -20,17 +20,13 @@ const Sentry: Module<unknown> = function () {
 
   this.nuxt.hook('ready', () => {
     const jsonFilePath = `${this.options.buildDir}/release.json`
-    if (fs.existsSync(jsonFilePath)) {
-      try {
-        const { release } = JSON.parse(
-          fs.readFileSync(jsonFilePath, 'utf8')
-        ) as Options
+    if (!fs.existsSync(jsonFilePath)) return
 
-        process.env.SENTRY_RELEASE_TAG = release
-      } catch {
-        // json file parse 失敗，不進行 env 寫入
-      }
-    }
+    const { release } = JSON.parse(
+      fs.readFileSync(jsonFilePath, 'utf8')
+    ) as Options
+
+    process.env.SENTRY_RELEASE_TAG = release
   })
 }
 
