@@ -4,16 +4,13 @@
       <h1 class="HeaderSection__title">{{ title }}</h1>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="HeaderSection__description" v-html="description" />
-      <div
-        class="HeaderSection__link"
-        :class="{ single: buttonInfo.length === 1 }"
-      >
+      <div class="HeaderSection__link">
         <BaseButton
-          v-for="button in buttonInfo"
+          v-for="button in buttonInfos"
           :key="button.value"
           class="HeaderSection__button"
           size="l-a"
-          type="tertiary"
+          :type="button.value === 'discontinued' ? 'primary' : 'tertiary'"
           :is-full-width="true"
           @click.native="openInfoModal(button.value)"
         >
@@ -51,26 +48,40 @@ const options: ComponentOption = {
     image() {
       return this.$store.state.insurance.staticData.image
     },
-    buttonInfo() {
+    buttonInfos() {
+      const buttonInfos: NavTab[] = []
       if (this.$store.state.insurance.staticData.isExternal) {
-        return [
+        buttonInfos.push({
+          key: '重點險種',
+          value: 'glossary',
+        })
+      } else {
+        buttonInfos.push(
           {
-            key: '重點險種',
+            key: `${this.name}的名詞解釋`,
             value: 'glossary',
           },
-        ]
+          {
+            key: '黃金投保原則',
+            value: 'principle',
+          }
+        )
       }
 
-      return [
-        {
-          key: `${this.name}的名詞解釋`,
-          value: 'glossary',
-        },
-        {
-          key: '黃金投保原則',
-          value: 'principle',
-        },
-      ]
+      if (this.discontinuedProductButtonInfo) {
+        buttonInfos.push(this.discontinuedProductButtonInfo)
+      }
+
+      return buttonInfos
+    },
+    discontinuedProductButtonInfo() {
+      if (this.$store.state.insurance.staticData.id !== 'disability') return
+      if (Date.now() > new Date('2021-01-02').getTime()) return
+
+      return {
+        key: `12月最新${this.name}停售表`,
+        value: 'discontinued',
+      }
     },
   },
   methods: {
@@ -112,7 +123,8 @@ export interface Computed {
   description: string
   name: string
   image: string
-  buttonInfo: NavTab[]
+  buttonInfos: NavTab[]
+  discontinuedProductButtonInfo: NavTab | undefined
 }
 
 export interface Props {}
@@ -154,18 +166,17 @@ export default options
   }
 
   &__link {
-    $width: 476px;
+    $width: 230px;
 
     display: flex;
-    width: $width;
-
-    &.single {
-      width: $width / 2;
-    }
 
     ::v-deep #{$self}__button {
-      &:not(:last-child) {
-        margin-right: 16px;
+      width: $width;
+
+      @include min-media('xl') {
+        &:not(:last-child) {
+          margin-right: 16px;
+        }
       }
     }
   }
@@ -194,12 +205,22 @@ export default options
     }
 
     &__link {
-      $width: 100%;
+      width: 100%;
+      flex-wrap: wrap;
 
-      width: $width;
+      ::v-deep #{$self}__button {
+        $offset: 16px;
 
-      &.single {
-        width: $width / 2;
+        width: calc(50% - #{$offset} / 2);
+        flex: 1 0 auto;
+
+        &:nth-child(even) {
+          margin-left: $offset;
+        }
+
+        &:nth-child(odd):not(:first-child) {
+          margin-top: 12px;
+        }
       }
     }
 
