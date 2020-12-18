@@ -37,6 +37,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
+import { LinkButton } from '@/api/type'
 
 export default {
   mixins: [DeviceMixin, UserMetaMixin],
@@ -52,7 +53,13 @@ export default {
       const beforeDueDays = differenceInDays(dueDay, now)
 
       if (beforeDueDays > 0) {
-        return `失能險停售倒數 ${differenceInDays(dueDay, now)} 天`
+        return {
+          text: `失能險停售倒數 ${differenceInDays(dueDay, now)} 天`,
+          link: {
+            path: '/insurance/disability',
+            url: `${this.$env.HOST_URL}/insurance/disability`,
+          },
+        }
       }
 
       return ''
@@ -95,7 +102,7 @@ export interface Data {}
 export type Methods = {}
 
 export interface Computed {
-  headerHeadline: string
+  headerHeadline: LinkButton | string
 }
 
 export interface Props {}
