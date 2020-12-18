@@ -18,7 +18,15 @@
         <AskingRoundButton />
       </GlobalLink>
       <div v-if="shouldShowHeaderHeadline" class="MobileHeader__headerHeadline">
-        {{ headerHeadline }}
+        <GlobalLink
+          v-if="typeof headerHeadline === 'object'"
+          :to="headerHeadline.link.path"
+        >
+          {{ headerHeadline.text }}
+        </GlobalLink>
+        <template v-else>
+          {{ headerHeadline }}
+        </template>
       </div>
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
@@ -35,6 +43,7 @@ import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton
 import BaseMenu from '@/components/base/icon/24/BaseMenu.vue'
 import BaseClose from '@/components/base/icon/24/BaseClose.vue'
 import { UserRole } from '@/services/user/user'
+import { LinkButton } from '@/api/type'
 
 export default {
   components: {
@@ -53,7 +62,7 @@ export default {
       default: 'guest',
     },
     headerHeadline: {
-      type: String,
+      type: [Object, String],
       default: '',
     },
   },
@@ -128,7 +137,7 @@ export interface Computed {
 export interface Props {
   enableRwd: boolean
   userRole: UserRole
-  headerHeadline: string
+  headerHeadline: LinkButton | string
 }
 </script>
 

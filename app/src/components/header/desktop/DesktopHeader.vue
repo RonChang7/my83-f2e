@@ -13,7 +13,15 @@
         v-if="shouldShowHeaderHeadline"
         class="DesktopHeader__headerHeadline"
       >
-        {{ headerHeadline }}
+        <GlobalLink
+          v-if="typeof headerHeadline === 'object'"
+          :to="headerHeadline.link.path"
+        >
+          {{ headerHeadline.text }}
+        </GlobalLink>
+        <template v-else>
+          {{ headerHeadline }}
+        </template>
       </div>
       <HeaderPersonalize />
     </nav>
@@ -28,6 +36,7 @@ import HeaderPersonalize from '../HeaderPersonalize.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { UserRole } from '@/services/user/user'
+import { LinkButton } from '@/api/type'
 
 export default {
   components: {
@@ -45,7 +54,7 @@ export default {
       default: 'guest',
     },
     headerHeadline: {
-      type: String,
+      type: [Object, String],
       default: '',
     },
   },
@@ -85,7 +94,7 @@ export interface Computed {
 export interface Props {
   enableRwd: boolean
   userRole: UserRole
-  headerHeadline: string
+  headerHeadline: LinkButton | string
 }
 </script>
 
