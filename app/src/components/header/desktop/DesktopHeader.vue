@@ -9,6 +9,12 @@
     </GlobalLink>
     <nav>
       <DesktopHeaderNav :user-role="userRole" />
+      <div
+        v-if="shouldShowHeaderHeadline"
+        class="DesktopHeader__headerHeadline"
+      >
+        {{ headerHeadline }}
+      </div>
       <HeaderPersonalize />
     </nav>
   </div>
@@ -38,6 +44,15 @@ export default {
       type: String,
       default: 'guest',
     },
+    headerHeadline: {
+      type: String,
+      default: '',
+    },
+  },
+  computed: {
+    shouldShowHeaderHeadline() {
+      return !!this.headerHeadline && this.userRole !== 'sales'
+    },
   },
 } as ComponentOption
 
@@ -63,11 +78,14 @@ export interface Data {}
 
 export type Methods = {}
 
-export interface Computed {}
+export interface Computed {
+  shouldShowHeaderHeadline: boolean
+}
 
 export interface Props {
   enableRwd: boolean
   userRole: UserRole
+  headerHeadline: string
 }
 </script>
 
@@ -109,6 +127,15 @@ export interface Props {
     @include max-media('xl') {
       display: none;
     }
+  }
+
+  &__headerHeadline {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    color: $primary-color;
+    font-weight: 500;
+    text-align: left;
   }
 }
 </style>
