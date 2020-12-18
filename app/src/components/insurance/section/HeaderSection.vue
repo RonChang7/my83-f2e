@@ -76,7 +76,7 @@ const options: ComponentOption = {
     },
     discontinuedProductButtonInfo() {
       if (this.$store.state.insurance.staticData.id !== 'disability') return
-      if (Date.now() > new Date('2021-01-02').getTime()) return
+      if (Date.now() > new Date('2021-01-02 00:00:00').getTime()) return
 
       return {
         key: `12月最新${this.name}停售表`,

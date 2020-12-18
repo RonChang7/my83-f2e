@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, isBefore } from 'date-fns'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -48,13 +48,12 @@ export default {
   },
   computed: {
     headerHeadline() {
-      const dueDay = new Date('2021-01-01')
+      const dueDay = new Date('2021-01-01 00:00:00')
       const now = new Date()
-      const beforeDueDays = differenceInDays(dueDay, now)
 
-      if (beforeDueDays > 0) {
+      if (isBefore(now, dueDay)) {
         return {
-          text: `失能險停售倒數 ${differenceInDays(dueDay, now)} 天`,
+          text: `失能險停售倒數 ${differenceInDays(dueDay, now) + 1} 天`,
           link: {
             path: '/insurance/disability',
             url: `${this.$env.HOST_URL}/insurance/disability`,
