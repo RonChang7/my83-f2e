@@ -125,11 +125,6 @@ const options: ComponentOption = {
                 ),
               ],
             },
-          ],
-        },
-        {
-          title: '2020-12-31 評估中',
-          companies: [
             {
               name: '全球人壽',
               products: [
@@ -143,6 +138,11 @@ const options: ComponentOption = {
                 ),
               ],
             },
+          ],
+        },
+        {
+          title: '2020-12-31 評估中',
+          companies: [
             {
               name: '中國人壽',
               products: [
