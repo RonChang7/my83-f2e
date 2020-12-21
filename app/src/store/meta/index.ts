@@ -16,10 +16,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
         try {
           const { data } = await api.fetchActiveSalesCount()
           commit(types.UPDATE_ACTIVE_SALES_COUNT, data.actived_sales_count)
-          this.$cookies.set(
-            this.$cookiesKey.LAST_UPDATE_ACTIVE_SALES_COUNT,
-            Date.now()
-          )
         } catch (err) {}
       },
     },
