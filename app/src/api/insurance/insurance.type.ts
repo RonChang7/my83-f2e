@@ -27,18 +27,18 @@ export interface FetchInsurancePageStaticDataPayload {
 
 export interface Glossary {
   terms: Term[]
-  recommend_blogs: Link[]
+  recommend_blogs: RecommendBlog[]
 }
 
 export interface Principle {
   rules: Rule[]
-  recommend_blogs: Link[]
+  recommend_blogs: RecommendBlog[]
 }
 
 export interface Faq {
   question: string
   answer: string
-  recommend_blogs?: Link[]
+  recommend_blogs?: RecommendBlog[]
 }
 
 export interface Term {
@@ -49,6 +49,11 @@ export interface Term {
 export interface Rule {
   title: string
   content: string
+}
+
+export interface RecommendBlog {
+  title: string
+  link: Link
 }
 
 export interface RelatedBlogsResponse {
