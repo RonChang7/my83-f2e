@@ -71,8 +71,8 @@ export class Auth {
   }
 
   public logout() {
-    if (this.userState.id > 0) {
-      this.suspect.role = this.userState.role.toString() as Role
+    if (this.isLogin) {
+      this.suspect.role = this.userState.roleCode as RoleCode
       this.suspect.id = this.userState.id.toString()
     }
     this.removeToken()
@@ -81,8 +81,8 @@ export class Auth {
   public refreshToken(baseURL: string) {
     return new Promise((resolve, reject) => {
       JWT.refreshToken(baseURL, {
-        jwtToken: this.getToken() || '',
-        expiredTime: this.expiredTime || 0,
+        jwtToken: this.getToken() as string,
+        expiredTime: this.expiredTime as number,
       })
         .then((data) => {
           this.setToken(data)

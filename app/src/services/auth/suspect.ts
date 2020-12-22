@@ -1,4 +1,4 @@
-import { Role } from '@/api/type'
+import { RoleCode } from '@/api/type'
 
 // 嫌疑犯檢查功能
 export class Suspect {
@@ -23,11 +23,11 @@ export class Suspect {
   }
 
   public get role() {
-    return this.store.get(this.storeKey.roleKey) as Role
+    return Number(this.store.get(this.storeKey.roleKey)) as RoleCode
   }
 
-  public set role(value: Role) {
-    this._set(this.storeKey.roleKey, value)
+  public set role(value: RoleCode) {
+    this._set(this.storeKey.roleKey, value.toString())
   }
 
   private _set(key: string, value: string | undefined) {
