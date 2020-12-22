@@ -64,8 +64,8 @@ import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { Faq } from '@/api/insurance/insurance.type'
 import BaseCollapse from '@/components/base/collapse/BaseCollapse.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import BaseArrowTop from '@/components/base/icon/24/BaseArrowTop.vue'
-import BaseArrowDown from '@/components/base/icon/24/BaseArrowDown.vue'
+import BaseArrowTop from '@/assets/icon/24/BaseArrowTop.svg'
+import BaseArrowDown from '@/assets/icon/24/BaseArrowDown.svg'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,

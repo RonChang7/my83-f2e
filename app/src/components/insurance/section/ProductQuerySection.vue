@@ -71,7 +71,7 @@ import { ProductQueryFormService } from '@/services/product/ProductQueryFormServ
 import { FieldOption, InputType } from '@/services/product/field.type'
 import { ZHTWUnitMap } from '@/utils/number-converter'
 import DeviceMixin from '@/mixins/device/device-mixins'
-import BaseInfo from '@/components/base/icon/18/BaseInfo.svg'
+import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
 @Component({

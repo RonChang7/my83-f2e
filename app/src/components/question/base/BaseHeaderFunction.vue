@@ -60,7 +60,7 @@ import {
 } from '@/api/question/question.type'
 import { UserRole } from '@/services/user/user'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseMore from '@/components/base/icon/24/BaseMore.vue'
+import BaseMore from '@/assets/icon/24/BaseMore.svg'
 import {
   FOLLOW_QUESTION,
   UNFOLLOW_QUESTION,
