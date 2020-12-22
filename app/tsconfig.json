@@ -22,7 +22,7 @@
       "~/*": ["./src/*"],
       "@/*": ["./src/*"]
     },
-    "types": ["@types/node", "@nuxt/types", "@types/webpack-env"]
+    "types": ["@types/node", "@nuxt/types", "@types/webpack-env", "@nuxt/typescript-build"]
   },
   "exclude": ["node_modules"]
 }

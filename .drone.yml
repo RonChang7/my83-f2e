@@ -176,6 +176,24 @@ steps:
         - refs/tags/v*
       event: tag
 
+  - name: add-sentry-release-tag
+    image: getsentry/sentry-cli:1.60.1
+    environment:
+      SENTRY_AUTH_TOKEN:
+        from_secret: SENTRY_AUTH_TOKEN
+      SENTRY_ORG: upn-1r
+      SENTRY_PROJECT: my83-front
+    commands:
+      - sentry-cli releases new $${DRONE_COMMIT_SHA} --finalize
+      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
+    depends_on:
+      - deploy-production
+    when:
+      branch: master
+      ref:
+        - refs/tags/v*
+      event: tag
+
   - name: notify-deploy-prod
     image: plugins/slack
     settings:
@@ -195,7 +213,7 @@ steps:
         Author: {{ build.author }}
         <{{ build.link }}|Visit build page ↗>
     depends_on:
-      - deploy-production
+      - add-sentry-release-tag
     when:
       status:
         - success

@@ -1,6 +1,6 @@
 import { Suspect } from './suspect'
 import { JWT } from './jwt'
-import { CookiesKey } from '@/plugins/cookies'
+import { cookiesKeyMap } from '@/config/cookies-map'
 import { jwtParser, Response } from '@/utils/jwt-parser'
 import { Role, RoleCode } from '@/api/type'
 
@@ -13,21 +13,17 @@ export class Auth {
     secure: true,
   }
 
-  private suspectStoreKeyMap: Partial<CookiesKey>
-
   private _userState: UserState
 
   private _landingUrlInfo: LandingUrlInfo
 
-  constructor({
-    jwtTokenKey,
-    store,
-    suspectStoreKeyMap,
-  }: AuthConstructPayload) {
+  constructor({ jwtTokenKey, store }: AuthConstructPayload) {
     this.jwtTokenKey = jwtTokenKey
     this.store = store
-    this.suspectStoreKeyMap = suspectStoreKeyMap
-    this.suspect = new Suspect(store, suspectStoreKeyMap)
+    this.suspect = new Suspect(store, {
+      idKey: cookiesKeyMap.MEMBER_ID,
+      roleKey: cookiesKeyMap.ROLE,
+    })
 
     this._userState = {
       id: 0,
@@ -55,11 +51,11 @@ export class Auth {
   }
 
   public get suspectRole() {
-    return this.suspect.get(this.suspectStoreKeyMap.ROLE!)
+    return this.suspect.role
   }
 
   public get suspectMemberId() {
-    return this.suspect.get(this.suspectStoreKeyMap.MEMBER_ID!)
+    return this.suspect.id
   }
 
   private get expiredTime() {
@@ -75,11 +71,9 @@ export class Auth {
   }
 
   public logout() {
-    if (this.userState.id > 0) {
-      this.suspect.set({
-        [this.suspectStoreKeyMap.ROLE!]: this.userState.roleCode.toString(),
-        [this.suspectStoreKeyMap.MEMBER_ID!]: this.userState.id.toString(),
-      })
+    if (this.isLogin) {
+      this.suspect.role = this.userState.roleCode as RoleCode
+      this.suspect.id = this.userState.id.toString()
     }
     this.removeToken()
   }
@@ -87,8 +81,8 @@ export class Auth {
   public refreshToken(baseURL: string) {
     return new Promise((resolve, reject) => {
       JWT.refreshToken(baseURL, {
-        jwtToken: this.getToken() || '',
-        expiredTime: this.expiredTime || 0,
+        jwtToken: this.getToken() as string,
+        expiredTime: this.expiredTime as number,
       })
         .then((data) => {
           this.setToken(data)
@@ -147,7 +141,6 @@ export class Auth {
 interface AuthConstructPayload {
   jwtTokenKey: string
   store: Store
-  suspectStoreKeyMap: Partial<CookiesKey>
 }
 
 interface payload {
@@ -157,7 +150,7 @@ interface payload {
 
 interface Store {
   get(key: string): string | undefined
-  set(key: string, value: string | object, option?: StoreOption): void
+  set(key: string, value: string | undefined, option?: StoreOption): void
   remove(key: string, option?: StoreOption): void
 }
 

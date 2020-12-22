@@ -14,7 +14,7 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseModal from '@/components/base/modal/BaseModal.vue'
-import BaseClose from '@/components/base/icon/24/BaseClose.vue'
+import BaseClose from '@/assets/icon/24/BaseClose.svg'
 
 const options: ComponentOption = {
   components: {
@@ -105,6 +105,10 @@ export default options
   color: $gray-primary;
   outline: 0;
   overflow: auto;
+
+  @include min-media('lg') {
+    max-height: 90vh;
+  }
 
   @include max-media('lg') {
     width: calc(100% - 24px);
