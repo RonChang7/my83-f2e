@@ -9,6 +9,20 @@
     </GlobalLink>
     <nav>
       <DesktopHeaderNav :user-role="userRole" />
+      <div
+        v-if="shouldShowHeaderHeadline"
+        class="DesktopHeader__headerHeadline"
+      >
+        <GlobalLink
+          v-if="typeof headerHeadline === 'object'"
+          :to="headerHeadline.link.path"
+        >
+          {{ headerHeadline.text }}
+        </GlobalLink>
+        <template v-else>
+          {{ headerHeadline }}
+        </template>
+      </div>
       <HeaderPersonalize />
     </nav>
   </div>
@@ -22,6 +36,7 @@ import HeaderPersonalize from '../HeaderPersonalize.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { UserRole } from '@/services/auth/auth'
+import { LinkButton } from '@/api/type'
 
 export default {
   components: {
@@ -37,6 +52,15 @@ export default {
     userRole: {
       type: String,
       default: 'guest',
+    },
+    headerHeadline: {
+      type: [Object, String],
+      default: '',
+    },
+  },
+  computed: {
+    shouldShowHeaderHeadline() {
+      return !!this.headerHeadline && this.userRole !== 'sales'
     },
   },
 } as ComponentOption
@@ -63,11 +87,14 @@ export interface Data {}
 
 export type Methods = {}
 
-export interface Computed {}
+export interface Computed {
+  shouldShowHeaderHeadline: boolean
+}
 
 export interface Props {
   enableRwd: boolean
   userRole: UserRole
+  headerHeadline: LinkButton | string
 }
 </script>
 
@@ -109,6 +136,15 @@ export interface Props {
     @include max-media('xl') {
       display: none;
     }
+  }
+
+  &__headerHeadline {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    color: $primary-color;
+    font-weight: 500;
+    text-align: left;
   }
 }
 </style>
