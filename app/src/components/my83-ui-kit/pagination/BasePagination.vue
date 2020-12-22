@@ -38,8 +38,8 @@ import {
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import Pagination from '@/components/base/pagination/Pagination.vue'
-import BaseArrowLeft from '@/components/base/icon/24/BaseArrowLeft.vue'
-import BaseArrowRight from '@/components/base/icon/24/BaseArrowRight.vue'
+import BaseArrowLeft from '@/assets/icon/24/BaseArrowLeft.svg'
+import BaseArrowRight from '@/assets/icon/24/BaseArrowRight.svg'
 
 const options: ComponentOption = {
   components: {
