@@ -19,7 +19,7 @@
 
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column left">
-        <ProductListSection />
+        <ProductListSection ref="ProductListSection" />
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
             :pagination="pagination"
@@ -64,6 +64,7 @@ import InsuranceTipModal, {
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
+import { scrollToElement } from '@/utils/scroll'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin],
@@ -107,6 +108,21 @@ const options: ComponentOption = {
     openInfoModal() {
       this.infoModal.visible = true
     },
+    scrollToProductListSection() {
+      const offset = this.isMobile ? 65 : 90
+
+      scrollToElement({
+        el: this.$refs.ProductListSection.$el as HTMLElement,
+        vertical: true,
+        offset,
+      })
+    },
+  },
+  watch: {
+    // handle page position when navigate via pagination
+    '$route.query.page'() {
+      this.scrollToProductListSection()
+    },
   },
 }
 
@@ -130,6 +146,9 @@ export interface Instance
   extends Vue,
     Omit<DeviceMixinComponentInstance, keyof Vue> {
   $store: Store<InsuranceVuexState>
+  $refs: {
+    ProductListSection: Vue
+  }
 }
 
 export interface Data {
@@ -142,6 +161,7 @@ export interface Data {
 export type Methods = {
   updateInfoModalActiveTab(tab: InsuranceTipModalProps['activeTab']): void
   openInfoModal(): void
+  scrollToProductListSection(): void
 }
 
 export interface Computed {
