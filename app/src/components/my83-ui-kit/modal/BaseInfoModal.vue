@@ -106,6 +106,10 @@ export default options
   outline: 0;
   overflow: auto;
 
+  @include min-media('lg') {
+    max-height: 90vh;
+  }
+
   @include max-media('lg') {
     width: calc(100% - 24px);
     height: calc(100% - 20px);
