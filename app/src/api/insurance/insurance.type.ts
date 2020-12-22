@@ -102,15 +102,15 @@ export interface BaseInsuranceProduct {
   fee: string
   btn: LinkButton
   features: string[]
-  coverage_age: string
+  coverage_age: string | null
   view_count: number
 }
 
 export interface InsuranceProduct extends BaseInsuranceProduct {
   coverage_charts: InsuranceProductCoverageChart[]
-  coverages: string[]
+  coverages: Coverage[]
   description: string
-  promotion: string
+  promotion: string | null
   fee_prefix: string
 }
 
@@ -119,4 +119,10 @@ export interface PromotionInsuranceProduct extends BaseInsuranceProduct {}
 export interface InsuranceProductCoverageChart {
   name: string
   amount_percentage: number
+}
+
+export interface Coverage {
+  name: string
+  amount: string
+  postfix: string
 }
