@@ -17,6 +17,17 @@
       >
         <AskingRoundButton />
       </GlobalLink>
+      <div v-if="shouldShowHeaderHeadline" class="MobileHeader__headerHeadline">
+        <GlobalLink
+          v-if="typeof headerHeadline === 'object'"
+          :to="headerHeadline.link.path"
+        >
+          {{ headerHeadline.text }}
+        </GlobalLink>
+        <template v-else>
+          {{ headerHeadline }}
+        </template>
+      </div>
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
     </div>
@@ -31,12 +42,10 @@ import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
 import BaseMenu from '@/assets/icon/24/BaseMenu.svg'
 import BaseClose from '@/assets/icon/24/BaseClose.svg'
-import UserMetaMixin, {
-  ComponentInstance as UserMetaMixinComponentInstance,
-} from '@/mixins/user/user-meta'
+import { UserRole } from '@/services/user/user'
+import { LinkButton } from '@/api/type'
 
 export default {
-  mixins: [UserMetaMixin],
   components: {
     GlobalLink,
     AskingRoundButton,
@@ -47,6 +56,14 @@ export default {
     enableRwd: {
       type: Boolean,
       default: false,
+    },
+    userRole: {
+      type: String,
+      default: 'guest',
+    },
+    headerHeadline: {
+      type: [Object, String],
+      default: '',
     },
   },
   data() {
@@ -66,6 +83,9 @@ export default {
     },
     showCloseMenu() {
       return this.$route.name === 'headerMenu'
+    },
+    shouldShowHeaderHeadline() {
+      return !!this.headerHeadline && this.userRole !== 'sales'
     },
   },
   methods: {
@@ -97,9 +117,7 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance
-  extends Vue,
-    Omit<UserMetaMixinComponentInstance, keyof Vue> {}
+export interface Instance extends Vue {}
 
 export interface Data {
   isMounted: boolean
@@ -113,10 +131,13 @@ export type Methods = {
 export interface Computed {
   shouldShowAskingButton: boolean
   showCloseMenu: boolean
+  shouldShowHeaderHeadline: boolean
 }
 
 export interface Props {
   enableRwd: boolean
+  userRole: UserRole
+  headerHeadline: LinkButton | string
 }
 </script>
 
@@ -143,10 +164,20 @@ export interface Props {
     }
   }
 
+  &__headerHeadline {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    color: $primary-color;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+  }
+
   .logo {
     width: 148px;
     height: 34px;
-    margin-right: 30px;
+    margin-right: 15px;
   }
 
   &.no-shadow {
