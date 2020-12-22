@@ -1,5 +1,4 @@
-import _ from 'lodash'
-import { CookiesKey } from '@/plugins/cookies'
+import { Role } from '@/api/type'
 
 // 嫌疑犯檢查功能
 export class Suspect {
@@ -7,31 +6,38 @@ export class Suspect {
     path: '/',
   }
 
-  constructor(private store: Store, private storeKeyMap: Partial<CookiesKey>) {}
-
-  public set(payload: Record<string, string>) {
-    _.forEach(payload, (value, key) => {
-      if (!_.includes(this.storeKeyMap, key))
-        throw new Error(`${key} is not exist in list!`)
-
-      this._set(key, value)
-    })
-  }
-
-  public get(key: string) {
-    return this.store.get(key)
-  }
-
-  private _set(key: string, value: string) {
-    if (!this.get(key)) {
-      this.store.set(key, value, this.storeOption)
+  constructor(
+    private store: Store,
+    private storeKey: {
+      idKey: string
+      roleKey: string
     }
+  ) {}
+
+  public get id() {
+    return this.store.get(this.storeKey.idKey)
+  }
+
+  public set id(value) {
+    this._set(this.storeKey.idKey, value)
+  }
+
+  public get role() {
+    return this.store.get(this.storeKey.roleKey) as Role
+  }
+
+  public set role(value: Role) {
+    this._set(this.storeKey.roleKey, value)
+  }
+
+  private _set(key: string, value: string | undefined) {
+    this.store.set(key, value, this.storeOption)
   }
 }
 
 interface Store {
   get(key: string): string | undefined
-  set(key: string, value: string | object, option?: StoreOption): void
+  set(key: string, value: string | undefined, option?: StoreOption): void
 }
 
 interface StoreOption {

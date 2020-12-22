@@ -58,10 +58,6 @@ const config: NuxtConfig = {
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
     {
-      src: '@/plugins/cookies',
-      mode: 'client',
-    },
-    {
       src: '@/plugins/auth',
       mode: 'client',
     },
