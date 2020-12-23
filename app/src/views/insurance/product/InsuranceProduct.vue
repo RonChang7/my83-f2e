@@ -204,7 +204,7 @@ export default class InsuranceProduct extends DeviceMixin {
 
       &.right {
         width: 264px;
-        margin-top: 49px;
+        margin-top: 43px;
 
         > div:not(:last-child) {
           margin-bottom: 20px;
