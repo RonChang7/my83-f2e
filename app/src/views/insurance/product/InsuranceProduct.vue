@@ -31,8 +31,11 @@
         />
       </div>
       <div class="column right">
-        <ProductPromotionSalesSection v-if="isDesktop" />
-        <PromotionSection v-else />
+        <ProductPromotionSalesSection
+          v-if="isDesktop"
+          :active-sales-count="activeSalesCount"
+        />
+        <PromotionSection v-else :active-sales-count="activeSalesCount" />
         <PopularProductSection />
       </div>
     </div>
@@ -90,6 +93,10 @@ export default class InsuranceProduct extends DeviceMixin {
 
   get shouldShowProductPromotionSection() {
     return !(this.isMobile && !this.shouldShowScrollToTop)
+  }
+
+  get activeSalesCount() {
+    return this.$store.state.meta.activeSalesCount
   }
 
   scrollToTop() {

@@ -10,6 +10,9 @@
         直接到 MY83
         保險達人榜，免費詢問站上活躍的業務員，讓專業、好評、回覆迅速的業務員來幫你！
       </div>
+      <div class="ProductPromotionSalesSection__activeSalesCount">
+        {{ activeSalesCountWording }}
+      </div>
       <BaseButton
         to="/searchSales"
         size="l-a"
@@ -23,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
 @Component({
@@ -31,7 +34,16 @@ import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
     BaseButton,
   },
 })
-export default class ProductPromotionSalesSection extends Vue {}
+export default class ProductPromotionSalesSection extends Vue {
+  @Prop({ type: Number, default: 0 })
+  activeSalesCount: number
+
+  get activeSalesCountWording() {
+    return this.activeSalesCount
+      ? `\\ 諮詢 ${this.activeSalesCount} 位活躍業務員 /`
+      : ''
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -66,7 +78,15 @@ export default class ProductPromotionSalesSection extends Vue {}
   &__description {
     color: $gray-primary;
     font-size: 0.875rem;
-    margin-bottom: 18px;
+    margin-bottom: 12px;
+  }
+
+  &__activeSalesCount {
+    height: 24px;
+    margin: 0 0 6px;
+    color: $gray-primary;
+    font-size: 0.875rem;
+    text-align: center;
   }
 }
 </style>
