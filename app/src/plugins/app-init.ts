@@ -5,8 +5,6 @@ import { createStoreModule as createHeaderStoreModule } from '@/store/header/ind
 import { createStoreModule as createPageMetaStoreModule } from '@/store/seo/page-meta'
 import { createStoreModule as createJsonLdStoreModule } from '@/store/seo/json-ld'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
-import { User } from '@/services/user/user'
-import { Auth } from '@/services/auth/auth'
 
 const storeModules: Record<string, StoreModule> = {
   global: {
@@ -28,12 +26,6 @@ const storeModules: Record<string, StoreModule> = {
 }
 
 export default (({ app, store }, inject) => {
-  // 設定 my83 token name
-  const auth = Auth.getInstance()
-  auth.setTokenKey(app.$env.JWT_TOKEN_NAME)
-
-  const user = User.getInstance()
-
   // Set image bucket url
   inject('imageBucketUrl', app.$env.IMAGE_BUCKET_URL)
 
@@ -52,8 +44,8 @@ export default (({ app, store }, inject) => {
     isTablet: app.$ua.isFromTablet(),
   })
 
-  if (process.client && !user.isLogin()) {
-    user.updateLandingUrl()
+  if (process.client && !app.$auth.isLogin) {
+    app.$auth.setLandingUrl()
   }
 }) as NuxtPlugin
 

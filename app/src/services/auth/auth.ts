@@ -1,49 +1,64 @@
-import Cookies, { CookieAttributes } from 'js-cookie'
+import { Suspect } from './suspect'
+import { JWT } from './jwt'
+import { cookiesKeyMap } from '@/config/cookies-map'
 import { jwtParser, Response } from '@/utils/jwt-parser'
+import { Role, RoleCode } from '@/api/type'
 
 export class Auth {
-  private static instance: Auth
-
   private jwtTokenKey: string
+  private store: Store
+  private suspect: Suspect
+  private storeOption: StoreOption = {
+    path: '/',
+    secure: true,
+  }
 
-  private cookieAttributes: CookieAttributes
+  private _userState: UserState
 
-  private constructor() {
-    this.cookieAttributes = {
-      path: '/',
-      secure: true,
+  private _landingUrlInfo: LandingUrlInfo
+
+  constructor({ jwtTokenKey, store }: AuthConstructPayload) {
+    this.jwtTokenKey = jwtTokenKey
+    this.store = store
+    this.suspect = new Suspect(store, {
+      idKey: cookiesKeyMap.MEMBER_ID,
+      roleKey: cookiesKeyMap.ROLE,
+    })
+
+    this._userState = {
+      id: 0,
+      role: 'guest',
+      roleCode: -1,
+      nickname: '',
+    }
+
+    this._landingUrlInfo = {
+      firstHttpReferrer: '',
+      firstUrl: '',
     }
   }
 
-  public static getInstance(): Auth {
-    if (!Auth.instance) {
-      Auth.instance = new Auth()
-    }
-
-    return Auth.instance
+  public get isLogin() {
+    return !!this.getToken()
   }
 
-  public login(payload: payload) {
-    this.setToken(payload)
+  public get userState() {
+    return this._userState
   }
 
-  public logout() {
-    this.removeToken()
+  public get landingUrl() {
+    return this._landingUrlInfo
   }
 
-  public refresh(payload: payload) {
-    this.setToken(payload)
+  public get suspectRole() {
+    return this.suspect.role
   }
 
-  public setTokenKey(key: string) {
-    this.jwtTokenKey = key
+  public get suspectMemberId() {
+    return this.suspect.id
   }
 
-  public getToken() {
-    return Cookies.get(this.jwtTokenKey)
-  }
-
-  public get expiredTime() {
+  private get expiredTime() {
     const result = jwtParser(this.getToken())
     if (result.success) {
       return (result as Response<true>).exp
@@ -51,19 +66,117 @@ export class Auth {
     return null
   }
 
+  public login(payload: payload) {
+    this.setToken(payload)
+  }
+
+  public logout() {
+    if (this.isLogin) {
+      this.suspect.role = this.userState.roleCode as RoleCode
+      this.suspect.id = this.userState.id.toString()
+    }
+    this.removeToken()
+  }
+
+  public refreshToken(baseURL: string) {
+    return new Promise((resolve, reject) => {
+      JWT.refreshToken(baseURL, {
+        jwtToken: this.getToken() as string,
+        expiredTime: this.expiredTime as number,
+      })
+        .then((data) => {
+          this.setToken(data)
+          resolve()
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
+  public getToken() {
+    return this.store.get(this.jwtTokenKey)
+  }
+
+  public setTokenKey(key: string) {
+    this.jwtTokenKey = key
+  }
+
+  public setUserState(userState: UserState) {
+    if (this.isLogin) {
+      this._userState = userState
+    } else {
+      this.resetUserState()
+    }
+  }
+
+  public setLandingUrl() {
+    this._landingUrlInfo = {
+      firstHttpReferrer: document.referrer,
+      firstUrl: window.location.href,
+    }
+  }
+
+  private resetUserState() {
+    this._userState = {
+      id: 0,
+      role: 'guest',
+      roleCode: -1,
+      nickname: '',
+    }
+  }
+
   private setToken({ jwtToken, expiredTime }: payload) {
-    Cookies.set(this.jwtTokenKey, jwtToken, {
+    this.store.set(this.jwtTokenKey, jwtToken, {
       expires: new Date(expiredTime * 1000),
-      ...this.cookieAttributes,
+      ...this.storeOption,
     })
   }
 
   private removeToken() {
-    Cookies.remove(this.jwtTokenKey, this.cookieAttributes)
+    this.store.remove(this.jwtTokenKey, this.storeOption)
   }
+}
+
+interface AuthConstructPayload {
+  jwtTokenKey: string
+  store: Store
 }
 
 interface payload {
   jwtToken: string
   expiredTime: number
+}
+
+interface Store {
+  get(key: string): string | undefined
+  set(key: string, value: string | undefined, option?: StoreOption): void
+  remove(key: string, option?: StoreOption): void
+}
+
+interface StoreOption {
+  path?: string
+  expires?: Date
+  secure?: boolean
+}
+
+export type UserRole = Role | 'guest'
+
+export type UserRoleCode = RoleCode | -1
+
+export const UserRoleMap: Record<UserRole, string> = {
+  client: '保戶',
+  sales: '業務員',
+  guest: '訪客',
+}
+
+export interface LandingUrlInfo {
+  firstHttpReferrer: string
+  firstUrl: string
+}
+export interface UserState {
+  id: number
+  role: UserRole
+  roleCode: UserRoleCode
+  nickname: string
 }

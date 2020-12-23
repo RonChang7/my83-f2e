@@ -34,7 +34,6 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { AvatarMap } from '../helpers/reply-default-avatar'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { User } from '@/services/user/user'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   OPEN_LOGIN_PANEL,
@@ -47,7 +46,6 @@ import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 const AnswerEditor = () => import('../answer/AnswerEditor.vue')
-const user = User.getInstance()
 
 export default {
   mixins: [DeviceMixin, UserMetaMixin],
@@ -69,7 +67,7 @@ export default {
       })
     },
     panelDisplayHandler(status) {
-      if (status && !user.isLogin()) {
+      if (status && !this.$auth.isLogin) {
         this.showLoginPanel()
         return
       }

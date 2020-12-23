@@ -1,4 +1,4 @@
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 
 export const AvatarMap: Record<UserRole, string> = {
   guest: '',

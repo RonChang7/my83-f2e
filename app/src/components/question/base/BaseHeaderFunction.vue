@@ -58,7 +58,7 @@ import {
   QuestionPersonalize,
   AnswerPersonalize,
 } from '@/api/question/question.type'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseMore from '@/assets/icon/24/BaseMore.svg'
 import {

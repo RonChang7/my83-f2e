@@ -20,6 +20,7 @@ export const facebookSignUp = async ({
   firstHttpReferrer,
   firstUrl,
   roleSession,
+  memberSession,
 }: FacebookSignUpPayload): Promise<FacebookSignUpResponse> => {
   const { data, status } = await request.post<FacebookSignUpResponse>(
     '/api/auth/facebook-signup',
@@ -29,6 +30,7 @@ export const facebookSignUp = async ({
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
       role_session: roleSession,
+      member_id: memberSession,
     }
   )
 
@@ -47,6 +49,7 @@ export const facebookLogin = async ({
   firstHttpReferrer,
   firstUrl,
   roleSession,
+  memberSession,
 }: FacebookLoginPayload): Promise<FacebookLoginResponse> => {
   const { data, status } = await request.post<FacebookLoginResponse>(
     '/api/auth/facebook-login',
@@ -55,6 +58,7 @@ export const facebookLogin = async ({
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
       role_session: roleSession,
+      member_id: memberSession,
     }
   )
 
@@ -74,6 +78,7 @@ export const emailLogin = async ({
   firstHttpReferrer,
   firstUrl,
   roleSession,
+  memberSession,
 }: EmailLoginPayload): Promise<EmailLoginResponse> => {
   const { data, status } = await request.post<EmailLoginResponse>(
     '/api/auth/email-login',
@@ -83,6 +88,7 @@ export const emailLogin = async ({
       first_http_referer: firstHttpReferrer,
       first_url: firstUrl,
       role_session: roleSession,
+      member_id: memberSession,
     }
   )
 

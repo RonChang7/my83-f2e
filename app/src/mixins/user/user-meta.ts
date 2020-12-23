@@ -1,23 +1,19 @@
 import Vue from 'vue'
-import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { GlobalVuexState } from '@/store/global-state'
-import { UserRole } from '@/services/user/user'
+import { Vue as VuePropertyDecorator, Component } from 'vue-property-decorator'
+import { UserRole } from '@/services/auth/auth'
 
-const options: ComponentOption = {
-  computed: {
-    nickname() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.nickname || ''
-      )
-    },
-    userRole() {
-      return (
-        this.$store.state.header.headerPersonalized?.personalize.role || 'guest'
-      )
-    },
-  },
+@Component
+export default class UserMetaMixin extends VuePropertyDecorator {
+  // this.$auth 這個 plugin 不會在 server side 進行注入，所以要額外進行判斷
+  get nickname() {
+    return process.client ? this.$auth.userState.nickname : ''
+  }
+
+  get userRole(): UserRole {
+    return process.client ? this.$auth.userState.role : 'guest'
+  }
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -36,9 +32,7 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {
-  $store: Store<GlobalVuexState>
-}
+export interface Instance extends Vue {}
 
 export interface Data {}
 
@@ -50,5 +44,3 @@ export interface Computed {
 }
 
 export interface Props {}
-
-export default options

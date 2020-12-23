@@ -1,6 +1,5 @@
 import https from 'https'
 import axios from 'axios'
-import { Auth } from './auth'
 import { LoginResponse } from '@/api/login/login.type'
 
 const request = axios.create({
@@ -10,16 +9,12 @@ const request = axios.create({
   withCredentials: true,
 })
 
-request.interceptors.request.use((config) => {
-  const auth = Auth.getInstance()
-  const jwtToken = auth.getToken()
-
-  config.headers.Authorization = `Bearer ${jwtToken}`
-  return config
-})
-
-const refreshJWTToken = async (baseURL: string): Promise<LoginResponse> => {
+const refreshJWTToken = async (
+  baseURL: string,
+  previousJWTToken: string
+): Promise<LoginResponse> => {
   request.defaults.baseURL = baseURL
+  request.defaults.headers.Authorization = `Bearer ${previousJWTToken}`
 
   const { data, status } = await request.get<LoginResponse>('/api/auth/refresh')
 
@@ -30,16 +25,14 @@ const refreshJWTToken = async (baseURL: string): Promise<LoginResponse> => {
 }
 
 export class JWT {
-  public static isRefreshing: Promise<void> | null
+  public static isRefreshing: Promise<JWTRefreshResponsePayload> | null
 
-  public static refreshToken = (baseURL: string) => {
-    const auth = Auth.getInstance()
-
+  public static refreshToken = (baseURL: string, payload: JWTPayload) => {
     if (JWT.isRefreshing) {
       return JWT.isRefreshing
     }
 
-    if (auth.expiredTime && Date.now() < auth.expiredTime * 1000) {
+    if (payload.expiredTime && Date.now() < payload.expiredTime * 1000) {
       JWT.isRefreshing = new Promise((resolve) => {
         setTimeout(() => {
           JWT.isRefreshing = null
@@ -48,13 +41,9 @@ export class JWT {
       })
     } else {
       JWT.isRefreshing = new Promise((resolve, reject) => {
-        refreshJWTToken(baseURL)
+        refreshJWTToken(baseURL, payload.jwtToken)
           .then(({ token, expired_time }) => {
-            auth.refresh({
-              jwtToken: token!,
-              expiredTime: expired_time!,
-            })
-            resolve()
+            resolve({ jwtToken: token!, expiredTime: expired_time! })
           })
           .catch((err) => {
             reject(err)
@@ -68,3 +57,10 @@ export class JWT {
     return JWT.isRefreshing
   }
 }
+
+interface JWTPayload {
+  jwtToken: string
+  expiredTime: number
+}
+
+interface JWTRefreshResponsePayload extends JWTPayload {}

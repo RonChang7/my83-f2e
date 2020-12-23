@@ -1,5 +1,5 @@
 import { SimpleResponse, Role } from '../type'
-import { LandingUrlInfo } from '@/services/user/user'
+import { LandingUrlInfo } from '@/services/auth/auth'
 
 export interface LoginResponse extends SimpleResponse {
   status?: number
@@ -10,18 +10,21 @@ export interface LoginResponse extends SimpleResponse {
 export interface FacebookLoginPayload extends LandingUrlInfo {
   fbToken: string
   roleSession?: string
+  memberSession?: string
 }
 
 export interface FacebookSignUpPayload extends LandingUrlInfo {
   fbToken: string
   role: Role
   roleSession?: string
+  memberSession?: string
 }
 
 export interface EmailLoginPayload extends LandingUrlInfo {
   email: string
   password: string
   roleSession?: string
+  memberSession?: string
 }
 
 export interface EmailLoginResponse extends LoginResponse {}

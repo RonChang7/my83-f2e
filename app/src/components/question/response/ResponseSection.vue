@@ -31,7 +31,7 @@ import BaseContent from '../base/BaseContent.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
 import { ResponseData } from '@/api/question/question.type'
 import { textToUrl, br2nl } from '@/utils/text-parser'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 
 export default {
   components: {
