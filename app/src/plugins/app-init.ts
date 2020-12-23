@@ -4,6 +4,7 @@ import { createStoreModule as createGlobalStoreModule } from '@/store/global/ind
 import { createStoreModule as createHeaderStoreModule } from '@/store/header/index'
 import { createStoreModule as createPageMetaStoreModule } from '@/store/seo/page-meta'
 import { createStoreModule as createJsonLdStoreModule } from '@/store/seo/json-ld'
+import { createStoreModule as createMetaStoreModule } from '@/store/meta/index'
 import { UPDATE_USER_AGENT } from '@/store/global/global.type'
 
 const storeModules: Record<string, StoreModule> = {
@@ -22,6 +23,10 @@ const storeModules: Record<string, StoreModule> = {
   jsonLd: {
     moduleName: 'jsonLd',
     createModule: () => createJsonLdStoreModule(),
+  },
+  meta: {
+    moduleName: 'meta',
+    createModule: () => createMetaStoreModule(),
   },
 }
 

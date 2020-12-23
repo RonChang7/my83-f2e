@@ -10,6 +10,9 @@
           <br class="newline" />
           讓專業、好評、回覆迅速的業務員來幫你！
         </div>
+        <div v-if="isDesktop" class="PromotionSection__activeSalesCount">
+          {{ activeSalesCountWording }}
+        </div>
         <BaseButton
           size="l-b"
           type="quaternary"
@@ -18,6 +21,9 @@
         >
           找業務員
         </BaseButton>
+      </div>
+      <div v-if="!isDesktop" class="PromotionSection__activeSalesCount">
+        {{ activeSalesCountWording }}
       </div>
     </div>
   </div>
@@ -36,6 +42,20 @@ const options: ComponentOption = {
   mixins: [DeviceMixin],
   components: {
     BaseButton,
+  },
+  props: {
+    activeSalesCount: {
+      type: Number,
+      default: 0,
+    },
+  },
+  computed: {
+    activeSalesCountWording() {
+      if (!this.activeSalesCount) return ''
+      const wording = `諮詢 ${this.activeSalesCount} 位活躍業務員`
+
+      return this.isDesktop ? `\\  ${wording}  /` : wording
+    },
   },
   methods: {
     calcMobileBackgroundPositionY() {
@@ -86,7 +106,9 @@ export type Methods = {
 
 export interface Computed {}
 
-export interface Props {}
+export interface Props {
+  activeSalesCount: number
+}
 
 export default options
 </script>
@@ -121,6 +143,14 @@ export default options
     text-align: left;
   }
 
+  &__activeSalesCount {
+    height: 24px;
+    margin: 0 0 6px;
+    color: $gray-primary;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
   @include max-media('xl') {
     margin: 16px 16px 20px;
     max-width: 420px;
@@ -147,8 +177,16 @@ export default options
 
     &__description {
       margin: 26px 16px 0 0;
-      width: 186px;
+      width: 176px;
       flex: 0 0 auto;
+    }
+
+    &__activeSalesCount {
+      height: 16px;
+      margin: 6px 0 0;
+      color: $gray-primary;
+      font-size: 0.75rem;
+      text-align: right;
     }
   }
 }
