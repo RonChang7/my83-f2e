@@ -75,14 +75,9 @@ import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseCheckbox from '@/components/my83-ui-kit/input/BaseCheckbox.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
-import { User, LandingUrlInfo } from '@/services/user/user'
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse, Role } from '@/api/type'
-import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/user/suspect'
-
-const auth = Auth.getInstance()
 
 export default {
   components: {
@@ -114,16 +109,6 @@ export default {
     },
   },
   methods: {
-    landingUrl() {
-      const user = User.getInstance()
-      return user.landingUrl
-    },
-    login(jwtToken, expiredTime) {
-      auth.login({
-        jwtToken,
-        expiredTime,
-      })
-    },
     async validate(key, value) {
       const error = await this.validator.validate(key, value)
       this.$set(this.errors, key, error[key])
@@ -146,11 +131,15 @@ export default {
         const { token, expired_time } = await login.emailLogin({
           email: this.form.email,
           password: this.form.password,
-          ...this.landingUrl(),
-          roleSession: Suspect.getRoleCode(),
+          ...this.$auth.landingUrl,
+          roleSession: this.$auth.suspectRole,
+          memberSession: this.$auth.suspectMemberId,
         })
 
-        this.login(token!, expired_time!)
+        this.$auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
+        })
         this.$emit('login-success')
       } catch (error) {
         this.state.email = ''
@@ -169,11 +158,15 @@ export default {
         const { token, expired_time } = await login.facebookSignUp({
           fbToken,
           role,
-          ...this.landingUrl(),
-          roleSession: Suspect.getRoleCode(),
+          ...this.$auth.landingUrl,
+          roleSession: this.$auth.suspectRole,
+          memberSession: this.$auth.suspectMemberId,
         })
 
-        this.login(token!, expired_time!)
+        this.$auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
+        })
 
         this.newUserRedirect(role)
       } catch (error) {
@@ -193,11 +186,15 @@ export default {
       try {
         const { token, expired_time } = await login.facebookLogin({
           fbToken,
-          ...this.landingUrl(),
-          roleSession: Suspect.getRoleCode(),
+          ...this.$auth.landingUrl,
+          roleSession: this.$auth.suspectRole,
+          memberSession: this.$auth.suspectMemberId,
         })
 
-        this.login(token!, expired_time!)
+        this.$auth.login({
+          jwtToken: token!,
+          expiredTime: expired_time!,
+        })
 
         this.$emit('login-success')
       } catch (error) {
@@ -263,8 +260,6 @@ export interface Data {
 }
 
 export type Methods = {
-  landingUrl(): LandingUrlInfo
-  login(jwtToken: string, expiredTime: number): void
   validate(key: string, value: any): void
   submit(): void
   facebookSignUp(fbToken: string, role: Role): void

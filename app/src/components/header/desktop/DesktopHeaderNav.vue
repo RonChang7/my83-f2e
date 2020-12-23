@@ -30,7 +30,7 @@ import HeaderMenuPanel from '../HeaderMenuPanel.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import BaseArrowDown from '@/assets/icon/18/BaseArrowDown.svg'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 import { headerNewBadgeList } from '@/config/header-new-badge-list'
 
 export default {

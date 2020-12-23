@@ -62,7 +62,7 @@ import AnswerInteraction from './AnswerInteraction.vue'
 import { Type } from './AnswerInteractionButton.vue'
 import { CancelDislikeDialogContent } from './cancel-dislike-dialog-info'
 import { AnswerData, LikeStatus } from '@/api/question/question.type'
-import { User, UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 import { SET_LIKE_STATUS } from '@/store/question/question.type'
 import {
   OPEN_GLOBAL_DIALOG,
@@ -72,8 +72,6 @@ import {
 } from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global'
 const ResponseEditor = () => import('../response/ResponseEditor.vue')
-
-const user = User.getInstance()
 
 export default {
   components: {
@@ -166,7 +164,7 @@ export default {
       })
     },
     buttonActionHandler(type) {
-      if (!user.isLogin()) {
+      if (!this.$auth.isLogin) {
         this.showLoginPanel()
         return
       }

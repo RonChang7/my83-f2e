@@ -30,7 +30,7 @@ import MobileHeader from './mobile/MobileHeader.vue'
 import Affix from '@/components/base/affix/Affix.vue'
 import * as types from '@/store/header/header.type'
 import { GlobalVuexState } from '@/store/global-state'
-import { UserRole } from '@/services/user/user'
+import { UserRole } from '@/services/auth/auth'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
