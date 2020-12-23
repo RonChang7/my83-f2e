@@ -8,16 +8,26 @@
               {{ product.company }}
             </div>
             <h3 class="ProductCard__name">{{ product.name }}</h3>
-            <div class="ProductCard__features">{{ features }}</div>
-            <div class="ProductCard__coverageAge">
+            <div v-if="features" class="ProductCard__features">
+              {{ features }}
+            </div>
+            <div v-if="product.coverage_age" class="ProductCard__coverageAge">
               {{ product.coverage_age }}
+            </div>
+            <div v-if="product.promotion" class="ProductCard__promotion">
+              {{ product.promotion }}
             </div>
           </div>
           <div
-            v-if="product.coverage_charts.length"
+            v-if="product.coverage_charts.length || product.coverages.length"
             class="ProductCard__subSection"
           >
-            <div class="ProductCard__coverages">
+            <div
+              class="ProductCard__coverages"
+              :class="{
+                'flex-wrap': enableCoverageFlexWrap,
+              }"
+            >
               <CoverageBadge
                 v-for="(coverage, index) in product.coverage_charts"
                 :key="index"
@@ -26,6 +36,21 @@
                 :wording="`${coverage.amount_percentage}%`"
                 :legend="coverage.name"
               />
+              <div
+                v-for="(coverage, index) in product.coverages"
+                :key="index"
+                class="ProductCard__coverages__item"
+              >
+                <span class="name">
+                  {{ coverage.name }}
+                </span>
+                <span class="amount">
+                  {{ coverage.amount }}
+                </span>
+                <span v-if="coverage.postfix" class="postfix">
+                  {{ coverage.postfix }}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -44,7 +69,9 @@
             </div>
           </div>
           <div class="ProductCard__subSection">
-            <div class="ProductCard__viewCount">{{ viewCount }}</div>
+            <div v-if="viewCount" class="ProductCard__viewCount">
+              {{ viewCount }}
+            </div>
             <BaseButton
               class="ProductCard__btn"
               :to="product.btn.link"
@@ -94,6 +121,12 @@ const options: ComponentOption = {
         ? `有 ${this.product.view_count} 人有興趣`
         : ''
     },
+    enableCoverageFlexWrap() {
+      return (
+        this.product.coverages.length > 0 &&
+        this.product.coverage_charts.length === 0
+      )
+    },
   },
   methods: {
     getFormattedFee(fee) {
@@ -130,6 +163,7 @@ export type Methods = {
 export interface Computed {
   features: string
   viewCount: string
+  enableCoverageFlexWrap: boolean
 }
 
 export interface Props {
@@ -195,15 +229,19 @@ export default options
 
   &__features,
   &__coverageAge,
-  &__viewCount {
+  &__viewCount,
+  &__promotion {
     font-size: 0.75rem;
-    min-height: 1.5em;
+  }
+
+  &__promotion {
+    color: $primary-color;
+    margin-top: 8px;
   }
 
   &__coverages {
     display: flex;
     align-items: center;
-    height: 50px;
     margin: 32px 0 0 4px;
 
     @include max-media('xl') {
@@ -219,6 +257,43 @@ export default options
         &:not(:last-child) {
           margin-right: 10px;
         }
+      }
+    }
+
+    &__item {
+      flex: 0 0 50%;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.875rem;
+      margin-top: 6px;
+
+      &:before {
+        content: '';
+        width: 0px;
+        height: 14px;
+        margin-right: 8px;
+        border: 2px solid $secondary-light-color;
+        border-radius: 2px;
+      }
+
+      &:nth-child(-n + 2) {
+        margin-top: 0;
+      }
+
+      > .name {
+        color: $gray-primary;
+      }
+
+      > .amount {
+        color: $secondary-color;
+        font-weight: 500;
+        margin-left: 0.25rem;
+      }
+
+      > .postfix {
+        color: $secondary-color;
+        font-size: 0.75em;
+        margin-left: 0.25rem;
       }
     }
   }
@@ -240,6 +315,8 @@ export default options
   }
 
   &__fee {
+    display: inline-flex;
+    align-items: center;
     color: $primary-color;
     font-size: 1.5rem;
     font-weight: 500;
