@@ -1,5 +1,6 @@
 import { Context } from '@nuxt/types'
 import { FETCH_HEADER_NAV_DATA } from '@/store/header/header.type'
+import { FETCH_ACTIVE_SALES_COUNT } from '@/store/meta/meta.type'
 import { GlobalVuexState } from '@/store/global-state'
 
 export const pageRequestMap: Request[] = [
@@ -12,6 +13,11 @@ export const pageRequestMap: Request[] = [
         !(store.state as GlobalVuexState).header.headerNavItems.length
       )
     },
+  },
+  {
+    promise: ({ store }) => store.dispatch(`meta/${FETCH_ACTIVE_SALES_COUNT}`),
+    shouldFetchRequest: ({ store }) =>
+      !(store.state as GlobalVuexState).meta.activeSalesCount,
   },
 ]
 

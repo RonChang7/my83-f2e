@@ -135,12 +135,14 @@ export default {
     },
   },
   mounted() {
-    window.addEventListener('scroll', this.checkShouldShowScrollToTop, {
-      passive: true,
-    })
+    this.activateScrollToTop &&
+      window.addEventListener('scroll', this.checkShouldShowScrollToTop, {
+        passive: true,
+      })
   },
   beforeDestroy() {
-    window.removeEventListener('scroll', this.checkShouldShowScrollToTop)
+    this.activateScrollToTop &&
+      window.removeEventListener('scroll', this.checkShouldShowScrollToTop)
   },
 } as ComponentOption
 

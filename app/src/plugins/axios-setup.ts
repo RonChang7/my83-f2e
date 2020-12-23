@@ -2,9 +2,6 @@ import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import request, { Request } from '@/api/request'
 import { sentryLog } from '@/api/sentry'
-import { Auth } from '@/services/auth/auth'
-import { Suspect } from '@/services/user/suspect'
-import { JWT } from '@/services/auth/jwt'
 import {
   checkRedirectResponse,
   RedirectErrorResponseBody,
@@ -71,8 +68,7 @@ export default (({ app, req }) => {
   if (process.client) {
     // Client side add Authorization header in order to valid JWT Token
     request.interceptors.request.use((config) => {
-      const auth = Auth.getInstance()
-      const jwtToken = auth.getToken()
+      const jwtToken = app.$auth.getToken()
 
       if (jwtToken) {
         config.headers.Authorization = `Bearer ${jwtToken}`
@@ -97,7 +93,6 @@ export default (({ app, req }) => {
           } = err
 
           const originalRequest = config as AxiosRequestConfig
-          const auth = Auth.getInstance()
 
           if (
             preventInterceptorsList.find(
@@ -106,9 +101,10 @@ export default (({ app, req }) => {
           ) {
             return Promise.reject(err)
           } else if (status === 401 && error === 'expired_token') {
-            return JWT.refreshToken(API_URL)
+            return app.$auth
+              .refreshToken(API_URL)
               .then(() => {
-                const jwtToken = auth.getToken()
+                const jwtToken = app.$auth.getToken()
                 originalRequest.headers.Authorization = `Bearer ${jwtToken}`
                 return request(originalRequest)
               })
@@ -121,14 +117,12 @@ export default (({ app, req }) => {
                   refreshTokenStatus === 401 &&
                   refreshTokenError === 'invalid_token'
                 ) {
-                  Suspect.setRoleCode()
-                  auth.logout()
+                  app.$auth.logout()
                 }
                 return Promise.reject(err)
               })
           } else if (status === 401 && error === 'invalid_token') {
-            Suspect.setRoleCode()
-            auth.logout()
+            app.$auth.logout()
             return Promise.reject(err)
           } else {
             if (checkRedirectResponse(err.response)) {

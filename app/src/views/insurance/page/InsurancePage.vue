@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="column right">
-        <PromotionSection />
+        <PromotionSection :active-sales-count="activeSalesCount" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
         <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
         <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
@@ -100,6 +100,9 @@ const options: ComponentOption = {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
     },
+    activeSalesCount() {
+      return this.$store.state.meta.activeSalesCount
+    },
   },
   methods: {
     updateInfoModalActiveTab(tab) {
@@ -168,6 +171,7 @@ export interface Computed {
   pagination: Pagination | null
   shouldShowPromotionProduct: boolean
   shouldShowPagination: boolean
+  activeSalesCount: number
 }
 
 export interface Props {}

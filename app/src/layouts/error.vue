@@ -44,7 +44,7 @@ import {
   ErrorPageType,
 } from '@/config/error-page.config.ts'
 import { Zendesk } from '@/services/zendesk/zendesk'
-import { UserRoleMap } from '@/services/user/user'
+import { UserRoleMap } from '@/services/auth/auth'
 import { GlobalVuexState } from '@/store/global-state'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,

@@ -58,6 +58,10 @@ const config: NuxtConfig = {
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
     '@/plugins/sentry',
+    {
+      src: '@/plugins/auth',
+      mode: 'client',
+    },
     '@/plugins/axios-setup',
     '@/plugins/app-init',
     {
@@ -124,6 +128,7 @@ const config: NuxtConfig = {
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
+    'cookie-universal-nuxt',
   ],
   webfontloader: {
     google: {

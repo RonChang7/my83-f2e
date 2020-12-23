@@ -2,7 +2,6 @@ import { Module } from 'vuex'
 import * as types from './header.type'
 import { HeaderNavItem, HeaderPersonalized } from '@/api/header/header.type'
 import * as api from '@/api/header/header'
-import { User } from '@/services/user/user'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {
@@ -25,12 +24,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
         try {
           const data = await api.fetchPersonalizedHeaderData()
           commit(types.UPDATE_HEADER_PERSONALIZED_DATA, data)
-
-          const user = User.getInstance()
-
-          user.updateUserState({
+          this.$auth.setUserState({
+            id: data.personalize.id,
             role: data.personalize.role,
             roleCode: data.personalize.role_code,
+            nickname: data.personalize.nickname,
           })
         } catch (err) {
           commit(types.UPDATE_HEADER_PERSONALIZED_DATA, null)
