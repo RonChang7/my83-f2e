@@ -75,14 +75,44 @@ export interface FetchInsuranceListPayload {
   page: number
 }
 
+export interface InsuranceProductFeeResponse {
+  data: {
+    product_fee_list: ProductFeeList[]
+  }
+}
+
+export interface ProductFeeList {
+  product_id: number
+  fee: number
+}
 export interface PromotionInsuranceProductResponse {
   data: PromotionInsuranceProduct[]
 }
 
 export interface InsuranceListData {
   title: string
-  ideal_coverages?: IdealCoverage[]
+  ideal_coverages: IdealCoverage[] | null
   products: InsuranceProduct[]
+  default_premium_config: PremiumConfig | null
+  premium_config: Record<string, PremiumConfigOption> | null
+}
+
+export type PremiumConfig = Record<string, string | number>
+
+export interface PremiumConfigOption {
+  type: OptionValueType
+  values: Option[]
+}
+
+export type OptionValueType = OptionType | RadioType
+
+export type OptionType = 'option'
+
+export type RadioType = 'radio'
+
+export interface Option {
+  key: string
+  value: string
 }
 
 export interface InsuranceListMeta {
@@ -99,7 +129,7 @@ export interface BaseInsuranceProduct {
   company: string
   name: string
   plan: string
-  fee: string
+  fee: number
   btn: LinkButton
   features: string[]
   coverage_age: string | null
