@@ -1,17 +1,24 @@
 <script lang="ts">
-import _ from 'lodash'
+import _, { DebouncedFunc } from 'lodash'
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Context } from '@nuxt/types'
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
-import { State } from '@/store/insurance/insurance'
+import {
+  State,
+  UpdateInsuranceListFilterPayload,
+} from '@/store/insurance/insurance'
 import { Content } from '@/services/page/Content'
 import { FetchInsuranceListPayload } from '@/api/insurance/insurance.type'
 import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
+  UPDATE_INSURANCE_LIST_PRODUCT_FEE,
+  UPDATE_INSURANCE_LIST_FILTER,
+  REMOVE_INSURANCE_LIST_FILTER,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
@@ -24,6 +31,9 @@ const opinions: ComponentOption = {
     const insurance = route.params.insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
     const currentInsurance = insuranceStore.staticData.id
+    const previousFilterKeys = _.keys(
+      insuranceStore.filter.defaultPremiumConfig
+    )
 
     const fetchPageData: Promise<any>[] = []
 
@@ -60,6 +70,8 @@ const opinions: ComponentOption = {
       })
     }
 
+    updateCurrentParamFromQueryString(previousFilterKeys, ctx)
+
     const shouldRedirect = query.page === '1'
     if (shouldRedirect) {
       redirect({ query: _.omit(query, ['page']) })
@@ -74,6 +86,20 @@ const opinions: ComponentOption = {
       redirect({ name: route.name! })
     }
   },
+  computed: {
+    currentParam() {
+      return this.$store.state.insurance.currentParam
+    },
+    defaultPremiumConfig() {
+      return this.$store.state.insurance.filter.defaultPremiumConfig
+    },
+    filterKeys() {
+      return _.keys(this.$store.state.insurance.filter.defaultPremiumConfig)
+    },
+    isExternal() {
+      return !!this.$store.state.insurance.filter.defaultPremiumConfig
+    },
+  },
   methods: {
     toPage(index) {
       this.$router.push({
@@ -82,6 +108,48 @@ const opinions: ComponentOption = {
           page: String(index),
         },
       })
+    },
+    updateInsuranceProductFee: _.debounce(function () {
+      if (!this.isExternal) return
+
+      let premiumConfig = this.filterKeys.reduce<
+        Record<string, string | undefined>
+      >((acc, key) => {
+        acc[key] = this.currentParam[key].toString()
+        return acc
+      }, {})
+
+      this.$store
+        .dispatch(
+          `insurance/${UPDATE_INSURANCE_LIST_PRODUCT_FEE}`,
+          premiumConfig
+        )
+        .then(() => {
+          const shouldRemoveFilterQueryString = this.filterKeys.every(
+            (key) => premiumConfig[key] === this.defaultPremiumConfig![key]
+          )
+
+          if (shouldRemoveFilterQueryString) {
+            premiumConfig = resetFilterQueryString(this.filterKeys)
+          }
+
+          this.$router.push({
+            query: {
+              ...this.$route.query,
+              ...premiumConfig,
+            },
+          })
+        })
+    }),
+  },
+  watch: {
+    currentParam: {
+      deep: true,
+      immediate: true,
+      handler() {
+        if (process.server) return
+        this.updateInsuranceProductFee()
+      },
     },
   },
   render(h) {
@@ -118,6 +186,55 @@ const fetchList = (
   }
 }
 
+const updateCurrentParamFromQueryString = (
+  previousFilterKeys: string[],
+  { store, query, redirect }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  const isExternal = !!insuranceStore.filter.defaultPremiumConfig
+  if (isExternal) {
+    const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
+
+    filterKeys.forEach((id) => {
+      const payload: UpdateInsuranceListFilterPayload = {
+        id,
+        value:
+          getFirstQuery(query[id]) ||
+          insuranceStore.filter.defaultPremiumConfig![id],
+      }
+
+      store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
+    })
+
+    const shouldRemoveFilterQueryString = filterKeys.every((key) => {
+      return (
+        insuranceStore.filter.defaultPremiumConfig![key] &&
+        insuranceStore.filter.defaultPremiumConfig![key] === query[key]
+      )
+    })
+
+    if (shouldRemoveFilterQueryString) {
+      redirect({
+        query: {
+          ...query,
+          ...resetFilterQueryString(filterKeys),
+        },
+      })
+    }
+  } else {
+    store.commit(
+      `insurance/${REMOVE_INSURANCE_LIST_FILTER}`,
+      previousFilterKeys
+    )
+  }
+}
+
+const resetFilterQueryString = (filterKeys: string[]) =>
+  filterKeys.reduce<Record<string, undefined>>((acc, key) => {
+    acc[key] = undefined
+    return acc
+  }, {})
+
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,
   Data,
@@ -134,15 +251,23 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<InsuranceVuexState>
+}
 
 export interface Data {}
 
 export type Methods = {
+  updateInsuranceProductFee: DebouncedFunc<(this: ComponentInstance) => void>
   toPage(index: number): void
 }
 
-export interface Computed {}
+export interface Computed {
+  currentParam: State['currentParam']
+  filterKeys: string[]
+  defaultPremiumConfig: State['filter']['defaultPremiumConfig']
+  isExternal: boolean
+}
 
 export interface Props {}
 
