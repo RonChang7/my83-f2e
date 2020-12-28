@@ -26,7 +26,10 @@ import { CanonicalService } from '@/seo/canonical-service'
 const InsurancePage = () => import('./InsurancePage.vue')
 
 const opinions: ComponentOption = {
-  watchQuery: ['page'],
+  watchQuery(newQuery, oldQuery) {
+    const queryKeys = ['page', ...this.filterKeys]
+    return queryKeys.some((key) => newQuery[key] || oldQuery[key])
+  },
   async asyncData(ctx) {
     const { error, route, query, store, redirect } = ctx
     const insurance = route.params.insurance
