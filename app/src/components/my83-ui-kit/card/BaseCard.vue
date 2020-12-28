@@ -77,7 +77,9 @@ export interface Props {
   $border-style: 1px solid $gray-quaternary;
 
   &.enableHover {
-    @include card-primary($hover: true);
+    @include min-media('md') {
+      @include card-primary($hover: true);
+    }
   }
 
   & > * {
