@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import { Module } from 'vuex'
 import * as types from './insurance.type'
@@ -108,10 +109,13 @@ export const createStoreModule = <R>(): Module<State, R> => {
       ) {
         commit(types.UPDATE_INSURANCE_LIST_FILTER, payload)
       },
-      [types.UPDATE_INSURANCE_PRODUCT_FEE](
-        { state, commit },
-        premiumConfig: Record<string, string | number>
-      ) {
+      [types.UPDATE_INSURANCE_PRODUCT_FEE]({ state, commit }) {
+        const premiumConfig = _.keys(state.filter.defaultPremiumConfig).reduce<
+          Record<string, string | number>
+        >((acc, key) => {
+          acc[key] = state.currentParam[key]
+          return acc
+        }, {})
         const productListIds =
           state.insuranceList?.map((product) => product.id) || []
         const promotionProductIds =
