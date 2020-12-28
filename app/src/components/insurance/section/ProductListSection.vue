@@ -11,9 +11,7 @@
         常見問題
       </a>
     </h2>
-    <div class="ProductListSection__description">
-      依熱門度排序。費率以 30 歲女性為基準。
-    </div>
+    <div class="ProductListSection__description">{{ description }}</div>
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
         <span>MY83 建議</span>
@@ -67,6 +65,12 @@ const options: ComponentOption = {
     insuranceProducts() {
       return this.$store.state.insurance.insuranceList || []
     },
+    description() {
+      return (
+        this.$store.state.insurance.staticData.productListDescription ||
+        '依熱門度排序。費率以 30 歲女性為基準。'
+      )
+    },
   },
   methods: {
     scrollToFAQ() {
@@ -118,6 +122,7 @@ export type Methods = {
 export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
+  description: string
 }
 
 export interface Props {}

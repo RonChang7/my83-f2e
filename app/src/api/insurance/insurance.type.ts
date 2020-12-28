@@ -15,6 +15,7 @@ export interface InsurancePageStaticData {
   image: string
   description: string
   promotion_wording?: string
+  product_list_description?: string
   glossary: Glossary
   principle: Principle
   faq: Faq[]
