@@ -22,6 +22,7 @@ import {
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
+import { CanonicalService } from '@/seo/canonical-service'
 const InsurancePage = () => import('./InsurancePage.vue')
 
 const opinions: ComponentOption = {
@@ -84,6 +85,30 @@ const opinions: ComponentOption = {
       insuranceStore.meta!.pagination.totalPage
     ) {
       redirect({ name: route.name! })
+    }
+  },
+  head() {
+    const canonical = CanonicalService.getCanonical({
+      hostname: this.$env.HOST_URL,
+      route: this.$route,
+      acceptedQueryStringKeys: ['page', ...this.filterKeys],
+    })
+
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: canonical,
+        },
+      ],
+      link: [
+        {
+          hid: 'canonical',
+          rel: 'canonical',
+          href: canonical,
+        },
+      ],
     }
   },
   computed: {
