@@ -3,14 +3,27 @@
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__company">{{ product.company }}</div>
       <div class="PromotionProductCard__name">{{ product.name }}</div>
-      <div class="PromotionProductCard__features">{{ features }}</div>
-      <div class="PromotionProductCard__coverageAge">
-        {{ product.coverage_age }}
+      <template v-if="!product.promotion">
+        <div class="PromotionProductCard__features">
+          {{ features }}
+        </div>
+        <div class="PromotionProductCard__coverageAge">
+          {{ product.coverage_age }}
+        </div>
+      </template>
+      <div v-else class="PromotionProductCard__promotion">
+        {{ product.promotion }}
       </div>
     </div>
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__plan">{{ product.plan }}</div>
       <div class="PromotionProductCard__fee">
+        <span
+          v-if="product.fee_prefix"
+          class="PromotionProductCard__fee__prefix"
+        >
+          {{ product.fee_prefix }}
+        </span>
         {{ getFormattedFee(product.fee) }}
       </div>
       <div v-if="viewCount" class="PromotionProductCard__viewCount">
@@ -143,16 +156,31 @@ export default options
     min-height: 1.5em;
   }
 
+  &__promotion {
+    color: $primary-color;
+    font-size: 0.75rem;
+    height: 3em;
+
+    @include text-ellipsis(2);
+  }
+
   &__plan {
     font-size: 0.875rem;
     margin-top: 20px;
   }
 
   &__fee {
+    display: inline-flex;
+    align-items: center;
     color: $primary-color;
     font-size: 1.375rem;
     font-weight: 500;
     margin-bottom: 20px;
+
+    &__prefix {
+      font-size: 0.875rem;
+      margin-right: 4px;
+    }
   }
 
   &__btn {
