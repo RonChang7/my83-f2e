@@ -38,6 +38,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           image: '',
           description: '',
           promotionWording: '',
+          productListDescription: '',
           glossary: null,
           principle: null,
           faq: null,
@@ -179,6 +180,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.staticData.image = data.image
         state.staticData.description = data.description
         state.staticData.promotionWording = data.promotion_wording || ''
+        state.staticData.productListDescription =
+          data.product_list_description || ''
         state.staticData.glossary = data.glossary
         state.staticData.principle = data.principle
         state.staticData.faq = data.faq
@@ -261,6 +264,7 @@ export interface State {
     image: string
     description: string
     promotionWording: string
+    productListDescription: string
     glossary: Glossary | null
     principle: Principle | null
     faq: Faq[] | null
