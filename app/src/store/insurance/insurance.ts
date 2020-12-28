@@ -107,19 +107,27 @@ export const createStoreModule = <R>(): Module<State, R> => {
       ) {
         commit(types.UPDATE_INSURANCE_LIST_FILTER, payload)
       },
-      [types.UPDATE_INSURANCE_LIST_PRODUCT_FEE](
+      [types.UPDATE_INSURANCE_PRODUCT_FEE](
         { state, commit },
         premiumConfig: Record<string, string | number>
       ) {
-        const productIds = state.insuranceList!.map((product) => product.id)
+        const productListIds =
+          state.insuranceList?.map((product) => product.id) || []
+        const promotionProductIds =
+          state.promotionProducts?.map((product) => product.id) || []
+
         return new Promise((resolve) => {
           api
-            .updateInsuranceProductFee(productIds, premiumConfig)
+            .updateInsuranceProductFee(
+              [...productListIds, ...promotionProductIds],
+              premiumConfig
+            )
             .then(({ data }) => {
               commit(
                 types.UPDATE_INSURANCE_LIST_PRODUCT_FEE,
                 data.product_fee_list
               )
+              commit(types.UPDATE_PROMOTION_PRODUCT_FEE, data.product_fee_list)
               resolve()
             })
             .catch(() => resolve())
@@ -206,7 +214,19 @@ export const createStoreModule = <R>(): Module<State, R> => {
           const index = state.insuranceList!.findIndex(
             (product) => product.id === product_id
           )
-          state.insuranceList![index].fee = fee
+          if (index >= 0) {
+            state.insuranceList![index].fee = fee
+          }
+        })
+      },
+      [types.UPDATE_PROMOTION_PRODUCT_FEE](state, payload: ProductFeeList[]) {
+        payload.forEach(({ product_id, fee }) => {
+          const index = state.promotionProducts!.findIndex(
+            (product) => product.id === product_id
+          )
+          if (index >= 0) {
+            state.promotionProducts![index].fee = fee
+          }
         })
       },
       [types.UPDATE_PROMOTION_PRODUCTS](

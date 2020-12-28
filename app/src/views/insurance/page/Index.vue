@@ -16,7 +16,7 @@ import { FetchInsuranceListPayload } from '@/api/insurance/insurance.type'
 import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
-  UPDATE_INSURANCE_LIST_PRODUCT_FEE,
+  UPDATE_INSURANCE_PRODUCT_FEE,
   UPDATE_INSURANCE_LIST_FILTER,
   REMOVE_INSURANCE_LIST_FILTER,
 } from '@/store/insurance/insurance.type'
@@ -120,10 +120,7 @@ const opinions: ComponentOption = {
       }, {})
 
       this.$store
-        .dispatch(
-          `insurance/${UPDATE_INSURANCE_LIST_PRODUCT_FEE}`,
-          premiumConfig
-        )
+        .dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`, premiumConfig)
         .then(() => {
           const shouldRemoveFilterQueryString = this.filterKeys.every(
             (key) => premiumConfig[key] === this.defaultPremiumConfig![key]
