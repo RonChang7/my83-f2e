@@ -276,8 +276,10 @@ export default options
         border-radius: 2px;
       }
 
-      &:nth-child(-n + 2) {
-        margin-top: 0;
+      @include min-media('xl') {
+        &:nth-child(-n + 2) {
+          margin-top: 0;
+        }
       }
 
       > .name {
@@ -294,6 +296,15 @@ export default options
         color: $secondary-color;
         font-size: 0.75em;
         margin-left: 0.25rem;
+      }
+
+      @include max-media('xl') {
+        flex: 0 0 100%;
+        margin-top: 4px;
+
+        &:first-child {
+          margin-top: 0;
+        }
       }
     }
   }

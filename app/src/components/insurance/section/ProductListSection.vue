@@ -12,6 +12,7 @@
       </a>
     </h2>
     <div class="ProductListSection__description">{{ description }}</div>
+    <slot />
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
         <span>MY83 建議</span>

@@ -60,6 +60,7 @@ export default class ProductListFilterSection extends Vue {
 </script>
 
 <style lang="scss" scoped>
+@import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
 .ProductListFilterSection {
@@ -67,6 +68,7 @@ export default class ProductListFilterSection extends Vue {
 
   &__content {
     padding: 16px 0;
+    color: $gray-primary;
   }
 
   &__field {
@@ -75,6 +77,10 @@ export default class ProductListFilterSection extends Vue {
     &:last-child {
       margin-bottom: 0;
     }
+  }
+
+  @include max-media('xl') {
+    margin-bottom: 10px;
   }
 }
 </style>

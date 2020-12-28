@@ -19,7 +19,11 @@
 
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column left">
-        <ProductListSection ref="ProductListSection" />
+        <ProductListSection ref="ProductListSection">
+          <ProductListFilterSection
+            v-if="isMobile && shouldShowProductListFilter"
+          />
+        </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
             :pagination="pagination"
@@ -28,7 +32,9 @@
         </div>
       </div>
       <div class="column right">
-        <ProductListFilterSection v-if="shouldShowProductListFilter" />
+        <ProductListFilterSection
+          v-if="!isMobile && shouldShowProductListFilter"
+        />
         <PromotionSection :active-sales-count="activeSalesCount" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
         <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
