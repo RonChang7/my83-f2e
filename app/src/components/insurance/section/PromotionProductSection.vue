@@ -16,7 +16,7 @@
         @click-button="
           clickPromotionProductButton(`${product.company}${product.name}`)
         "
-        @click.native="$router.push(product.btn.link.path)"
+        @click.native="clickProductCard(product)"
       />
     </BaseHorizontalList>
   </div>
@@ -51,6 +51,14 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    clickProductCard(product) {
+      const { isExternal } = this.$store.state.insurance.staticData
+      if (isExternal) {
+        window.location.href = product.btn.link.url
+      } else {
+        this.$router.push(product.btn.link.path)
+      }
+    },
     clickPromotionProductButton(productName) {
       const insuranceType = this.$store.state.insurance.staticData.abbr
 
@@ -86,6 +94,7 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export type Methods = {
+  clickProductCard(product: PromotionInsuranceProduct): void
   clickPromotionProductButton(productName: string): void
 }
 

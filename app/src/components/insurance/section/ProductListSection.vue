@@ -35,7 +35,7 @@
       class="ProductListSection__product"
       :product="product"
       @click-button="clickProductButton(`${product.company}${product.name}`)"
-      @click.native="$router.push(product.btn.link.path)"
+      @click.native="clickProductCard(product)"
     />
   </div>
 </template>
@@ -81,6 +81,14 @@ const options: ComponentOption = {
         offset: 32,
       })
     },
+    clickProductCard(product) {
+      const { isExternal } = this.$store.state.insurance.staticData
+      if (isExternal) {
+        window.location.href = product.btn.link.url
+      } else {
+        this.$router.push(product.btn.link.path)
+      }
+    },
     clickProductButton(productName) {
       const insuranceType = this.$store.state.insurance.staticData.abbr
 
@@ -117,6 +125,7 @@ export interface Data {}
 
 export type Methods = {
   scrollToFAQ(): void
+  clickProductCard(product: InsuranceProduct): void
   clickProductButton(productName: string): void
 }
 
