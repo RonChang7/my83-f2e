@@ -26,10 +26,7 @@ import { CanonicalService } from '@/seo/canonical-service'
 const InsurancePage = () => import('./InsurancePage.vue')
 
 const opinions: ComponentOption = {
-  watchQuery(newQuery, oldQuery) {
-    const queryKeys = ['page', ...this.filterKeys]
-    return queryKeys.some((key) => newQuery[key] || oldQuery[key])
-  },
+  watchQuery: true,
   async asyncData(ctx) {
     const { error, route, query, store, redirect } = ctx
     const insurance = route.params.insurance
@@ -199,6 +196,8 @@ const updateCurrentParamFromQueryString = async (
     }
 
     filterKeys.forEach((id) => {
+      if (getFirstQuery(query[id]) === insuranceStore.currentParam[id]) return
+
       const payload: UpdateInsuranceListFilterPayload = {
         id,
         value:
