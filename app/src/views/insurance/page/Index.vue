@@ -182,16 +182,6 @@ const updateCurrentParamFromQueryString = async (
   if (isExternal) {
     const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
 
-    filterKeys.forEach((id) => {
-      const payload: UpdateInsuranceListFilterPayload = {
-        id,
-        value:
-          getFirstQuery(query[id]) ||
-          insuranceStore.filter.defaultPremiumConfig![id],
-      }
-      store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
-    })
-
     const shouldRemoveFilterQueryString = filterKeys.every((key) => {
       return (
         query[key] &&
@@ -208,7 +198,26 @@ const updateCurrentParamFromQueryString = async (
       })
     }
 
-    if (!(isFirstLanding && shouldRemoveFilterQueryString)) {
+    filterKeys.forEach((id) => {
+      const payload: UpdateInsuranceListFilterPayload = {
+        id,
+        value:
+          getFirstQuery(query[id]) ||
+          insuranceStore.filter.defaultPremiumConfig![id],
+      }
+      store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
+    })
+
+    const isDefaultFilter = filterKeys.every((key) => {
+      return (
+        insuranceStore.filter.defaultPremiumConfig![key] ===
+        insuranceStore.currentParam[key]
+      )
+    })
+
+    if (
+      !(isFirstLanding && (shouldRemoveFilterQueryString || isDefaultFilter))
+    ) {
       await store.dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`)
     }
   }
