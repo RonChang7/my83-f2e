@@ -76,7 +76,7 @@
               class="ProductCard__btn"
               :to="product.btn.link"
               size="l-a"
-              @click.native="$emit('click-button')"
+              @click.stop.native="$emit('click-button')"
             >
               {{ product.btn.text }}
             </BaseButton>
