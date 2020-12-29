@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="DiscontinuedProductPanel__row lastUpdateTime">
-        最後更新時間 2020-12-17
+        最後更新時間 2020-12-29
       </div>
       <div class="DiscontinuedProductPanel__row">
         <span>推薦閱讀：</span>
@@ -138,6 +138,35 @@ const options: ComponentOption = {
                 ),
               ],
             },
+            {
+              name: '遠雄人壽',
+              products: [
+                this.productLinkTransformer(
+                  '新超好心A型失能照護終身保險 (MD2)',
+                  1261
+                ),
+                this.productLinkTransformer(
+                  '新超好心B型失能照護終身健康保險附約 (ME2)',
+                  1263
+                ),
+                this.productLinkTransformer(
+                  '新超好心C型失能照護終身健康保險 (MF2)',
+                  217
+                ),
+                this.productLinkTransformer(
+                  '幸福好照A型失能照護終身保險 (MG1)',
+                  1275
+                ),
+                this.productLinkTransformer(
+                  '幸福好照B型失能照護終身健康保險附約 (MH1)',
+                  1276
+                ),
+                this.productLinkTransformer(
+                  '幸福好照C型失能照護終身健康保險 (MI1)',
+                  1254
+                ),
+              ],
+            },
           ],
         },
         {
@@ -149,19 +178,6 @@ const options: ComponentOption = {
                 this.productLinkTransformer(
                   '揪福氣失能照護定期保險附約 (JOEBBA)',
                   1271
-                ),
-              ],
-            },
-            {
-              name: '遠雄人壽',
-              products: [
-                this.productLinkTransformer(
-                  '新超好心C型失能照護終身健康保險 (MF2)',
-                  217
-                ),
-                this.productLinkTransformer(
-                  '幸福好照C型失能照護終身健康保險 (MI1)',
-                  1254
                 ),
               ],
             },
