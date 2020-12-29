@@ -3,7 +3,7 @@ import { Options, Event, EventHint } from '@sentry/types'
 export const sentryInitConfig: Options = {
   ignoreErrors: ['Network Error', /postMessage/],
   beforeSend(event, hint) {
-    const shouldIgnoreError = ignoreErrorInBeforeSend.every((rule) =>
+    const shouldIgnoreError = ignoreErrorInBeforeSend.some((rule) =>
       rule.check(event, hint)
     )
     return shouldIgnoreError ? null : event
