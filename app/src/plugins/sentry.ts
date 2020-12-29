@@ -1,5 +1,6 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import * as SentryClientTypes from '@sentry/browser'
+import { sentryInitConfig } from '@/config/sentry.config'
 
 /**
  * @TODO:
@@ -20,6 +21,7 @@ export default (({ app, beforeNuxtRender }) => {
       })
     } else {
       ;((app.$sentry as unknown) as typeof SentryClientTypes).init({
+        ...sentryInitConfig,
         dsn: app.$env.SENTRY_DSN,
         release: app.$env.SENTRY_RELEASE_TAG,
       })
