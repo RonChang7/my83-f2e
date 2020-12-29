@@ -12,11 +12,15 @@
         v-for="product in promotionProducts"
         :key="product.id"
         class="product"
+        :class="{ enabled: isEnabled(product) }"
         :product="product"
+        :enabled="isEnabled(product)"
         @click-button="
-          clickPromotionProductButton(`${product.company}${product.name}`)
+          isEnabled(product)
+            ? clickPromotionProductButton(`${product.company}${product.name}`)
+            : null
         "
-        @click.native="clickProductCard(product)"
+        @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
     </BaseHorizontalList>
   </div>
@@ -51,6 +55,9 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    isEnabled(product) {
+      return product.fee !== null
+    },
     clickProductCard(product) {
       const { isExternal } = this.$store.state.insurance.staticData
       if (isExternal) {
@@ -94,6 +101,7 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export type Methods = {
+  isEnabled(product: PromotionInsuranceProduct): boolean
   clickProductCard(product: PromotionInsuranceProduct): void
   clickPromotionProductButton(productName: string): void
 }
@@ -131,7 +139,9 @@ export default options
   }
 
   .product {
-    cursor: pointer;
+    &.enabled {
+      cursor: pointer;
+    }
 
     &:not(:last-of-type) {
       margin-right: 16px;

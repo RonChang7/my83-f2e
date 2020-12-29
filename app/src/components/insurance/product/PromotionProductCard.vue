@@ -1,5 +1,5 @@
 <template>
-  <div class="PromotionProductCard">
+  <div class="PromotionProductCard" :class="{ enableHover: enabled }">
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__company">{{ product.company }}</div>
       <div class="PromotionProductCard__name">{{ product.name }}</div>
@@ -31,12 +31,13 @@
       </div>
       <BaseButton
         class="PromotionProductCard__btn"
-        :to="product.btn.link"
+        :to="enabled ? product.btn.link : null"
         size="l-a"
         :is-full-width="true"
+        :is-disabled="!enabled"
         @click.stop.native="$emit('click-button')"
       >
-        {{ product.btn.text }}
+        {{ buttonText }}
       </BaseButton>
     </div>
   </div>
@@ -59,6 +60,10 @@ const options: ComponentOption = {
       type: Object,
       required: true,
     },
+    enabled: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     features() {
@@ -68,6 +73,9 @@ const options: ComponentOption = {
       return this.product.view_count
         ? `有 ${this.product.view_count} 人有興趣`
         : ''
+    },
+    buttonText() {
+      return this.enabled ? this.product.btn.text : '條件不符合'
     },
   },
   methods: {
@@ -105,10 +113,12 @@ export type Methods = {
 export interface Computed {
   features: string
   viewCount: string
+  buttonText: string
 }
 
 export interface Props {
   product: PromotionInsuranceProduct
+  enabled: boolean
 }
 
 export default options
@@ -119,7 +129,11 @@ export default options
 @import '@/sass/rwd.scss';
 
 .PromotionProductCard {
-  @include card-primary($hover: true);
+  @include card-primary();
+
+  &.enableHover {
+    @include card-primary($hover: true);
+  }
 
   width: 240px;
   padding: 24px 20px;

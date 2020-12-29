@@ -1,5 +1,5 @@
 <template>
-  <BaseCard class="ProductCard" :enable-hover="true">
+  <BaseCard class="ProductCard" :enable-hover="enabled">
     <template v-slot:default>
       <div class="ProductCard__content">
         <div class="ProductCard__section">
@@ -74,11 +74,12 @@
             </div>
             <BaseButton
               class="ProductCard__btn"
-              :to="product.btn.link"
+              :to="enabled ? product.btn.link : null"
               size="l-a"
+              :is-disabled="!enabled"
               @click.stop.native="$emit('click-button')"
             >
-              {{ product.btn.text }}
+              {{ buttonText }}
             </BaseButton>
           </div>
         </div>
@@ -111,6 +112,10 @@ const options: ComponentOption = {
       type: Object,
       required: true,
     },
+    enabled: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     features() {
@@ -126,6 +131,9 @@ const options: ComponentOption = {
         this.product.coverages.length > 0 &&
         this.product.coverage_charts.length === 0
       )
+    },
+    buttonText() {
+      return this.enabled ? this.product.btn.text : '條件不符合'
     },
   },
   methods: {
@@ -164,10 +172,12 @@ export interface Computed {
   features: string
   viewCount: string
   enableCoverageFlexWrap: boolean
+  buttonText: string
 }
 
 export interface Props {
   product: InsuranceProduct
+  enabled: boolean
 }
 
 export default options

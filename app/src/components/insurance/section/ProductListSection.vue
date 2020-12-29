@@ -33,9 +33,15 @@
       v-for="product in insuranceProducts"
       :key="product.id"
       class="ProductListSection__product"
+      :class="{ enabled: isEnabled(product) }"
       :product="product"
-      @click-button="clickProductButton(`${product.company}${product.name}`)"
-      @click.native="clickProductCard(product)"
+      :enabled="isEnabled(product)"
+      @click-button="
+        isEnabled(product)
+          ? clickProductButton(`${product.company}${product.name}`)
+          : null
+      "
+      @click.native="isEnabled(product) ? clickProductCard(product) : null"
     />
   </div>
 </template>
@@ -74,6 +80,9 @@ const options: ComponentOption = {
     },
   },
   methods: {
+    isEnabled(product) {
+      return product.fee !== null
+    },
     scrollToFAQ() {
       scrollToElement({
         el: document.querySelector('#faq')! as HTMLElement,
@@ -124,6 +133,7 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export type Methods = {
+  isEnabled(product: InsuranceProduct): boolean
   scrollToFAQ(): void
   clickProductCard(product: InsuranceProduct): void
   clickProductButton(productName: string): void
@@ -235,7 +245,9 @@ export default options
   }
 
   &__product {
-    cursor: pointer;
+    &.enabled {
+      cursor: pointer;
+    }
 
     &:not(:last-child) {
       margin-bottom: 16px;
