@@ -168,7 +168,7 @@ const updateCurrentParamFromQueryString = async (
   { store, query, redirect, from, route }: Context
 ) => {
   const insuranceStore = (store.state as InsuranceVuexState).insurance
-  const isExternal = !!insuranceStore.filter.defaultPremiumConfig
+  const { isExternal } = insuranceStore.staticData
   const isFirstLanding =
     from === undefined || from.params.insurance !== route.params.insurance
 
