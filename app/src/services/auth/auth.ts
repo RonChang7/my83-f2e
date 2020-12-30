@@ -78,9 +78,9 @@ export class Auth {
     this.removeToken()
   }
 
-  public refreshToken(baseURL: string) {
+  public refreshToken(baseURL: string, basicAuth: string) {
     return new Promise((resolve, reject) => {
-      JWT.refreshToken(baseURL, {
+      JWT.refreshToken(baseURL, basicAuth, {
         jwtToken: this.getToken() as string,
         expiredTime: this.expiredTime as number,
       })
