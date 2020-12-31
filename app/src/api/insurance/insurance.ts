@@ -6,12 +6,14 @@ import {
   PromotionInsuranceProductResponse,
   InsuranceListResponse,
   FetchInsuranceListPayload,
+  InsuranceProductFeeResponse,
 } from './insurance.type'
 import request from '@/api/request'
 import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 
 /**
  * @description 取得險種頁靜態資料
+ * @param {string} host Nuxt server host name
  * @param {string} insurance 險種名
  */
 export const fetchInsurancePageStaticData = async ({
@@ -48,7 +50,7 @@ export const fetchPromotionProducts = async (
 
 /**
  * @description 取得險種商品
- * @param {InsuranceListPayload} payload
+ * @param {FetchInsuranceListPayload} payload
  */
 export const fetchInsuranceList = async (
   payload: FetchInsuranceListPayload
@@ -63,6 +65,28 @@ export const fetchInsuranceList = async (
       },
     }
   )
+  return data
+}
+
+/**
+ * @description 取得無險種頁篩選險種商品價格
+ * @param {number[]} productIds
+ * @param {Record<string, string | number>} premiumConfig
+ */
+export const updateInsuranceProductFee = async (
+  productIds: number[],
+  premiumConfig: Record<string, string | number>
+): Promise<InsuranceProductFeeResponse> => {
+  const { data } = await request.get<InsuranceProductFeeResponse>(
+    `/api/insurance/product-fee-list`,
+    {
+      params: {
+        product_ids: productIds.join(','),
+        ...premiumConfig,
+      },
+    }
+  )
+
   return data
 }
 

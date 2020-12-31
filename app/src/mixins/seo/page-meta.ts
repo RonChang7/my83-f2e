@@ -4,7 +4,6 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { MetaInfo } from 'vue-meta'
 import { GlobalVuexState } from '@/store/global-state'
-import CanonicalService from '@/seo/canonical-service'
 import { getJsonLdScript } from '@/seo/helper'
 import { getOrganizationJsonLd } from '@/seo/common-meta'
 
@@ -82,8 +81,9 @@ export default {
         ],
         link: [
           {
+            hid: 'canonical',
             rel: 'canonical',
-            href: CanonicalService.getCanonical(hostname, this.$route),
+            content: `${hostname}${this.$route.path}`,
           },
         ],
         __dangerouslyDisableSanitizers: ['script'],

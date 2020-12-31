@@ -19,6 +19,9 @@
         <BaseArrowRight class="ml-1" />
       </GlobalLink>
     </div>
+    <div class="InsuranceLinkSection__disclaimer">
+      本平台呈現資料僅供參考，實際情況會依據個人需求而不同，最終費率與資訊請以各家官方網站為主。
+    </div>
   </div>
 </template>
 
@@ -176,6 +179,12 @@ export default options
     }
   }
 
+  &__disclaimer {
+    margin-top: 20px;
+    color: $gray-tertiary;
+    font-size: 0.75rem;
+  }
+
   @include max-media('xl') {
     @include card-secondary;
 
@@ -195,6 +204,10 @@ export default options
 
     &__footer {
       margin-right: 16px;
+    }
+
+    &__disclaimer {
+      padding: 0 19px 0 20px;
     }
   }
 }

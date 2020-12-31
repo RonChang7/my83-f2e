@@ -11,9 +11,8 @@
         常見問題
       </a>
     </h2>
-    <div class="ProductListSection__description">
-      依熱門度排序。費率以 30 歲女性為基準。
-    </div>
+    <div class="ProductListSection__description">{{ description }}</div>
+    <slot />
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
         <span>MY83 建議</span>
@@ -34,9 +33,15 @@
       v-for="product in insuranceProducts"
       :key="product.id"
       class="ProductListSection__product"
+      :class="{ enabled: isEnabled(product) }"
       :product="product"
-      @click-button="clickProductButton(`${product.company}${product.name}`)"
-      @click.native="$router.push(product.btn.link.path)"
+      :enabled="isEnabled(product)"
+      @click-button="
+        isEnabled(product)
+          ? clickProductButton(`${product.company}${product.name}`)
+          : null
+      "
+      @click.native="isEnabled(product) ? clickProductCard(product) : null"
     />
   </div>
 </template>
@@ -67,14 +72,31 @@ const options: ComponentOption = {
     insuranceProducts() {
       return this.$store.state.insurance.insuranceList || []
     },
+    description() {
+      return (
+        this.$store.state.insurance.staticData.productListDescription ||
+        '依熱門度排序。費率以 30 歲女性為基準。'
+      )
+    },
   },
   methods: {
+    isEnabled(product) {
+      return product.fee !== null
+    },
     scrollToFAQ() {
       scrollToElement({
         el: document.querySelector('#faq')! as HTMLElement,
         vertical: true,
         offset: 32,
       })
+    },
+    clickProductCard(product) {
+      const { isExternal } = this.$store.state.insurance.staticData
+      if (isExternal) {
+        window.location.href = product.btn.link.url
+      } else {
+        this.$router.push(product.btn.link.path)
+      }
     },
     clickProductButton(productName) {
       const insuranceType = this.$store.state.insurance.staticData.abbr
@@ -111,13 +133,16 @@ export interface Instance extends Vue {
 export interface Data {}
 
 export type Methods = {
+  isEnabled(product: InsuranceProduct): boolean
   scrollToFAQ(): void
+  clickProductCard(product: InsuranceProduct): void
   clickProductButton(productName: string): void
 }
 
 export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
+  description: string
 }
 
 export interface Props {}
@@ -220,7 +245,9 @@ export default options
   }
 
   &__product {
-    cursor: pointer;
+    &.enabled {
+      cursor: pointer;
+    }
 
     &:not(:last-child) {
       margin-bottom: 16px;
