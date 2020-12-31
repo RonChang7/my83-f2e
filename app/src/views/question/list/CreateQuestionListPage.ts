@@ -12,6 +12,7 @@ import {
 import { ErrorPageType } from '@/config/error-page.config'
 import { PageService, PageType } from '@/services/question/PageService'
 import { Content } from '@/services/page/Content'
+import { CanonicalService } from '@/seo/canonical-service'
 const ListPage = () => import('../list/QuestionListPage.vue')
 
 export default {
@@ -80,6 +81,30 @@ export default {
       questionListStore.meta!.pagination.totalPage
     ) {
       redirect({ name: 'questionList' })
+    }
+  },
+  head() {
+    const canonical = CanonicalService.getCanonical({
+      hostname: this.$env.HOST_URL,
+      route: this.$route,
+      acceptedQueryStringKeys: ['page', 'sort', 'q'],
+    })
+
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: canonical,
+        },
+      ],
+      link: [
+        {
+          hid: 'canonical',
+          rel: 'canonical',
+          href: canonical,
+        },
+      ],
     }
   },
   methods: {

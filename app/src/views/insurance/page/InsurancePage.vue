@@ -19,7 +19,11 @@
 
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column left">
-        <ProductListSection ref="ProductListSection" />
+        <ProductListSection ref="ProductListSection">
+          <ProductListFilterSection
+            v-if="isMobile && shouldShowProductListFilter"
+          />
+        </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
             :pagination="pagination"
@@ -28,6 +32,9 @@
         </div>
       </div>
       <div class="column right">
+        <ProductListFilterSection
+          v-if="!isMobile && shouldShowProductListFilter"
+        />
         <PromotionSection :active-sales-count="activeSalesCount" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
         <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
@@ -56,6 +63,7 @@ import FaqSection from '@/components/insurance/section/FaqSection.vue'
 import InsuranceLinkSection from '@/components/insurance/section/InsuranceLinkSection.vue'
 import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSection.vue'
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
+import ProductListFilterSection from '@/components/insurance/section/ProductListFilterSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
 import InsuranceTipModal, {
@@ -78,6 +86,7 @@ const options: ComponentOption = {
     InsuranceLinkSection,
     RelatedBlogSection,
     RelatedQuestionSection,
+    ProductListFilterSection,
     BasePagination,
   },
   data() {
@@ -95,6 +104,9 @@ const options: ComponentOption = {
     },
     shouldShowPromotionProduct() {
       return !!this.$store.state.insurance.promotionProducts?.length
+    },
+    shouldShowProductListFilter() {
+      return !!this.$store.state.insurance.filter.defaultPremiumConfig
     },
     shouldShowPagination() {
       if (!this.pagination) return false
@@ -170,6 +182,7 @@ export type Methods = {
 export interface Computed {
   pagination: Pagination | null
   shouldShowPromotionProduct: boolean
+  shouldShowProductListFilter: boolean
   shouldShowPagination: boolean
   activeSalesCount: number
 }
@@ -261,7 +274,7 @@ export default options
 
       &.right {
         width: 360px;
-        margin-top: 120px;
+        margin-top: 117px;
 
         > .faq {
           background: #fff;

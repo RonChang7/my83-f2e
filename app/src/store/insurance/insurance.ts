@@ -1,3 +1,5 @@
+import _ from 'lodash'
+import Vue from 'vue'
 import { Module } from 'vuex'
 import * as types from './insurance.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
@@ -13,6 +15,9 @@ import {
   InsuranceProduct,
   IdealCoverage,
   InsuranceListMeta,
+  PremiumConfig,
+  PremiumConfigOption,
+  ProductFeeList,
 } from '@/api/insurance/insurance.type'
 import { RelatedBlog, RelatedQuestion, Pagination } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
@@ -34,6 +39,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           image: '',
           description: '',
           promotionWording: '',
+          productListDescription: '',
           glossary: null,
           principle: null,
           faq: null,
@@ -44,6 +50,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
         promotionProducts: null,
         insuranceList: null,
         insuranceIdealCoverages: null,
+        filter: {
+          defaultPremiumConfig: null,
+          premiumConfig: null,
+        },
       }
     },
     getters: {},
@@ -93,6 +103,44 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
+      [types.UPDATE_INSURANCE_LIST_FILTER](
+        { commit },
+        payload: UpdateInsuranceListFilterPayload
+      ) {
+        commit(types.UPDATE_INSURANCE_LIST_FILTER, payload)
+      },
+      [types.UPDATE_INSURANCE_PRODUCT_FEE]({ state, commit }) {
+        const premiumConfig = _.keys(state.filter.defaultPremiumConfig).reduce<
+          Record<string, string | number>
+        >((acc, key) => {
+          acc[key] = state.currentParam[key]
+          return acc
+        }, {})
+        const productListIds =
+          state.insuranceList?.map((product) => product.id) || []
+        const promotionProductIds =
+          state.promotionProducts?.map((product) => product.id) || []
+
+        return new Promise((resolve) => {
+          api
+            .updateInsuranceProductFee(
+              [...productListIds, ...promotionProductIds],
+              premiumConfig
+            )
+            .then(({ data }) => {
+              commit(
+                types.UPDATE_INSURANCE_LIST_PRODUCT_FEE,
+                data.product_fee_list
+              )
+              commit(types.UPDATE_PROMOTION_PRODUCT_FEE, data.product_fee_list)
+              resolve()
+            })
+            .catch((error) => {
+              console.error(`Cannot update product price via filter.`, error)
+              resolve()
+            })
+        })
+      },
       [types.FETCH_STATIC_DATA](_, insurance: string) {
         return new Promise((resolve) => {
           api
@@ -139,21 +187,57 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.staticData.image = data.image
         state.staticData.description = data.description
         state.staticData.promotionWording = data.promotion_wording || ''
+        state.staticData.productListDescription =
+          data.product_list_description || ''
         state.staticData.glossary = data.glossary
         state.staticData.principle = data.principle
         state.staticData.faq = data.faq
       },
       [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
         state.title = data.title
-        data.ideal_coverages &&
-          (state.insuranceIdealCoverages = data.ideal_coverages)
-
         state.insuranceList = data.products
+        state.insuranceIdealCoverages = data.ideal_coverages
+        state.filter.premiumConfig = data.premium_config
+        state.filter.defaultPremiumConfig = data.default_premium_config
       },
       [types.UPDATE_INSURANCE_LIST_META](state, meta: InsuranceListMeta) {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
         }
+      },
+      [types.UPDATE_INSURANCE_LIST_FILTER](
+        state,
+        { id, value }: UpdateInsuranceListFilterPayload
+      ) {
+        Vue.set(state.currentParam, id, value)
+      },
+      [types.REMOVE_INSURANCE_LIST_FILTER](state, keys: string[]) {
+        keys.forEach((key) => {
+          Vue.delete(state.currentParam, key)
+        })
+      },
+      [types.UPDATE_INSURANCE_LIST_PRODUCT_FEE](
+        state,
+        payload: ProductFeeList[]
+      ) {
+        payload.forEach(({ product_id, fee }) => {
+          const index = state.insuranceList!.findIndex(
+            (product) => product.id === product_id
+          )
+          if (index >= 0) {
+            state.insuranceList![index].fee = fee
+          }
+        })
+      },
+      [types.UPDATE_PROMOTION_PRODUCT_FEE](state, payload: ProductFeeList[]) {
+        payload.forEach(({ product_id, fee }) => {
+          const index = state.promotionProducts!.findIndex(
+            (product) => product.id === product_id
+          )
+          if (index >= 0) {
+            state.promotionProducts![index].fee = fee
+          }
+        })
       },
       [types.UPDATE_PROMOTION_PRODUCTS](
         state,
@@ -175,9 +259,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
 }
 
 export interface State {
-  currentParam: {
-    page: number
-  }
+  currentParam: CurrentParam
   meta: {
     pagination: Pagination
   } | null
@@ -189,6 +271,7 @@ export interface State {
     image: string
     description: string
     promotionWording: string
+    productListDescription: string
     glossary: Glossary | null
     principle: Principle | null
     faq: Faq[] | null
@@ -199,4 +282,17 @@ export interface State {
   promotionProducts: PromotionInsuranceProduct[] | null
   insuranceList: InsuranceProduct[] | null
   insuranceIdealCoverages: IdealCoverage[] | null
+  filter: {
+    defaultPremiumConfig: PremiumConfig | null
+    premiumConfig: Record<string, PremiumConfigOption> | null
+  }
+}
+
+export interface CurrentParam extends PremiumConfig {
+  page: number
+}
+
+export interface UpdateInsuranceListFilterPayload {
+  id: string
+  value: string | number | undefined
 }
