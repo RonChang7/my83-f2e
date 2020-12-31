@@ -135,7 +135,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
               commit(types.UPDATE_PROMOTION_PRODUCT_FEE, data.product_fee_list)
               resolve()
             })
-            .catch(() => resolve())
+            .catch((error) => {
+              console.error(`Cannot update product price via filter.`, error)
+              resolve()
+            })
         })
       },
       [types.FETCH_STATIC_DATA](_, insurance: string) {
