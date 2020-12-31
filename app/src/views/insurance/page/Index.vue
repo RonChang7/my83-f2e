@@ -160,6 +160,7 @@ const fetchList = (
   }
 }
 
+// @TODO: refactor
 const updateCurrentParamFromQueryString = async (
   previousFilterKeys: string[],
   ctx: Context

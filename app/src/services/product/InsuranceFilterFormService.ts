@@ -3,6 +3,7 @@ import { FieldOption, OptionScheme, InputType } from './field.type'
 import { PremiumConfigOption } from '@/api/insurance/insurance.type'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 
+// @TODO: refactor
 export class InsuranceFilterFormService {
   private fieldList: FieldListObject[] = [
     {
