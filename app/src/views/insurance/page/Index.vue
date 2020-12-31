@@ -162,71 +162,101 @@ const fetchList = (
 
 const updateCurrentParamFromQueryString = async (
   previousFilterKeys: string[],
-  { store, query, redirect, from, route }: Context
+  ctx: Context
 ) => {
-  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  const insuranceStore = (ctx.store.state as InsuranceVuexState).insurance
   const { isExternal } = insuranceStore.staticData
-  const isFirstLanding =
-    from === undefined || from.params.insurance !== route.params.insurance
 
+  removePreviousInsuranceListFilter(previousFilterKeys, ctx)
+
+  if (isExternal) {
+    const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
+    const shouldRemoveDefaultFilterQueryString = filterKeys.every((key) => {
+      return (
+        ctx.query[key] &&
+        ctx.query[key] === insuranceStore.filter.defaultPremiumConfig![key]
+      )
+    })
+
+    if (shouldRemoveDefaultFilterQueryString) {
+      removeDefaultFilterQueryString(filterKeys, ctx)
+      return
+    }
+
+    updateCurrentParam(filterKeys, ctx)
+    await fetchInsuranceProductFee(filterKeys, ctx)
+  }
+}
+
+const removePreviousInsuranceListFilter = (
+  previousFilterKeys: string[],
+  { store, from, route }: Context
+) => {
   if (from !== undefined && from.params.insurance !== route.params.insurance) {
     store.commit(
       `insurance/${REMOVE_INSURANCE_LIST_FILTER}`,
       previousFilterKeys
     )
   }
-
-  if (isExternal) {
-    const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
-
-    const shouldRemoveFilterQueryString = filterKeys.every((key) => {
-      return (
-        query[key] &&
-        query[key] === insuranceStore.filter.defaultPremiumConfig![key]
-      )
-    })
-
-    if (shouldRemoveFilterQueryString) {
-      redirect({
-        query: {
-          ...query,
-          ...resetFilterQueryString(filterKeys),
-        },
-      })
-    }
-
-    filterKeys.forEach((id) => {
-      if (getFirstQuery(query[id]) === insuranceStore.currentParam[id]) return
-
-      const payload: UpdateInsuranceListFilterPayload = {
-        id,
-        value:
-          getFirstQuery(query[id]) ||
-          insuranceStore.filter.defaultPremiumConfig![id],
-      }
-      store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
-    })
-
-    const isDefaultFilter = filterKeys.every((key) => {
-      return (
-        insuranceStore.filter.defaultPremiumConfig![key] ===
-        insuranceStore.currentParam[key]
-      )
-    })
-
-    if (
-      !(isFirstLanding && (shouldRemoveFilterQueryString || isDefaultFilter))
-    ) {
-      await store.dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`)
-    }
-  }
 }
 
-const resetFilterQueryString = (filterKeys: string[]) =>
-  filterKeys.reduce<Record<string, undefined>>((acc, key) => {
-    acc[key] = undefined
-    return acc
-  }, {})
+const removeDefaultFilterQueryString = (
+  filterKeys: string[],
+  { redirect, query }: Context
+) => {
+  const resetFilterQueryString = filterKeys.reduce<Record<string, undefined>>(
+    (acc, key) => {
+      acc[key] = undefined
+      return acc
+    },
+    {}
+  )
+
+  redirect({
+    query: {
+      ...query,
+      ...resetFilterQueryString,
+    },
+  })
+}
+
+const updateCurrentParam = (
+  filterKeys: string[],
+  { query, store }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+
+  filterKeys.forEach((id) => {
+    if (getFirstQuery(query[id]) === insuranceStore.currentParam[id]) return
+
+    const payload: UpdateInsuranceListFilterPayload = {
+      id,
+      value:
+        getFirstQuery(query[id]) ||
+        insuranceStore.filter.defaultPremiumConfig![id],
+    }
+    store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
+  })
+}
+
+const fetchInsuranceProductFee = async (
+  filterKeys: string[],
+  { from, route, store }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  const isFirstLanding =
+    from === undefined || from.params.insurance !== route.params.insurance
+  const isDefaultFilter = filterKeys.every((key) => {
+    return (
+      insuranceStore.filter.defaultPremiumConfig![key] ===
+      insuranceStore.currentParam[key]
+    )
+  })
+
+  if (!(isFirstLanding && isDefaultFilter)) {
+    await store.dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`)
+  }
+}
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,
