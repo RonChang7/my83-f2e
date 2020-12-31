@@ -1,29 +1,40 @@
 <script lang="ts">
 import _ from 'lodash'
 import Vue from 'vue'
+import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Context } from '@nuxt/types'
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
-import { State } from '@/store/insurance/insurance'
+import {
+  State,
+  UpdateInsuranceListFilterPayload,
+} from '@/store/insurance/insurance'
 import { Content } from '@/services/page/Content'
 import { FetchInsuranceListPayload } from '@/api/insurance/insurance.type'
 import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
+  UPDATE_INSURANCE_PRODUCT_FEE,
+  UPDATE_INSURANCE_LIST_FILTER,
+  REMOVE_INSURANCE_LIST_FILTER,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
+import { CanonicalService } from '@/seo/canonical-service'
 const InsurancePage = () => import('./InsurancePage.vue')
 
 const opinions: ComponentOption = {
-  watchQuery: ['page'],
+  watchQuery: true,
   async asyncData(ctx) {
     const { error, route, query, store, redirect } = ctx
     const insurance = route.params.insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
     const currentInsurance = insuranceStore.staticData.id
+    const previousFilterKeys = _.keys(
+      insuranceStore.filter.defaultPremiumConfig
+    )
 
     const fetchPageData: Promise<any>[] = []
 
@@ -60,6 +71,8 @@ const opinions: ComponentOption = {
       })
     }
 
+    await updateCurrentParamFromQueryString(previousFilterKeys, ctx)
+
     const shouldRedirect = query.page === '1'
     if (shouldRedirect) {
       redirect({ query: _.omit(query, ['page']) })
@@ -73,6 +86,35 @@ const opinions: ComponentOption = {
     ) {
       redirect({ name: route.name! })
     }
+  },
+  head() {
+    const canonical = CanonicalService.getCanonical({
+      hostname: this.$env.HOST_URL,
+      route: this.$route,
+      acceptedQueryStringKeys: ['page', ...this.filterKeys],
+    })
+
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: canonical,
+        },
+      ],
+      link: [
+        {
+          hid: 'canonical',
+          rel: 'canonical',
+          href: canonical,
+        },
+      ],
+    }
+  },
+  computed: {
+    filterKeys() {
+      return _.keys(this.$store.state.insurance.filter.defaultPremiumConfig)
+    },
   },
   methods: {
     toPage(index) {
@@ -118,6 +160,105 @@ const fetchList = (
   }
 }
 
+// @TODO: refactor
+const updateCurrentParamFromQueryString = async (
+  previousFilterKeys: string[],
+  ctx: Context
+) => {
+  const insuranceStore = (ctx.store.state as InsuranceVuexState).insurance
+  const { isExternal } = insuranceStore.staticData
+
+  removePreviousInsuranceListFilter(previousFilterKeys, ctx)
+
+  if (isExternal) {
+    const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
+    const shouldRemoveDefaultFilterQueryString = filterKeys.every((key) => {
+      return (
+        ctx.query[key] &&
+        ctx.query[key] === insuranceStore.filter.defaultPremiumConfig![key]
+      )
+    })
+
+    if (shouldRemoveDefaultFilterQueryString) {
+      removeDefaultFilterQueryString(filterKeys, ctx)
+      return
+    }
+
+    updateCurrentParam(filterKeys, ctx)
+    await fetchInsuranceProductFee(filterKeys, ctx)
+  }
+}
+
+const removePreviousInsuranceListFilter = (
+  previousFilterKeys: string[],
+  { store, from, route }: Context
+) => {
+  if (from !== undefined && from.params.insurance !== route.params.insurance) {
+    store.commit(
+      `insurance/${REMOVE_INSURANCE_LIST_FILTER}`,
+      previousFilterKeys
+    )
+  }
+}
+
+const removeDefaultFilterQueryString = (
+  filterKeys: string[],
+  { redirect, query }: Context
+) => {
+  const resetFilterQueryString = filterKeys.reduce<Record<string, undefined>>(
+    (acc, key) => {
+      acc[key] = undefined
+      return acc
+    },
+    {}
+  )
+
+  redirect({
+    query: {
+      ...query,
+      ...resetFilterQueryString,
+    },
+  })
+}
+
+const updateCurrentParam = (
+  filterKeys: string[],
+  { query, store }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+
+  filterKeys.forEach((id) => {
+    if (getFirstQuery(query[id]) === insuranceStore.currentParam[id]) return
+
+    const payload: UpdateInsuranceListFilterPayload = {
+      id,
+      value:
+        getFirstQuery(query[id]) ||
+        insuranceStore.filter.defaultPremiumConfig![id],
+    }
+    store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
+  })
+}
+
+const fetchInsuranceProductFee = async (
+  filterKeys: string[],
+  { from, route, store }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  const isFirstLanding =
+    from === undefined || from.params.insurance !== route.params.insurance
+  const isDefaultFilter = filterKeys.every((key) => {
+    return (
+      insuranceStore.filter.defaultPremiumConfig![key] ===
+      insuranceStore.currentParam[key]
+    )
+  })
+
+  if (!(isFirstLanding && isDefaultFilter)) {
+    await store.dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`)
+  }
+}
+
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,
   Data,
@@ -134,7 +275,9 @@ export type ComponentInstance = CombinedVueInstance<
   Props
 >
 
-export interface Instance extends Vue {}
+export interface Instance extends Vue {
+  $store: Store<InsuranceVuexState>
+}
 
 export interface Data {}
 
@@ -142,7 +285,9 @@ export type Methods = {
   toPage(index: number): void
 }
 
-export interface Computed {}
+export interface Computed {
+  filterKeys: string[]
+}
 
 export interface Props {}
 
