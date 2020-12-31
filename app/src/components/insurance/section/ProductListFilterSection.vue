@@ -69,8 +69,9 @@ export default class ProductListFilterSection extends Vue {
       .filter.premiumConfig
     if (!premiumConfig) return
 
-    this.insuranceFilterFormService = new InsuranceFilterFormService()
-    this.insuranceFilterFormService.create(premiumConfig)
+    this.insuranceFilterFormService = new InsuranceFilterFormService(
+      premiumConfig
+    )
     this.options = this.insuranceFilterFormService.options
   }
 }

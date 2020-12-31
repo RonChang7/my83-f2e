@@ -17,6 +17,10 @@ export class InsuranceFilterFormService {
 
   private _options: FieldOption<OptionScheme>[]
 
+  constructor(options: Record<string, PremiumConfigOption>) {
+    this._create(options)
+  }
+
   private static getOptionType(
     type: string
   ): InputType.RADIO | InputType.OPTION | undefined {
@@ -30,7 +34,7 @@ export class InsuranceFilterFormService {
     }
   }
 
-  public create(options: Record<string, PremiumConfigOption>) {
+  private _create(options: Record<string, PremiumConfigOption>) {
     const optionKeys = _.keys(options)
     this._options = optionKeys.reduce<FieldOption<OptionScheme>[]>(
       (acc, key) => {
