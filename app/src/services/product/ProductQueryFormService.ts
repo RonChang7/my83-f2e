@@ -18,6 +18,7 @@ import {
 } from '@/api/insurance/product.type'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 
+// @TODO: refactor
 export class ProductQueryFormService {
   private plans: Plan[]
 
