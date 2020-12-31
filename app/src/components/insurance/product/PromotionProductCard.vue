@@ -17,15 +17,17 @@
     </div>
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__plan">{{ product.plan }}</div>
-      <div class="PromotionProductCard__fee">
-        <span
-          v-if="product.fee_prefix"
-          class="PromotionProductCard__fee__prefix"
-        >
-          {{ product.fee_prefix }}
-        </span>
-        {{ getFormattedFee(product.fee) }}
-      </div>
+      <transition name="fade" mode="out-in">
+        <div :key="product.fee" class="PromotionProductCard__fee">
+          <span
+            v-if="product.fee_prefix"
+            class="PromotionProductCard__fee__prefix"
+          >
+            {{ product.fee_prefix }}
+          </span>
+          {{ getFormattedFee(product.fee) }}
+        </div>
+      </transition>
       <div v-if="viewCount" class="PromotionProductCard__viewCount">
         {{ viewCount }}
       </div>
@@ -199,6 +201,10 @@ export default options
 
   &__btn {
     margin-top: 8px;
+  }
+
+  .fade {
+    @include vue-transition-fade($second: 0.2);
   }
 }
 </style>
