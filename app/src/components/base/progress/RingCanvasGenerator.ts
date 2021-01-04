@@ -10,33 +10,33 @@ export class RingCanvasGenerator {
     (deg: number) => RingConfig[]
   > = {
     [RingType.OVER]: () => [
-      // leftTop
+      // rightTop
       {
         startAngle: RingCanvasGenerator.degree(0),
         endAngle: RingCanvasGenerator.degree(90),
-        gradientPoint: (radius) => [radius, 0, 0, radius],
-        color: ['#6980D1', '#4C6AD5'],
-      },
-      // leftBottom
-      {
-        startAngle: RingCanvasGenerator.degree(90),
-        endAngle: RingCanvasGenerator.degree(180),
-        gradientPoint: (radius) => [0, radius, radius, radius * 2],
-        color: ['#4C6AD5', '#8C75AF'],
+        gradientPoint: (radius) => [radius * 2, radius, radius, 0],
+        color: ['#4C6AD5', '#6980D1'],
       },
       // rightBottom
       {
+        startAngle: RingCanvasGenerator.degree(90),
+        endAngle: RingCanvasGenerator.degree(180),
+        gradientPoint: (radius) => [radius, radius * 2, radius * 2, radius],
+        color: ['#8C75AF', '#4C6AD5'],
+      },
+      // leftBottom
+      {
         startAngle: RingCanvasGenerator.degree(180),
         endAngle: RingCanvasGenerator.degree(270),
-        gradientPoint: (radius) => [radius, radius * 2, radius * 2, radius],
-        color: ['#8C75AF', '#D07F86'],
+        gradientPoint: (radius) => [0, radius, radius, radius * 2],
+        color: ['#D07F86', '#8C75AF'],
       },
-      // rightTop
+      // leftTop
       {
         startAngle: RingCanvasGenerator.degree(270),
         endAngle: RingCanvasGenerator.degree(360),
-        gradientPoint: (radius) => [radius * 2, radius, radius, 0],
-        color: ['#D07F86', '#FF8659'],
+        gradientPoint: (radius) => [radius, 0, 0, radius],
+        color: ['#FF8659', '#D07F86'],
       },
     ],
     [RingType.LOWER]: (deg) => [
@@ -89,7 +89,7 @@ export class RingCanvasGenerator {
 
   private static degree(deg: number) {
     const degShift = -90
-    return ((-deg + degShift) / 180) * Math.PI
+    return ((deg + degShift) / 180) * Math.PI
   }
 
   public draw({ length, lineWidth, deg }: RingInstance) {
@@ -107,8 +107,7 @@ export class RingCanvasGenerator {
         length / 2,
         radius,
         RingCanvasGenerator.degree(0),
-        RingCanvasGenerator.degree(360),
-        true
+        RingCanvasGenerator.degree(360)
       )
       this.ctx.strokeStyle = this.ringConfig?.[0]?.backgroundColor || '#edf2ff'
       this.ctx.stroke()
@@ -121,7 +120,7 @@ export class RingCanvasGenerator {
       color,
     }: RingConfig) => {
       this.ctx.beginPath()
-      this.ctx.arc(length / 2, length / 2, radius, startAngle, endAngle, true)
+      this.ctx.arc(length / 2, length / 2, radius, startAngle, endAngle)
       const lineGradientPoint =
         typeof gradientPoint === 'function'
           ? gradientPoint(length / 2)
