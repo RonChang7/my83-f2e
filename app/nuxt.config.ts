@@ -89,6 +89,7 @@ const config: NuxtConfig = {
     '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/stylelint-module
     '@nuxtjs/stylelint-module',
+    '@nuxtjs/composition-api',
     '@nuxt/typescript-build',
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
