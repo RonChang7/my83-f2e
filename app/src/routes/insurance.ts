@@ -4,6 +4,14 @@ import { RouteConfig } from '@/types/router'
 export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
   return [
     {
+      name: 'insuranceLeaderBoard',
+      path: '/product/leaderboard',
+      component: resolve('@/views/insurance/leader-board/Index.vue'),
+      meta: {
+        requiredStoreModules: ['insuranceLeaderBoard'],
+      },
+    },
+    {
       name: 'insuranceProduct',
       path: '/product/:id(\\d+)',
       component: resolve('@/views/insurance/product/Index.vue'),
