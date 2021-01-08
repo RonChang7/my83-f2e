@@ -11,10 +11,14 @@ const request = axios.create({
 
 const refreshJWTToken = async (
   baseURL: string,
+  basicAuth: string,
   previousJWTToken: string
 ): Promise<LoginResponse> => {
   request.defaults.baseURL = baseURL
-  request.defaults.headers.Authorization = `Bearer ${previousJWTToken}`
+  request.defaults.headers['X-Auth'] = `Bearer ${previousJWTToken}`
+  if (basicAuth) {
+    request.defaults.headers.Authorization = `Basic ${basicAuth}`
+  }
 
   const { data, status } = await request.get<LoginResponse>('/api/auth/refresh')
 
@@ -27,7 +31,11 @@ const refreshJWTToken = async (
 export class JWT {
   public static isRefreshing: Promise<JWTRefreshResponsePayload> | null
 
-  public static refreshToken = (baseURL: string, payload: JWTPayload) => {
+  public static refreshToken = (
+    baseURL: string,
+    basicAuth: string,
+    payload: JWTPayload
+  ) => {
     if (JWT.isRefreshing) {
       return JWT.isRefreshing
     }
@@ -41,7 +49,7 @@ export class JWT {
       })
     } else {
       JWT.isRefreshing = new Promise((resolve, reject) => {
-        refreshJWTToken(baseURL, payload.jwtToken)
+        refreshJWTToken(baseURL, basicAuth, payload.jwtToken)
           .then(({ token, expired_time }) => {
             resolve({ jwtToken: token!, expiredTime: expired_time! })
           })

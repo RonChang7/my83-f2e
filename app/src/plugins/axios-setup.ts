@@ -10,7 +10,7 @@ import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 
 export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
-  const { APP_ENV, API_URL } = app.$env
+  const { APP_ENV, API_URL, API_SERVER_BASIC_AUTH_BASE64 } = app.$env
   const requestInstance = Request.getInstance()
 
   request.defaults.baseURL = API_URL
@@ -24,6 +24,11 @@ export default (({ app, req }) => {
     })
 
     requestInstance.initApiUrlLogger = true
+  }
+
+  // Add basic auth header for dev server
+  if (API_SERVER_BASIC_AUTH_BASE64) {
+    request.defaults.headers.Authorization = `Basic ${API_SERVER_BASIC_AUTH_BASE64}`
   }
 
   if (process.server) {
@@ -71,7 +76,7 @@ export default (({ app, req }) => {
       const jwtToken = app.$auth.getToken()
 
       if (jwtToken) {
-        config.headers.Authorization = `Bearer ${jwtToken}`
+        config.headers['X-Auth'] = `Bearer ${jwtToken}`
       }
       return config
     })
@@ -102,10 +107,10 @@ export default (({ app, req }) => {
             return Promise.reject(err)
           } else if (status === 401 && error === 'expired_token') {
             return app.$auth
-              .refreshToken(API_URL)
+              .refreshToken(API_URL, API_SERVER_BASIC_AUTH_BASE64)
               .then(() => {
                 const jwtToken = app.$auth.getToken()
-                originalRequest.headers.Authorization = `Bearer ${jwtToken}`
+                originalRequest.headers['X-Auth'] = `Bearer ${jwtToken}`
                 return request(originalRequest)
               })
               .catch((err) => {
