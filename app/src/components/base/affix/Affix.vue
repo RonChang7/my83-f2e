@@ -5,6 +5,8 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { getScroll, getRect } from '@/utils/dom'
 
+let previousScrollTopPosition: number
+
 const options: ComponentOption = {
   props: {
     placeholderTag: {
@@ -26,6 +28,10 @@ const options: ComponentOption = {
     affixOffsetTop: {
       type: Number,
       default: 0,
+    },
+    enableHideOnScrollDown: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -55,7 +61,6 @@ const options: ComponentOption = {
     updateAffixPosition(event?: Event) {
       window.requestAnimationFrame(() => {
         const target = window
-        if (!target) return
         const el = this.$refs.placeholder
         if (!el) return
 
@@ -76,6 +81,10 @@ const options: ComponentOption = {
         }
 
         if (scrollTop > elOffset.top - this.affixOffsetTop) {
+          if (this.enableHideOnScrollDown && !previousScrollTopPosition) {
+            previousScrollTopPosition = getScroll(window, true) || 0
+          }
+
           this.$set(this.contentStyle, 'position', 'fixed')
           this.$set(
             this.contentStyle,
@@ -94,6 +103,17 @@ const options: ComponentOption = {
             'height',
             `${this.$refs.placeholder.offsetHeight}px`
           )
+
+          if (this.enableHideOnScrollDown) {
+            if (scrollTop > previousScrollTopPosition) {
+              this.$set(this.contentStyle, 'visibility', 'hidden')
+              this.$set(this.contentStyle, 'transform', 'translateY(-60px)')
+            } else if (scrollTop < previousScrollTopPosition - 10) {
+              this.$set(this.contentStyle, 'visibility', 'visible')
+              this.$set(this.contentStyle, 'transform', 'translateY(0px)')
+            }
+            previousScrollTopPosition = scrollTop
+          }
         } else {
           this.placeholderStyle = {}
 
@@ -195,6 +215,7 @@ export interface Props {
   contentTag: string
   contentClass: object | string
   affixOffsetTop: number
+  enableHideOnScrollDown: boolean
 }
 
 export default options
