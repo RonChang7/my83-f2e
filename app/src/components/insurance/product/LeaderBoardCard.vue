@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, PropType } from '@nuxtjs/composition-api'
 import { Section } from '@/api/insurance/leader-board.type'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
@@ -68,7 +68,7 @@ export default defineComponent({
   },
   props: {
     section: {
-      type: Object as () => Section,
+      type: Object as PropType<Section>,
       required: true,
     },
   },

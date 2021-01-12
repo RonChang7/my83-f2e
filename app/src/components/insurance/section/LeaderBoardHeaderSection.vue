@@ -83,11 +83,13 @@ export default defineComponent({
     })
 
     watch(value, (val) =>
-      router?.push({
-        query: {
-          sort: val.toString() || undefined,
-        },
-      })
+      val
+        ? router?.push({
+            query: {
+              sort: val.toString(),
+            },
+          })
+        : router?.push({ query: {} })
     )
 
     watch(sort, (val) => {
