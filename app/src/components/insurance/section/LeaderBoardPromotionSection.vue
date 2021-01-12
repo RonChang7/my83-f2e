@@ -34,14 +34,13 @@
 import { defineComponent } from '@nuxtjs/composition-api'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin, { useDevice } from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
 
 export default defineComponent({
   components: {
     BaseLazyImage,
     BaseButton,
   },
-  mixins: [DeviceMixin],
   setup() {
     const { isMobile } = useDevice()
     const bundleLinks: Link[] = [
