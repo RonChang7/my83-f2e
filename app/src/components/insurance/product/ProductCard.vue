@@ -61,12 +61,17 @@
               <br />
               {{ product.plan }}
             </div>
-            <div class="ProductCard__fee">
-              <span v-if="product.fee_prefix" class="ProductCard__fee__prefix">
-                {{ product.fee_prefix }}
-              </span>
-              {{ getFormattedFee(product.fee) }}
-            </div>
+            <transition name="fade" mode="out-in">
+              <div :key="product.fee" class="ProductCard__fee">
+                <span
+                  v-if="product.fee_prefix"
+                  class="ProductCard__fee__prefix"
+                >
+                  {{ product.fee_prefix }}
+                </span>
+                {{ getFormattedFee(product.fee) }}
+              </div>
+            </transition>
           </div>
           <div class="ProductCard__subSection">
             <div v-if="viewCount" class="ProductCard__viewCount">
@@ -185,6 +190,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 .ProductCard {
@@ -350,6 +356,10 @@ export default options
 
   &__btn {
     margin-top: 8px;
+  }
+
+  .fade {
+    @include vue-transition-fade($second: 0.2);
   }
 }
 </style>
