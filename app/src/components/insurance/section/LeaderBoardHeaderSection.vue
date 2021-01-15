@@ -36,6 +36,7 @@
         v-if="isMobile"
         placeholder-class="fix__switch__wrapper"
         content-class="fix__switch__content"
+        fixed-content-class="fix__switch__content__fixed"
         :affix-offset-top="64"
         :enable-hide-on-scroll-down="true"
       >
@@ -206,6 +207,10 @@ interface SwitchPayload {
       margin: -8px 0;
       background: $primary-bg;
       z-index: 1;
+
+      &__fixed {
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+      }
     }
   }
 }
