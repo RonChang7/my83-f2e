@@ -1,6 +1,10 @@
 <template>
   <div class="BaseSwitch">
     <div
+      class="selected"
+      :style="{ left: offset.left ? `${offset.left}px` : 'unset' }"
+    ></div>
+    <div
       v-for="option in options"
       :key="option.value"
       class="BaseSwitch__option"
@@ -9,10 +13,6 @@
     >
       {{ option.text }}
     </div>
-    <div
-      class="selected"
-      :style="{ left: offset.left ? `${offset.left}px` : 'unset' }"
-    ></div>
   </div>
 </template>
 
