@@ -16,7 +16,7 @@
         v-for="(product, index) in section.products"
         :key="index"
         class="LeaderBoardCard__product"
-        @click="() => $router.push({ path: `${product.btn.link.path}` })"
+        @click="clickProduct(product.btn.link)"
       >
         <div class="LeaderBoardCard__product__index">{{ index + 1 }}</div>
         <div class="LeaderBoardCard__product__content">
@@ -53,7 +53,10 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import { defineComponent, PropType } from '@nuxtjs/composition-api'
+import { useRouter } from '@/utils/composition-api'
+import { Link } from '@/api/type'
 import { Section } from '@/api/insurance/leader-board.type'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
@@ -73,15 +76,25 @@ export default defineComponent({
     },
   },
   setup() {
+    const router = useRouter()
     const pageviewsFormatter = (number: number) => {
       return number ? delimitIntegerWithSymbol(number) : ''
     }
 
     const featuresFormatter = (features: string[]) => features.join('．')
 
+    const clickProduct = (link: Link) => {
+      const matches = router.getMatchedComponents(link)
+
+      _.isEmpty(matches)
+        ? (window.location.href = link.path)
+        : router.push({ path: `${link.path}` })
+    }
+
     return {
       pageviewsFormatter,
       featuresFormatter,
+      clickProduct,
     }
   },
 })
