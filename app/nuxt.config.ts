@@ -120,8 +120,6 @@ const config: NuxtConfig = {
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
           { key: 'IMAGE_BUCKET_URL' },
-          { key: 'SENTRY_DSN' },
-          { key: 'SENTRY_DISABLED' },
         ],
       },
     ],
