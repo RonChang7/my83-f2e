@@ -25,6 +25,10 @@ const options: ComponentOption = {
       type: String,
       default: '',
     },
+    fixedContentClass: {
+      type: String,
+      default: '',
+    },
     affixOffsetTop: {
       type: Number,
       default: 0,
@@ -38,6 +42,7 @@ const options: ComponentOption = {
     return {
       placeholderStyle: {},
       contentStyle: {},
+      mergedContentClass: [],
     }
   },
   methods: {
@@ -139,6 +144,22 @@ const options: ComponentOption = {
         }
       })
     },
+    updateMergedContentClass() {
+      this.mergedContentClass =
+        this.contentStyle.position === 'fixed'
+          ? [this.contentClass, this.fixedContentClass]
+          : [this.contentClass]
+    },
+  },
+  watch: {
+    'contentStyle.position'() {
+      if (!this.fixedContentClass) return
+
+      this.updateMergedContentClass()
+    },
+  },
+  created() {
+    this.updateMergedContentClass()
   },
   mounted() {
     this.updateAffixPosition()
@@ -164,7 +185,7 @@ const options: ComponentOption = {
           this.contentTag,
           {
             ref: 'content',
-            class: this.contentClass,
+            class: this.mergedContentClass,
             style: this.contentStyle,
           },
           [this.$slots.default]
@@ -200,20 +221,23 @@ export interface Instance extends Vue {
 export interface Data {
   placeholderStyle: Partial<CSSStyleDeclaration>
   contentStyle: Partial<CSSStyleDeclaration>
+  mergedContentClass: string[]
 }
 
 export type Methods = {
   syncPlaceholderStyle(): void
   updateAffixPosition(event?: Event): void
+  updateMergedContentClass(): void
 }
 
 export interface Computed {}
 
 export interface Props {
   placeholderTag: string
-  placeholderClass: object | string
+  placeholderClass: string
   contentTag: string
-  contentClass: object | string
+  contentClass: string
+  fixedContentClass: string
   affixOffsetTop: number
   enableHideOnScrollDown: boolean
 }
