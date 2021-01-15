@@ -190,6 +190,10 @@ export default defineComponent({
       flex: 1 1 auto;
       padding: 0 20px;
 
+      > * {
+        transition: 0.3s;
+      }
+
       .company {
         color: $secondary-color;
         font-weight: 500;
@@ -242,6 +246,22 @@ export default defineComponent({
         }
       }
     }
+
+    @include hover-supported {
+      &:hover {
+        .company {
+          color: $secondary-hover-color;
+        }
+
+        .name {
+          color: $primary-color;
+        }
+
+        .features {
+          color: $gray-primary;
+        }
+      }
+    }
   }
 
   &__link {
@@ -263,7 +283,7 @@ export default defineComponent({
     font-weight: 500;
 
     @include max-media('xl') {
-      padding-left: 20px;
+      padding: 0 20px;
     }
   }
 }
