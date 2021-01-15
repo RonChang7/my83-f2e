@@ -202,6 +202,8 @@ interface SwitchPayload {
     }
 
     &__content {
+      display: flex;
+      justify-content: center;
       transition: 0.3s;
       padding: 8px 20px;
       margin: -8px 0;
