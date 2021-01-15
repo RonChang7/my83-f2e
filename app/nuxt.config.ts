@@ -91,13 +91,13 @@ const config: NuxtConfig = {
     '@nuxt/typescript-build',
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
+    '@/nuxt-modules/sentry/module',
     'nuxt-svg-loader',
   ],
   /*
    ** Nuxt.js modules
    */
   modules: [
-    '@/nuxt-modules/sentry/module',
     [
       // ref: https://github.com/samtgarson/nuxt-env
       'nuxt-env',
