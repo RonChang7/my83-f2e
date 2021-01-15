@@ -135,10 +135,6 @@ export interface Props {
     display: flex;
     align-items: center;
     height: 60px;
-
-    &.new:after {
-      @include header-new-badge;
-    }
   }
 
   &__menu {
@@ -152,6 +148,10 @@ export interface Props {
     @include only_ie {
       margin-left: calc(-75px + #{$margin-left});
     }
+  }
+
+  .new:after {
+    @include header-new-badge;
   }
 }
 </style>
