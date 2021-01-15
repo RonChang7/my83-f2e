@@ -57,7 +57,6 @@ const config: NuxtConfig = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
-    '@/plugins/sentry',
     {
       src: '@/plugins/auth',
       mode: 'client',
