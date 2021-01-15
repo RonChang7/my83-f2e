@@ -90,7 +90,7 @@ type ModuleContainer = any
 interface Options {
   apiMethods: string[]
   enableLogMockCalls: boolean
-  releaseName: string
+  releaseName: string | undefined
 }
 
 type AddPlugin = (
