@@ -12,7 +12,11 @@
       <slot name="button"></slot>
     </div>
     <client-only>
-      <div ref="content" class="BaseTooltip__content">
+      <div
+        ref="content"
+        class="BaseTooltip__content"
+        :style="{ 'z-index': zIndex }"
+      >
         <slot name="content"></slot>
       </div>
     </client-only>
@@ -30,6 +34,9 @@ export default class BaseTooltip extends Vue {
 
   @Prop({ type: Number, default: 0 })
   offset: number
+
+  @Prop({ type: Number, default: 1 })
+  zIndex: number
 
   $refs: {
     button: HTMLElement
