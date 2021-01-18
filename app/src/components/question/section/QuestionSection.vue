@@ -69,7 +69,6 @@ export default {
       return this.$store.state.question.question?.subject
     },
     content() {
-      // TODO: 之後 question 後端移除 HTML tag 之後要另外處理
       const content = this.$store.state.question.question?.content
       return content ? textToUrl(content) : ''
     },
