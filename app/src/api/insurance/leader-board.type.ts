@@ -1,10 +1,6 @@
-import { LinkButton, PageMeta } from '../type'
+import { LinkButton, PageResponse } from '../type'
 
-export interface LeaderBoardResponse {
-  data: LeaderBoard
-  page_meta: PageMeta
-  json_ld?: any[]
-}
+export type LeaderBoardResponse = PageResponse<LeaderBoard>
 
 export interface LeaderBoard {
   title: string

@@ -12,6 +12,12 @@ export type Role = 'client' | 'sales'
 
 export type RoleCode = 0 | 1
 
+export interface PageResponse<T> {
+  data: T
+  page_meta: PageMeta
+  json_ld?: any[]
+}
+
 export interface PageMeta {
   title: string
   url: string
