@@ -1,5 +1,5 @@
 <template>
-  <div class="BaseSwitch">
+  <div ref="baseSwitchEl" class="BaseSwitch">
     <div
       class="selected"
       :style="{ left: offset.left ? `${offset.left}px` : 'unset' }"
@@ -26,6 +26,7 @@ import {
   onBeforeUnmount,
   reactive,
   watch,
+  ref,
 } from '@nuxtjs/composition-api'
 import { Option } from './type'
 
@@ -41,7 +42,11 @@ export default defineComponent({
     },
   },
   setup(props, ctx) {
-    const offset = useCurrentSelectedPosition(computed(() => props.value))
+    const baseSwitchEl = ref<HTMLElement | null>(null)
+    const offset = useCurrentSelectedPosition(
+      computed(() => props.value),
+      computed(() => baseSwitchEl.value)
+    )
     const clickHandler = (value: string | number) => {
       ctx.emit('update:value', value)
     }
@@ -49,12 +54,14 @@ export default defineComponent({
     return {
       clickHandler,
       offset,
+      baseSwitchEl,
     }
   },
 })
 
 const useCurrentSelectedPosition = (
-  currentSelectValue: ComputedRef<number | string>
+  currentSelectValue: ComputedRef<number | string>,
+  el: ComputedRef<HTMLElement | null>
 ) => {
   const offset = reactive({
     left: 0,
@@ -62,9 +69,10 @@ const useCurrentSelectedPosition = (
   })
 
   const updateOffset = () => {
-    const currentSelectEl = document.querySelector('.active') as HTMLElement
-    offset.left = currentSelectEl?.offsetLeft || 0
-    offset.top = currentSelectEl?.offsetTop || 0
+    const activeEl = el.value?.querySelector('.active') as HTMLElement
+
+    offset.left = activeEl?.offsetLeft || 0
+    offset.top = activeEl?.offsetTop || 0
   }
 
   onMounted(() => {
