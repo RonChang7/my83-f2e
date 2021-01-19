@@ -88,7 +88,6 @@ import {
   ResponseFormData,
 } from '@/services/question/form/ResponseFormService'
 import { scrollToElement } from '@/utils/scroll'
-import { nl2br } from '@/utils/text-parser'
 
 export default {
   components: {
@@ -163,7 +162,7 @@ export default {
         questionId: this.questionId,
         answerId: this.answerId,
         nickname: this.nickname ? this.nickname : this.form?.nickname,
-        content: nl2br(this.form!.content.trim()), // @TODO: 相容舊版，所以新增 response 要補上 <br />
+        content: this.form!.content.trim(),
         isDislikeResponse: this.isDislikeResponse,
       }
 
