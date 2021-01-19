@@ -12,10 +12,9 @@ export default defineComponent({
   scrollToTop: false,
   async asyncData(ctx) {
     const { store, error, query } = ctx
-    const fetchPageData: Promise<any>[] = []
-    fetchPageData.push(
-      store.dispatch(`insuranceLeaderBoard/${FETCH_LEADER_BOARD}`, query.sort)
-    )
+    const fetchPageData: Promise<any>[] = [
+      store.dispatch(`insuranceLeaderBoard/${FETCH_LEADER_BOARD}`, query.sort),
+    ]
 
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
