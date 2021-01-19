@@ -85,24 +85,19 @@ const options: ComponentOption = {
         }
 
         if (scrollTop > elOffset.top - this.affixOffsetTop) {
-          this.$set(this.contentStyle, 'position', 'fixed')
-          this.$set(
-            this.contentStyle,
-            'top',
-            `${targetRect.top + this.affixOffsetTop}px`
-          )
-          this.$set(
-            this.contentStyle,
-            'left',
-            `${targetRect.left + elOffset.left}px`
-          )
-          this.$set(this.contentStyle, 'width', `${elOffset.width}px`)
-          this.$set(this.placeholderStyle, 'width', `${elOffset.width}px`)
-          this.$set(
-            this.placeholderStyle,
-            'height',
-            `${this.$refs.placeholder.offsetHeight}px`
-          )
+          this.contentStyle = {
+            ...this.contentStyle,
+            position: 'fixed',
+            top: `${targetRect.top + this.affixOffsetTop}px`,
+            left: `${targetRect.left + elOffset.left}px`,
+            width: `${elOffset.width}px`,
+          }
+
+          this.placeholderStyle = {
+            ...this.placeholderStyle,
+            width: `${elOffset.width}px`,
+            height: `${this.$refs.placeholder.offsetHeight}px`,
+          }
 
           this.updateHideOnScrollDownStyle()
         } else {
@@ -140,11 +135,17 @@ const options: ComponentOption = {
         const scrollTop = getScroll(target, true) || 0
 
         if (scrollTop > previousScrollTopPosition) {
-          this.$set(this.contentStyle, 'visibility', 'hidden')
-          this.$set(this.contentStyle, 'transform', 'translateY(-60px)')
+          this.contentStyle = {
+            ...this.contentStyle,
+            visibility: 'hidden',
+            transform: 'translateY(-60px)',
+          }
         } else if (scrollTop < previousScrollTopPosition - 10) {
-          this.$set(this.contentStyle, 'visibility', 'visible')
-          this.$set(this.contentStyle, 'transform', 'translateY(0px)')
+          this.contentStyle = {
+            ...this.contentStyle,
+            visibility: 'visible',
+            transform: 'translateY(0px)',
+          }
         }
         previousScrollTopPosition = scrollTop
       }
