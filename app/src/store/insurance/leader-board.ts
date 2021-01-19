@@ -12,12 +12,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
         title: '',
         description: '',
         sections: [],
+        isFetching: false,
       }
     },
     getters: {},
     actions: {
-      [types.FETCH_LEADER_BOARD]({ commit }, sort?: SortType) {
+      [types.FETCH_LEADER_BOARD]({ commit, state }, sort?: SortType) {
+        if (state.isFetching) return
+
         return new Promise((resolve, reject) => {
+          commit(types.UPDATE_FETCHING_STATUS, true)
+
           api
             .fetchLeaderBoard(sort)
             .then(({ data, page_meta, json_ld }) => {
@@ -26,9 +31,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 root: true,
               })
               commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+
+              commit(types.UPDATE_FETCHING_STATUS, false)
               resolve()
             })
-            .catch((error) => reject(error))
+            .catch((error) => {
+              commit(types.UPDATE_FETCHING_STATUS, false)
+              return reject(error)
+            })
         })
       },
     },
@@ -38,6 +48,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.description = data.description
         state.sections = data.sections
       },
+      [types.UPDATE_FETCHING_STATUS](state, status: boolean) {
+        state.isFetching = status
+      },
     },
   }
 }
@@ -46,4 +59,5 @@ export interface State {
   title: LeaderBoard['title']
   description: LeaderBoard['description']
   sections: LeaderBoard['sections']
+  isFetching: boolean
 }

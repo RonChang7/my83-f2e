@@ -40,9 +40,18 @@
         :affix-offset-top="64"
         :enable-hide-on-scroll-down="true"
       >
-        <BaseSwitch :options="options" :value.sync="value" />
+        <BaseSwitch
+          :options="options"
+          :value="value"
+          @update:value="updateValue"
+        />
       </Affix>
-      <BaseSwitch v-else :options="options" :value.sync="value" />
+      <BaseSwitch
+        v-else
+        :options="options"
+        :value="value"
+        @update:value="updateValue"
+      />
       <img
         v-if="!isMobile"
         :src="`${$imageBucketUrl}/front/insurance/leader-board/img-header-crowd-r.png`"
@@ -83,6 +92,11 @@ export default defineComponent({
       value: sort.value,
     })
 
+    const updateValue = (val) => {
+      if (store.state.insuranceLeaderBoard.isFetching) return
+      value.value = val
+    }
+
     watch(value, (val) =>
       val
         ? router?.push({
@@ -102,6 +116,7 @@ export default defineComponent({
       description,
       options,
       value,
+      updateValue,
     }
   },
 })
