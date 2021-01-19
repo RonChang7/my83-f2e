@@ -37,14 +37,13 @@ export default defineComponent({
     let promotionSectionObserver: IntersectionObserver | null
 
     onMounted(() => {
-      promotionSectionObserver = isMobile.value
-        ? new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              shouldShowPromotionSection.value =
-                entry.boundingClientRect.bottom < 0
-            })
-          })
-        : null
+      if (!isMobile.value) return
+
+      promotionSectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          shouldShowPromotionSection.value = entry.boundingClientRect.bottom < 0
+        })
+      })
 
       promotionSectionObserver &&
         promotionSectionObserver.observe(header.value.$el)
