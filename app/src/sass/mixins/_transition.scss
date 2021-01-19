@@ -1,4 +1,4 @@
-@mixin vue-transition-fade($second: 0.3) {
+@mixin vue-transition-fade($second: 0.3, $reverse: false) {
   &-enter-active {
     animation: fade #{$second}s;
   }
@@ -7,13 +7,31 @@
     animation: fade #{$second}s reverse;
   }
 
-  @include animation-fade;
+  @if $reverse {
+    @include animation-fade-reverse;
+  } @else {
+    @include animation-fade;
+  }
 }
 
 @mixin animation-fade {
   @keyframes fade {
     0% {
       transform: translate3d(0, -20px, 0);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+}
+
+@mixin animation-fade-reverse {
+  @keyframes fade {
+    0% {
+      transform: translate3d(0, 20px, 0);
       opacity: 0;
     }
 
