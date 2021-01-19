@@ -6,7 +6,9 @@
       <LeaderBoardListSection />
     </div>
 
-    <LeaderBoardPromotionSection v-if="shouldShowPromotionSection" />
+    <transition name="fade">
+      <LeaderBoardPromotionSection v-if="shouldShowPromotionSection" />
+    </transition>
   </div>
 </template>
 
@@ -93,6 +95,10 @@ export default defineComponent({
       margin: 20px auto 0;
       width: 100%;
     }
+  }
+
+  .fade {
+    @include vue-transition-fade($second: 0.2, $reverse: true);
   }
 }
 </style>
