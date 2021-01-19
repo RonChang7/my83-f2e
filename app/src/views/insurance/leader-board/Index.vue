@@ -25,10 +25,8 @@ export default defineComponent({
         err.response.status === 404
           ? ErrorPageType.DEFAULT
           : ErrorPageType.SERVER
-      return error({
-        statusCode,
-        message,
-      })
+
+      error({ statusCode, message })
     }
   },
   setup() {
