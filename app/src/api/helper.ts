@@ -1,8 +1,7 @@
 import { AxiosResponse, AxiosError } from 'axios'
 
-export const checkIsAxiosError = (error: AxiosError | any): boolean => {
-  if (!error) return false
-  return (error as AxiosError).isAxiosError
+export const isAxiosError = (error: any): error is AxiosError => {
+  return (error as AxiosError).isAxiosError !== undefined
 }
 
 export const checkCorrectAxiosResponse = <T>(

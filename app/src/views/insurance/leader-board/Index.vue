@@ -5,6 +5,7 @@ import { State } from '@/store/insurance/leader-board'
 import { FETCH_LEADER_BOARD } from '@/store/insurance/leader-board.type'
 import { Content } from '@/services/page/Content'
 import { ErrorPageType } from '@/config/error-page.config'
+import { isAxiosError } from '@/api/helper'
 const InsuranceLeaderBoard = () => import('./InsuranceLeaderBoard.vue')
 
 export default defineComponent({
@@ -19,11 +20,12 @@ export default defineComponent({
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
-      const statusCode = err.response.status === 404 ? err.response.status : 500
+      if (!isAxiosError(err)) throw err
+
+      const statusCode =
+        err.response?.status === 404 ? err.response.status : 500
       const message =
-        err.response.status === 404
-          ? ErrorPageType.DEFAULT
-          : ErrorPageType.SERVER
+        statusCode === 404 ? ErrorPageType.DEFAULT : ErrorPageType.SERVER
 
       error({ statusCode, message })
     }
