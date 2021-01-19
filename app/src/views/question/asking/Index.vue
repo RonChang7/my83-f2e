@@ -37,7 +37,7 @@ const options: ComponentOption = {
     } catch (err) {
       const statusCode = err.response.status === 404 ? err.response.status : 500
 
-      return error({
+      error({
         statusCode,
         message: ErrorPageType.SERVER,
       })

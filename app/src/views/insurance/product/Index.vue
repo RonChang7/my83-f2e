@@ -30,10 +30,7 @@ const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
           ? ErrorPageType.PRODUCT
           : ErrorPageType.SERVER
 
-      return error({
-        statusCode,
-        message,
-      })
+      error({ statusCode, message })
     }
   },
   render(h) {
