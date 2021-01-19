@@ -26,6 +26,7 @@ import {
 } from '@/config/question-asking-dialog-info'
 import { ErrorPageType } from '@/config/error-page.config'
 import { Content } from '@/services/page/Content'
+import { isAxiosError } from '@/api/helper'
 const AskingPage = () => import('./AskingPage.vue')
 
 const options: ComponentOption = {
@@ -35,7 +36,10 @@ const options: ComponentOption = {
     try {
       await Promise.all([...Content.requests(ctx)])
     } catch (err) {
-      const statusCode = err.response.status === 404 ? err.response.status : 500
+      if (!isAxiosError(err)) throw err
+
+      const statusCode =
+        err.response?.status === 404 ? err.response.status : 500
 
       error({
         statusCode,

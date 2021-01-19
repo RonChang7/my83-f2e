@@ -10,6 +10,7 @@ import {
   FETCH_PAGE_DATA,
 } from '@/store/question/question.type'
 import { ErrorPageType } from '@/config/error-page.config'
+import { isAxiosError } from '@/api/helper'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/question/question'
 import { Content } from '@/services/page/Content'
@@ -36,11 +37,11 @@ export default {
         store.dispatch(`question/${FETCH_PAGE_DATA}`, id),
       ])
     } catch (err) {
-      const statusCode = err.response.status === 404 ? err.response.status : 500
-      const message =
-        err.response.status === 404
-          ? ErrorPageType.QUESTION
-          : ErrorPageType.SERVER
+      if (!isAxiosError(err)) throw err
+
+      const statusCode =
+        err.response?.status === 404 ? err.response.status : 500
+      const message = statusCode ? ErrorPageType.QUESTION : ErrorPageType.SERVER
 
       return error({
         statusCode,
