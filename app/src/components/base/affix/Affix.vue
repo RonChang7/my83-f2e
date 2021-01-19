@@ -42,7 +42,6 @@ const options: ComponentOption = {
     return {
       placeholderStyle: {},
       contentStyle: {},
-      mergedContentClass: [],
     }
   },
   methods: {
@@ -86,10 +85,6 @@ const options: ComponentOption = {
         }
 
         if (scrollTop > elOffset.top - this.affixOffsetTop) {
-          if (this.enableHideOnScrollDown && !previousScrollTopPosition) {
-            previousScrollTopPosition = getScroll(window, true) || 0
-          }
-
           this.$set(this.contentStyle, 'position', 'fixed')
           this.$set(
             this.contentStyle,
@@ -109,16 +104,7 @@ const options: ComponentOption = {
             `${this.$refs.placeholder.offsetHeight}px`
           )
 
-          if (this.enableHideOnScrollDown) {
-            if (scrollTop > previousScrollTopPosition) {
-              this.$set(this.contentStyle, 'visibility', 'hidden')
-              this.$set(this.contentStyle, 'transform', 'translateY(-60px)')
-            } else if (scrollTop < previousScrollTopPosition - 10) {
-              this.$set(this.contentStyle, 'visibility', 'visible')
-              this.$set(this.contentStyle, 'transform', 'translateY(0px)')
-            }
-            previousScrollTopPosition = scrollTop
-          }
+          this.updateHideOnScrollDownStyle()
         } else {
           this.placeholderStyle = {}
 
@@ -144,22 +130,32 @@ const options: ComponentOption = {
         }
       })
     },
-    updateMergedContentClass() {
-      this.mergedContentClass =
-        this.contentStyle.position === 'fixed'
-          ? [this.contentClass, this.fixedContentClass]
-          : [this.contentClass]
-    },
-  },
-  watch: {
-    'contentStyle.position'() {
-      if (!this.fixedContentClass) return
+    updateHideOnScrollDownStyle() {
+      if (this.enableHideOnScrollDown) {
+        if (!previousScrollTopPosition) {
+          previousScrollTopPosition = getScroll(window, true) || 0
+        }
 
-      this.updateMergedContentClass()
+        const target = window
+        const scrollTop = getScroll(target, true) || 0
+
+        if (scrollTop > previousScrollTopPosition) {
+          this.$set(this.contentStyle, 'visibility', 'hidden')
+          this.$set(this.contentStyle, 'transform', 'translateY(-60px)')
+        } else if (scrollTop < previousScrollTopPosition - 10) {
+          this.$set(this.contentStyle, 'visibility', 'visible')
+          this.$set(this.contentStyle, 'transform', 'translateY(0px)')
+        }
+        previousScrollTopPosition = scrollTop
+      }
     },
   },
-  created() {
-    this.updateMergedContentClass()
+  computed: {
+    currentContentClass() {
+      return this.fixedContentClass && this.contentStyle.position === 'fixed'
+        ? [this.contentClass, this.fixedContentClass]
+        : [this.contentClass]
+    },
   },
   mounted() {
     this.updateAffixPosition()
@@ -185,7 +181,7 @@ const options: ComponentOption = {
           this.contentTag,
           {
             ref: 'content',
-            class: this.mergedContentClass,
+            class: this.currentContentClass,
             style: this.contentStyle,
           },
           [this.$slots.default]
@@ -221,16 +217,17 @@ export interface Instance extends Vue {
 export interface Data {
   placeholderStyle: Partial<CSSStyleDeclaration>
   contentStyle: Partial<CSSStyleDeclaration>
-  mergedContentClass: string[]
 }
 
 export type Methods = {
   syncPlaceholderStyle(): void
   updateAffixPosition(event?: Event): void
-  updateMergedContentClass(): void
+  updateHideOnScrollDownStyle(): void
 }
 
-export interface Computed {}
+export interface Computed {
+  currentContentClass: string[]
+}
 
 export interface Props {
   placeholderTag: string
