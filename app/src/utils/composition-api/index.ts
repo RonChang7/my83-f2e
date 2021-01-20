@@ -9,7 +9,7 @@ import {
 // @TODO: mock useStore for Vue3 upgrade
 // https://next.vuex.vuejs.org/guide/composition-api.html
 export const useStore = <T = any>() => {
-  const instance = getCurrentInstance()
+  const instance = getCurrentInstance()?.proxy
   const store = instance?.$store as Store<T>
 
   return store
@@ -18,7 +18,7 @@ export const useStore = <T = any>() => {
 // @TODO: mock useRouter, useRoute for Vue3 upgrade
 // https://next.router.vuejs.org/guide/advanced/composition-api.html
 export const useRouter = () => {
-  const instance = getCurrentInstance()
+  const instance = getCurrentInstance()?.proxy
 
   return instance?.$router
 }
@@ -27,7 +27,7 @@ export const useRouter = () => {
 // Make route as a reactive object
 // Ref: https://school.geekwall.in/p/oV93xZjUQ/reactive-vue-routes-with-the-composition-api
 export const useRoute = () => {
-  const instance = getCurrentInstance()
+  const instance = getCurrentInstance()?.proxy
 
   const state = reactive({
     route: instance!.$route,
