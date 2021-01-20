@@ -1,4 +1,10 @@
-@mixin vue-transition-fade($second: 0.3) {
+$valid-directions: up, down;
+
+@mixin vue-transition-fade($second: 0.3, $direction: down) {
+  @if not index($valid-directions, $direction) {
+    @error "#{$direction} is not a valid direction. Expected one of #{$valid-directions}.";
+  }
+
   &-enter-active {
     animation: fade #{$second}s;
   }
@@ -7,13 +13,31 @@
     animation: fade #{$second}s reverse;
   }
 
-  @include animation-fade;
+  @if $direction == down {
+    @include animation-fade-down;
+  } @else if $direction == up {
+    @include animation-fade-up;
+  }
 }
 
-@mixin animation-fade {
+@mixin animation-fade-down {
   @keyframes fade {
     0% {
       transform: translate3d(0, -20px, 0);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translate3d(0, 0, 0);
+      opacity: 1;
+    }
+  }
+}
+
+@mixin animation-fade-up {
+  @keyframes fade {
+    0% {
+      transform: translate3d(0, 20px, 0);
       opacity: 0;
     }
 

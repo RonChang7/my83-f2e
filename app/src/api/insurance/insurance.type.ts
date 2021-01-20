@@ -2,9 +2,9 @@ import {
   Link,
   RelatedBlog,
   RelatedQuestion,
-  PageMeta,
   PaginationResponse,
   LinkButton,
+  PageResponse,
 } from '../type'
 
 export interface InsurancePageStaticData {
@@ -64,11 +64,8 @@ export interface RelatedBlogsResponse {
 export interface RelatedQuestionsResponse {
   data: RelatedQuestion[]
 }
-export interface InsuranceListResponse {
-  data: InsuranceListData
-  page_meta: PageMeta
+export interface InsuranceListResponse extends PageResponse<InsuranceListData> {
   meta: InsuranceListMeta
-  json_ld?: any[]
 }
 
 export interface FetchInsuranceListPayload {

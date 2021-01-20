@@ -5,6 +5,8 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { getScroll, getRect } from '@/utils/dom'
 
+let previousScrollTopPosition: number
+
 const options: ComponentOption = {
   props: {
     placeholderTag: {
@@ -23,9 +25,17 @@ const options: ComponentOption = {
       type: String,
       default: '',
     },
+    fixedContentClass: {
+      type: String,
+      default: '',
+    },
     affixOffsetTop: {
       type: Number,
       default: 0,
+    },
+    enableHideOnScrollDown: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -55,7 +65,6 @@ const options: ComponentOption = {
     updateAffixPosition(event?: Event) {
       window.requestAnimationFrame(() => {
         const target = window
-        if (!target) return
         const el = this.$refs.placeholder
         if (!el) return
 
@@ -76,24 +85,21 @@ const options: ComponentOption = {
         }
 
         if (scrollTop > elOffset.top - this.affixOffsetTop) {
-          this.$set(this.contentStyle, 'position', 'fixed')
-          this.$set(
-            this.contentStyle,
-            'top',
-            `${targetRect.top + this.affixOffsetTop}px`
-          )
-          this.$set(
-            this.contentStyle,
-            'left',
-            `${targetRect.left + elOffset.left}px`
-          )
-          this.$set(this.contentStyle, 'width', `${elOffset.width}px`)
-          this.$set(this.placeholderStyle, 'width', `${elOffset.width}px`)
-          this.$set(
-            this.placeholderStyle,
-            'height',
-            `${this.$refs.placeholder.offsetHeight}px`
-          )
+          this.contentStyle = {
+            ...this.contentStyle,
+            position: 'fixed',
+            top: `${targetRect.top + this.affixOffsetTop}px`,
+            left: `${targetRect.left + elOffset.left}px`,
+            width: `${elOffset.width}px`,
+          }
+
+          this.placeholderStyle = {
+            ...this.placeholderStyle,
+            width: `${elOffset.width}px`,
+            height: `${this.$refs.placeholder.offsetHeight}px`,
+          }
+
+          this.updateHideOnScrollDownStyle()
         } else {
           this.placeholderStyle = {}
 
@@ -118,6 +124,38 @@ const options: ComponentOption = {
           this.syncPlaceholderStyle()
         }
       })
+    },
+    updateHideOnScrollDownStyle() {
+      if (this.enableHideOnScrollDown) {
+        if (!previousScrollTopPosition) {
+          previousScrollTopPosition = getScroll(window, true) || 0
+        }
+
+        const target = window
+        const scrollTop = getScroll(target, true) || 0
+
+        if (scrollTop > previousScrollTopPosition) {
+          this.contentStyle = {
+            ...this.contentStyle,
+            visibility: 'hidden',
+            transform: 'translateY(-60px)',
+          }
+        } else if (scrollTop < previousScrollTopPosition - 10) {
+          this.contentStyle = {
+            ...this.contentStyle,
+            visibility: 'visible',
+            transform: 'translateY(0px)',
+          }
+        }
+        previousScrollTopPosition = scrollTop
+      }
+    },
+  },
+  computed: {
+    currentContentClass() {
+      return this.fixedContentClass && this.contentStyle.position === 'fixed'
+        ? [this.contentClass, this.fixedContentClass]
+        : [this.contentClass]
     },
   },
   mounted() {
@@ -144,7 +182,7 @@ const options: ComponentOption = {
           this.contentTag,
           {
             ref: 'content',
-            class: this.contentClass,
+            class: this.currentContentClass,
             style: this.contentStyle,
           },
           [this.$slots.default]
@@ -185,16 +223,21 @@ export interface Data {
 export type Methods = {
   syncPlaceholderStyle(): void
   updateAffixPosition(event?: Event): void
+  updateHideOnScrollDownStyle(): void
 }
 
-export interface Computed {}
+export interface Computed {
+  currentContentClass: string[]
+}
 
 export interface Props {
   placeholderTag: string
-  placeholderClass: object | string
+  placeholderClass: string
   contentTag: string
-  contentClass: object | string
+  contentClass: string
+  fixedContentClass: string
   affixOffsetTop: number
+  enableHideOnScrollDown: boolean
 }
 
 export default options
