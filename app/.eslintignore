@@ -1,3 +1,4 @@
 src/nuxt-modules/classic-store/plugin.js
+src/nuxt-modules/sentry/templates/*
 # Service worker
 sw.*
