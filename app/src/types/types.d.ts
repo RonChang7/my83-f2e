@@ -2,7 +2,6 @@ import { UA } from 'nuxt-user-agent/lib/plugin.template'
 import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventManager'
 import { ReCaptchaInstance } from '@/services/recaptcha'
 import { Auth } from '@/services/auth/auth'
-import '@nuxtjs/sentry'
 import 'cookie-universal-nuxt'
 
 /**
