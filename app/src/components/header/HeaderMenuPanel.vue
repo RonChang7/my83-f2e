@@ -20,7 +20,11 @@
           :key="itemIndex"
           class="HeaderMenuPanel__column__link wider"
         >
-          <GlobalLink v-if="item.link" :to="item.link.path">
+          <GlobalLink
+            v-if="item.link"
+            :to="item.link.path"
+            :class="{ new: shouldAddNewBadge(item.name) }"
+          >
             {{ item.name }}
           </GlobalLink>
           <div
@@ -47,7 +51,11 @@
           :key="itemIndex"
           class="HeaderMenuPanel__column__link"
         >
-          <GlobalLink v-if="item.link" :to="item.link.path">
+          <GlobalLink
+            v-if="item.link"
+            :to="item.link.path"
+            :class="{ new: shouldAddNewBadge(item.name) }"
+          >
             {{ item.name }}
           </GlobalLink>
           <div
@@ -215,10 +223,6 @@ export interface Props {
       padding-bottom: 10px;
       margin-bottom: 15px;
       border-bottom: 1px solid $secondary-bg;
-
-      &.new:after {
-        @include header-new-badge;
-      }
     }
 
     &__link {
@@ -249,6 +253,10 @@ export interface Props {
       font-size: 0.875rem;
       margin-top: 4px;
     }
+  }
+
+  .new:after {
+    @include header-new-badge;
   }
 }
 </style>

@@ -13,6 +13,7 @@ import MobileHeaderNav from '@/components/header/mobile/MobileHeaderNav.vue'
 import HeaderPersonalize from '@/components/header/HeaderPersonalize.vue'
 import { Content } from '@/services/page/Content'
 import { ErrorPageType } from '@/config/error-page.config'
+import { isAxiosError } from '@/api/helper'
 
 export default {
   async asyncData(ctx) {
@@ -21,7 +22,10 @@ export default {
     try {
       await Promise.all([...Content.requests(ctx)])
     } catch (err) {
-      const statusCode = err.response.status === 404 ? err.response.status : 500
+      if (!isAxiosError(err)) throw err
+
+      const statusCode =
+        err.response?.status === 404 ? err.response.status : 500
 
       return error({
         statusCode,

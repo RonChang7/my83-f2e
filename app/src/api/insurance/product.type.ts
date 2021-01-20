@@ -1,10 +1,6 @@
-import { Link, LinkButton, Gender, PageMeta } from '../type'
+import { Link, LinkButton, Gender, PageResponse } from '../type'
 
-export interface ProductResponse {
-  data: Product
-  page_meta: PageMeta
-  json_ld?: any[]
-}
+export type ProductResponse = PageResponse<Product>
 
 export interface FetchProductFeePayload extends PremiumQuery {
   productId: string

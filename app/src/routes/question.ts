@@ -1,6 +1,7 @@
 import { CreateRouteFunction } from '@/nuxt-modules/flexible-routes/module'
+import { RouteConfig } from '@/types/router'
 
-export const createRoutes: CreateRouteFunction = (resolve) => {
+export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
   return [
     // 討論區
     {

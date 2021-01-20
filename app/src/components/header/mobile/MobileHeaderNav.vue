@@ -150,10 +150,6 @@ export interface Props {}
     display: flex;
     align-items: center;
     height: 45px;
-
-    &.new:after {
-      @include header-new-badge;
-    }
   }
 
   &__menu {
@@ -163,6 +159,10 @@ export interface Props {}
     &--show {
       display: flex;
     }
+  }
+
+  .new:after {
+    @include header-new-badge;
   }
 }
 </style>

@@ -2,17 +2,13 @@ import {
   Link,
   SimpleResponse,
   Role,
-  PageMeta,
   RelatedBlog,
   RelatedQuestion,
   LinkButton,
+  PageResponse,
 } from '../type'
 
-export interface QuestionDataResponse {
-  data: QuestionData
-  page_meta: PageMeta
-  json_ld?: any[]
-}
+export type QuestionDataResponse = PageResponse<QuestionData>
 
 export interface AnswerDataResponse {
   data: AnswerData[]
