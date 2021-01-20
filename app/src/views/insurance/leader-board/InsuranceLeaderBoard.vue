@@ -98,7 +98,7 @@ export default defineComponent({
   }
 
   .fade {
-    @include vue-transition-fade($second: 0.2, $reverse: true);
+    @include vue-transition-fade($second: 0.2, $direction: up);
   }
 }
 </style>
