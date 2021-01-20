@@ -89,9 +89,9 @@ const FlexibleRoutes: Module<Options> = function (options) {
 }
 // node_modules/@nuxt/types/config/router.d.ts
 export type NuxtRouteResolve = (...pathSegments: string[]) => any
-export type CreateRouteFunction = (
+export type CreateRouteFunction<T = NuxtRouteConfig> = (
   resolve: NuxtRouteResolve
-) => NuxtRouteConfig[]
+) => T[]
 
 export interface Options {
   path: string

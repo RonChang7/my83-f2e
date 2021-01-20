@@ -10,6 +10,7 @@ import {
   FETCH_SEARCH_QUESTION_LIST,
 } from '@/store/question/list.type'
 import { ErrorPageType } from '@/config/error-page.config'
+import { isAxiosError } from '@/api/helper'
 import { PageService, PageType } from '@/services/question/PageService'
 import { Content } from '@/services/page/Content'
 import { CanonicalService } from '@/seo/canonical-service'
@@ -57,11 +58,11 @@ export default {
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
-      const statusCode = err.response.status === 404 ? err.response.status : 500
-      const message =
-        err.response.status === 404
-          ? ErrorPageType.QUESTION
-          : ErrorPageType.SERVER
+      if (!isAxiosError(err)) throw err
+
+      const statusCode =
+        err.response?.status === 404 ? err.response.status : 500
+      const message = statusCode ? ErrorPageType.QUESTION : ErrorPageType.SERVER
 
       return error({
         statusCode,

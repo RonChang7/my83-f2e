@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import { Store } from 'vuex'
+import { computed } from '@nuxtjs/composition-api'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Vue as VuePropertyDecorator, Component } from 'vue-property-decorator'
 import { GlobalVuexState } from '@/store/global-state'
 import { UserAgent } from '@/store/global/index'
+import { useStore } from '@/utils/composition-api'
 
 @Component
 export default class DeviceMixin extends VuePropertyDecorator {
@@ -51,3 +53,13 @@ export type Methods = {}
 export interface Computed extends UserAgent {}
 
 export interface Props {}
+
+export const useDevice = () => {
+  const store = useStore<GlobalVuexState>()
+
+  return {
+    isDesktop: computed(() => store.state.global.userAgent?.isDesktop || null),
+    isMobile: computed(() => store.state.global.userAgent?.isMobile || null),
+    isTablet: computed(() => store.state.global.userAgent?.isTablet || null),
+  }
+}
