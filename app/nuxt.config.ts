@@ -57,7 +57,6 @@ const config: NuxtConfig = {
   plugins: [
     '@/plugins/register-store',
     '@/plugins/sync-page-module-register-middleware',
-    '@/plugins/sentry',
     {
       src: '@/plugins/auth',
       mode: 'client',
@@ -93,14 +92,13 @@ const config: NuxtConfig = {
     '@nuxt/typescript-build',
     '@/nuxt-modules/flexible-routes/module',
     '@/nuxt-modules/classic-store/module',
+    '@/nuxt-modules/sentry/module',
     'nuxt-svg-loader',
   ],
   /*
    ** Nuxt.js modules
    */
   modules: [
-    '@/nuxt-modules/sentry/module',
-    '@nuxtjs/sentry',
     [
       // ref: https://github.com/samtgarson/nuxt-env
       'nuxt-env',
@@ -110,6 +108,7 @@ const config: NuxtConfig = {
           { key: 'APP_ENV' },
           { key: 'API_URL' },
           { key: 'HOST_URL' },
+          { key: 'API_SERVER_BASIC_AUTH_BASE64' },
           { key: 'JWT_TOKEN_NAME' },
           { key: 'HEALTH_CHECK_AGENT_STRING' },
           { key: 'FACEBOOK_APP_ID' },
@@ -122,8 +121,6 @@ const config: NuxtConfig = {
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
           { key: 'IMAGE_BUCKET_URL' },
-          { key: 'SENTRY_DSN' },
-          { key: 'SENTRY_DISABLED' },
         ],
       },
     ],

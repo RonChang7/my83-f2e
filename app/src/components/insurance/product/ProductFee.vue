@@ -5,7 +5,11 @@
   >
     <div class="ProductFee">
       <div class="ProductFee__content" :style="{ height: `${cardHeight}px` }">
-        <div class="ProductFee__fee">{{ getFormattedFee(fee) }}</div>
+        <transition name="fade" mode="out-in">
+          <div :key="fee" class="ProductFee__fee">
+            {{ getFormattedFee(fee) }}
+          </div>
+        </transition>
         <div class="ProductFee__action">
           <BaseButton size="l-a" type="quaternary" :to="consultLink.path">
             免費找業務員
@@ -106,6 +110,10 @@ export default class ProductFee extends Vue {
     cursor: pointer;
 
     @include hover('_white');
+  }
+
+  .fade {
+    @include vue-transition-fade($second: 0.2);
   }
 }
 </style>

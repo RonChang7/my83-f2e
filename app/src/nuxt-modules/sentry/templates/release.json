@@ -1,5 +1,0 @@
-{
-  <% if (options.release) { %>
-  "release": "<%= options.release %>"
-  <% } %>
-}

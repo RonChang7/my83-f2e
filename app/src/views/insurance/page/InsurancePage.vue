@@ -274,7 +274,7 @@ export default options
 
       &.right {
         width: 360px;
-        margin-top: 117px;
+        margin-top: 107px;
 
         > .faq {
           background: #fff;

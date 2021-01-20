@@ -156,7 +156,7 @@ export default options
 @import '@/sass/rwd.scss';
 
 .ProductListSection {
-  margin-top: 30px;
+  margin-top: 20px;
 
   &__title {
     display: flex;
