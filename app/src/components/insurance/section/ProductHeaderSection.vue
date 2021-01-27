@@ -11,6 +11,11 @@
       <div class="ProductHeaderSection__company">{{ company }}</div>
       <h1 class="ProductHeaderSection__name">{{ name }}</h1>
       <div class="ProductHeaderSection__features">{{ features }}</div>
+      <div class="ProductHeaderSection__viewCount">
+        有
+        <span>{{ viewCount }}</span>
+        人有興趣
+      </div>
     </div>
     <div class="ProductHeaderSection__column">
       <div class="ProductHeaderSection__files">
@@ -43,29 +48,32 @@ import DeviceMixin from '@/mixins/device/device-mixins'
   },
 })
 export default class ProductHeaderSection extends Mixins(DeviceMixin) {
+  get storeState() {
+    return this.$store.state as InsuranceProductVuexState
+  }
+
   get breadcrumbs() {
-    return (this.$store.state as InsuranceProductVuexState).pageMeta.pageMeta
-      ?.breadcrumbs
+    return this.storeState.pageMeta.pageMeta?.breadcrumbs
   }
 
   get company() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.product.company
+    return this.storeState.insuranceProduct.product?.product.company
   }
 
   get name() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.product.name
+    return this.storeState.insuranceProduct.product?.product.name
   }
 
   get features() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.product.features.join('．')
+    return this.storeState.insuranceProduct.product?.product.features.join('．')
+  }
+
+  get viewCount() {
+    return this.storeState.insuranceProduct.product?.product.view_count
   }
 
   get files() {
-    const state = this.$store.state as InsuranceProductVuexState
-    return state.insuranceProduct.product?.files
+    return this.storeState.insuranceProduct.product?.files
   }
 }
 </script>
@@ -111,8 +119,14 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
     margin-bottom: 6px;
   }
 
-  &__features {
+  &__features,
+  &__viewCount {
     font-size: 0.875rem;
+  }
+
+  &__viewCount > span {
+    font-size: 1.25rem;
+    font-weight: 500;
   }
 
   &__files {
@@ -138,8 +152,13 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
       margin-bottom: 8px;
     }
 
-    &__features {
+    &__features,
+    &__viewCount {
       font-size: 0.75rem;
+    }
+
+    &__viewCount > span {
+      font-size: 1rem;
     }
 
     &__files {
