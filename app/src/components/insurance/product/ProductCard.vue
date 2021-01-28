@@ -250,6 +250,10 @@ export default options
     font-size: 0.75rem;
   }
 
+  &__viewCount {
+    text-align: right;
+  }
+
   &__promotion {
     color: $primary-color;
     margin-top: 8px;
