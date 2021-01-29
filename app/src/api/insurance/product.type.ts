@@ -31,6 +31,7 @@ type ContractType = '主約' | '附約'
 type WholeLifeType = '終身險' | '定期險'
 
 export interface ProductData {
+  id: number
   name: string
   description: string
   company: string
@@ -38,6 +39,7 @@ export interface ProductData {
   contract_type: ContractType
   whole_life_type: WholeLifeType
   insurance_type: string
+  view_count: number
 }
 
 export interface Coverage {
