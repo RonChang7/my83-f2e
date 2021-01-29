@@ -19,7 +19,8 @@ export interface HeaderPersonalized {
 
 export interface SalesInfo {
   is_verify: boolean
-  vip_countdown: number
+  vip_discount_countdown: number | null
+  point_discount_countdown: number | null
   reward_point: number
 }
 

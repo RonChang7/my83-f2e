@@ -9,11 +9,11 @@
     </GlobalLink>
 
     <GlobalLink
-      v-else-if="shouldShowCountdown"
+      v-else-if="countdownConfig"
       class="HeaderSalesDetail__vipCountdown"
       to="/pricing"
     >
-      限時優惠 VIP 只剩 {{ countdownDisplay.day }} 日
+      {{ countdownConfig.text }} 只剩 {{ countdownDisplay.day }} 日
       <br class="wrap" />
       <div class="digital">{{ countdownDisplay.hour }}</div>
       :
@@ -84,21 +84,37 @@ export default {
       const min = Math.floor(sec / 60)
       sec -= min * 60
       sec = Math.floor(sec % 60)
-      this.countdownDisplay.day = padLeft(day, 2)
+      this.countdownDisplay.day = day.toString()
       this.countdownDisplay.hour = padLeft(hour, 2)
       this.countdownDisplay.min = padLeft(min, 2)
       this.countdownDisplay.sec = padLeft(sec, 2)
     },
   },
   computed: {
-    shouldShowCountdown() {
-      return this.salesInfo.vip_countdown * 1000 >= Date.now()
+    vipDiscountCountdown() {
+      return this.salesInfo.vip_discount_countdown || 0
+    },
+    pointDiscountCountdown() {
+      return this.salesInfo.point_discount_countdown || 0
+    },
+    countdownConfig() {
+      return this.vipDiscountCountdown * 1000 >= Date.now()
+        ? {
+            text: '限時優惠 VIP',
+            discountCountdown: this.vipDiscountCountdown,
+          }
+        : this.pointDiscountCountdown * 1000 >= Date.now()
+        ? {
+            text: '限時優惠 5000 點',
+            discountCountdown: this.pointDiscountCountdown,
+          }
+        : null
     },
   },
   mounted() {
-    if (this.salesInfo.is_verify && this.shouldShowCountdown) {
+    if (this.countdownConfig) {
       this.countdown =
-        this.salesInfo.vip_countdown - Math.round(Date.now() / 1000)
+        this.countdownConfig.discountCountdown - Math.round(Date.now() / 1000)
 
       this.setCountdown()
     }
@@ -139,7 +155,12 @@ export type Methods = {
 }
 
 export interface Computed {
-  shouldShowCountdown: boolean
+  vipDiscountCountdown: number
+  pointDiscountCountdown: number
+  countdownConfig: {
+    text: string
+    discountCountdown: number
+  } | null
 }
 
 export interface Props {
