@@ -1,14 +1,7 @@
-import _ from 'lodash'
 import { Field, FieldType, InputType } from '@/services/form/field.type'
-import {
-  DefaultPremiumConfig,
-  Plan,
-  Option,
-  OptionValue,
-  OptionValueType,
-  IntervalType,
-} from '@/api/insurance/product.type'
+import { DefaultPremiumConfig, Plan } from '@/api/insurance/product.type'
 import { FormService } from '@/services/form/FormService'
+import { FieldFactory } from '@/services/form/FieldFactory'
 import { Rule, ValidateMessage } from '@/services/validator/Validator'
 import { ZHTWUnitMap } from '@/utils/number-converter'
 
@@ -230,14 +223,6 @@ export class FixedRateScheme {
   }
 }
 
-interface FieldFactoryPayload<T extends OptionValueType> {
-  id: string
-  name: string
-  options: Option<T>
-  type: InputType
-  unit?: string
-}
-
 enum JobLevel {
   LEVEL_1 = '職等1（內勤人員、教師、家管等）',
   LEVEL_2 = '職等2（外勤人員、業務、廚師或技師等）',
@@ -245,56 +230,6 @@ enum JobLevel {
   LEVEL_4 = '職等4（模板工、水電工等）',
   LEVEL_5 = '職等5（刑警、焊接工、高樓外部清潔工等）',
   LEVEL_6 = '職等6（消防隊隊員、機上服務員等）',
-}
-
-class FieldFactory<T extends FieldType> {
-  field: Field<T>
-
-  validator: Rule<string>
-
-  constructor(payload: FieldFactoryPayload<OptionValueType>) {
-    this.createField(payload)
-  }
-
-  private createField({
-    id,
-    name,
-    options,
-    type,
-    unit,
-  }: FieldFactoryPayload<OptionValueType>) {
-    switch (type) {
-      case InputType.NUMBER: {
-        const [min, max] = options.values as OptionValue<IntervalType>
-
-        const field: Field<FieldType.INTERVAL> = {
-          id,
-          name,
-          type,
-          min,
-          max,
-          postfix: unit,
-          range:
-            unit && !_.isUndefined(max) && !_.isUndefined(min)
-              ? unit
-                ? `(${min} ~ ${max} ${unit})`
-                : `(${min} ~ ${max})`
-              : undefined,
-        }
-        this.field = field as Field<T>
-
-        this.validator = {
-          [id]: {
-            type: 'integer',
-            min,
-            max,
-            message: `${name}不符`,
-          },
-        }
-        break
-      }
-    }
-  }
 }
 
 class BuildGenderField {
