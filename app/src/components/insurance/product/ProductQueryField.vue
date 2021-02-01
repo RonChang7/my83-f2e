@@ -6,9 +6,15 @@
         v-if="option.type === 'NUMBER'"
         :value="value"
         :option="option"
-        :is-validated="isValidated"
+        :validate-state="validateState"
         @update="(e) => updateValue(e)"
         @blur="$emit('blur')"
+      />
+      <BaseInputText
+        v-if="option.type === 'TEXT'"
+        :value="value || ''"
+        :placeholder="option.placeholder"
+        :disabled="option.disabled"
       />
       <Select
         v-if="option.type === 'OPTION' && option.options"
@@ -45,30 +51,32 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import IntervalTextInput from './input-field/IntervalTextInput.vue'
 import Select from './input-field/Select.vue'
 import Radio from './input-field/Radio.vue'
-import { FieldOption } from '@/services/product/field.type'
-import { OptionValueType } from '@/api/insurance/product.type'
+import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
+import { Field, InputType } from '@/services/form/field.type'
+import { ValidateMessage } from '@/services/validator/Validator'
 
 @Component({
   components: {
     IntervalTextInput,
     Select,
     Radio,
+    BaseInputText,
   },
 })
 export default class ProductQueryField extends Vue {
   @Prop({ type: Object, required: true })
-  option!: FieldOption<OptionValueType>
+  option!: Field<any>
 
   @Prop({ type: [String, Number] })
-  value!: string | number
+  value: string | number
 
-  @Prop({ type: Boolean, default: true })
-  isValidated: boolean
+  @Prop({ type: Object })
+  validateState: ValidateMessage
 
   updateValue(value: string | number) {
     this.$emit('update', {
       id: this.option.id,
-      value,
+      value: this.option.type === InputType.NUMBER ? Number(value) : value,
     })
   }
 }
