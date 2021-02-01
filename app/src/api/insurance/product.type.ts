@@ -112,7 +112,7 @@ export interface HotProduct {
 export interface PremiumQuery {
   age: number
   gender: Gender
-  plan: number
-  jobLevel?: number
+  plan_id: number
+  job_level?: number
   amount?: number
 }
