@@ -89,10 +89,13 @@ const opinions: ComponentOption = {
     }
   },
   head() {
+    const filterKeys = _.keys(
+      this.$store.state.insurance.filter.defaultPremiumConfig
+    )
     const canonical = CanonicalService.getCanonical({
       hostname: this.$env.HOST_URL,
       route: this.$route,
-      acceptedQueryStringKeys: ['page', ...this.filterKeys],
+      acceptedQueryStringKeys: ['page', ...filterKeys],
     })
 
     return {
@@ -111,11 +114,6 @@ const opinions: ComponentOption = {
         },
       ],
     }
-  },
-  computed: {
-    filterKeys() {
-      return _.keys(this.$store.state.insurance.filter.defaultPremiumConfig)
-    },
   },
   methods: {
     toPage(index) {
@@ -286,9 +284,7 @@ export type Methods = {
   toPage(index: number): void
 }
 
-export interface Computed {
-  filterKeys: string[]
-}
+export interface Computed {}
 
 export interface Props {}
 
