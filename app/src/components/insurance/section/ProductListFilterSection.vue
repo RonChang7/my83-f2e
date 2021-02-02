@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import { defineComponent, ref } from '@nuxtjs/composition-api'
 import ProductQueryField from '../product/ProductQueryField.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
@@ -24,6 +25,7 @@ import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { InsuranceFilterScheme } from '@/services/product/InsuranceFilterScheme'
 import { UpdateInsuranceListFilterPayload } from '@/store/insurance/insurance'
 import { useRoute, useRouter, useStore } from '@/utils/composition-api'
+import { getFirstQuery } from '@/utils/query-string'
 
 export default defineComponent({
   components: {
@@ -35,10 +37,25 @@ export default defineComponent({
     const router = useRouter()!
     const route = useRoute()
 
-    const { premiumConfig, defaultPremiumConfig } = store.state.insurance.filter
+    const {
+      premiumConfig,
+      defaultPremiumConfig: defaultFilterPremiumConfig,
+    } = store.state.insurance.filter
+    const filterPremiumConfig = _.keys(defaultFilterPremiumConfig).reduce(
+      (acc, cur) => {
+        if (getFirstQuery(route.value.query[cur])) {
+          acc[cur] = getFirstQuery(route.value.query[cur])
+        }
+        return acc
+      },
+      {}
+    )
+
     const scheme = new InsuranceFilterScheme(
       premiumConfig,
-      defaultPremiumConfig
+      _.isEmpty(filterPremiumConfig)
+        ? defaultFilterPremiumConfig
+        : filterPremiumConfig
     )
     const options = ref(scheme.form.fields)
     const formData = ref(scheme.form.formData)
