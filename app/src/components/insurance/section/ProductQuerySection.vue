@@ -9,7 +9,7 @@
         :value="formData[option.id]"
         :validate-state="validateState[option.id]"
         @update="update"
-        @blur="fetchProductFee"
+        @blur="submit"
       />
       <ProductFee
         class="ProductQuerySection__fee"
@@ -174,6 +174,9 @@ export default defineComponent({
       })
     }
 
+    scheme.form.setSubmit(fetchProductFee)
+    const submit = () => scheme.form.submit()
+
     const update = async ({ id, value }: UpdatePremiumQueryPayload) => {
       scheme.form.updateFormData(id, value)
       await scheme.form.validate(id)
@@ -203,7 +206,7 @@ export default defineComponent({
       formData,
       validateState,
       update,
-      fetchProductFee,
+      submit,
       feeCardHeight,
       contractTypeInfo,
       wholeLifeTypeInfo,
