@@ -7,18 +7,13 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { Context } from '@nuxt/types'
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
-import {
-  State,
-  UpdateInsuranceListFilterPayload,
-} from '@/store/insurance/insurance'
+import { State } from '@/store/insurance/insurance'
 import { Content } from '@/services/page/Content'
 import { FetchInsuranceListPayload } from '@/api/insurance/insurance.type'
 import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
   UPDATE_INSURANCE_PRODUCT_FEE,
-  UPDATE_INSURANCE_LIST_FILTER,
-  REMOVE_INSURANCE_LIST_FILTER,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
@@ -33,9 +28,6 @@ const opinions: ComponentOption = {
     const insurance = route.params.insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
     const currentInsurance = insuranceStore.staticData.id
-    const previousFilterKeys = _.keys(
-      insuranceStore.filter.defaultPremiumConfig
-    )
 
     const fetchPageData: Promise<any>[] = []
 
@@ -72,7 +64,20 @@ const opinions: ComponentOption = {
       })
     }
 
-    await updateCurrentParamFromQueryString(previousFilterKeys, ctx)
+    const pageFilter = new PageFilterService(ctx)
+
+    if (
+      !(
+        pageFilter.isFirstLanding &&
+        (pageFilter.isDefaultFilter || pageFilter.isEmptyFilter)
+      )
+    ) {
+      if (pageFilter.isDefaultFilter) {
+        return pageFilter.removeFilterQueryString()
+      }
+
+      await pageFilter.fetchInsuranceProductFee()
+    }
 
     const shouldRedirect = query.page === '1'
     if (shouldRedirect) {
@@ -159,102 +164,73 @@ const fetchList = (
   }
 }
 
-// @TODO: refactor
-const updateCurrentParamFromQueryString = async (
-  previousFilterKeys: string[],
-  ctx: Context
-) => {
-  const insuranceStore = (ctx.store.state as InsuranceVuexState).insurance
-  const { isExternal } = insuranceStore.staticData
+class PageFilterService {
+  private filterKeys: string[]
 
-  removePreviousInsuranceListFilter(previousFilterKeys, ctx)
+  constructor(private ctx: Context) {
+    this.filterKeys = _.keys(
+      (ctx.store.state as InsuranceVuexState).insurance.filter
+        .defaultPremiumConfig
+    )
+  }
 
-  if (isExternal) {
-    const filterKeys = _.keys(insuranceStore.filter.defaultPremiumConfig)
-    const shouldRemoveDefaultFilterQueryString = filterKeys.every((key) => {
-      return (
-        ctx.query[key] &&
-        ctx.query[key] === insuranceStore.filter.defaultPremiumConfig![key]
-      )
+  removeFilterQueryString() {
+    const { query, redirect } = this.ctx
+    this.filterKeys.forEach((key) => {
+      delete query[key]
     })
 
-    if (shouldRemoveDefaultFilterQueryString) {
-      removeDefaultFilterQueryString(filterKeys, ctx)
-      return
-    }
-
-    updateCurrentParam(filterKeys, ctx)
-    await fetchInsuranceProductFee(filterKeys, ctx)
+    redirect({
+      query,
+    })
   }
-}
 
-const removePreviousInsuranceListFilter = (
-  previousFilterKeys: string[],
-  { store, from, route }: Context
-) => {
-  if (from !== undefined && from.params.insurance !== route.params.insurance) {
-    store.commit(
-      `insurance/${REMOVE_INSURANCE_LIST_FILTER}`,
-      previousFilterKeys
+  async fetchInsuranceProductFee() {
+    await this.ctx.store.dispatch(
+      `insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`,
+      this.premiumConfig
     )
   }
-}
 
-const removeDefaultFilterQueryString = (
-  filterKeys: string[],
-  { redirect, query }: Context
-) => {
-  const resetFilterQueryString = filterKeys.reduce<Record<string, undefined>>(
-    (acc, key) => {
-      acc[key] = undefined
-      return acc
-    },
-    {}
-  )
+  get isDefaultFilter() {
+    const { query, store } = this.ctx
+    if (_.isEmpty(query)) return false
 
-  redirect({
-    query: {
-      ...query,
-      ...resetFilterQueryString,
-    },
-  })
-}
+    return this.filterKeys.every(
+      (key) =>
+        getFirstQuery(query[key]) ===
+        (store.state as InsuranceVuexState).insurance.filter
+          .defaultPremiumConfig?.[key]
+    )
+  }
 
-const updateCurrentParam = (
-  filterKeys: string[],
-  { query, store }: Context
-) => {
-  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  get isEmptyFilter() {
+    const { query } = this.ctx
+    if (_.isEmpty(query)) return true
 
-  filterKeys.forEach((id) => {
-    if (getFirstQuery(query[id]) === insuranceStore.currentParam[id]) return
+    return this.filterKeys.every((key) => getFirstQuery(query[key]) === '')
+  }
 
-    const payload: UpdateInsuranceListFilterPayload = {
-      id,
-      value:
-        getFirstQuery(query[id]) ||
-        insuranceStore.filter.defaultPremiumConfig![id],
-    }
-    store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
-  })
-}
-
-const fetchInsuranceProductFee = async (
-  filterKeys: string[],
-  { from, route, store }: Context
-) => {
-  const insuranceStore = (store.state as InsuranceVuexState).insurance
-  const isFirstLanding =
-    from === undefined || from.params.insurance !== route.params.insurance
-  const isDefaultFilter = filterKeys.every((key) => {
+  get isFirstLanding() {
+    const { from, route } = this.ctx
     return (
-      insuranceStore.filter.defaultPremiumConfig![key] ===
-      insuranceStore.currentParam[key]
+      from === undefined || from.params.insurance !== route.params.insurance
     )
-  })
+  }
 
-  if (!(isFirstLanding && isDefaultFilter)) {
-    await store.dispatch(`insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`)
+  private get premiumConfig() {
+    const { query, store } = this.ctx
+    const premiumConfig = this.filterKeys.reduce((acc, cur) => {
+      if (getFirstQuery(query[cur])) {
+        acc[cur] = getFirstQuery(query[cur])
+      }
+      return acc
+    }, {})
+
+    return _.isEmpty(premiumConfig)
+      ? (store.state as InsuranceVuexState).insurance.filter
+          .defaultPremiumConfig
+      : premiumConfig
   }
 }
 
