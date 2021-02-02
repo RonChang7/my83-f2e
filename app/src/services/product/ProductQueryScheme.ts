@@ -2,7 +2,7 @@ import { Field, FieldType, InputType } from '@/services/form/field.type'
 import { DefaultPremiumConfig, Plan } from '@/api/insurance/product.type'
 import { FormService } from '@/services/form/FormService'
 import { FieldFactory } from '@/services/form/FieldFactory'
-import { Rule, ValidateMessage } from '@/services/validator/Validator'
+import { Rule } from '@/services/validator/Validator'
 import { ZHTWUnitMap } from '@/utils/number-converter'
 
 export class VariableRateScheme {
@@ -131,8 +131,6 @@ export class FixedRateScheme {
   private formData: Record<string, any>
 
   private validateRules: Record<string, Rule<string>> = {}
-
-  private validateState: Record<string, ValidateMessage> = {}
 
   private plans: Plan[]
 
