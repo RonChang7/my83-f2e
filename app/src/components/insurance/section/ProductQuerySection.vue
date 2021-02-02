@@ -91,6 +91,10 @@ export default defineComponent({
     const { isDesktop } = useDevice()
     const content = ref<HTMLElement | null>(null)
     const feeCardHeight = ref(0)
+    const options = ref({})
+    const validateState = ref({})
+    const formData = ref({})
+    const submit = ref({})
 
     // 不需要響應的資料，不使用 ref, reactive warp
     const contractTypeInfo = [
@@ -145,10 +149,6 @@ export default defineComponent({
           amountUnit: premiumConfig.value!.amount_unit,
         })
 
-    const options = ref(scheme.form.fields)
-    const validateState = ref(scheme.form.validateState)
-    const formData = ref(scheme.form.formData)
-
     const fetchProductFeeAction = _.debounce(() => {
       const payload = {
         productId: store.state.insuranceProduct.id,
@@ -174,13 +174,20 @@ export default defineComponent({
       })
     }
 
-    scheme.form.setSubmit(fetchProductFee)
-    const submit = () => scheme.form.submit()
-
     const update = async ({ id, value }: UpdatePremiumQueryPayload) => {
       scheme.form.updateFormData(id, value)
       await scheme.form.validate(id)
     }
+
+    const createReactive = () => {
+      formData.value = reactive(scheme.form.formData)
+      options.value = reactive(scheme.form.fields)
+      validateState.value = reactive(scheme.form.validateState)
+      scheme.form.setSubmit(fetchProductFee)
+      submit.value = () => scheme.form.submit()
+    }
+
+    createReactive()
 
     onMounted(() => {
       // 調整費率區塊位置
@@ -195,8 +202,8 @@ export default defineComponent({
         // 更新 plan id，重建整張 form
         scheme.updateForm(val)
         await validateAll()
-        formData.value = reactive(scheme.form.formData)
-        options.value = reactive(scheme.form.fields)
+        // 重新建立 form 響應的資料
+        createReactive()
       }
     )
 
