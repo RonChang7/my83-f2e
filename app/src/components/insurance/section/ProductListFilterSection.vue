@@ -36,6 +36,8 @@ export default defineComponent({
     const store = useStore<InsuranceVuexState>()
     const router = useRouter()!
     const route = useRoute()
+    const options = ref({})
+    const formData = ref({})
 
     const {
       premiumConfig,
@@ -57,17 +59,21 @@ export default defineComponent({
         ? defaultFilterPremiumConfig
         : filterPremiumConfig
     )
-    const options = ref(scheme.form.fields)
-    const formData = ref(scheme.form.formData)
-    const update = ({ id, value }: UpdateInsuranceListFilterPayload) => {
-      scheme.form.updateFormData(id, value)
 
+    scheme.form.setSubmit(() => {
       router.push({
         query: {
           ...route.value.query,
           ...scheme.form.formData,
         },
       })
+    })
+    options.value = scheme.form.fields
+    formData.value = scheme.form.formData
+
+    const update = ({ id, value }: UpdateInsuranceListFilterPayload) => {
+      scheme.form.updateFormData(id, value)
+      scheme.form.submit()
     }
 
     return {
