@@ -8,8 +8,8 @@
           :key="option.id"
           class="ProductListFilterSection__field"
           :option="option"
-          :value="getValue(option.id)"
-          @update="updateFilterOption"
+          :value="formData[option.id]"
+          @update="update"
         />
       </div>
     </template>
@@ -17,64 +17,49 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
-import { Vue, Component } from 'vue-property-decorator'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import ProductQueryField from '../product/ProductQueryField.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { InsuranceFilterFormService } from '@/services/product/InsuranceFilterFormService'
-import { FieldOption, OptionScheme } from '@/services/product/field.type'
+import { InsuranceFilterScheme } from '@/services/product/InsuranceFilterScheme'
 import { UpdateInsuranceListFilterPayload } from '@/store/insurance/insurance'
-import { UPDATE_INSURANCE_LIST_FILTER } from '@/store/insurance/insurance.type'
+import { useRoute, useRouter, useStore } from '@/utils/composition-api'
 
-@Component({
+export default defineComponent({
   components: {
     BaseCard,
     ProductQueryField,
   },
-})
-export default class ProductListFilterSection extends Vue {
-  insuranceFilterFormService: InsuranceFilterFormService
+  setup() {
+    const store = useStore<InsuranceVuexState>()
+    const router = useRouter()!
+    const route = useRoute()
 
-  options: FieldOption<OptionScheme>[] = []
-
-  get insuranceState() {
-    return (this.$store.state as InsuranceVuexState).insurance
-  }
-
-  getValue(id: string) {
-    return this.insuranceState.currentParam[id] || ''
-  }
-
-  updateFilterOption(payload: UpdateInsuranceListFilterPayload) {
-    this.$store.dispatch(`insurance/${UPDATE_INSURANCE_LIST_FILTER}`, payload)
-
-    const premiumConfig = _.keys(
-      this.insuranceState.filter.defaultPremiumConfig
-    ).reduce<Record<string, string>>((acc, key) => {
-      acc[key] = this.insuranceState.currentParam[key].toString()
-      return acc
-    }, {})
-
-    this.$router.push({
-      query: {
-        ...this.$route.query,
-        ...premiumConfig,
-      },
-    })
-  }
-
-  created() {
-    const premiumConfig = (this.$store.state as InsuranceVuexState).insurance
-      .filter.premiumConfig
-    if (!premiumConfig) return
-
-    this.insuranceFilterFormService = new InsuranceFilterFormService(
-      premiumConfig
+    const { premiumConfig, defaultPremiumConfig } = store.state.insurance.filter
+    const scheme = new InsuranceFilterScheme(
+      premiumConfig,
+      defaultPremiumConfig
     )
-    this.options = this.insuranceFilterFormService.options
-  }
-}
+    const options = ref(scheme.form.fields)
+    const formData = ref(scheme.form.formData)
+    const update = ({ id, value }: UpdateInsuranceListFilterPayload) => {
+      scheme.form.updateFormData(id, value)
+
+      router.push({
+        query: {
+          ...route.value.query,
+          ...scheme.form.formData,
+        },
+      })
+    }
+
+    return {
+      options,
+      formData,
+      update,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>
