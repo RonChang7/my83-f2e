@@ -66,16 +66,16 @@ const opinions: ComponentOption = {
 
     const pageFilter = new PageFilterService(ctx)
 
+    if (pageFilter.isDefaultFilter) {
+      return pageFilter.removeFilterQueryString()
+    }
+
     if (
       !(
         pageFilter.isFirstLanding &&
         (pageFilter.isDefaultFilter || pageFilter.isEmptyFilter)
       )
     ) {
-      if (pageFilter.isDefaultFilter) {
-        return pageFilter.removeFilterQueryString()
-      }
-
       await pageFilter.fetchInsuranceProductFee()
     }
 
