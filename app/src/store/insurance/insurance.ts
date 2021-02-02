@@ -1,5 +1,3 @@
-import _ from 'lodash'
-import Vue from 'vue'
 import { Module } from 'vuex'
 import * as types from './insurance.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
@@ -103,19 +101,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
-      [types.UPDATE_INSURANCE_LIST_FILTER](
-        { commit },
-        payload: UpdateInsuranceListFilterPayload
+      [types.UPDATE_INSURANCE_PRODUCT_FEE](
+        { state, commit },
+        payload: PremiumConfig
       ) {
-        commit(types.UPDATE_INSURANCE_LIST_FILTER, payload)
-      },
-      [types.UPDATE_INSURANCE_PRODUCT_FEE]({ state, commit }) {
-        const premiumConfig = _.keys(state.filter.defaultPremiumConfig).reduce<
-          Record<string, string | number>
-        >((acc, key) => {
-          acc[key] = state.currentParam[key]
-          return acc
-        }, {})
         const productListIds =
           state.insuranceList?.map((product) => product.id) || []
         const promotionProductIds =
@@ -125,7 +114,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .updateInsuranceProductFee(
               [...productListIds, ...promotionProductIds],
-              premiumConfig
+              payload
             )
             .then(({ data }) => {
               commit(
@@ -204,17 +193,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
         }
-      },
-      [types.UPDATE_INSURANCE_LIST_FILTER](
-        state,
-        { id, value }: UpdateInsuranceListFilterPayload
-      ) {
-        Vue.set(state.currentParam, id, value)
-      },
-      [types.REMOVE_INSURANCE_LIST_FILTER](state, keys: string[]) {
-        keys.forEach((key) => {
-          Vue.delete(state.currentParam, key)
-        })
       },
       [types.UPDATE_INSURANCE_LIST_PRODUCT_FEE](
         state,
