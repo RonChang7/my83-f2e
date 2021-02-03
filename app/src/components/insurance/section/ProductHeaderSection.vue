@@ -1,15 +1,49 @@
 <template>
   <div class="ProductHeaderSection">
     <div class="ProductHeaderSection__column">
-      <div class="ProductHeaderSection__breadcrumbs">
-        <span v-for="(breadcrumb, index) in breadcrumbs" :key="index">
-          <GlobalLink :to="breadcrumb.link.path">
-            {{ breadcrumb.name }}
-          </GlobalLink>
-        </span>
+      <div class="ProductHeaderSection__row">
+        <div class="ProductHeaderSection__column">
+          <div class="ProductHeaderSection__breadcrumbs">
+            <span v-for="(breadcrumb, index) in breadcrumbs" :key="index">
+              <GlobalLink :to="breadcrumb.link.path">
+                {{ breadcrumb.name }}
+              </GlobalLink>
+            </span>
+          </div>
+          <div class="ProductHeaderSection__company">{{ company }}</div>
+        </div>
+        <div
+          v-if="onlineProduct && isMobile"
+          class="ProductHeaderSection__column"
+        >
+          <div class="ProductHeaderSection__onlineProduct">
+            <BaseButton
+              class="active"
+              :to="onlineProduct.link.path"
+              :size="isMobile ? 'm' : 'l-a'"
+              type="secondary"
+              :is-full-width="true"
+            >
+              {{ onlineProduct.text }}
+            </BaseButton>
+          </div>
+        </div>
       </div>
-      <div class="ProductHeaderSection__company">{{ company }}</div>
       <h1 class="ProductHeaderSection__name">{{ name }}</h1>
+      <div
+        v-if="onlineProduct && !isMobile"
+        class="ProductHeaderSection__onlineProduct"
+      >
+        <BaseButton
+          class="active"
+          :to="onlineProduct.link.path"
+          :size="isMobile ? 'm' : 'l-a'"
+          type="secondary"
+          :is-full-width="true"
+        >
+          {{ onlineProduct.text }}
+        </BaseButton>
+      </div>
       <div class="ProductHeaderSection__features">{{ features }}</div>
       <div v-if="viewCount" class="ProductHeaderSection__viewCount">
         有
@@ -75,6 +109,10 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
   get files() {
     return this.storeState.insuranceProduct.product?.files
   }
+
+  get onlineProduct() {
+    return this.storeState.insuranceProduct.product?.online_product
+  }
 }
 </script>
 
@@ -90,6 +128,11 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
 
   &__column {
     flex: 1 1 auto;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
   }
 
   &__breadcrumbs {
@@ -117,6 +160,11 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
     font-size: 1.75rem;
     font-weight: 500;
     margin-bottom: 6px;
+  }
+
+  &__onlineProduct {
+    width: 136px;
+    padding: 6px 0 8px;
   }
 
   &__features,
@@ -150,6 +198,12 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
     &__name {
       font-size: 1.375rem;
       margin-bottom: 8px;
+    }
+
+    &__onlineProduct {
+      width: 124px;
+      padding: 0;
+      float: right;
     }
 
     &__features,
