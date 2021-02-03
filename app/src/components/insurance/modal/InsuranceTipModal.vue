@@ -5,12 +5,7 @@
     @close="closePanel"
   >
     <div ref="insuranceTipModal" class="InsuranceTipModal">
-      <div v-if="!isActiveTabInNavTabs" class="InsuranceTipModal__navbar">
-        <div class="InsuranceTipModal__navbar__singleItem">
-          {{ discontinuedTitle }}
-        </div>
-      </div>
-      <div v-else-if="navTabs.length > 1" class="InsuranceTipModal__navbar">
+      <div v-if="navTabs.length > 1" class="InsuranceTipModal__navbar">
         <div
           v-for="tab in navTabs"
           :key="tab.key"
@@ -37,14 +32,12 @@
           v-show="activeTab === 'principle'"
           :data="principle"
         />
-        <DiscontinuedProductPanel v-show="activeTab === 'discontinued'" />
       </div>
     </div>
   </BaseInfoModal>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import {
@@ -54,7 +47,6 @@ import {
 import { CombinedVueInstance } from 'vue/types/vue'
 import GlossaryPanel from './GlossaryPanel.vue'
 import PrinciplePanel from './PrinciplePanel.vue'
-import DiscontinuedProductPanel from './DiscontinuedProductPanel.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { Glossary, Principle } from '@/api/insurance/insurance.type'
 import BaseInfoModal from '@/components/my83-ui-kit/modal/BaseInfoModal.vue'
@@ -64,7 +56,6 @@ const options: ComponentOption = {
     BaseInfoModal,
     GlossaryPanel,
     PrinciplePanel,
-    DiscontinuedProductPanel,
   },
   props: {
     visible: {
@@ -87,9 +78,6 @@ const options: ComponentOption = {
     },
   },
   computed: {
-    isActiveTabInNavTabs() {
-      return _.map(this.navTabs, 'key').includes(this.activeTab)
-    },
     navTabs() {
       if (this.$store.state.insurance.staticData.isExternal) {
         return [
@@ -110,9 +98,6 @@ const options: ComponentOption = {
           value: '黃金投保原則',
         },
       ]
-    },
-    discontinuedTitle() {
-      return `12月最新${this.$store.state.insurance.staticData.abbr}停售表`
     },
     glossary() {
       return this.$store.state.insurance.staticData.glossary
@@ -162,9 +147,7 @@ export type Methods = {
 }
 
 export interface Computed {
-  isActiveTabInNavTabs: boolean
   navTabs: NavTab[]
-  discontinuedTitle: string
   glossary: Glossary | null
   principle: Principle | null
 }
