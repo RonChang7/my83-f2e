@@ -27,27 +27,27 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { defineComponent, Ref, ref, watch } from '@nuxtjs/composition-api'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
+import { useRoute, useStore } from '@/utils/composition-api'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     GlobalLink,
     BaseArrowRight,
   },
-  data() {
-    return {
-      insuranceLink: null,
-    }
-  },
-  methods: {
-    findHeaderNavItemById(headerNavItems, id) {
+  setup() {
+    const store = useStore<InsuranceVuexState>()
+    const route = useRoute()
+    const insuranceLink: Ref<HeaderNavItem[] | null> = ref(null)
+
+    const findHeaderNavItemById = (
+      headerNavItems: HeaderNavItem[],
+      id: string
+    ) => {
       let path: string[] = []
 
       for (let index = 0; index < headerNavItems.length; index++) {
@@ -57,7 +57,7 @@ const options: ComponentOption = {
         }
 
         if (headerNavItems[index].children) {
-          const childPath = this.findHeaderNavItemById(
+          const childPath = findHeaderNavItemById(
             headerNavItems[index].children!,
             id
           )
@@ -69,60 +69,32 @@ const options: ComponentOption = {
       }
 
       return path
-    },
-    removeLink(headerNavItem) {
+    }
+
+    const removeLink = (headerNavItem: HeaderNavItem[] | null) => {
       if (headerNavItem === null) return null
 
       return headerNavItem.filter(
-        (item) => item.link?.path !== this.$route.path
+        (item) => item.link?.path !== route.value.path
       )
-    },
-  },
-  watch: {
-    '$store.state.header.headerNavItems': {
-      immediate: true,
-      handler(val) {
-        const path = this.findHeaderNavItemById(val, 'insurance')
-        this.insuranceLink = this.removeLink(_.get(val, path, null))
+    }
+
+    watch(
+      () => store.state.header.headerNavItems,
+      (val) => {
+        const path = findHeaderNavItemById(val, 'insurance')
+        insuranceLink.value = removeLink(_.get(val, path, null))
       },
-    },
+      {
+        immediate: true,
+      }
+    )
+
+    return {
+      insuranceLink,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<InsuranceVuexState>
-}
-
-export interface Data {
-  insuranceLink: HeaderNavItem[] | null
-}
-
-export type Methods = {
-  findHeaderNavItemById(item: HeaderNavItem[], id: string): string[]
-  removeLink(item: HeaderNavItem[] | null): HeaderNavItem[] | null
-}
-
-export interface Computed {}
-
-export interface Props {}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>

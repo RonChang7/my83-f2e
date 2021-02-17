@@ -15,18 +15,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { RawLocation } from 'vue-router'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { RelatedQuestion } from '@/api/type'
+import { useStore } from '~/utils/composition-api'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     RelatedSection,
     GlobalLink,
@@ -38,59 +34,30 @@ const options: ComponentOption = {
       default: 10,
     },
   },
-  computed: {
-    title() {
-      return `${this.$store.state.insurance.staticData.abbr}熱門討論`
-    },
-    relatedQuestions() {
-      return this.$store.state.insurance.relatedQuestions || []
-    },
-    linkLocation() {
+  setup() {
+    const store = useStore<InsuranceVuexState>()
+    const title = computed(
+      () => `${store.state.insurance.staticData.abbr}熱門討論`
+    )
+    const relatedQuestions = computed(
+      () => store.state.insurance.relatedQuestions || []
+    )
+    const linkLocation = computed(() => {
       return {
         name: 'questionSearch',
         query: {
-          q: this.$store.state.insurance.staticData.queryForMoreQuestion,
+          q: store.state.insurance.staticData.queryForMoreQuestion,
         },
       }
-    },
+    })
+
+    return {
+      title,
+      relatedQuestions,
+      linkLocation,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<InsuranceVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  title: string
-  relatedQuestions: RelatedQuestion[]
-  linkLocation: RawLocation
-}
-
-export interface Props {
-  maxPost: number
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
