@@ -30,87 +30,61 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  ref,
+} from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin, {
-  ComponentInstance as DeviceMixinComponentInstance,
-} from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { useStore } from '@/utils/composition-api'
+import { GlobalVuexState } from '@/store/global-state'
 
-const options: ComponentOption = {
-  mixins: [DeviceMixin],
+export default defineComponent({
   components: {
     BaseButton,
   },
-  props: {
-    activeSalesCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-  computed: {
-    activeSalesCountWording() {
-      if (!this.activeSalesCount) return ''
-      const wording = `諮詢 ${this.activeSalesCount} 位活躍業務員`
+  setup() {
+    const store = useStore<GlobalVuexState>()
+    const { isDesktop } = useDevice()
+    const section = ref<HTMLElement | null>(null)
+    const activeSalesCount = computed(() => store.state.meta.activeSalesCount)
 
-      return this.isDesktop ? `\\  ${wording}  /` : wording
-    },
-  },
-  methods: {
-    calcMobileBackgroundPositionY() {
+    const activeSalesCountWording = computed(() => {
+      if (!activeSalesCount.value) return ''
+      const wording = `諮詢 ${activeSalesCount.value} 位活躍業務員`
+
+      return isDesktop.value ? `\\  ${wording}  /` : wording
+    })
+
+    const calcMobileBackgroundPositionY = () => {
+      if (!section.value) return
+
       const maxWidth = 420
-      const elWidth = this.$refs.section.offsetWidth
+      const elWidth = section.value.offsetWidth
 
       return Math.round((maxWidth - elWidth) / 4.8) - 16
-    },
-  },
-  mounted() {
-    if (!this.isDesktop) {
-      this.$nextTick(() => {
-        this.$refs.section.style.backgroundPositionY = `${this.calcMobileBackgroundPositionY()}px`
-      })
+    }
+
+    onMounted(() => {
+      if (!isDesktop.value) {
+        nextTick(() => {
+          if (!section.value) return
+          section.value.style.backgroundPositionY = `${calcMobileBackgroundPositionY()}px`
+        })
+      }
+    })
+
+    return {
+      isDesktop,
+      section,
+      activeSalesCountWording,
+      calcMobileBackgroundPositionY,
     }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance
-  extends Vue,
-    Omit<DeviceMixinComponentInstance, keyof Vue> {
-  $refs: {
-    section: HTMLElement
-  }
-}
-
-export interface Data {}
-
-export type Methods = {
-  calcMobileBackgroundPositionY(): number
-}
-
-export interface Computed {}
-
-export interface Props {
-  activeSalesCount: number
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>

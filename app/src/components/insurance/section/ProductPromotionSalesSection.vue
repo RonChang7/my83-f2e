@@ -26,24 +26,30 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { useStore } from '@/utils/composition-api'
+import { GlobalVuexState } from '@/store/global-state'
 
-@Component({
+export default defineComponent({
   components: {
     BaseButton,
   },
-})
-export default class ProductPromotionSalesSection extends Vue {
-  @Prop({ type: Number, default: 0 })
-  activeSalesCount: number
+  setup() {
+    const store = useStore<GlobalVuexState>()
+    const activeSalesCount = computed(() => store.state.meta.activeSalesCount)
 
-  get activeSalesCountWording() {
-    return this.activeSalesCount
-      ? `\\ 諮詢 ${this.activeSalesCount} 位活躍業務員 /`
-      : ''
-  }
-}
+    const activeSalesCountWording = computed(() => {
+      return activeSalesCount.value
+        ? `\\ 諮詢 ${activeSalesCount.value} 位活躍業務員 /`
+        : ''
+    })
+
+    return {
+      activeSalesCountWording,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

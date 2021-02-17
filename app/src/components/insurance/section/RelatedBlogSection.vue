@@ -15,17 +15,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { RelatedBlog } from '@/api/type'
+import { useStore } from '@/utils/composition-api'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     RelatedSection,
     GlobalLink,
@@ -37,50 +34,21 @@ const options: ComponentOption = {
       default: 10,
     },
   },
-  computed: {
-    title() {
-      return `${this.$store.state.insurance.staticData.abbr}相關文章`
-    },
-    relatedBlogs() {
-      return this.$store.state.insurance.relatedBlogs || []
-    },
+  setup() {
+    const store = useStore<InsuranceVuexState>()
+    const title = computed(
+      () => `${store.state.insurance.staticData.abbr}相關文章`
+    )
+    const relatedBlogs = computed(
+      () => store.state.insurance.relatedBlogs || []
+    )
+
+    return {
+      title,
+      relatedBlogs,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<InsuranceVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  title: string
-  relatedBlogs: RelatedBlog[]
-}
-
-export interface Props {
-  maxPost: number
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>

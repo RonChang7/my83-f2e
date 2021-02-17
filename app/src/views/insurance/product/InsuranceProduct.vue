@@ -95,10 +95,6 @@ export default class InsuranceProduct extends DeviceMixin {
     return !(this.isMobile && !this.shouldShowScrollToTop)
   }
 
-  get activeSalesCount() {
-    return this.$store.state.meta.activeSalesCount
-  }
-
   scrollToTop() {
     const body = document.querySelector('body')
     scrollToElement({
