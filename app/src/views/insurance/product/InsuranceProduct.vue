@@ -17,6 +17,7 @@
         <ProductQuerySection
           ref="productQuerySection"
           @open-modal="openInfoModal"
+          @tracking="tracking('consultSales', title)"
         />
       </div>
     </div>
@@ -28,15 +29,23 @@
         <ProductPromotionSection
           v-if="shouldShowProductPromotionSection"
           @open-modal="openInfoModal"
+          @tracking="tracking('consultSales', title)"
         />
       </div>
       <div class="column right">
         <ProductPromotionSalesSection
           v-if="isDesktop"
-          :active-sales-count="activeSalesCount"
+          @tracking="(action) => tracking('findSales', action)"
         />
-        <PromotionSection v-else :active-sales-count="activeSalesCount" />
-        <PopularProductSection />
+        <PromotionSection
+          v-else
+          @tracking="(action) => tracking('findSales', action)"
+        />
+        <PopularProductSection
+          @tracking="
+            (action) => tracking('popularProduct', `${insuranceType} ${action}`)
+          "
+        />
       </div>
     </div>
 
@@ -50,6 +59,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { InsuranceProductVuexState } from './Index.vue'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
 import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
@@ -63,6 +73,9 @@ import ProductQuerySection from '@/components/insurance/section/ProductQuerySect
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
+
+type trackingType = 'findSales' | 'popularProduct' | 'consultSales'
 
 @Component({
   mixins: [DeviceMixin],
@@ -95,6 +108,18 @@ export default class InsuranceProduct extends DeviceMixin {
     return !(this.isMobile && !this.shouldShowScrollToTop)
   }
 
+  get insuranceType() {
+    return (
+      (this.$store.state as InsuranceProductVuexState).pageMeta.pageMeta
+        ?.breadcrumbs?.[0].name || ''
+    )
+  }
+
+  get title() {
+    const state = this.$store.state as InsuranceProductVuexState
+    return `${state.insuranceProduct.product?.product.company} ${state.insuranceProduct.product?.product.name}`
+  }
+
   scrollToTop() {
     const body = document.querySelector('body')
     scrollToElement({
@@ -113,6 +138,31 @@ export default class InsuranceProduct extends DeviceMixin {
 
   openInfoModal() {
     this.infoModalVisible = true
+  }
+
+  tracking(type: trackingType, action: string) {
+    const options: Record<trackingType, { category: string; label: string }> = {
+      findSales: {
+        category: '業務員廣告版位CTA',
+        label: '商品頁',
+      },
+      popularProduct: {
+        category: '點擊險種熱門排行榜',
+        label: '',
+      },
+      consultSales: {
+        category: '商品頁CTA',
+        label: this.insuranceType,
+      },
+    }
+
+    if (options[type]) {
+      this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: options[type].category,
+        action,
+        label: options[type].label,
+      })
+    }
   }
 
   mounted() {

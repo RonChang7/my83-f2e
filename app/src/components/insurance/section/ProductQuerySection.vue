@@ -17,6 +17,7 @@
         :fee="fee"
         :consult-link="consultLink"
         @open-modal="$emit('open-modal')"
+        @click-link="$emit('tracking')"
       />
     </div>
     <div class="ProductQuerySection__footer">

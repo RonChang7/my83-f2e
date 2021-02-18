@@ -4,6 +4,7 @@
       :related-data="relatedBlogs"
       :max-post="maxPost"
       :title="title"
+      @click-link="(index) => $emit('tracking', relatedBlogs[index].link.path)"
     />
     <div class="RelatedBlogSection__footer">
       <GlobalLink to="/blogs">

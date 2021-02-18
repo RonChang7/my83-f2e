@@ -8,6 +8,7 @@
           :key="index"
           class="InsuranceLinkSection__link"
           :to="item.link.path"
+          @click.native="$emit('tracking', item.name)"
         >
           {{ item.name }}
         </GlobalLink>

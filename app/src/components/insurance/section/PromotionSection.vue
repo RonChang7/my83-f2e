@@ -18,6 +18,7 @@
           type="quaternary"
           to="/searchSales"
           :is-full-width="!isDesktop"
+          @click.native="$emit('tracking', 'click')"
         >
           找業務員
         </BaseButton>

@@ -11,7 +11,12 @@
           </div>
         </transition>
         <div class="ProductFee__action">
-          <BaseButton size="l-a" type="quaternary" :to="consultLink.path">
+          <BaseButton
+            size="l-a"
+            type="quaternary"
+            :to="consultLink.path"
+            @click.native="$emit('click-link')"
+          >
             免費找業務員
           </BaseButton>
           <div class="ProductFee__faq" @click="openModal">

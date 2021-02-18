@@ -4,6 +4,9 @@
       :related-data="relatedQuestions"
       :max-post="maxPost"
       :title="title"
+      @click-link="
+        (index) => $emit('tracking', relatedQuestions[index].link.path)
+      "
     />
     <div class="RelatedQuestionSection__footer">
       <GlobalLink :to="linkLocation">
