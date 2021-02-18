@@ -2,6 +2,13 @@ import { Link, Role, RoleCode } from '../type'
 
 export interface HeaderDataResponse {
   header: HeaderNavItem[]
+  announcement: Announcement | null
+}
+
+export interface Announcement {
+  name: string
+  link: Link
+  countdown: number
 }
 
 export interface HeaderNavItem {
