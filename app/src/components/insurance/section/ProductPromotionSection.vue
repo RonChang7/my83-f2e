@@ -22,6 +22,7 @@
           :type="isMobile ? 'primary' : 'quaternary'"
           :to="consultLink.path"
           :is-full-width="isMobile"
+          @click.native="$emit('tracking')"
         >
           免費找業務員
         </BaseButton>

@@ -1,6 +1,11 @@
 <template>
   <div v-if="hotProducts.length" class="PopularProductSection">
-    <RelatedSection :title="title" :related-data="hotProducts" :max-post="5" />
+    <RelatedSection
+      :title="title"
+      :related-data="hotProducts"
+      :max-post="5"
+      @click-link="(index) => $emit('tracking', `${hotProducts[index].title}`)"
+    />
     <div class="PopularProductSection__footer">
       <GlobalLink :to="moreLink">
         更多

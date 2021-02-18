@@ -18,6 +18,7 @@
         size="l-a"
         type="quaternary"
         :is-full-width="false"
+        @click.native="$emit('tracking', 'click')"
       >
         找業務員
       </BaseButton>
