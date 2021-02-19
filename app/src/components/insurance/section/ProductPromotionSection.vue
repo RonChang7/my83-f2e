@@ -38,34 +38,33 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import ProductPromotion from '../product/ProductPromotion.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { useStore } from '@/utils/composition-api'
 
-@Component({
+export default defineComponent({
   components: {
     ProductPromotion,
     BaseButton,
   },
+  setup() {
+    const store = useStore<InsuranceProductVuexState>()
+    const { isMobile } = useDevice()
+    const fee = computed(() => store.state.insuranceProduct.fee)
+    const consultLink = computed(
+      () => store.state.insuranceProduct.product?.consult_link
+    )
+
+    return {
+      isMobile,
+      fee,
+      consultLink,
+    }
+  },
 })
-export default class ProductPromotionSection extends DeviceMixin {
-  get isFieldsValidated(): boolean {
-    return this.$store.getters['insuranceProduct/isFieldsValidated']
-  }
-
-  get fee() {
-    return this.isFieldsValidated
-      ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
-      : null
-  }
-
-  get consultLink() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.consult_link
-  }
-}
 </script>
 
 <style lang="scss" scoped>
