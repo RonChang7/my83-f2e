@@ -4,9 +4,7 @@
       :related-data="relatedQuestions"
       :max-post="maxPost"
       :title="title"
-      @click-link="
-        (index) => $emit('tracking', relatedQuestions[index].link.path)
-      "
+      @click-link="tracking"
     />
     <div class="RelatedQuestionSection__footer">
       <GlobalLink :to="linkLocation">
@@ -23,7 +21,8 @@ import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { useStore } from '~/utils/composition-api'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
@@ -39,6 +38,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<InsuranceVuexState>()
+    const analytics = useAnalytics()
     const title = computed(
       () => `${store.state.insurance.staticData.abbr}熱門討論`
     )
@@ -53,11 +53,19 @@ export default defineComponent({
         },
       }
     })
+    const insuranceAbbr = computed(() => store.state.insurance.staticData.abbr)
+    const tracking = (index: number) =>
+      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '點擊熱門討論',
+        action: relatedQuestions.value[index].link.path,
+        label: insuranceAbbr.value,
+      })
 
     return {
       title,
       relatedQuestions,
       linkLocation,
+      tracking,
     }
   },
 })

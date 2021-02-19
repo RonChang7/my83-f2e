@@ -18,7 +18,7 @@
         size="l-a"
         type="quaternary"
         :is-full-width="false"
-        @click.native="$emit('tracking', 'click')"
+        @click.native="tracking"
       >
         找業務員
       </BaseButton>
@@ -29,15 +29,23 @@
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { useStore } from '@/utils/composition-api'
+import { useAnalytics, useStore } from '@/utils/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
     BaseButton,
   },
-  setup() {
+  props: {
+    pageType: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props) {
     const store = useStore<GlobalVuexState>()
+    const analytics = useAnalytics()
     const activeSalesCount = computed(() => store.state.meta.activeSalesCount)
 
     const activeSalesCountWording = computed(() => {
@@ -46,8 +54,16 @@ export default defineComponent({
         : ''
     })
 
+    const tracking = () =>
+      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '業務員廣告版位CTA',
+        action: 'click',
+        label: props.pageType,
+      })
+
     return {
       activeSalesCountWording,
+      tracking,
     }
   },
 })

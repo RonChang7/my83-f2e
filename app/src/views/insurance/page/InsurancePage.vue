@@ -35,21 +35,11 @@
         <ProductListFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
         />
-        <PromotionSection
-          @tracking="(action) => tracking('findSales', action)"
-        />
+        <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
-        <RelatedBlogSection
-          :max-post="isMobile ? 5 : 10"
-          @tracking="(action) => tracking('relatedBlog', action)"
-        />
-        <RelatedQuestionSection
-          :max-post="isMobile ? 5 : 10"
-          @tracking="(action) => tracking('relatedQuestion', action)"
-        />
-        <InsuranceLinkSection
-          @tracking="(action) => tracking('insuranceLink', action)"
-        />
+        <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
+        <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
+        <InsuranceLinkSection />
       </div>
     </div>
 
@@ -76,7 +66,6 @@ import RelatedQuestionSection from '@/components/insurance/section/RelatedQuesti
 import ProductListFilterSection from '@/components/insurance/section/ProductListFilterSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
-import { EventTypes } from '@/analytics/event-listeners/event.type'
 import InsuranceTipModal, {
   Props as InsuranceTipModalProps,
 } from '@/components/insurance/modal/InsuranceTipModal.vue'
@@ -140,25 +129,6 @@ const options: ComponentOption = {
         offset,
       })
     },
-    tracking(type, action) {
-      const category: Record<trackingType, string> = {
-        findSales: '業務員廣告版位CTA',
-        relatedBlog: '點擊相關文章',
-        relatedQuestion: '點擊熱門討論',
-        insuranceLink: '點擊其他險種',
-      }
-
-      if (category[type]) {
-        this.$analytics.dispatch<EventTypes.ClickAction>(
-          EventTypes.ClickAction,
-          {
-            category: category[type],
-            action,
-            label: this.$store.state.insurance.staticData.abbr,
-          }
-        )
-      }
-    },
   },
   watch: {
     // handle page position when navigate via pagination
@@ -204,7 +174,6 @@ export type Methods = {
   updateInfoModalActiveTab(tab: InsuranceTipModalProps['activeTab']): void
   openInfoModal(): void
   scrollToProductListSection(): void
-  tracking(type: trackingType, action: string): void
 }
 
 export interface Computed {
@@ -215,12 +184,6 @@ export interface Computed {
 }
 
 export interface Props {}
-
-type trackingType =
-  | 'findSales'
-  | 'relatedBlog'
-  | 'relatedQuestion'
-  | 'insuranceLink'
 
 export default options
 </script>

@@ -18,7 +18,7 @@
           type="quaternary"
           to="/searchSales"
           :is-full-width="!isDesktop"
-          @click.native="$emit('tracking', 'click')"
+          @click.native="tracking"
         >
           找業務員
         </BaseButton>
@@ -40,15 +40,23 @@ import {
 } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { useStore } from '@/utils/composition-api'
+import { useAnalytics, useStore } from '@/utils/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
     BaseButton,
   },
-  setup() {
+  props: {
+    pageType: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props) {
     const store = useStore<GlobalVuexState>()
+    const analytics = useAnalytics()
     const { isDesktop } = useDevice()
     const section = ref<HTMLElement | null>(null)
     const activeSalesCount = computed(() => store.state.meta.activeSalesCount)
@@ -69,6 +77,13 @@ export default defineComponent({
       return Math.round((maxWidth - elWidth) / 4.8) - 16
     }
 
+    const tracking = () =>
+      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '業務員廣告版位CTA',
+        action: 'click',
+        label: props.pageType,
+      })
+
     onMounted(() => {
       if (!isDesktop.value) {
         nextTick(() => {
@@ -83,6 +98,7 @@ export default defineComponent({
       section,
       activeSalesCountWording,
       calcMobileBackgroundPositionY,
+      tracking,
     }
   },
 })

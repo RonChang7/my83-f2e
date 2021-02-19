@@ -42,3 +42,9 @@ export const useRoute = () => {
 
   return toRefs(state).route
 }
+
+export const useAnalytics = () => {
+  const instance = getCurrentInstance()?.proxy
+
+  return instance?.$analytics
+}
