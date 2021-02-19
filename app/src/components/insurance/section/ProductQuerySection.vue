@@ -16,8 +16,8 @@
         :card-height="feeCardHeight"
         :fee="fee"
         :consult-link="consultLink"
+        :insurance-type="insuranceType"
         @open-modal="$emit('open-modal')"
-        @click-link="$emit('tracking')"
       />
     </div>
     <div class="ProductQuerySection__footer">
@@ -126,6 +126,11 @@ export default class ProductQuerySection extends DeviceMixin {
 
   get storeState() {
     return this.$store.state as InsuranceProductVuexState
+  }
+
+  // @TODO: Resolve conflict after merge query refactor
+  get insuranceType() {
+    return this.storeState.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
   }
 
   get contractType() {

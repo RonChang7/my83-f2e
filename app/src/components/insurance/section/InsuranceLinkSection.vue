@@ -8,7 +8,7 @@
           :key="index"
           class="InsuranceLinkSection__link"
           :to="item.link.path"
-          @click.native="$emit('tracking', item.name)"
+          @click.native="tracking(item.name)"
         >
           {{ item.name }}
         </GlobalLink>
@@ -28,12 +28,19 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { defineComponent, Ref, ref, watch } from '@nuxtjs/composition-api'
+import {
+  computed,
+  defineComponent,
+  Ref,
+  ref,
+  watch,
+} from '@nuxtjs/composition-api'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
-import { useRoute, useStore } from '@/utils/composition-api'
+import { useAnalytics, useRoute, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
@@ -43,7 +50,16 @@ export default defineComponent({
   setup() {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
+    const analytics = useAnalytics()
     const insuranceLink: Ref<HeaderNavItem[] | null> = ref(null)
+    const insuranceAbbr = computed(() => store.state.insurance.staticData.abbr)
+
+    const tracking = (target: string) =>
+      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '點擊其他險種',
+        action: target,
+        label: insuranceAbbr.value,
+      })
 
     const findHeaderNavItemById = (
       headerNavItems: HeaderNavItem[],
@@ -93,6 +109,7 @@ export default defineComponent({
 
     return {
       insuranceLink,
+      tracking,
     }
   },
 })

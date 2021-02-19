@@ -4,7 +4,7 @@
       :title="title"
       :related-data="hotProducts"
       :max-post="5"
-      @click-link="(index) => $emit('tracking', `${hotProducts[index].title}`)"
+      @click-link="tracking"
     />
     <div class="PopularProductSection__footer">
       <GlobalLink :to="moreLink">
@@ -16,40 +16,51 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-@Component({
+export default defineComponent({
   components: {
     RelatedSection,
     GlobalLink,
     BaseArrowRight,
   },
+  setup() {
+    const store = useStore<InsuranceProductVuexState>()
+    const analytics = useAnalytics()
+
+    const title = computed(
+      () => store.state.insuranceProduct.product?.hot_products.title || ''
+    )
+    const hotProducts = computed(
+      () => store.state.insuranceProduct.product?.hot_products.data || []
+    )
+    const moreLink = computed(() => {
+      const insuranceType = store.state.insuranceProduct.product!.product
+        .insurance_type
+      return `/insurance/${insuranceType}`
+    })
+
+    const tracking = (index: number) =>
+      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '點擊險種熱門排行榜',
+        action: hotProducts.value[index].title,
+        label: '',
+      })
+
+    return {
+      title,
+      hotProducts,
+      moreLink,
+      tracking,
+    }
+  },
 })
-export default class PopularProductSection extends Vue {
-  get title() {
-    return (
-      (this.$store.state as InsuranceProductVuexState).insuranceProduct.product
-        ?.hot_products.title || ''
-    )
-  }
-
-  get hotProducts() {
-    return (
-      (this.$store.state as InsuranceProductVuexState).insuranceProduct.product
-        ?.hot_products.data || []
-    )
-  }
-
-  get moreLink() {
-    const insuranceType = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product!.product.insurance_type
-    return `/insurance/${insuranceType}`
-  }
-}
 </script>
 
 <style lang="scss" scoped>

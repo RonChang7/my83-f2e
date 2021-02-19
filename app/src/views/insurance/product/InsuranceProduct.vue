@@ -17,7 +17,6 @@
         <ProductQuerySection
           ref="productQuerySection"
           @open-modal="openInfoModal"
-          @tracking="tracking('consultSales', title)"
         />
       </div>
     </div>
@@ -29,23 +28,12 @@
         <ProductPromotionSection
           v-if="shouldShowProductPromotionSection"
           @open-modal="openInfoModal"
-          @tracking="tracking('consultSales', title)"
         />
       </div>
       <div class="column right">
-        <ProductPromotionSalesSection
-          v-if="isDesktop"
-          @tracking="(action) => tracking('findSales', action)"
-        />
-        <PromotionSection
-          v-else
-          @tracking="(action) => tracking('findSales', action)"
-        />
-        <PopularProductSection
-          @tracking="
-            (action) => tracking('popularProduct', `${insuranceType} ${action}`)
-          "
-        />
+        <ProductPromotionSalesSection v-if="isDesktop" page-type="商品頁" />
+        <PromotionSection v-else page-type="商品頁" />
+        <PopularProductSection />
       </div>
     </div>
 
@@ -73,9 +61,6 @@ import ProductQuerySection from '@/components/insurance/section/ProductQuerySect
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
-import { EventTypes } from '@/analytics/event-listeners/event.type'
-
-type trackingType = 'findSales' | 'popularProduct' | 'consultSales'
 
 @Component({
   mixins: [DeviceMixin],
@@ -138,31 +123,6 @@ export default class InsuranceProduct extends DeviceMixin {
 
   openInfoModal() {
     this.infoModalVisible = true
-  }
-
-  tracking(type: trackingType, action: string) {
-    const options: Record<trackingType, { category: string; label: string }> = {
-      findSales: {
-        category: '業務員廣告版位CTA',
-        label: '商品頁',
-      },
-      popularProduct: {
-        category: '點擊險種熱門排行榜',
-        label: '',
-      },
-      consultSales: {
-        category: '商品頁CTA',
-        label: this.insuranceType,
-      },
-    }
-
-    if (options[type]) {
-      this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
-        category: options[type].category,
-        action,
-        label: options[type].label,
-      })
-    }
   }
 
   mounted() {
