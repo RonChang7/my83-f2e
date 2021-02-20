@@ -31,11 +31,8 @@
         />
       </div>
       <div class="column right">
-        <ProductPromotionSalesSection
-          v-if="isDesktop"
-          :active-sales-count="activeSalesCount"
-        />
-        <PromotionSection v-else :active-sales-count="activeSalesCount" />
+        <ProductPromotionSalesSection v-if="isDesktop" page-type="商品頁" />
+        <PromotionSection v-else page-type="商品頁" />
         <PopularProductSection />
       </div>
     </div>
@@ -50,6 +47,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { InsuranceProductVuexState } from './Index.vue'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
 import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
@@ -95,8 +93,16 @@ export default class InsuranceProduct extends DeviceMixin {
     return !(this.isMobile && !this.shouldShowScrollToTop)
   }
 
-  get activeSalesCount() {
-    return this.$store.state.meta.activeSalesCount
+  get insuranceType() {
+    return (
+      (this.$store.state as InsuranceProductVuexState).pageMeta.pageMeta
+        ?.breadcrumbs?.[0].name || ''
+    )
+  }
+
+  get title() {
+    const state = this.$store.state as InsuranceProductVuexState
+    return `${state.insuranceProduct.product?.product.company} ${state.insuranceProduct.product?.product.name}`
   }
 
   scrollToTop() {

@@ -35,7 +35,7 @@
         <ProductListFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
         />
-        <PromotionSection :active-sales-count="activeSalesCount" />
+        <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
         <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
         <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
@@ -112,9 +112,6 @@ const options: ComponentOption = {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
     },
-    activeSalesCount() {
-      return this.$store.state.meta.activeSalesCount
-    },
   },
   methods: {
     updateInfoModalActiveTab(tab) {
@@ -184,7 +181,6 @@ export interface Computed {
   shouldShowPromotionProduct: boolean
   shouldShowProductListFilter: boolean
   shouldShowPagination: boolean
-  activeSalesCount: number
 }
 
 export interface Props {}

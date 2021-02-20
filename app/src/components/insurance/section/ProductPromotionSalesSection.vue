@@ -18,6 +18,7 @@
         size="l-a"
         type="quaternary"
         :is-full-width="false"
+        @click.native="tracking"
       >
         找業務員
       </BaseButton>
@@ -26,24 +27,47 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { GlobalVuexState } from '@/store/global-state'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-@Component({
+export default defineComponent({
   components: {
     BaseButton,
   },
-})
-export default class ProductPromotionSalesSection extends Vue {
-  @Prop({ type: Number, default: 0 })
-  activeSalesCount: number
+  props: {
+    pageType: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props) {
+    const store = useStore<GlobalVuexState>()
+    const analytics = useAnalytics()
+    const activeSalesCount = computed(() => store.state.meta.activeSalesCount)
 
-  get activeSalesCountWording() {
-    return this.activeSalesCount
-      ? `\\ 諮詢 ${this.activeSalesCount} 位活躍業務員 /`
-      : ''
-  }
-}
+    const activeSalesCountWording = computed(() => {
+      return activeSalesCount.value
+        ? `\\ 諮詢 ${activeSalesCount.value} 位活躍業務員 /`
+        : ''
+    })
+
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '業務員廣告版位CTA',
+        action: 'click',
+        label: props.pageType,
+      })
+    }
+
+    return {
+      activeSalesCountWording,
+      tracking,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

@@ -22,6 +22,7 @@
           :type="isMobile ? 'primary' : 'quaternary'"
           :to="consultLink.path"
           :is-full-width="isMobile"
+          @click.native="tracking"
         >
           免費找業務員
         </BaseButton>
@@ -38,34 +39,54 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import ProductPromotion from '../product/ProductPromotion.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-@Component({
+// @TODO: Resolve conflict after merge query refactor
+export default defineComponent({
   components: {
     ProductPromotion,
     BaseButton,
   },
+  setup() {
+    const store = useStore<InsuranceProductVuexState>()
+    const analytics = useAnalytics()
+    const { isMobile } = useDevice()
+    const isFieldsValidated = computed(
+      () => store.getters['insuranceProduct/isFieldsValidated']
+    )
+    const fee = computed(() =>
+      isFieldsValidated.value ? store.state.insuranceProduct.fee : null
+    )
+    const consultLink = computed(
+      () => store.state.insuranceProduct.product?.consult_link
+    )
+
+    const tracking = () => {
+      const insuranceType = computed(
+        () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+      )
+
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '商品頁CTA',
+        action: 'click',
+        label: insuranceType.value,
+      })
+    }
+
+    return {
+      isMobile,
+      fee,
+      consultLink,
+      tracking,
+    }
+  },
 })
-export default class ProductPromotionSection extends DeviceMixin {
-  get isFieldsValidated(): boolean {
-    return this.$store.getters['insuranceProduct/isFieldsValidated']
-  }
-
-  get fee() {
-    return this.isFieldsValidated
-      ? (this.$store.state as InsuranceProductVuexState).insuranceProduct.fee
-      : null
-  }
-
-  get consultLink() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .product?.consult_link
-  }
-}
 </script>
 
 <style lang="scss" scoped>
