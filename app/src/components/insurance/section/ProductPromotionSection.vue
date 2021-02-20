@@ -71,14 +71,12 @@ export default defineComponent({
       const insuranceType = computed(
         () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
       )
-      return analytics?.dispatch<EventTypes.ClickAction>(
-        EventTypes.ClickAction,
-        {
-          category: '商品頁CTA',
-          action: 'click',
-          label: insuranceType.value,
-        }
-      )
+
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '商品頁CTA',
+        action: 'click',
+        label: insuranceType.value,
+      })
     }
 
     return {

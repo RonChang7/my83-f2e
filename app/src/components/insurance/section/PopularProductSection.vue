@@ -46,12 +46,13 @@ export default defineComponent({
       return `/insurance/${insuranceType}`
     })
 
-    const tracking = (index: number) =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = (index: number) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '點擊險種熱門排行榜',
         action: hotProducts.value[index].title,
         label: '',
       })
+    }
 
     return {
       title,
