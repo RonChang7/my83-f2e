@@ -4,19 +4,18 @@
     :related-data="popularQuestions"
     :max-post="maxPost"
     title="人氣問答"
+    @click-link="tracking"
   />
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
-import { PopularQuestion } from '@/api/question/list.type'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-export default {
+export default defineComponent({
   components: {
     RelatedSection,
   },
@@ -26,42 +25,25 @@ export default {
       default: 10,
     },
   },
-  computed: {
-    popularQuestions() {
-      return this.$store.state.questionList.popularQuestions || []
-    },
+  setup() {
+    const store = useStore<QuestionListVuexState>()
+    const analytics = useAnalytics()
+    const popularQuestions = computed(
+      () => store.state.questionList.popularQuestions || []
+    )
+
+    const tracking = (index: number) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '點擊討論區塊',
+        action: popularQuestions.value[index].link.path,
+        label: '討論區列表',
+      })
+    }
+
+    return {
+      popularQuestions,
+      tracking,
+    }
   },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<QuestionListVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  popularQuestions: PopularQuestion[]
-}
-
-export interface Props {
-  maxPost: number
-}
+})
 </script>
