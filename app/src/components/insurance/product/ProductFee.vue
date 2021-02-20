@@ -11,7 +11,12 @@
           </div>
         </transition>
         <div class="ProductFee__action">
-          <BaseButton size="l-a" type="quaternary" :to="consultLink.path">
+          <BaseButton
+            size="l-a"
+            type="quaternary"
+            :to="consultLink.path"
+            @click.native="tracking"
+          >
             免費找業務員
           </BaseButton>
           <div class="ProductFee__faq" @click="openModal">
@@ -24,27 +29,50 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { defineComponent } from '@nuxtjs/composition-api'
 import ProductPromotion from './ProductPromotion.vue'
 import { Link } from '@/api/type'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { useAnalytics } from '@/utils/composition-api'
 
-@Component({
+export default defineComponent({
   components: {
     ProductPromotion,
     BaseButton,
   },
+  props: {
+    cardHeight: {
+      type: Number,
+      default: 0,
+    },
+    fee: {
+      type: Number,
+    },
+    consultLink: {
+      type: Object as () => Link,
+      required: true,
+    },
+    insuranceType: {
+      type: String,
+      default: '',
+    },
+  },
+  setup(props) {
+    const analytics = useAnalytics()
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '商品頁CTA',
+        action: 'click',
+        label: props.insuranceType,
+      })
+    }
+
+    return {
+      tracking,
+    }
+  },
 })
-export default class ProductFee extends Vue {
-  @Prop({ type: Number, default: 0 })
-  cardHeight: number
-
-  @Prop({ type: Number })
-  fee: number | null
-
-  @Prop({ type: Object, required: true })
-  consultLink: Link
-}
 </script>
 
 <style lang="scss" scoped>

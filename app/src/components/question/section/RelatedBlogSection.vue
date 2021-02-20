@@ -4,19 +4,18 @@
     :related-data="relatedBlogs"
     :max-post="maxPost"
     title="相關文章"
+    @click-link="tracking"
   />
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { RelatedBlog } from '@/api/type'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-export default {
+export default defineComponent({
   components: {
     RelatedSection,
   },
@@ -26,42 +25,22 @@ export default {
       default: 10,
     },
   },
-  computed: {
-    relatedBlogs() {
-      return this.$store.state.question.relatedBlogs || []
-    },
+  setup() {
+    const store = useStore<QuestionVuexState>()
+    const analytics = useAnalytics()
+    const relatedBlogs = computed(() => store.state.question.relatedBlogs || [])
+    const tracking = (index: number) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '點擊文章區塊',
+        action: relatedBlogs.value[index].link.path,
+        label: '討論區單則',
+      })
+    }
+
+    return {
+      relatedBlogs,
+      tracking,
+    }
   },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<QuestionVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  relatedBlogs: RelatedBlog[]
-}
-
-export interface Props {
-  maxPost: number
-}
+})
 </script>
