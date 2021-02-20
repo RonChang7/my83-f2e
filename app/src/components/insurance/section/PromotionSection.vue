@@ -77,12 +77,13 @@ export default defineComponent({
       return Math.round((maxWidth - elWidth) / 4.8) - 16
     }
 
-    const tracking = () =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '業務員廣告版位CTA',
         action: 'click',
         label: props.pageType,
       })
+    }
 
     onMounted(() => {
       if (!isDesktop.value) {

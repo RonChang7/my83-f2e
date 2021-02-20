@@ -10,7 +10,9 @@ import {
 // https://next.vuex.vuejs.org/guide/composition-api.html
 export const useStore = <T = any>() => {
   const instance = getCurrentInstance()?.proxy
-  const store = instance?.$store as Store<T>
+  if (!instance) throw new Error('Vue instance not exist!')
+
+  const store = instance.$store as Store<T>
 
   return store
 }
@@ -19,8 +21,9 @@ export const useStore = <T = any>() => {
 // https://next.router.vuejs.org/guide/advanced/composition-api.html
 export const useRouter = () => {
   const instance = getCurrentInstance()?.proxy
+  if (!instance) throw new Error('Vue instance not exist!')
 
-  return instance?.$router
+  return instance.$router
 }
 
 // @TODO: mock useRouter, useRoute for Vue3 upgrade
@@ -28,13 +31,14 @@ export const useRouter = () => {
 // Ref: https://school.geekwall.in/p/oV93xZjUQ/reactive-vue-routes-with-the-composition-api
 export const useRoute = () => {
   const instance = getCurrentInstance()?.proxy
+  if (!instance) throw new Error('Vue instance not exist!')
 
   const state = reactive({
-    route: instance!.$route,
+    route: instance.$route,
   })
 
   watch(
-    () => instance!.$route,
+    () => instance.$route,
     (r) => {
       state.route = r
     }
@@ -45,6 +49,7 @@ export const useRoute = () => {
 
 export const useAnalytics = () => {
   const instance = getCurrentInstance()?.proxy
+  if (!instance) throw new Error('Vue instance not exist!')
 
-  return instance?.$analytics
+  return instance.$analytics
 }

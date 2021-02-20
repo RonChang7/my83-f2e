@@ -60,12 +60,13 @@ export default defineComponent({
   },
   setup(props) {
     const analytics = useAnalytics()
-    const tracking = () =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '商品頁CTA',
         action: 'click',
         label: props.insuranceType,
       })
+    }
 
     return {
       tracking,

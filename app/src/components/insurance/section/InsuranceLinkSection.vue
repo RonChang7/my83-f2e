@@ -54,12 +54,13 @@ export default defineComponent({
     const insuranceLink: Ref<HeaderNavItem[] | null> = ref(null)
     const insuranceAbbr = computed(() => store.state.insurance.staticData.abbr)
 
-    const tracking = (target: string) =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = (target: string) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '點擊其他險種',
         action: target,
         label: insuranceAbbr.value,
       })
+    }
 
     const findHeaderNavItemById = (
       headerNavItems: HeaderNavItem[],

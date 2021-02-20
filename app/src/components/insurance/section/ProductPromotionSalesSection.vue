@@ -54,12 +54,13 @@ export default defineComponent({
         : ''
     })
 
-    const tracking = () =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '業務員廣告版位CTA',
         action: 'click',
         label: props.pageType,
       })
+    }
 
     return {
       activeSalesCountWording,

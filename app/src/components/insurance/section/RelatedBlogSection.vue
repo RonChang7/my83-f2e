@@ -46,12 +46,13 @@ export default defineComponent({
       () => store.state.insurance.relatedBlogs || []
     )
     const insuranceAbbr = computed(() => store.state.insurance.staticData.abbr)
-    const tracking = (index: number) =>
-      analytics?.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+    const tracking = (index: number) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '點擊文章區塊',
         action: relatedBlogs.value[index].link.path,
         label: insuranceAbbr.value,
       })
+    }
 
     return {
       title,
