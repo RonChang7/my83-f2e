@@ -11,23 +11,13 @@
       />
     </GlobalLink>
     <div class="MobileHeader__function">
+      <HeaderAnnouncement v-if="announcement" :announcement="announcement" />
       <GlobalLink
         v-if="shouldShowAskingButton"
         :to="{ name: 'questionAsking' }"
       >
         <AskingRoundButton />
       </GlobalLink>
-      <div v-if="shouldShowHeaderHeadline" class="MobileHeader__headerHeadline">
-        <GlobalLink
-          v-if="typeof headerHeadline === 'object'"
-          :to="headerHeadline.link.path"
-        >
-          {{ headerHeadline.text }}
-        </GlobalLink>
-        <template v-else>
-          {{ headerHeadline }}
-        </template>
-      </div>
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
     </div>
@@ -38,15 +28,17 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import HeaderAnnouncement from '../HeaderAnnouncement.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
 import BaseMenu from '@/assets/icon/24/BaseMenu.svg'
 import BaseClose from '@/assets/icon/24/BaseClose.svg'
 import { UserRole } from '@/services/auth/auth'
-import { LinkButton } from '@/api/type'
+import { Announcement } from '@/api/header/header.type'
 
 export default {
   components: {
+    HeaderAnnouncement,
     GlobalLink,
     AskingRoundButton,
     BaseMenu,
@@ -61,9 +53,9 @@ export default {
       type: String,
       default: 'guest',
     },
-    headerHeadline: {
-      type: [Object, String],
-      default: '',
+    announcement: {
+      type: Object,
+      default: null,
     },
   },
   data() {
@@ -83,9 +75,6 @@ export default {
     },
     showCloseMenu() {
       return this.$route.name === 'headerMenu'
-    },
-    shouldShowHeaderHeadline() {
-      return !!this.headerHeadline && this.userRole !== 'sales'
     },
   },
   methods: {
@@ -131,13 +120,12 @@ export type Methods = {
 export interface Computed {
   shouldShowAskingButton: boolean
   showCloseMenu: boolean
-  shouldShowHeaderHeadline: boolean
 }
 
 export interface Props {
   enableRwd: boolean
   userRole: UserRole
-  headerHeadline: LinkButton | string
+  announcement: Announcement
 }
 </script>
 
@@ -158,20 +146,16 @@ export interface Props {
   &__function {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
+    width: 100%;
 
     &::v-deep > *:not(:last-child) {
       margin-right: 15px;
     }
-  }
 
-  &__headerHeadline {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    color: $primary-color;
-    font-size: 0.875rem;
-    font-weight: 500;
-    text-align: left;
+    &::v-deep > svg {
+      flex: 0 0 auto;
+    }
   }
 
   .logo {

@@ -232,6 +232,7 @@ interface Menu extends HeaderNavItem {
 .HeaderPersonalize {
   $self: &;
   font-weight: 500;
+  flex: 0 0 auto;
 
   a {
     @include hover('_gray-secondary-lighter');

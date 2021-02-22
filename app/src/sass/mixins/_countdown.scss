@@ -1,0 +1,13 @@
+@mixin countdown-timer-digital {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  border: 1px solid $primary-light-color;
+}
+
+@mixin countdown-timer-delimiter {
+  display: inline-flex;
+}
