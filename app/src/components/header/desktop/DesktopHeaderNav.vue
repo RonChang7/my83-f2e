@@ -103,6 +103,7 @@ export interface Props {
   padding: 0;
   list-style: none;
   display: flex;
+  flex: 0 0 auto;
 
   a {
     @include hover('_gray-secondary-lighter');

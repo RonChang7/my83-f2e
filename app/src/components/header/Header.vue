@@ -5,13 +5,13 @@
     <header>
       <template v-if="isDesktop">
         <DesktopHeader
-          :header-headline="headerHeadline"
+          :announcement="announcement"
           :enable-rwd="true"
           :user-role="userRole"
         />
       </template>
       <MobileHeader
-        :header-headline="headerHeadline"
+        :announcement="announcement"
         :enable-rwd="isDesktop"
         :user-role="userRole"
       />
@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { differenceInDays, isBefore } from 'date-fns'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
@@ -37,7 +36,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
-import { LinkButton } from '@/api/type'
+import { Announcement } from '@/api/header/header.type'
 
 export default {
   mixins: [DeviceMixin, UserMetaMixin],
@@ -47,21 +46,8 @@ export default {
     Affix,
   },
   computed: {
-    headerHeadline() {
-      const dueDay = new Date('2021-01-01 00:00:00')
-      const now = new Date()
-
-      if (isBefore(now, dueDay)) {
-        return {
-          text: `失能險停售倒數 ${differenceInDays(dueDay, now) + 1} 天`,
-          link: {
-            path: '/insurance/disability',
-            url: `${this.$env.HOST_URL}/insurance/disability`,
-          },
-        }
-      }
-
-      return ''
+    announcement() {
+      return this.$store.state.header.announcement
     },
   },
   watch: {
@@ -101,7 +87,7 @@ export interface Data {}
 export type Methods = {}
 
 export interface Computed {
-  headerHeadline: LinkButton | string
+  announcement: Announcement
 }
 
 export interface Props {}
