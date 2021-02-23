@@ -22,6 +22,7 @@
           :type="isMobile ? 'primary' : 'quaternary'"
           :to="consultLink.path"
           :is-full-width="isMobile"
+          @click.native="tracking"
         >
           免費找業務員
         </BaseButton>
@@ -43,7 +44,8 @@ import ProductPromotion from '../product/ProductPromotion.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { useStore } from '@/utils/composition-api'
+import { useAnalytics, useStore } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
@@ -52,16 +54,30 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<InsuranceProductVuexState>()
+    const analytics = useAnalytics()
     const { isMobile } = useDevice()
     const fee = computed(() => store.state.insuranceProduct.fee)
     const consultLink = computed(
       () => store.state.insuranceProduct.product?.consult_link
     )
 
+    const tracking = () => {
+      const insuranceType = computed(
+        () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+      )
+
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '商品頁CTA',
+        action: 'click',
+        label: insuranceType.value,
+      })
+    }
+
     return {
       isMobile,
       fee,
       consultLink,
+      tracking,
     }
   },
 })

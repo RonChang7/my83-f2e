@@ -17,7 +17,12 @@ import {
   PremiumConfigOption,
   ProductFeeList,
 } from '@/api/insurance/insurance.type'
-import { RelatedBlog, RelatedQuestion, Pagination } from '@/api/type'
+import {
+  RelatedBlog,
+  RelatedQuestion,
+  Pagination,
+  LinkButton,
+} from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
 
 export const createStoreModule = <R>(): Module<State, R> => {
@@ -43,6 +48,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           faq: null,
         },
         title: '',
+        announcement: null,
         relatedBlogs: null,
         relatedQuestions: null,
         promotionProducts: null,
@@ -184,6 +190,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
       },
       [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
         state.title = data.title
+        state.announcement = data.announcement_btn
         state.insuranceList = data.products
         state.insuranceIdealCoverages = data.ideal_coverages
         state.filter.premiumConfig = data.premium_config
@@ -255,6 +262,7 @@ export interface State {
     faq: Faq[] | null
   }
   title: string
+  announcement: LinkButton | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   promotionProducts: PromotionInsuranceProduct[] | null

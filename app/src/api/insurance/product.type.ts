@@ -24,6 +24,7 @@ export interface Product {
   claims: string[]
   rules: Rule[]
   hot_products: HotProductList
+  online_product: LinkButton | null
 }
 
 type ContractType = '主約' | '附約'

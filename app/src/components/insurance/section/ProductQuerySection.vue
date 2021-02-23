@@ -16,6 +16,7 @@
         :card-height="feeCardHeight"
         :fee="fee"
         :consult-link="consultLink"
+        :insurance-type="insuranceType"
         @open-modal="$emit('open-modal')"
       />
     </div>
@@ -118,7 +119,9 @@ export default defineComponent({
           '保障一定年期，如：10 年定期壽險，即保障 10 年，到期後契約終止。',
       },
     ]
-
+    const insuranceType = computed(
+      () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+    )
     const contractType = computed(
       () => store.state.insuranceProduct.product?.product.contract_type
     )
@@ -217,6 +220,7 @@ export default defineComponent({
       feeCardHeight,
       contractTypeInfo,
       wholeLifeTypeInfo,
+      insuranceType,
       contractType,
       wholeLifeType,
       fee,
