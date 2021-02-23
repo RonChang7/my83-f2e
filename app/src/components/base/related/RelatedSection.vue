@@ -6,6 +6,7 @@
         v-for="(item, index) in filteredRelatedData"
         :key="index"
         :to="item.link.path"
+        @click.native="$emit('click-link', index)"
       >
         <RelatedCard
           :index="index + 1"
