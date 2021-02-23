@@ -76,7 +76,7 @@ export default defineComponent({
   flex: 1 1 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   color: $primary-color;
   font-weight: 500;
   text-align: center;
