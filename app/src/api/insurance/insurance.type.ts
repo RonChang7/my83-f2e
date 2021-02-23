@@ -93,6 +93,7 @@ export interface InsuranceListData {
   products: InsuranceProduct[]
   default_premium_config: PremiumConfig | null
   premium_config: Record<string, PremiumConfigOption> | null
+  announcement_btn: LinkButton | null
 }
 
 export type PremiumConfig = Record<string, string | number>
