@@ -10,11 +10,22 @@
           :key="button.value"
           class="HeaderSection__button"
           size="l-a"
-          :type="button.value === 'discontinued' ? 'primary' : 'tertiary'"
+          type="tertiary"
           :is-full-width="true"
           @click.native="openInfoModal(button.value)"
         >
           {{ button.key }}
+        </BaseButton>
+        <BaseButton
+          v-if="announcement"
+          class="HeaderSection__button announcement"
+          size="l-a"
+          :to="announcement.link.path"
+          :is-full-width="true"
+          type="primary"
+          target="_blank"
+        >
+          {{ announcement.text }}
         </BaseButton>
       </div>
     </div>
@@ -28,6 +39,7 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { NavTab, Props as InfoModalProps } from '../modal/InsuranceTipModal.vue'
+import { LinkButton } from '@/api/type'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 
@@ -68,20 +80,10 @@ const options: ComponentOption = {
         )
       }
 
-      if (this.discontinuedProductButtonInfo) {
-        buttonInfos.push(this.discontinuedProductButtonInfo)
-      }
-
       return buttonInfos
     },
-    discontinuedProductButtonInfo() {
-      if (this.$store.state.insurance.staticData.id !== 'disability') return
-      if (Date.now() > new Date('2021-01-02 00:00:00').getTime()) return
-
-      return {
-        key: `12月最新${this.name}停售表`,
-        value: 'discontinued',
-      }
+    announcement() {
+      return this.$store.state.insurance.announcement
     },
   },
   methods: {
@@ -124,7 +126,7 @@ export interface Computed {
   name: string
   image: string
   buttonInfos: NavTab[]
-  discontinuedProductButtonInfo: NavTab | undefined
+  announcement: LinkButton | null
 }
 
 export interface Props {}
@@ -172,6 +174,10 @@ export default options
 
     ::v-deep #{$self}__button {
       width: $width;
+
+      &.announcement {
+        flex: 1 1 auto;
+      }
 
       @include min-media('xl') {
         &:not(:last-child) {
