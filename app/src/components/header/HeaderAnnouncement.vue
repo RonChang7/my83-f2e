@@ -11,27 +11,32 @@
         {{ announcement.name }}
       </template>
 
-      <div v-if="countdown" class="HeaderAnnouncement__countdown">
-        <template v-if="countdown.day !== '0'">
-          倒數 {{ countdown.day }} 天
-        </template>
-        <template v-else>
-          <div class="digital">{{ countdown.hour }}</div>
-          <div class="delimiter">:</div>
-          <div class="digital">{{ countdown.min }}</div>
-          <div class="delimiter">:</div>
-          <div class="digital">{{ countdown.sec }}</div>
-        </template>
-      </div>
+      <client-only>
+        <div
+          v-if="countdown.endTimeTimestamp"
+          class="HeaderAnnouncement__countdown"
+        >
+          <template v-if="countdown.day !== '0'">
+            倒數 {{ countdown.day }} 天
+          </template>
+          <template v-else>
+            <div class="digital">{{ countdown.hour }}</div>
+            <div class="delimiter">:</div>
+            <div class="digital">{{ countdown.min }}</div>
+            <div class="delimiter">:</div>
+            <div class="digital">{{ countdown.sec }}</div>
+          </template>
+        </div>
+      </client-only>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, watch } from '@nuxtjs/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { Announcement } from '@/api/header/header.type'
-import { useCountdown } from '@/utils/composition-api/countdown'
+import { useCountdownTimer } from '@/utils/composition-api/countdown'
 
 export default defineComponent({
   components: {
@@ -44,9 +49,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const countdown = props.announcement?.countdown
-      ? useCountdown(props.announcement.countdown)
-      : null
+    const countdown = useCountdownTimer(props.announcement?.countdown)
+
+    watch(
+      () => props.announcement,
+      (val) => {
+        if (!val) return
+
+        countdown.endTimeTimestamp = val.countdown
+      }
+    )
 
     return {
       countdown,

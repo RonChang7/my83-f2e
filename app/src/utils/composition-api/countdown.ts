@@ -1,15 +1,17 @@
-import { reactive, onMounted, computed } from '@nuxtjs/composition-api'
+import { reactive, onMounted, watch } from '@nuxtjs/composition-api'
 import { padLeft } from '@/utils/digital'
 
-export const useCountdown = (endTimeTimestamp: number) => {
-  const countdown = reactive({
+export const useCountdownTimer = (endTimeTimestamp?: number) => {
+  let timer: number | null = null
+  const countdownTimer = reactive({
+    endTimeTimestamp: endTimeTimestamp || 0,
     day: '0',
-    hour: '0',
-    min: '0',
-    sec: '0',
+    hour: '00',
+    min: '00',
+    sec: '00',
   })
 
-  const countdownTransformer = (sec: number) => {
+  const timerDisplayTransformer = (sec: number) => {
     const day = Math.floor(sec / (3600 * 24))
     sec -= day * (3600 * 24)
     const hour = Math.floor(sec / 3600)
@@ -18,25 +20,55 @@ export const useCountdown = (endTimeTimestamp: number) => {
     sec -= min * 60
     sec = Math.floor(sec % 60)
 
-    countdown.day = day.toString()
-    countdown.hour = padLeft(hour, 2)
-    countdown.min = padLeft(min, 2)
-    countdown.sec = padLeft(sec, 2)
+    countdownTimer.day = day.toString()
+    countdownTimer.hour = padLeft(hour, 2)
+    countdownTimer.min = padLeft(min, 2)
+    countdownTimer.sec = padLeft(sec, 2)
+  }
+
+  const setupTimer = () => {
+    let secBeforeEnd =
+      countdownTimer.endTimeTimestamp - Math.round(Date.now() / 1000)
+
+    if (secBeforeEnd <= 0) {
+      stopTimer()
+      resetEndTime()
+      return
+    }
+
+    timerDisplayTransformer(secBeforeEnd)
+    timer = window.setInterval(() => {
+      secBeforeEnd -= 1
+      timerDisplayTransformer(secBeforeEnd)
+
+      if (secBeforeEnd <= 0) {
+        stopTimer()
+        resetEndTime()
+      }
+    }, 1000)
+  }
+
+  const stopTimer = () => {
+    timer !== null && window.clearInterval(timer)
+  }
+
+  const resetEndTime = () => {
+    countdownTimer.endTimeTimestamp = 0
   }
 
   onMounted(() => {
-    let secBeforeEnd = endTimeTimestamp - Math.round(Date.now() / 1000)
-
-    countdownTransformer(secBeforeEnd)
-    const timer = window.setInterval(() => {
-      secBeforeEnd -= 1
-      countdownTransformer(secBeforeEnd)
-
-      if (secBeforeEnd <= 0) {
-        window.clearInterval(timer)
-      }
-    }, 1000)
+    setupTimer()
   })
 
-  return computed(() => countdown)
+  watch(
+    () => countdownTimer.endTimeTimestamp,
+    (val) => {
+      if (!val) return
+
+      stopTimer()
+      setupTimer()
+    }
+  )
+
+  return countdownTimer
 }

@@ -38,7 +38,7 @@
 import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { SalesInfo } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { useCountdown } from '~/utils/composition-api/countdown'
+import { useCountdownTimer } from '@/utils/composition-api/countdown'
 
 export default defineComponent({
   components: {
@@ -71,9 +71,9 @@ export default defineComponent({
         : null
     })
 
-    const countdown = countdownConfig.value
-      ? useCountdown(countdownConfig.value.discountCountdown)
-      : null
+    const countdown = useCountdownTimer(
+      countdownConfig.value?.discountCountdown
+    )
 
     return {
       countdownConfig,
