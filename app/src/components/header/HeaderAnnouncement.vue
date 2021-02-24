@@ -12,6 +12,10 @@
       </template>
 
       <client-only>
+        <template v-if="countdown.endTimeTimestamp && countdown.day === '0'">
+          倒數
+        </template>
+
         <div
           v-if="countdown.endTimeTimestamp"
           class="HeaderAnnouncement__countdown"
@@ -90,7 +94,7 @@ export default defineComponent({
   }
 
   &__content {
-    max-width: 180px;
+    max-width: 220px;
     margin: 0 15px 0 5px;
     line-height: 1;
 

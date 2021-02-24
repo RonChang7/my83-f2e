@@ -161,7 +161,7 @@ export interface Props {
   .logo {
     width: 148px;
     height: 34px;
-    margin-right: 15px;
+    margin-right: 10px;
   }
 
   &.no-shadow {
