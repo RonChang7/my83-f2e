@@ -2,14 +2,15 @@
   <div
     class="HeaderAnnouncement"
     :class="{ countdown: countdown && !countdown.day }"
+    @click="() => (announcement.link ? tracking() : null)"
   >
-    <div class="HeaderAnnouncement__content">
-      <GlobalLink v-if="announcement.link" :to="announcement.link.path">
-        {{ announcement.name }}
-      </GlobalLink>
-      <template v-else>
-        {{ announcement.name }}
-      </template>
+    <component
+      :is="announcement.link ? 'GlobalLink' : 'div'"
+      :to="announcement.link ? announcement.link.path : null"
+      target="_blank"
+      class="HeaderAnnouncement__content"
+    >
+      {{ announcement.name }}
 
       <client-only>
         <template v-if="countdown.endTimeTimestamp && countdown.day === '0'">
@@ -32,7 +33,7 @@
           </template>
         </div>
       </client-only>
-    </div>
+    </component>
   </div>
 </template>
 
@@ -41,6 +42,8 @@ import { defineComponent, watch } from '@nuxtjs/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { Announcement } from '@/api/header/header.type'
 import { useCountdownTimer } from '@/utils/composition-api/countdown'
+import { useAnalytics } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
@@ -53,7 +56,15 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const analytics = useAnalytics()
     const countdown = useCountdownTimer(props.announcement?.countdown)
+    const tracking = () => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: 'header navigation - click announcement',
+        action: props.announcement?.name || '',
+        label: '',
+      })
+    }
 
     watch(
       () => props.announcement,
@@ -66,6 +77,7 @@ export default defineComponent({
 
     return {
       countdown,
+      tracking,
     }
   },
 })
