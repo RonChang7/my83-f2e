@@ -150,7 +150,7 @@ export interface Props {
     width: 100%;
 
     &::v-deep > *:not(:last-child) {
-      margin-right: 15px;
+      margin-right: 8px;
     }
 
     &::v-deep > svg {
@@ -161,7 +161,7 @@ export interface Props {
   .logo {
     width: 148px;
     height: 34px;
-    margin-right: 10px;
+    margin-right: 5px;
   }
 
   &.no-shadow {
