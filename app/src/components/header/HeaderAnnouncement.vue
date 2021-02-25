@@ -1,7 +1,7 @@
 <template>
   <div
     class="HeaderAnnouncement"
-    :class="{ countdown: countdown && !countdown.day }"
+    :class="{ countdown: countdown && countdown.endTimeTimestamp }"
     @click="() => (announcement.link ? tracking() : null)"
   >
     <component
@@ -13,16 +13,13 @@
       {{ announcement.name }}
 
       <client-only>
-        <template v-if="countdown.endTimeTimestamp && countdown.day === '0'">
-          倒數
-        </template>
-
         <div
           v-if="countdown.endTimeTimestamp"
           class="HeaderAnnouncement__countdown"
         >
+          倒數
           <template v-if="countdown.day !== '0'">
-            倒數 {{ countdown.day }} 天
+            {{ countdown.day }} 天
           </template>
           <template v-else>
             <div class="digital">{{ countdown.hour }}</div>
