@@ -104,6 +104,14 @@ export default defineComponent({
         display: none;
       }
     }
+
+    @include hover-supported {
+      &:hover {
+        .digital {
+          border-color: $primary-dark-color;
+        }
+      }
+    }
   }
 
   &__reward {

@@ -110,6 +110,14 @@ export default defineComponent({
     @include max-media('xl') {
       margin: 0;
     }
+
+    @include hover-supported {
+      &:hover {
+        .digital {
+          border-color: $primary-dark-color;
+        }
+      }
+    }
   }
 
   &__countdown {
