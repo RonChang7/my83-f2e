@@ -92,10 +92,15 @@ const options: ComponentOption = {
               return {
                 name: item.tag_type_name,
                 isOpen: item.is_open,
-                options: item.tag_ids.map((tagId) => {
+                sections: item.sections.map((section) => {
                   return {
-                    text: this.formOption.tag_list[tagId],
-                    value: tagId,
+                    name: section.name,
+                    options: section.tag_ids.map((tagId) => {
+                      return {
+                        text: this.formOption.tag_list[tagId],
+                        value: tagId,
+                      }
+                    }),
                   }
                 }),
               }
@@ -108,10 +113,15 @@ const options: ComponentOption = {
                   return {
                     name: item.tag_type_name,
                     isOpen: item.is_open,
-                    options: item.tag_ids.map((tagId) => {
+                    sections: item.sections.map((section) => {
                       return {
-                        text: this.formOption.tag_list[tagId],
-                        value: tagId,
+                        name: section.name,
+                        options: section.tag_ids.map((tagId) => {
+                          return {
+                            text: this.formOption.tag_list[tagId],
+                            value: tagId,
+                          }
+                        }),
                       }
                     }),
                   }
@@ -170,7 +180,10 @@ export interface Props {
 export interface InsuranceTagOption {
   name: string
   isOpen: boolean
-  options: SelectOption[]
+  sections: {
+    name: string
+    options: SelectOption[]
+  }[]
 }
 
 export interface TransformFormOption {
