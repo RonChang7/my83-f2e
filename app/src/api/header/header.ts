@@ -1,16 +1,12 @@
 import request from '../request'
-import {
-  HeaderNavItem,
-  HeaderPersonalized,
-  HeaderDataResponse,
-} from './header.type'
+import { HeaderPersonalized, HeaderDataResponse } from './header.type'
 
 /**
  * @description 取得 Header 選單資料
  */
-export const fetchHeaderData = async (): Promise<HeaderNavItem[]> => {
+export const fetchHeaderData = async (): Promise<HeaderDataResponse> => {
   const { data } = await request.get<HeaderDataResponse>('/api/menu')
-  return data.header
+  return data
 }
 
 /**
