@@ -72,6 +72,12 @@ export class QuestionFormService {
         {
           required: true,
           type: 'array',
+          max: 3,
+          message: '標籤類型不得超過三個',
+        },
+        {
+          required: true,
+          type: 'array',
           min: 1,
           message: '請選擇符合內文的標籤，至少一個',
         },
