@@ -30,7 +30,7 @@
             </div>
           </template>
           <template v-slot:content>
-            <ProductQueryTooltipCard :info="contractTypeInfo" />
+            <ContractTypeCard />
           </template>
         </BaseTooltip>
         <span>{{ contractType }}</span>
@@ -44,7 +44,7 @@
             </div>
           </template>
           <template v-slot:content>
-            <ProductQueryTooltipCard :info="wholeLifeTypeInfo" />
+            <WholeLifeTypeCard />
           </template>
         </BaseTooltip>
         <span>{{ wholeLifeType }}</span>
@@ -66,7 +66,8 @@ import {
 } from '@nuxtjs/composition-api'
 import ProductQueryField from '../product/ProductQueryField.vue'
 import ProductFee from '../product/ProductFee.vue'
-import ProductQueryTooltipCard from '../product/ProductQueryTooltipCard.vue'
+import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
+import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import { useStore } from '@/utils/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
@@ -85,7 +86,8 @@ export default defineComponent({
     ProductFee,
     BaseInfo,
     BaseTooltip,
-    ProductQueryTooltipCard,
+    ContractTypeCard,
+    WholeLifeTypeCard,
   },
   setup() {
     const store = useStore<InsuranceProductVuexState>()
@@ -97,28 +99,6 @@ export default defineComponent({
     const formData = ref({})
     const submit = ref({})
 
-    // 不需要響應的資料，不使用 ref, reactive warp
-    const contractTypeInfo = [
-      {
-        title: '主約',
-        content: '可以單獨購買的保險契約。',
-      },
-      {
-        title: '附約',
-        content: '不能單獨購買、需搭配著主約一起購買的保險契約。',
-      },
-    ]
-    const wholeLifeTypeInfo = [
-      {
-        title: '終身險',
-        content: '保障終身。通常繳費 20 年後即可不須再繳保費。',
-      },
-      {
-        title: '定期險',
-        content:
-          '保障一定年期，如：10 年定期壽險，即保障 10 年，到期後契約終止。',
-      },
-    ]
     const insuranceType = computed(
       () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
     )
@@ -218,8 +198,6 @@ export default defineComponent({
       update,
       submit,
       feeCardHeight,
-      contractTypeInfo,
-      wholeLifeTypeInfo,
       insuranceType,
       contractType,
       wholeLifeType,
