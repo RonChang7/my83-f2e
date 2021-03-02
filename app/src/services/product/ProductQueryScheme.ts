@@ -1,3 +1,4 @@
+import { ref, reactive } from '@nuxtjs/composition-api'
 import { Field, FieldType, InputType } from '@/services/form/field.type'
 import {
   DefaultPremiumConfig,
@@ -8,8 +9,33 @@ import { FormService } from '@/services/form/FormService'
 import { FieldFactory } from '@/services/form/FieldFactory'
 import { Rule } from '@/services/validator/Validator'
 import { ZHTWUnitMap } from '@/utils/number-converter'
+import { UpdatePremiumQueryPayload } from '@/store/insurance/product'
 
-export class RateSchemeFactory {
+export const useProductQuery = (
+  premiumConfig: PremiumConfig | undefined,
+  defaultPremiumConfig: DefaultPremiumConfig
+) => {
+  const validateState = ref({})
+  const scheme = RateSchemeFactory.create(premiumConfig, defaultPremiumConfig)
+  const validateAll = async () => {
+    const result = await scheme.form.validateAll()
+    validateState.value = reactive(scheme.form.validateState)
+    return result
+  }
+  const update = async ({ id, value }: UpdatePremiumQueryPayload) => {
+    scheme.form.updateFormData(id, value)
+    await scheme.form.validate(id)
+  }
+
+  return {
+    scheme,
+    validateState,
+    validateAll,
+    update,
+  }
+}
+
+class RateSchemeFactory {
   constructor() {}
 
   static create(
