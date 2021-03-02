@@ -75,7 +75,7 @@ import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
-import { RateSchemeFactory } from '@/services/product/ProductQueryScheme'
+import { useProductQuery } from '@/services/product/ProductQueryScheme'
 
 export default defineComponent({
   components: {
@@ -92,7 +92,6 @@ export default defineComponent({
     const content = ref<HTMLElement | null>(null)
     const feeCardHeight = ref(0)
     const options = ref({})
-    const validateState = ref({})
     const formData = ref({})
     const submit = ref({})
 
@@ -116,7 +115,7 @@ export default defineComponent({
       () => store.state.insuranceProduct.product?.premium_config.amount_unit
     )
 
-    const scheme = RateSchemeFactory.create(
+    const { scheme, validateState, validateAll, update } = useProductQuery(
       premiumConfig?.value,
       store.state.insuranceProduct.product!.default_premium_config
     )
@@ -130,12 +129,6 @@ export default defineComponent({
       store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`, payload)
     }, 50)
 
-    const validateAll = async () => {
-      const result = await scheme.form.validateAll()
-      validateState.value = reactive(scheme.form.validateState)
-      return result
-    }
-
     const fetchProductFee = () => {
       nextTick(async () => {
         if (await validateAll()) {
@@ -144,11 +137,6 @@ export default defineComponent({
           store.commit(`insuranceProduct/${CLEAR_FEE}`)
         }
       })
-    }
-
-    const update = async ({ id, value }: UpdatePremiumQueryPayload) => {
-      scheme.form.updateFormData(id, value)
-      await scheme.form.validate(id)
     }
 
     const createReactive = () => {
