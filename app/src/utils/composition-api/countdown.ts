@@ -3,7 +3,7 @@ import { padLeft } from '@/utils/digital'
 
 export const useCountdownTimer = (endTimeTimestamp?: number) => {
   let timer: number | null = null
-  const countdownTimer = reactive({
+  const countdownTimer: CountdownTimer = reactive({
     endTimeTimestamp: endTimeTimestamp || 0,
     day: '0',
     hour: '00',
@@ -11,7 +11,7 @@ export const useCountdownTimer = (endTimeTimestamp?: number) => {
     sec: '00',
   })
 
-  const timerDisplayTransformer = (sec: number) => {
+  const displayTimerTransformer = (sec: number) => {
     const day = Math.floor(sec / (3600 * 24))
     sec -= day * (3600 * 24)
     const hour = Math.floor(sec / 3600)
@@ -36,10 +36,10 @@ export const useCountdownTimer = (endTimeTimestamp?: number) => {
       return
     }
 
-    timerDisplayTransformer(secBeforeEnd)
+    displayTimerTransformer(secBeforeEnd)
     timer = window.setInterval(() => {
       secBeforeEnd -= 1
-      timerDisplayTransformer(secBeforeEnd)
+      displayTimerTransformer(secBeforeEnd)
 
       if (secBeforeEnd <= 0) {
         stopTimer()
@@ -57,18 +57,27 @@ export const useCountdownTimer = (endTimeTimestamp?: number) => {
   }
 
   onMounted(() => {
+    if (!countdownTimer.endTimeTimestamp) return
     setupTimer()
   })
 
   watch(
     () => countdownTimer.endTimeTimestamp,
     (val) => {
-      if (!val) return
-
       stopTimer()
+
+      if (!val) return
       setupTimer()
     }
   )
 
   return countdownTimer
+}
+
+interface CountdownTimer {
+  endTimeTimestamp: number
+  day: string
+  hour: string
+  min: string
+  sec: string
 }
