@@ -8,7 +8,7 @@
         class="AskingFormTagSelectField__panel"
         :class="{ first: index === 0 }"
         :label="tagOption.label"
-        :options="tagOption.options"
+        :option-sections="tagOption.sections"
         :selected="value"
         :enable-fold="tagOption.enableFold"
         :is-expanded.sync="panelExpandState[index]"

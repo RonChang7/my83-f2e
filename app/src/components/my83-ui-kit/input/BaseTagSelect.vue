@@ -13,17 +13,27 @@
         <BaseArrowDown v-else />
       </div>
     </div>
-    <div v-if="shouldDisplayOptions" class="BaseTagSelect__options">
-      <template v-for="option in options">
-        <BaseTagOption
-          v-if="option.text"
-          :key="option.value"
-          :option="option"
-          :selected="isSelected(option.value)"
-          @click-option="clickOptionHandler"
-        />
-      </template>
-    </div>
+    <template v-if="shouldDisplayOptions">
+      <div
+        v-for="(section, index) in optionSections"
+        :key="index"
+        class="BaseTagSelect__options"
+        :class="{ indent: !!section.name }"
+      >
+        <div v-if="section.name" class="BaseTagSelect__title">
+          {{ section.name }}
+        </div>
+        <template v-for="option in section.options">
+          <BaseTagOption
+            v-if="option.text"
+            :key="option.value"
+            :option="option"
+            :selected="isSelected(option.value)"
+            @click-option="clickOptionHandler"
+          />
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -48,7 +58,7 @@ const options: ComponentOption = {
       type: String,
       default: '',
     },
-    options: {
+    optionSections: {
       type: Array,
       required: true,
     },
@@ -125,7 +135,10 @@ export interface Computed {
 
 export interface Props {
   label: string
-  options: Option[]
+  optionSections: {
+    name: string
+    options: Option[]
+  }[]
   selected: (string | number)[]
   enableFold: boolean
   isExpanded: boolean
@@ -149,13 +162,28 @@ export default options
     }
   }
 
+  &__title {
+    color: $secondary-color;
+    padding-bottom: 0.5rem;
+  }
+
   &__label {
     color: $gray-primary;
     margin: 8px 0;
   }
 
   &__options {
-    padding: 5px 0;
+    &:first-child {
+      padding-top: 5px;
+    }
+
+    &:last-child {
+      padding-bottom: 5px;
+    }
+
+    &.indent {
+      padding-left: 1rem;
+    }
   }
 }
 </style>

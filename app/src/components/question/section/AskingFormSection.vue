@@ -231,7 +231,7 @@ const options: ComponentOption = {
             ] as InsuranceTagOption[]).map((option) => {
               return {
                 label: option.name,
-                options: option.options,
+                sections: option.sections,
                 enableFold: true,
                 isExpanded: expandAllPanel || option.isOpen,
               }
@@ -245,7 +245,7 @@ const options: ComponentOption = {
             >)[this.form.target].map((option) => {
               return {
                 label: option.name,
-                options: option.options,
+                sections: option.sections,
                 enableFold: true,
                 isExpanded: expandAllPanel || option.isOpen,
               }
