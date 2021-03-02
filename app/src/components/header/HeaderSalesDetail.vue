@@ -13,13 +13,13 @@
       class="HeaderSalesDetail__vipCountdown"
       to="/pricing"
     >
-      {{ countdownConfig.text }} 只剩 {{ countdownDisplay.day }} 日
+      {{ countdownConfig.text }} 只剩 {{ countdown.day }} 日
       <br class="wrap" />
-      <div class="digital">{{ countdownDisplay.hour }}</div>
-      :
-      <div class="digital">{{ countdownDisplay.min }}</div>
-      :
-      <div class="digital">{{ countdownDisplay.sec }}</div>
+      <div class="digital">{{ countdown.hour }}</div>
+      <div class="delimiter">:</div>
+      <div class="digital">{{ countdown.min }}</div>
+      <div class="delimiter">:</div>
+      <div class="digital">{{ countdown.sec }}</div>
     </GlobalLink>
 
     <GlobalLink
@@ -35,137 +35,52 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { SalesInfo } from '@/api/header/header.type'
-import { padLeft } from '@/utils/digital'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { useCountdownTimer } from '@/utils/composition-api/countdown'
 
-export default {
+export default defineComponent({
   components: {
     GlobalLink,
   },
-  data() {
-    return {
-      countdown: 0,
-      countdownDisplay: {
-        day: '0',
-        hour: '0',
-        min: '0',
-        sec: '0',
-      },
-    }
-  },
   props: {
     salesInfo: {
-      type: Object,
+      type: Object as () => SalesInfo,
       required: true,
     },
   },
-  methods: {
-    setCountdown() {
-      this.countdownTransformer(this.countdown)
-
-      const timer = window.setInterval(() => {
-        this.countdown -= 1
-        this.countdownTransformer(this.countdown)
-
-        if (this.countdown <= 0) {
-          window.clearInterval(timer)
-        }
-      }, 1000)
-    },
-    countdownTransformer(sec) {
-      const day = Math.floor(sec / (3600 * 24))
-      sec -= day * (3600 * 24)
-      const hour = Math.floor(sec / 3600)
-      sec -= hour * 3600
-      const min = Math.floor(sec / 60)
-      sec -= min * 60
-      sec = Math.floor(sec % 60)
-      this.countdownDisplay.day = day.toString()
-      this.countdownDisplay.hour = padLeft(hour, 2)
-      this.countdownDisplay.min = padLeft(min, 2)
-      this.countdownDisplay.sec = padLeft(sec, 2)
-    },
-  },
-  computed: {
-    vipDiscountCountdown() {
-      return this.salesInfo.vip_discount_countdown || 0
-    },
-    pointDiscountCountdown() {
-      return this.salesInfo.point_discount_countdown || 0
-    },
-    countdownConfig() {
-      return this.vipDiscountCountdown * 1000 >= Date.now()
+  setup(props) {
+    const vipDiscountCountdown = computed(
+      () => props.salesInfo.vip_discount_countdown || 0
+    )
+    const pointDiscountCountdown = computed(
+      () => props.salesInfo.point_discount_countdown || 0
+    )
+    const countdownConfig = computed(() => {
+      return vipDiscountCountdown.value * 1000 >= Date.now()
         ? {
             text: '限時優惠 VIP',
-            discountCountdown: this.vipDiscountCountdown,
+            discountCountdown: vipDiscountCountdown.value,
           }
-        : this.pointDiscountCountdown * 1000 >= Date.now()
+        : pointDiscountCountdown.value * 1000 >= Date.now()
         ? {
             text: '限時優惠 5000 點',
-            discountCountdown: this.pointDiscountCountdown,
+            discountCountdown: pointDiscountCountdown.value,
           }
         : null
-    },
-  },
-  mounted() {
-    if (this.countdownConfig) {
-      this.countdown =
-        this.countdownConfig.discountCountdown - Math.round(Date.now() / 1000)
+    })
 
-      this.setCountdown()
+    const countdown = useCountdownTimer(
+      countdownConfig.value?.discountCountdown
+    )
+
+    return {
+      countdownConfig,
+      countdown,
     }
   },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {
-  countdown: number
-  countdownDisplay: {
-    day: string
-    hour: string
-    min: string
-    sec: string
-  }
-}
-
-export type Methods = {
-  setCountdown(): void
-  countdownTransformer(sec: number): void
-}
-
-export interface Computed {
-  vipDiscountCountdown: number
-  pointDiscountCountdown: number
-  countdownConfig: {
-    text: string
-    discountCountdown: number
-  } | null
-}
-
-export interface Props {
-  salesInfo: SalesInfo
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -189,6 +104,14 @@ export interface Props {
         display: none;
       }
     }
+
+    @include hover-supported {
+      &:hover {
+        .digital {
+          border-color: $primary-dark-color;
+        }
+      }
+    }
   }
 
   &__reward {
@@ -205,14 +128,11 @@ export interface Props {
   }
 
   .digital {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 2px;
-    border: 1px solid $primary-light-color;
-    width: 24px;
-    height: 24px;
-    margin: 0 4px;
+    @include countdown-timer-digital;
+  }
+
+  .delimiter {
+    @include countdown-timer-delimiter;
   }
 }
 </style>

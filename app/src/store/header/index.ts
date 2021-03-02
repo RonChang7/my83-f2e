@@ -1,6 +1,10 @@
 import { Module } from 'vuex'
 import * as types from './header.type'
-import { HeaderNavItem, HeaderPersonalized } from '@/api/header/header.type'
+import {
+  HeaderNavItem,
+  HeaderPersonalized,
+  Announcement,
+} from '@/api/header/header.type'
 import * as api from '@/api/header/header'
 
 export const createStoreModule = <R>(): Module<State, R> => {
@@ -10,14 +14,16 @@ export const createStoreModule = <R>(): Module<State, R> => {
       return {
         headerNavItems: [],
         headerPersonalized: null,
+        announcement: null,
       }
     },
     getters: {},
     actions: {
       async [types.FETCH_HEADER_NAV_DATA]({ commit }) {
         try {
-          const data = await api.fetchHeaderData()
-          commit(types.UPDATE_HEADER_NAV_DATA, data)
+          const { header, announcement } = await api.fetchHeaderData()
+          commit(types.UPDATE_HEADER_NAV_DATA, header)
+          commit(types.UPDATE_HEADER_ANNOUNCEMENT, announcement)
         } catch (err) {}
       },
       async [types.FETCH_HEADER_PERSONALIZED_DATA]({ commit }) {
@@ -42,6 +48,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_HEADER_PERSONALIZED_DATA](state, data: HeaderPersonalized) {
         state.headerPersonalized = data
       },
+      [types.UPDATE_HEADER_ANNOUNCEMENT](state, data: Announcement) {
+        state.announcement = data
+      },
     },
   }
 }
@@ -49,4 +58,5 @@ export const createStoreModule = <R>(): Module<State, R> => {
 export interface State {
   headerNavItems: HeaderNavItem[]
   headerPersonalized: HeaderPersonalized | null
+  announcement: Announcement | null
 }
