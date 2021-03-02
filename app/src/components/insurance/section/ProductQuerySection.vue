@@ -75,10 +75,7 @@ import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
-import {
-  FixedRateScheme,
-  VariableRateScheme,
-} from '@/services/product/ProductQueryScheme'
+import { RateSchemeFactory } from '@/services/product/ProductQueryScheme'
 
 export default defineComponent({
   components: {
@@ -119,18 +116,10 @@ export default defineComponent({
       () => store.state.insuranceProduct.product?.premium_config.amount_unit
     )
 
-    const scheme = premiumConfig.value!.is_fixed_rate
-      ? new FixedRateScheme({
-          plans: premiumConfig.value!.plans,
-          defaultPremiumConfig: store.state.insuranceProduct.product!
-            .default_premium_config,
-        })
-      : new VariableRateScheme({
-          plans: premiumConfig.value!.plans,
-          defaultPremiumConfig: store.state.insuranceProduct.product!
-            .default_premium_config,
-          amountUnit: premiumConfig.value!.amount_unit,
-        })
+    const scheme = RateSchemeFactory.create(
+      premiumConfig?.value,
+      store.state.insuranceProduct.product!.default_premium_config
+    )
 
     const fetchProductFeeAction = _.debounce(() => {
       const payload = {

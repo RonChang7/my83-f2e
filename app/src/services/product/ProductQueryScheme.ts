@@ -1,11 +1,38 @@
 import { Field, FieldType, InputType } from '@/services/form/field.type'
-import { DefaultPremiumConfig, Plan } from '@/api/insurance/product.type'
+import {
+  DefaultPremiumConfig,
+  Plan,
+  PremiumConfig,
+} from '@/api/insurance/product.type'
 import { FormService } from '@/services/form/FormService'
 import { FieldFactory } from '@/services/form/FieldFactory'
 import { Rule } from '@/services/validator/Validator'
 import { ZHTWUnitMap } from '@/utils/number-converter'
 
-export class VariableRateScheme {
+export class RateSchemeFactory {
+  constructor() {}
+
+  static create(
+    premiumConfig: PremiumConfig | undefined,
+    defaultPremiumConfig: DefaultPremiumConfig
+  ) {
+    if (!premiumConfig)
+      throw new Error('Cannot create scheme with empty premium config!')
+
+    return premiumConfig.is_fixed_rate
+      ? new FixedRateScheme({
+          plans: premiumConfig.plans,
+          defaultPremiumConfig,
+        })
+      : new VariableRateScheme({
+          plans: premiumConfig.plans,
+          defaultPremiumConfig,
+          amountUnit: premiumConfig.amount_unit,
+        })
+  }
+}
+
+class VariableRateScheme {
   form: FormService
 
   private fields: Field<FieldType>[]
@@ -123,7 +150,7 @@ export class VariableRateScheme {
   }
 }
 
-export class FixedRateScheme {
+class FixedRateScheme {
   form: FormService
 
   private fields: Field<FieldType>[]
