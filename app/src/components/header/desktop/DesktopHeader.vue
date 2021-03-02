@@ -9,40 +9,26 @@
     </GlobalLink>
     <nav>
       <DesktopHeaderNav :user-role="userRole" />
-      <div
-        v-if="shouldShowHeaderHeadline"
-        class="DesktopHeader__headerHeadline"
-      >
-        <GlobalLink
-          v-if="typeof headerHeadline === 'object'"
-          :to="headerHeadline.link.path"
-        >
-          {{ headerHeadline.text }}
-        </GlobalLink>
-        <template v-else>
-          {{ headerHeadline }}
-        </template>
-      </div>
+      <HeaderAnnouncement v-if="announcement" :announcement="announcement" />
       <HeaderPersonalize />
     </nav>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { defineComponent } from '@nuxtjs/composition-api'
 import HeaderPersonalize from '../HeaderPersonalize.vue'
+import HeaderAnnouncement from '../HeaderAnnouncement.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { UserRole } from '@/services/auth/auth'
-import { LinkButton } from '@/api/type'
 
-export default {
+export default defineComponent({
   components: {
+    GlobalLink,
     DesktopHeaderNav,
     HeaderPersonalize,
-    GlobalLink,
+    HeaderAnnouncement,
   },
   props: {
     enableRwd: {
@@ -50,52 +36,15 @@ export default {
       default: false,
     },
     userRole: {
-      type: String,
+      type: String as () => UserRole,
       default: 'guest',
     },
-    headerHeadline: {
-      type: [Object, String],
-      default: '',
+    announcement: {
+      type: Object,
+      default: null,
     },
   },
-  computed: {
-    shouldShowHeaderHeadline() {
-      return !!this.headerHeadline && this.userRole !== 'sales'
-    },
-  },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  shouldShowHeaderHeadline: boolean
-}
-
-export interface Props {
-  enableRwd: boolean
-  userRole: UserRole
-  headerHeadline: LinkButton | string
-}
+})
 </script>
 
 <style lang="scss" scoped>
@@ -136,15 +85,6 @@ export interface Props {
     @include max-media('xl') {
       display: none;
     }
-  }
-
-  &__headerHeadline {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
-    color: $primary-color;
-    font-weight: 500;
-    text-align: left;
   }
 }
 </style>

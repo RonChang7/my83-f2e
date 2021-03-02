@@ -103,6 +103,7 @@ export interface Props {
   padding: 0;
   list-style: none;
   display: flex;
+  flex: 0 0 auto;
 
   a {
     @include hover('_gray-secondary-lighter');
@@ -113,7 +114,7 @@ export interface Props {
       $base: ($header-resize-cut-point - map-get($grid-breakpoints, 'xl')) / 1px;
 
       li {
-        padding: 0 calc((((100vw - 1200px) / #{$base}) * 8) + 7px);
+        padding: 0 calc((((100vw - 1200px) / #{$base}) * 8) + 4.5px);
       }
     }
   }
