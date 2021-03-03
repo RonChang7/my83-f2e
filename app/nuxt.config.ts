@@ -5,7 +5,6 @@ const config: NuxtConfig = {
   server: {
     port: process.env.PORT,
   },
-  mode: 'universal',
   srcDir: './src',
   globalName: 'my83',
   /*
