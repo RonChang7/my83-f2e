@@ -20,7 +20,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.FETCH_LEADER_BOARD]({ commit, state }, sort?: SortType) {
         if (state.isFetching) return
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           commit(types.UPDATE_FETCHING_STATUS, true)
 
           api

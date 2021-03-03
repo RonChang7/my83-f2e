@@ -65,7 +65,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     getters: {},
     actions: {
       [types.FETCH_PAGE_DATA]({ commit }, id: number) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           Promise.all([
             promiseSettledWrapper(api.fetchQuestionData(id)),
             promiseSettledWrapper(api.fetchAnswerData(id)),
@@ -137,7 +137,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_PAGE_DATA_AFTER_POST]({ commit }, id: number) {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
           Promise.all([
             promiseSettledWrapper(api.fetchAnswerData(id)),
             promiseSettledWrapper(api.fetchRelatedQuestions(id)),

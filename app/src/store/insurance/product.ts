@@ -23,7 +23,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     },
     actions: {
       [types.FETCH_PRODUCT]({ commit }, id: string) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           api
             .fetchProduct(id)
             .then(({ data, page_meta, json_ld }) => {
@@ -48,7 +48,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_PRODUCT_FEE]({ commit, state }) {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
           api
             .fetchProductFee({
               productId: state.id,
