@@ -5,7 +5,6 @@ const config: NuxtConfig = {
   server: {
     port: process.env.PORT,
   },
-  mode: 'universal',
   srcDir: './src',
   globalName: 'my83',
   /*
@@ -161,7 +160,8 @@ const config: NuxtConfig = {
     loaders: {
       scss: {
         // Doc: https://github.com/vuejs/vue-loader/blob/master/docs/guide/pre-processors.md#sharing-global-variables
-        prependData: '$image-bucket-url: "https://images.my83.com.tw";',
+        // @ts-ignore
+        additionalData: '$image-bucket-url: "https://images.my83.com.tw";',
       },
     },
     // extend(config, ctx) {},
