@@ -29,7 +29,7 @@ const refreshJWTToken = async (
 }
 
 export class JWT {
-  public static isRefreshing: Promise<JWTRefreshResponsePayload> | null
+  public static isRefreshing: Promise<JWTRefreshResponsePayload | void> | null
 
   public static refreshToken = (
     baseURL: string,

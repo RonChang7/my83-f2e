@@ -35,7 +35,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     getters: {},
     actions: {
       [types.FETCH_PAGE_DATA]({ dispatch, commit }) {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
           Promise.all([
             dispatch(types.FETCH_POPULAR_QUESTIONS),
             dispatch(types.FETCH_POPULAR_BLOGS),
@@ -54,7 +54,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         { commit },
         payload: FetchQuestionListPayload
       ) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           api
             .fetchQuestionList(payload)
             .then(({ data, meta, page_meta }) => {
@@ -75,7 +75,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         { commit },
         payload: FetchSearchQuestionListPayload
       ) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           api
             .fetchSearchQuestionList(payload)
             .then(({ data, meta, page_meta }) => {
@@ -93,7 +93,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_POPULAR_QUESTIONS]() {
-        return new Promise((resolve) => {
+        return new Promise<PopularQuestion[] | void>((resolve) => {
           api
             .fetchPopularQuestions()
             .then(({ data }) => resolve(data))
@@ -101,7 +101,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_POPULAR_BLOGS]() {
-        return new Promise((resolve) => {
+        return new Promise<PopularBlog[] | void>((resolve) => {
           api
             .fetchPopularBlogs()
             .then(({ data }) => resolve(data))
@@ -109,7 +109,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_PROMOTIONS]() {
-        return new Promise((resolve) => {
+        return new Promise<PromotionsResponse['data'] | void>((resolve) => {
           api
             .fetchPromotions()
             .then(({ data }) => resolve(data))
