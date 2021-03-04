@@ -39,7 +39,7 @@ export class Facebook {
   }
 
   public login() {
-    return new Promise((resolve) =>
+    return new Promise<void>((resolve) =>
       window.FB.login(
         (response: ResponseGetLoginStatus<Status>) => {
           this.updateStatus(response)
@@ -56,7 +56,7 @@ export class Facebook {
 
   private initFacebookSDK() {
     const appId = this.appId
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       window.fbAsyncInit = function () {
         window.FB.init({
           appId,

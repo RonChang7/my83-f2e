@@ -17,7 +17,7 @@ steps:
       event: push
 
   - name: build-app
-    image: node:10-alpine
+    image: node:14-alpine
     user: root
     commands:
       - cd app
@@ -45,7 +45,7 @@ steps:
       event: push
 
   - name: remove-devDependencies
-    image: node:10-alpine
+    image: node:14-alpine
     user: root
     commands:
       - cd app
@@ -67,7 +67,7 @@ steps:
         - ${DRONE_COMMIT_SHA}
       dockerfile: ./docker/front-app-prod/Dockerfile
       context: ./app
-      cache_from: node:10-alpine
+      cache_from: node:14-alpine
     depends_on:
       - remove-devDependencies
     when:

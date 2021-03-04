@@ -63,7 +63,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
     getters: {},
     actions: {
       [types.FETCH_PAGE_DATA]({ dispatch, commit }, insurance: string) {
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
           Promise.all([
             dispatch(types.FETCH_STATIC_DATA, insurance),
             dispatch(types.FETCH_PROMOTION_PRODUCTS, insurance),
@@ -91,7 +91,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         { commit },
         payload: FetchInsuranceListPayload
       ) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
           api
             .fetchInsuranceList(payload)
             .then(({ data, meta, page_meta, json_ld }) => {
@@ -116,7 +116,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         const promotionProductIds =
           state.promotionProducts?.map((product) => product.id) || []
 
-        return new Promise((resolve) => {
+        return new Promise<void>((resolve) => {
           api
             .updateInsuranceProductFee(
               [...productListIds, ...promotionProductIds],
@@ -137,7 +137,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_STATIC_DATA](_, insurance: string) {
-        return new Promise((resolve) => {
+        return new Promise<InsurancePageStaticData | void>((resolve) => {
           api
             .fetchInsurancePageStaticData({
               host: this.$env.HOST_URL as string,
@@ -148,7 +148,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_PROMOTION_PRODUCTS](_, insurance: string) {
-        return new Promise((resolve) => {
+        return new Promise<PromotionInsuranceProduct[] | void>((resolve) => {
           api
             .fetchPromotionProducts(insurance)
             .then(({ data }) => resolve(data))
@@ -156,7 +156,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_RELATED_BLOGS](_, insurance: string) {
-        return new Promise((resolve) => {
+        return new Promise<RelatedBlog[] | void>((resolve) => {
           api
             .fetchRelatedBlogs(insurance)
             .then(({ data }) => resolve(data))
@@ -164,7 +164,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         })
       },
       [types.FETCH_RELATED_QUESTIONS](_, insurance: string) {
-        return new Promise((resolve) => {
+        return new Promise<RelatedQuestion[] | void>((resolve) => {
           api
             .fetchRelatedQuestions(insurance)
             .then(({ data }) => resolve(data))
