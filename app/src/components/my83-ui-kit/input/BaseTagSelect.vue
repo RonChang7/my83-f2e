@@ -13,6 +13,9 @@
         <BaseArrowDown v-else />
       </div>
     </div>
+    <div v-if="description" class="BaseTagSelect__description">
+      {{ description }}
+    </div>
     <template v-if="shouldDisplayOptions">
       <div
         v-for="(section, index) in optionSections"
@@ -55,6 +58,10 @@ const options: ComponentOption = {
   },
   props: {
     label: {
+      type: String,
+      default: '',
+    },
+    description: {
       type: String,
       default: '',
     },
@@ -135,6 +142,7 @@ export interface Computed {
 
 export interface Props {
   label: string
+  description: string
   optionSections: {
     name: string
     options: Option[]
@@ -149,6 +157,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .BaseTagSelect {
   &__header {
@@ -159,6 +168,16 @@ export default options
     &.enableFold {
       user-select: none;
       cursor: pointer;
+    }
+  }
+
+  &__description {
+    margin: -8px 0 8px 0;
+    color: $gray-secondary;
+    font-size: 0.75rem;
+
+    @include max-media('xl') {
+      margin: -4px 0 12px 0;
     }
   }
 
@@ -185,6 +204,10 @@ export default options
 
     &.indent {
       padding-left: 20px;
+
+      @include max-media('xl') {
+        padding-left: 16px;
+      }
 
       &:not(:last-child) {
         padding-bottom: 8px;

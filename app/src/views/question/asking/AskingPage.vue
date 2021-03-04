@@ -91,6 +91,7 @@ const options: ComponentOption = {
             result[key] = value.map((item) => {
               return {
                 name: item.tag_type_name,
+                description: item.description,
                 isOpen: item.is_open,
                 sections: item.sections.map((section) => {
                   return {
@@ -112,6 +113,7 @@ const options: ComponentOption = {
                 option[optionKey] = optionValue.map((item) => {
                   return {
                     name: item.tag_type_name,
+                    description: item.description,
                     isOpen: item.is_open,
                     sections: item.sections.map((section) => {
                       return {
@@ -179,6 +181,7 @@ export interface Props {
 
 export interface InsuranceTagOption {
   name: string
+  description: string
   isOpen: boolean
   sections: {
     name: string
