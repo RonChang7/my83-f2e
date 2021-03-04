@@ -47,7 +47,6 @@ import { useDevice } from '@/mixins/device/device-mixins'
 import { useAnalytics, useStore } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
-// @TODO: Resolve conflict after merge query refactor
 export default defineComponent({
   components: {
     ProductPromotion,
@@ -57,12 +56,7 @@ export default defineComponent({
     const store = useStore<InsuranceProductVuexState>()
     const analytics = useAnalytics()
     const { isMobile } = useDevice()
-    const isFieldsValidated = computed(
-      () => store.getters['insuranceProduct/isFieldsValidated']
-    )
-    const fee = computed(() =>
-      isFieldsValidated.value ? store.state.insuranceProduct.fee : null
-    )
+    const fee = computed(() => store.state.insuranceProduct.fee)
     const consultLink = computed(
       () => store.state.insuranceProduct.product?.consult_link
     )

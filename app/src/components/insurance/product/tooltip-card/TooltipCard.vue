@@ -1,10 +1,10 @@
 <template functional>
-  <div class="ProductQueryTooltipCard">
+  <div class="TooltipCard">
     <template v-for="(info, index) in props.info">
-      <div :key="`${index}_title`" class="ProductQueryTooltipCard__title">
+      <div :key="`${index}_title`" class="TooltipCard__title">
         {{ info.title }}
       </div>
-      <div :key="`${index}_content`" class="ProductQueryTooltipCard__content">
+      <div :key="`${index}_content`" class="TooltipCard__content">
         {{ info.content }}
       </div>
     </template>
@@ -21,7 +21,7 @@ export default {
 @import '@/sass/variables.scss';
 @import '@/sass/mixins.scss';
 
-.ProductQueryTooltipCard {
+.TooltipCard {
   @include card-primary;
 
   padding: 16px;
