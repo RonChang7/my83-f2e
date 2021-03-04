@@ -76,7 +76,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const router = useRouter()
+    const router = useRouter()!
     const pageviewsFormatter = (number: number) => {
       return number ? delimitIntegerWithSymbol(number) : ''
     }

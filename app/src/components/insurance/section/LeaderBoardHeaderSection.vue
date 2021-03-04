@@ -79,7 +79,7 @@ export default defineComponent({
   mixins: [DeviceMixin],
   setup() {
     const store = useStore<InsuranceLeaderBoardVuexState>()
-    const router = useRouter()
+    const router = useRouter()!
     const route = useRoute()
 
     const title = computed(() => store.state.insuranceLeaderBoard.title)
@@ -99,12 +99,12 @@ export default defineComponent({
 
     watch(value, (val) =>
       val
-        ? router?.push({
+        ? router.push({
             query: {
               sort: val.toString(),
             },
           })
-        : router?.push({ query: {} })
+        : router.push({ query: {} })
     )
 
     watch(sort, (val) => {
