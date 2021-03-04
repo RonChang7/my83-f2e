@@ -17,15 +17,23 @@ export const fetchProduct = async (id: string): Promise<ProductResponse> => {
 export const fetchProductFee = async (
   payload: FetchProductFeePayload
 ): Promise<ProductFeeResponse> => {
-  const { productId, gender, age, jobLevel, amount, plan, amountUnit } = payload
+  const {
+    productId,
+    gender,
+    age,
+    job_level,
+    amount,
+    plan_id,
+    amountUnit,
+  } = payload
 
   const { data } = await request.post('/api/insurance/query-premium', {
     product_id: productId,
     gender,
     age,
-    job_level: jobLevel,
+    job_level,
     amount,
-    plan_id: plan,
+    plan_id,
     amount_unit: amountUnit,
   })
 

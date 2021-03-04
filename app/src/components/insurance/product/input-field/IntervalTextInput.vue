@@ -3,7 +3,7 @@
     <BaseInputText
       :value="String(value)"
       type="number"
-      :state="isValidated ? '' : 'error'"
+      :state="isValidated ? '' : validateState.state"
       class="input"
       @update="(e) => $emit('update', e)"
       @enter="$emit('blur')"
@@ -12,24 +12,24 @@
     <BaseInputMessage
       v-if="!isValidated"
       class="errorMessage"
-      :msg="option.validateMsg"
+      :msg="validateState.message"
     />
-    <span v-if="unit" class="unit">
-      {{ unit }}
+    <span v-if="option.postfix" class="unit">
+      {{ option.postfix }}
     </span>
-    <span v-if="rangeWording" class="range" :class="{ error: !isValidated }">
-      {{ rangeWording }}
+    <span v-if="option.range" class="range" :class="{ error: !isValidated }">
+      {{ option.range }}
     </span>
   </div>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { FieldOption } from '@/services/product/field.type'
 import { IntervalType } from '@/api/insurance/product.type'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
+import { ValidateMessage } from '@/services/validator/Validator'
 
 @Component({
   components: {
@@ -44,21 +44,11 @@ export default class IntervalTextInput extends Vue {
   @Prop({ type: Object, required: true })
   option: FieldOption<IntervalType>
 
-  @Prop({ type: Boolean, default: true })
-  isValidated: boolean
+  @Prop({ type: Object })
+  validateState: ValidateMessage
 
-  get unit() {
-    return this.option.unit || ''
-  }
-
-  get rangeWording() {
-    if (!_.isUndefined(this.option.min) && !_.isUndefined(this.option.max)) {
-      return this.option.unit
-        ? `(${this.option.min} ~ ${this.option.max} ${this.option.unit})`
-        : `(${this.option.min} ~ ${this.option.max})`
-    }
-
-    return ''
+  get isValidated() {
+    return !(this.validateState && this.validateState.state === 'error')
   }
 }
 </script>
