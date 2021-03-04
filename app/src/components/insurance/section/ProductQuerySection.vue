@@ -6,10 +6,10 @@
         :key="option.id"
         class="ProductQuerySection__field"
         :option="option"
-        :value="premiumQuery[fieldValueMap[option.id]]"
-        :is-validated="fieldValidated[fieldValueMap[option.id]]"
-        @update="updatePremiumQuery"
-        @blur="fetchProductFee"
+        :value="formData[option.id]"
+        :validate-state="validateState[option.id]"
+        @update="update"
+        @blur="submit"
       />
       <ProductFee
         class="ProductQuerySection__fee"
@@ -30,7 +30,7 @@
             </div>
           </template>
           <template v-slot:content>
-            <ProductQueryTooltipCard :info="contractTypeInfo" />
+            <ContractTypeCard />
           </template>
         </BaseTooltip>
         <span>{{ contractType }}</span>
@@ -44,7 +44,7 @@
             </div>
           </template>
           <template v-slot:content>
-            <ProductQueryTooltipCard :info="wholeLifeTypeInfo" />
+            <WholeLifeTypeCard />
           </template>
         </BaseTooltip>
         <span>{{ wholeLifeType }}</span>
@@ -55,202 +55,138 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { Component } from 'vue-property-decorator'
+import {
+  computed,
+  defineComponent,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from '@nuxtjs/composition-api'
 import ProductQueryField from '../product/ProductQueryField.vue'
 import ProductFee from '../product/ProductFee.vue'
-import ProductQueryTooltipCard from '../product/ProductQueryTooltipCard.vue'
+import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
+import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
+import { useStore } from '@/utils/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
-import { UpdatePremiumQueryPayload } from '@/store/insurance/product'
-import {
-  UPDATE_PREMIUM_QUERY_KEY,
-  FETCH_PRODUCT_FEE,
-  UPDATE_PREMIUM_QUERY_VALIDATE,
-  CLEAR_FEE,
-} from '@/store/insurance/product.type'
-import { OptionValueType } from '@/api/insurance/product.type'
-import { ProductQueryFormService } from '@/services/product/ProductQueryFormService'
-import { FieldOption, InputType } from '@/services/product/field.type'
-import { ZHTWUnitMap } from '@/utils/number-converter'
-import DeviceMixin from '@/mixins/device/device-mixins'
+import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
+import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
 
-@Component({
+import { useProductQuery } from '@/services/product/ProductQueryScheme'
+
+export default defineComponent({
   components: {
     ProductQueryField,
     ProductFee,
     BaseInfo,
     BaseTooltip,
-    ProductQueryTooltipCard,
+    ContractTypeCard,
+    WholeLifeTypeCard,
+  },
+  setup() {
+    const store = useStore<InsuranceProductVuexState>()
+    const { isDesktop } = useDevice()
+    const content = ref<HTMLElement | null>(null)
+    const feeCardHeight = ref(0)
+    const options = ref({})
+    const formData = ref({})
+    const submit = ref({})
+
+    const insuranceType = computed(
+      () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+    )
+    const contractType = computed(
+      () => store.state.insuranceProduct.product?.product.contract_type
+    )
+    const wholeLifeType = computed(
+      () => store.state.insuranceProduct.product?.product.whole_life_type
+    )
+    const fee = computed(() => store.state.insuranceProduct.fee)
+    const consultLink = computed(
+      () => store.state.insuranceProduct.product?.consult_link
+    )
+    const premiumConfig = computed(
+      () => store.state.insuranceProduct.product?.premium_config
+    )
+    const amountUnit = computed(
+      () => store.state.insuranceProduct.product?.premium_config.amount_unit
+    )
+
+    const { scheme, validateState, validateAll, update } = useProductQuery(
+      premiumConfig?.value,
+      store.state.insuranceProduct.product!.default_premium_config
+    )
+
+    const fetchProductFeeAction = _.debounce(() => {
+      const payload = {
+        productId: store.state.insuranceProduct.id,
+        amountUnit: amountUnit.value,
+        ...formData.value,
+      }
+      store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`, payload)
+    }, 50)
+
+    const fetchProductFee = () => {
+      nextTick(async () => {
+        if (await validateAll()) {
+          fetchProductFeeAction()
+        } else {
+          store.commit(`insuranceProduct/${CLEAR_FEE}`)
+        }
+      })
+    }
+
+    const createReactive = () => {
+      formData.value = reactive(scheme.form.formData)
+      options.value = reactive(scheme.form.fields)
+      validateState.value = reactive(scheme.form.validateState)
+      scheme.form.setSubmit(fetchProductFee)
+      submit.value = () => scheme.form.submit()
+    }
+
+    createReactive()
+
+    onMounted(() => {
+      // 調整費率區塊位置
+      feeCardHeight.value = isDesktop.value
+        ? (content.value as HTMLElement).offsetHeight - 22
+        : 160
+    })
+
+    watch(
+      () => scheme.form.formData.plan_id,
+      async (val) => {
+        // 更新 plan id，重建整張 form
+        scheme.updateForm(val)
+        await validateAll()
+        // 重新建立 form 響應的資料
+        createReactive()
+      }
+    )
+
+    return {
+      content,
+      options,
+      formData,
+      validateState,
+      update,
+      submit,
+      feeCardHeight,
+      insuranceType,
+      contractType,
+      wholeLifeType,
+      fee,
+      consultLink,
+    }
   },
 })
-export default class ProductQuerySection extends DeviceMixin {
-  // 不設定初始值以避免響應
-  queryForm: ProductQueryFormService
 
-  $refs: {
-    content: HTMLElement
-  }
-
-  options: FieldOption<OptionValueType>[] = []
-
-  fetchProductFeeAction = _.debounce(
-    () => this.$store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`),
-    50
-  )
-
-  feeCardHeight: number = 0
-
-  contractTypeInfo = [
-    {
-      title: '主約',
-      content: '可以單獨購買的保險契約。',
-    },
-    {
-      title: '附約',
-      content: '不能單獨購買、需搭配著主約一起購買的保險契約。',
-    },
-  ]
-
-  wholeLifeTypeInfo = [
-    {
-      title: '終身險',
-      content: '保障終身。通常繳費 20 年後即可不須再繳保費。',
-    },
-    {
-      title: '定期險',
-      content:
-        '保障一定年期，如：10 年定期壽險，即保障 10 年，到期後契約終止。',
-    },
-  ]
-
-  get storeState() {
-    return this.$store.state as InsuranceProductVuexState
-  }
-
-  // @TODO: Resolve conflict after merge query refactor
-  get insuranceType() {
-    return this.storeState.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
-  }
-
-  get contractType() {
-    return this.storeState.insuranceProduct.product?.product.contract_type
-  }
-
-  get wholeLifeType() {
-    return this.storeState.insuranceProduct.product?.product.whole_life_type
-  }
-
-  get fee() {
-    return this.storeState.insuranceProduct.fee
-  }
-
-  get consultLink() {
-    return this.storeState.insuranceProduct.product?.consult_link
-  }
-
-  get premiumConfig() {
-    return this.storeState.insuranceProduct.product?.premium_config
-  }
-
-  get premiumQuery() {
-    return this.storeState.insuranceProduct.premiumQuery
-  }
-
-  get amountUnit() {
-    return this.storeState.insuranceProduct.product?.premium_config.amount_unit
-  }
-
-  get fieldValueMap() {
-    return _.keys(this.premiumQuery).reduce<Record<string, string>>(
-      (acc, key) => {
-        if (!this.premiumConfig?.is_fixed_rate && key === 'plan') {
-          acc.period = key
-        } else {
-          acc[_.snakeCase(key)] = key
-        }
-
-        return acc
-      },
-      {}
-    )
-  }
-
-  get fieldValidated() {
-    return this.storeState.insuranceProduct.fieldValidated
-  }
-
-  get isFieldsValidated(): boolean {
-    return this.$store.getters['insuranceProduct/isFieldsValidated']
-  }
-
-  fetchProductFee() {
-    this.$nextTick(() => {
-      if (this.isFieldsValidated) {
-        this.fetchProductFeeAction()
-      } else if (this.fee !== null) {
-        this.$store.commit(`insuranceProduct/${CLEAR_FEE}`)
-      }
-    })
-  }
-
-  validateAllField() {
-    _.forEach(this.premiumQuery!, (value, id) => {
-      this.updateFieldValidate(
-        this.fieldValueMap[id],
-        this.queryForm.validate(id, value!)
-      )
-    })
-  }
-
-  updateFieldValidate(key: string, status: boolean) {
-    this.$store.dispatch(`insuranceProduct/${UPDATE_PREMIUM_QUERY_VALIDATE}`, {
-      [key]: status,
-    })
-  }
-
-  updatePremiumQuery(payload: UpdatePremiumQueryPayload) {
-    const { id, value } = payload
-
-    this.updateFieldValidate(
-      this.fieldValueMap[id],
-      this.queryForm.validate(id, value)
-    )
-
-    const optionType = this.options.find((option) => option.id === id)!.type
-
-    this.$store.dispatch(`insuranceProduct/${UPDATE_PREMIUM_QUERY_KEY}`, {
-      id: this.fieldValueMap[id],
-      value: optionType === InputType.NUMBER ? Number(value) : value,
-    })
-
-    if (this.fieldValueMap[id] === 'plan') {
-      this.updateOptions()
-      this.validateAllField()
-    }
-  }
-
-  updateOptions() {
-    this.options = this.queryForm.getOptions(this.premiumQuery!.plan!)
-  }
-
-  created() {
-    const displayAmountUnit = this.amountUnit
-      ? ZHTWUnitMap[this.amountUnit] || '元'
-      : undefined
-
-    this.queryForm = new ProductQueryFormService(this.premiumConfig!, {
-      age: '歲',
-      amount: displayAmountUnit,
-    })
-    this.updateOptions()
-  }
-
-  mounted() {
-    this.feeCardHeight = this.isDesktop
-      ? this.$refs.content.offsetHeight - 22
-      : 160
-  }
+interface UpdatePremiumQueryPayload {
+  id: string
+  value: string | number
 }
 </script>
 
