@@ -163,8 +163,10 @@ export default options
   }
 
   &__title {
-    color: $secondary-color;
-    padding-bottom: 0.5rem;
+    color: $gray-secondary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding-bottom: 6px;
   }
 
   &__label {
@@ -182,7 +184,11 @@ export default options
     }
 
     &.indent {
-      padding-left: 1rem;
+      padding-left: 20px;
+
+      &:not(:last-child) {
+        padding-bottom: 8px;
+      }
     }
   }
 }
