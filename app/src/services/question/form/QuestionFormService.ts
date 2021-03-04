@@ -72,8 +72,8 @@ export class QuestionFormService {
         {
           required: true,
           type: 'array',
-          max: 3,
-          message: '標籤類型不得超過三個',
+          max: 10,
+          message: '超過標籤選取上限囉！最多請選 10 個',
         },
         {
           required: true,
