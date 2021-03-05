@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node'
-import { sentryInitConfig } from '@/config/sentry.config'
+import { nodeOptions } from '@/config/sentry.config'
 
 const apiMethods = <%= JSON.stringify(options.apiMethods)%>
 
@@ -35,7 +35,7 @@ export default function (ctx, inject) {
     Sentry.init({
       dsn: sentryEnvConfig.SENTRY_DSN,
       <%= options.releaseName ? `release: '${options.releaseName}',` : '' %>
-      ...sentryInitConfig,
+      ...nodeOptions,
     })
 
     process.sentry = Sentry

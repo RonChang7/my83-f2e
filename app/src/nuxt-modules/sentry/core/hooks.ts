@@ -5,7 +5,7 @@ const enableLogMockCalls =
   process.env.APP_ENV === 'development'
 
 async function getBrowserApiMethods() {
-  const SentryBrowser = await import('@sentry/browser')
+  const SentryBrowser = await import('@sentry/vue')
 
   const browserMethods: string[] = []
   for (const key in SentryBrowser) {
