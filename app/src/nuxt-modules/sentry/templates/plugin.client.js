@@ -1,5 +1,5 @@
-import * as Sentry from '@sentry/browser'
-import { sentryInitConfig } from '@/config/sentry.config'
+import * as Sentry from '@sentry/vue'
+import { browserOptions } from '@/config/sentry.config'
 
 const apiMethods = <%= JSON.stringify(options.apiMethods)%>
 
@@ -24,7 +24,7 @@ export default function (ctx, inject) {
     Sentry.init({
       dsn: ctx.nuxtState.sentry.SENTRY_DSN,
       <%= options.releaseName ? `release: '${options.releaseName}',` : '' %>
-      ...sentryInitConfig,
+      ...browserOptions,
     })
 
     inject('sentry', Sentry)
