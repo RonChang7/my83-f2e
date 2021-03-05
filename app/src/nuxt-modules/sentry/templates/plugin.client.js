@@ -27,6 +27,12 @@ export default function (ctx, inject) {
       ...browserOptions,
     })
 
+    // Setting tags on error for indexed and searchable.
+    Sentry.setTags({
+      platform: process.server ? 'server' : 'client',
+      project: 'nuxt',
+    })
+
     inject('sentry', Sentry)
     ctx.$sentry = Sentry
   }
