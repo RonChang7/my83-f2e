@@ -3,7 +3,6 @@ import { Event, EventHint, Options as BaseOptions } from '@sentry/types'
 import { NodeOptions } from '@sentry/node'
 import { init as sentryBrowserInit } from '@sentry/vue/dist/sdk'
 import {
-  CaptureConsole,
   Dedupe,
   ExtraErrorData,
   RewriteFrames,
@@ -50,9 +49,6 @@ const baseOptions: BaseOptions = {
 export const browserOptions: BrowserOptions = {
   ...baseOptions,
   integrations: [
-    new CaptureConsole({
-      levels: ['error'],
-    }),
     new Dedupe(),
     new ExtraErrorData(),
     new RewriteFrames(),
@@ -70,12 +66,5 @@ export const browserOptions: BrowserOptions = {
 
 export const nodeOptions: NodeOptions = {
   ...baseOptions,
-  integrations: [
-    new CaptureConsole({
-      levels: ['error'],
-    }),
-    new Dedupe(),
-    new ExtraErrorData(),
-    new RewriteFrames(),
-  ],
+  integrations: [new Dedupe(), new ExtraErrorData(), new RewriteFrames()],
 }
