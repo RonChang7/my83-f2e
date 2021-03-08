@@ -164,7 +164,12 @@ const config: NuxtConfig = {
         additionalData: '$image-bucket-url: "https://images.my83.com.tw";',
       },
     },
-    // extend(config, ctx) {},
+    extend(config, ctx) {
+      if (ctx.isClient) {
+        // Adding client-side source map for sentry
+        config.devtool = 'hidden-source-map'
+      }
+    },
   },
   telemetry: false,
 }
