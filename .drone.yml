@@ -29,6 +29,35 @@ steps:
       branch: master
       event: push
 
+  - name: create-sentry-release
+    image: getsentry/sentry-cli:1.60.1
+    environment:
+      SENTRY_AUTH_TOKEN:
+        from_secret: SENTRY_AUTH_TOKEN
+      SENTRY_ORG: upn-1r
+      SENTRY_PROJECT: my83-front
+    commands:
+      - sentry-cli releases new $${DRONE_COMMIT_SHA}
+      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
+      - sentry-cli releases files $${DRONE_COMMIT_SHA} upload-sourcemaps --url-prefix '~/_nuxt/' ./app/.nuxt/dist/client/
+    depends_on:
+      - build-app
+    when:
+      branch: master
+      event: push
+
+  - name: remove-source-map
+    image: node:14-alpine
+    user: root
+    commands:
+      - cd app
+      - rm ./.nuxt/dist/client/*.js.map
+    depends_on:
+      - create-sentry-release
+    when:
+      branch: master
+      event: push
+
   - name: rebuild-cache
     image: drillster/drone-volume-cache
     volumes:
@@ -39,7 +68,7 @@ steps:
       mount:
         - ./app/node_modules
     depends_on:
-      - build-app
+      - remove-source-map
     when:
       branch: master
       event: push
@@ -176,7 +205,7 @@ steps:
         - refs/tags/v*
       event: tag
 
-  - name: add-sentry-release-tag
+  - name: create-sentry-deploy
     image: getsentry/sentry-cli:1.60.1
     environment:
       SENTRY_AUTH_TOKEN:
@@ -184,8 +213,8 @@ steps:
       SENTRY_ORG: upn-1r
       SENTRY_PROJECT: my83-front
     commands:
-      - sentry-cli releases new $${DRONE_COMMIT_SHA} --finalize
-      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
+      - sentry-cli releases finalize $${DRONE_COMMIT_SHA}
+      - sentry-cli releases deploys $${DRONE_COMMIT_SHA} new -e "production"
     depends_on:
       - deploy-production
     when:
@@ -213,7 +242,7 @@ steps:
         Author: {{ build.author }}
         <{{ build.link }}|Visit build page ↗>
     depends_on:
-      - add-sentry-release-tag
+      - create-sentry-deploy
     when:
       status:
         - success
