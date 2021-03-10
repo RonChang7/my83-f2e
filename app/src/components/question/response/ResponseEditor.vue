@@ -65,7 +65,6 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { CancelResponseDialogContent } from './cancel-response-dialog-info'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
@@ -88,6 +87,7 @@ import {
   ResponseFormData,
 } from '@/services/question/form/ResponseFormService'
 import { scrollToElement } from '@/utils/scroll'
+import { CancelResponseDialogContent } from './cancel-response-dialog-info'
 
 export default {
   components: {

@@ -1,6 +1,13 @@
 import _ from 'lodash'
 import { ImageConvertService } from '../image/ImageConvertService'
 
+export const SINGLE_IMAGE_MAX_SIZE = 7
+export const PREVIEW_FAILED = 'Image file cannot preview.'
+
+const MEGABYTE = 1024 * 1024
+const KILOBYTE = 1024
+const ACCEPT_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png']
+
 export class UploadImageService {
   public error: Record<string, ValidateMessage> = {}
 
@@ -150,16 +157,6 @@ export class UploadImageService {
       .every((file: File) => ACCEPT_MIME_TYPES.includes(file.type))
   }
 }
-
-export const SINGLE_IMAGE_MAX_SIZE = 7
-
-const MEGABYTE = 1024 * 1024
-
-const KILOBYTE = 1024
-
-const ACCEPT_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png']
-
-export const PREVIEW_FAILED = 'Image file cannot preview.'
 
 export interface ValidateMessage {
   message: string

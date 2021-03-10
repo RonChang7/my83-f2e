@@ -32,13 +32,13 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import BaseModal from '@/components/base/modal/BaseModal.vue'
+import * as types from '@/store/global/global.type'
+import { TargetPanel } from '@/store/global/index'
 import LoginHeader from './components/LoginHeader.vue'
 import LoginPanelLogin from './panel/LoginPanelLogin.vue'
 import LoginPanelSignUp from './panel/LoginPanelSignUp.vue'
 import LoginPanelForgetPassword from './panel/LoginPanelForgetPassword.vue'
-import BaseModal from '@/components/base/modal/BaseModal.vue'
-import * as types from '@/store/global/global.type'
-import { TargetPanel } from '@/store/global/index'
 
 export default {
   components: {

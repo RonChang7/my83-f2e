@@ -6,14 +6,14 @@
         :is-active="activeList[index]"
         @toggle="toggleActiveCollapse(index)"
       >
-        <template v-slot:title>
+        <template #title>
           <div class="FaqSection__collapse__title">
             <h3>{{ index + 1 }}. {{ faq.question }}</h3>
             <BaseArrowTop v-if="activeList[index]" />
             <BaseArrowDown v-else />
           </div>
         </template>
-        <template v-slot:content>
+        <template #content>
           <div class="FaqSection__collapse__content">
             <!-- eslint-disable-next-line vue/no-v-html -->
             <div v-html="faq.answer" />

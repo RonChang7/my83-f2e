@@ -1,5 +1,5 @@
+import { Vue, CreateElement } from 'vue/types/vue'
 import { VNode } from 'vue/types/vnode'
-import { CreateElement } from 'vue/types/vue'
 
 export const isSlotExist = (name: string, ctx: Vue) => {
   return !!ctx.$slots[name] || !!ctx.$scopedSlots[name]

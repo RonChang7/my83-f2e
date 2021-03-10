@@ -40,12 +40,12 @@
 
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import ProductPromotion from '../product/ProductPromotion.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
 import { useAnalytics, useStore } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
+import ProductPromotion from '../product/ProductPromotion.vue'
 
 export default defineComponent({
   components: {

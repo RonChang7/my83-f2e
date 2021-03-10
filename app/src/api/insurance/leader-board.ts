@@ -1,6 +1,6 @@
-import { LeaderBoardResponse, SortType } from './leader-board.type'
 import request from '@/api/request'
 import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
+import { LeaderBoardResponse, SortType } from './leader-board.type'
 
 export const fetchLeaderBoard = async (
   sort?: SortType

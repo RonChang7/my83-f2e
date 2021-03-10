@@ -21,6 +21,101 @@ import { isAxiosError } from '@/api/helper'
 import { CanonicalService } from '@/seo/canonical-service'
 const InsurancePage = () => import('./InsurancePage.vue')
 
+const fetchList = (
+  insurance: string,
+  { query, store, from, route }: Context
+) => {
+  const insuranceStore = (store.state as InsuranceVuexState).insurance
+  const page = /^\d+$/.test(getFirstQuery(query.page))
+    ? Number(getFirstQuery(query.page))
+    : 1
+  const currentParam = insuranceStore.currentParam
+  const currentInsurance = insuranceStore.staticData.id
+
+  const payload: FetchInsuranceListPayload = {
+    insurance,
+    page,
+  }
+
+  if (
+    from?.name !== route?.name ||
+    insurance !== currentInsurance ||
+    page !== currentParam.page
+  ) {
+    return store.dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
+  }
+}
+
+class PageFilterService {
+  private filterKeys: string[]
+
+  constructor(private ctx: Context) {
+    this.filterKeys = _.keys(
+      (ctx.store.state as InsuranceVuexState).insurance.filter
+        .defaultPremiumConfig
+    )
+  }
+
+  removeFilterQueryString() {
+    const { query, redirect } = this.ctx
+    this.filterKeys.forEach((key) => {
+      delete query[key]
+    })
+
+    redirect({
+      query,
+    })
+  }
+
+  async fetchInsuranceProductFee() {
+    await this.ctx.store.dispatch(
+      `insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`,
+      this.premiumConfig
+    )
+  }
+
+  get isDefaultFilter() {
+    const { query, store } = this.ctx
+    if (_.isEmpty(query)) return false
+
+    return this.filterKeys.every(
+      (key) =>
+        getFirstQuery(query[key]) ===
+        (store.state as InsuranceVuexState).insurance.filter
+          .defaultPremiumConfig?.[key]
+    )
+  }
+
+  get isEmptyFilter() {
+    const { query } = this.ctx
+    if (_.isEmpty(query)) return true
+
+    return this.filterKeys.every((key) => getFirstQuery(query[key]) === '')
+  }
+
+  get isFirstLanding() {
+    const { from, route } = this.ctx
+    return (
+      from === undefined || from.params.insurance !== route.params.insurance
+    )
+  }
+
+  private get premiumConfig() {
+    const { query, store } = this.ctx
+    const premiumConfig = this.filterKeys.reduce((acc, cur) => {
+      if (getFirstQuery(query[cur])) {
+        acc[cur] = getFirstQuery(query[cur])
+      }
+      return acc
+    }, {})
+
+    return _.isEmpty(premiumConfig)
+      ? (store.state as InsuranceVuexState).insurance.filter
+          .defaultPremiumConfig
+      : premiumConfig
+  }
+}
+
 const opinions: ComponentOption = {
   watchQuery: true,
   async asyncData(ctx) {
@@ -137,101 +232,6 @@ const opinions: ComponentOption = {
       },
     })
   },
-}
-
-const fetchList = (
-  insurance: string,
-  { query, store, from, route }: Context
-) => {
-  const insuranceStore = (store.state as InsuranceVuexState).insurance
-  const page = /^\d+$/.test(getFirstQuery(query.page))
-    ? Number(getFirstQuery(query.page))
-    : 1
-  const currentParam = insuranceStore.currentParam
-  const currentInsurance = insuranceStore.staticData.id
-
-  const payload: FetchInsuranceListPayload = {
-    insurance,
-    page,
-  }
-
-  if (
-    from?.name !== route?.name ||
-    insurance !== currentInsurance ||
-    page !== currentParam.page
-  ) {
-    return store.dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
-  }
-}
-
-class PageFilterService {
-  private filterKeys: string[]
-
-  constructor(private ctx: Context) {
-    this.filterKeys = _.keys(
-      (ctx.store.state as InsuranceVuexState).insurance.filter
-        .defaultPremiumConfig
-    )
-  }
-
-  removeFilterQueryString() {
-    const { query, redirect } = this.ctx
-    this.filterKeys.forEach((key) => {
-      delete query[key]
-    })
-
-    redirect({
-      query,
-    })
-  }
-
-  async fetchInsuranceProductFee() {
-    await this.ctx.store.dispatch(
-      `insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`,
-      this.premiumConfig
-    )
-  }
-
-  get isDefaultFilter() {
-    const { query, store } = this.ctx
-    if (_.isEmpty(query)) return false
-
-    return this.filterKeys.every(
-      (key) =>
-        getFirstQuery(query[key]) ===
-        (store.state as InsuranceVuexState).insurance.filter
-          .defaultPremiumConfig?.[key]
-    )
-  }
-
-  get isEmptyFilter() {
-    const { query } = this.ctx
-    if (_.isEmpty(query)) return true
-
-    return this.filterKeys.every((key) => getFirstQuery(query[key]) === '')
-  }
-
-  get isFirstLanding() {
-    const { from, route } = this.ctx
-    return (
-      from === undefined || from.params.insurance !== route.params.insurance
-    )
-  }
-
-  private get premiumConfig() {
-    const { query, store } = this.ctx
-    const premiumConfig = this.filterKeys.reduce((acc, cur) => {
-      if (getFirstQuery(query[cur])) {
-        acc[cur] = getFirstQuery(query[cur])
-      }
-      return acc
-    }, {})
-
-    return _.isEmpty(premiumConfig)
-      ? (store.state as InsuranceVuexState).insurance.filter
-          .defaultPremiumConfig
-      : premiumConfig
-  }
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<

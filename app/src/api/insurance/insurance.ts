@@ -1,3 +1,5 @@
+import request from '@/api/request'
+import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 import {
   InsurancePageStaticData,
   FetchInsurancePageStaticDataPayload,
@@ -8,8 +10,6 @@ import {
   FetchInsuranceListPayload,
   InsuranceProductFeeResponse,
 } from './insurance.type'
-import request from '@/api/request'
-import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 
 /**
  * @description 取得險種頁靜態資料

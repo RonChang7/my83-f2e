@@ -31,12 +31,12 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import PromotionProductCard from '../product/PromotionProductCard.vue'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import DeviceMixin from '@/mixins/device/device-mixins'
+import PromotionProductCard from '../product/PromotionProductCard.vue'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin],

@@ -17,7 +17,7 @@
         :is-full-width="true"
         :to="{ name: 'questionList' }"
       >
-        <template v-slot:icon>
+        <template #icon>
           <BaseComment />
         </template>
         熱門討論
@@ -28,7 +28,7 @@
         :is-full-width="true"
         :to="{ name: 'questionAsking' }"
       >
-        <template v-slot:icon>
+        <template #icon>
           <BasePencil />
         </template>
         我要發問

@@ -32,12 +32,12 @@ import Vue from 'vue'
 import { mapState } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import HeaderMenuPanel from '../HeaderMenuPanel.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import BaseArrowDown from '@/assets/icon/18/BaseArrowDown.svg'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { headerNewBadgeList } from '@/config/header-new-badge-list'
+import HeaderMenuPanel from '../HeaderMenuPanel.vue'
 
 export default {
   components: {

@@ -1,5 +1,4 @@
 import { Module } from 'vuex'
-import * as types from './list.type'
 import { UPDATE_PAGE_META } from '@/store/seo/seo.type'
 import * as api from '@/api/question/list'
 import {
@@ -14,6 +13,7 @@ import {
 } from '@/api/question/list.type'
 import { Pagination } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
+import * as types from './list.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

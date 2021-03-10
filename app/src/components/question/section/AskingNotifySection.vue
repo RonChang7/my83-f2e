@@ -1,6 +1,6 @@
 <template>
   <BaseCard class="AskingNotifySection">
-    <template v-slot:title>討論區發文注意事項</template>
+    <template #title>討論區發文注意事項</template>
     <ol class="AskingNotifySection__rule">
       <li>
         若有保險規劃的需求，可以直接

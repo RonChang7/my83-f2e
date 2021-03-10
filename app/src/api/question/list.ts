@@ -1,3 +1,4 @@
+import request from '@/api/request'
 import {
   PopularBlogsResponse,
   PopularQuestionsResponse,
@@ -7,7 +8,6 @@ import {
   FetchSearchQuestionListPayload,
   PromotionsResponse,
 } from './list.type'
-import request from '@/api/request'
 
 /**
  * @description Question 列表
