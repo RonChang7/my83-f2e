@@ -145,11 +145,11 @@ export interface Computed {
 }
 
 export interface Props {
-  pagination: Pagination
+  pagination: IPagination
   maxPages: number
 }
 
-interface Pagination {
+interface IPagination {
   totalPage: number
   currentPage: number
 }

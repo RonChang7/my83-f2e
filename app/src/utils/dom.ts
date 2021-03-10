@@ -87,6 +87,27 @@ export const getScrollContainer = (
   return parent
 }
 
+export const getScroll = (
+  target: HTMLElement | Window,
+  vertical: boolean
+): number | void => {
+  if (isServer) return
+
+  const prop = vertical ? 'pageYOffset' : 'pageXOffset'
+  const method = vertical ? 'scrollTop' : 'scrollLeft'
+  const isWindow = target === window
+
+  let ret = isWindow
+    ? (target as Window)[prop]
+    : (target as HTMLElement)[method]
+  // ie6,7,8 standard mode
+  if (isWindow && typeof ret !== 'number') {
+    ret = (document.documentElement as HTMLElement)[method]
+  }
+
+  return ret
+}
+
 export const getCoords = (el: HTMLElement, container: HTMLElement | Window) => {
   if (isServer) return
 
@@ -112,27 +133,6 @@ export const getCoords = (el: HTMLElement, container: HTMLElement | Window) => {
   }
 }
 
-export const getScroll = (
-  target: HTMLElement | Window,
-  vertical: boolean
-): number | void => {
-  if (isServer) return
-
-  const prop = vertical ? 'pageYOffset' : 'pageXOffset'
-  const method = vertical ? 'scrollTop' : 'scrollLeft'
-  const isWindow = target === window
-
-  let ret = isWindow
-    ? (target as Window)[prop]
-    : (target as HTMLElement)[method]
-  // ie6,7,8 standard mode
-  if (isWindow && typeof ret !== 'number') {
-    ret = (document.documentElement as HTMLElement)[method]
-  }
-
-  return ret
-}
-
 export const checkHasScroll = (
   el: HTMLElement | Window,
   vertical: boolean
@@ -146,9 +146,9 @@ export const checkHasScroll = (
   }
 }
 
-export const getRect = (target: HTMLElement | Window | null): ClientRect => {
+export const getRect = (target: HTMLElement | Window | null) => {
   if (target === window) {
-    return { top: 0, left: 0, bottom: 0 } as ClientRect
+    return { top: 0, left: 0, bottom: 0 }
   }
   return (target as HTMLElement).getBoundingClientRect()
 }

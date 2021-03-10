@@ -25,11 +25,11 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import AskingFormBaseField, {
   Props as FieldProps,
 } from '../AskingFormBaseField.vue'
-import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 
 const options: ComponentOption = {
   components: {

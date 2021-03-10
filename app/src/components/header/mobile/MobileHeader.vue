@@ -28,13 +28,13 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import HeaderAnnouncement from '../HeaderAnnouncement.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
 import BaseMenu from '@/assets/icon/24/BaseMenu.svg'
 import BaseClose from '@/assets/icon/24/BaseClose.svg'
 import { UserRole } from '@/services/auth/auth'
 import { Announcement } from '@/api/header/header.type'
+import HeaderAnnouncement from '../HeaderAnnouncement.vue'
 
 export default {
   components: {

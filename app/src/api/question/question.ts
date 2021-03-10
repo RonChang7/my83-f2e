@@ -1,3 +1,5 @@
+import request from '@/api/request'
+import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 import { SimpleResponse } from '../type'
 import {
   QuestionDataResponse,
@@ -20,8 +22,6 @@ import {
   cancelReportPayload,
   RecommendProductResponse,
 } from './question.type'
-import request from '@/api/request'
-import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 
 /**
  * @description 取得單則 Question 內容

@@ -1,6 +1,6 @@
 <template>
   <BaseCard v-if="recommendProduct" class="DesktopRecommendProductSection">
-    <template v-slot:title>{{ recommendProduct.header }}</template>
+    <template #title>{{ recommendProduct.header }}</template>
     <GlobalLink :to="recommendProduct.btn.link.path">
       <div class="DesktopRecommendProductSection__content">
         <div

@@ -41,13 +41,13 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { rule } from '../validate-rule'
-import LoginFooter from '../components/LoginFooter.vue'
 import { Validator, ValidateMessage } from '@/services/validator/Validator'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { forgetPassword } from '@/api/login/login'
+import LoginFooter from '../components/LoginFooter.vue'
+import { rule } from '../validate-rule'
 
 export default {
   components: {

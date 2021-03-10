@@ -65,10 +65,6 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { rule } from '../validate-rule'
-import { FacebookLoginNotMy83User } from '../dialog-info'
-import FacebookLoginButton from './FacebookLoginButton.vue'
-import LoginFooter from './LoginFooter.vue'
 import { Validator, ValidateMessage } from '@/services/validator/Validator'
 import { login } from '@/api/login/login'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
@@ -78,6 +74,10 @@ import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vu
 import * as types from '@/store/global/global.type'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse, Role } from '@/api/type'
+import { FacebookLoginNotMy83User } from '../dialog-info'
+import { rule } from '../validate-rule'
+import LoginFooter from './LoginFooter.vue'
+import FacebookLoginButton from './FacebookLoginButton.vue'
 
 export default {
   components: {

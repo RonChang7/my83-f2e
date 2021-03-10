@@ -51,13 +51,13 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import ProductCard from '../product/ProductCard.vue'
-import CoverageBadge from '../coverages/CoverageBadge.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseFAQ from '@/assets/icon/24/BaseFAQ.svg'
 import { scrollToElement } from '@/utils/scroll'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
+import CoverageBadge from '../coverages/CoverageBadge.vue'
+import ProductCard from '../product/ProductCard.vue'
 
 const options: ComponentOption = {
   components: {

@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { Module } from 'vuex'
-import * as types from './question.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/question/question'
 import { promiseSettledWrapper } from '@/utils/promise-settled'
@@ -26,6 +25,7 @@ import {
   QuestionDataResponse,
 } from '@/api/question/question.type'
 import { SimpleResponse, RelatedQuestion, RelatedBlog } from '@/api/type'
+import * as types from './question.type'
 
 export const DefaultQuestionPersonalize: QuestionPersonalize = {
   is_owner: false,

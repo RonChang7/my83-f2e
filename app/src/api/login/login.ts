@@ -1,3 +1,4 @@
+import request from '@/api/request'
 import {
   FacebookSignUpResponse,
   FacebookLoginResponse,
@@ -8,7 +9,6 @@ import {
   FacebookLoginPayload,
   EmailLoginPayload,
 } from './login.type'
-import request from '@/api/request'
 
 /**
  * @description Facebook 註冊

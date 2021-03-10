@@ -1,8 +1,8 @@
-import { Suspect } from './suspect'
-import { JWT } from './jwt'
 import { cookiesKeyMap } from '@/config/cookies-map'
 import { jwtParser, Response } from '@/utils/jwt-parser'
 import { Role, RoleCode } from '@/api/type'
+import { JWT } from './jwt'
+import { Suspect } from './suspect'
 
 export class Auth {
   private jwtTokenKey: string
