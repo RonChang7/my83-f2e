@@ -2,12 +2,7 @@ import Vue from 'vue'
 import { Event, EventHint, Options as BaseOptions } from '@sentry/types'
 import { NodeOptions } from '@sentry/node'
 import { init as sentryBrowserInit } from '@sentry/vue/dist/sdk'
-import {
-  Dedupe,
-  ExtraErrorData,
-  RewriteFrames,
-  ReportingObserver,
-} from '@sentry/integrations'
+import { Dedupe, ExtraErrorData, RewriteFrames } from '@sentry/integrations'
 
 type BrowserOptions = Parameters<typeof sentryBrowserInit>[0]
 
@@ -48,12 +43,7 @@ const baseOptions: BaseOptions = {
 
 export const browserOptions: BrowserOptions = {
   ...baseOptions,
-  integrations: [
-    new Dedupe(),
-    new ExtraErrorData(),
-    new RewriteFrames(),
-    new ReportingObserver(),
-  ],
+  integrations: [new Dedupe(), new ExtraErrorData(), new RewriteFrames()],
   // Ref: https://docs.sentry.io/platforms/javascript/guides/vue/
   Vue,
   attachProps: true,
