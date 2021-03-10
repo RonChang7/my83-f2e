@@ -165,7 +165,7 @@ const config: NuxtConfig = {
       },
     },
     extend(config, ctx) {
-      if (ctx.isClient) {
+      if (ctx.isClient && !ctx.isDev) {
         // Adding client-side source map for sentry
         config.devtool = 'hidden-source-map'
       }
