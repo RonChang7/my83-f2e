@@ -212,7 +212,8 @@ class VariableRateScheme {
     ]
       .map((fieldFactory) => {
         const id = fieldFactory?.field?.id
-        const validator = fieldFactory?.validator
+        // eslint-disable-next-line dot-notation
+        const validator = fieldFactory?.['validator']
 
         if (id && validator) {
           this.validateRules = {
@@ -314,7 +315,8 @@ class FixedRateScheme {
     ]
       .map((fieldFactory) => {
         const id = fieldFactory?.field?.id
-        const validator = fieldFactory?.validator
+        // eslint-disable-next-line dot-notation
+        const validator = fieldFactory?.['validator']
 
         if (id && validator) {
           this.validateRules = {
