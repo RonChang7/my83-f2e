@@ -45,11 +45,11 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import GlossaryPanel from './GlossaryPanel.vue'
-import PrinciplePanel from './PrinciplePanel.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { Glossary, Principle } from '@/api/insurance/insurance.type'
 import BaseInfoModal from '@/components/my83-ui-kit/modal/BaseInfoModal.vue'
+import PrinciplePanel from './PrinciplePanel.vue'
+import GlossaryPanel from './GlossaryPanel.vue'
 
 const options: ComponentOption = {
   components: {

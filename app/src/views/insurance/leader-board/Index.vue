@@ -9,8 +9,10 @@ import { isAxiosError } from '@/api/helper'
 const InsuranceLeaderBoard = () => import('./InsuranceLeaderBoard.vue')
 
 export default defineComponent({
-  watchQuery: ['sort'],
   scrollToTop: false,
+  setup() {
+    return () => h(InsuranceLeaderBoard)
+  },
   async asyncData(ctx) {
     const { store, error, query } = ctx
     const fetchPageData: Promise<any>[] = [
@@ -30,9 +32,7 @@ export default defineComponent({
       error({ statusCode, message })
     }
   },
-  setup() {
-    return () => h(InsuranceLeaderBoard)
-  },
+  watchQuery: ['sort'],
 })
 
 export interface InsuranceLeaderBoardVuexState extends GlobalVuexState {

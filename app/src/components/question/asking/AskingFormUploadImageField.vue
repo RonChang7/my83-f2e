@@ -6,13 +6,13 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import AskingFormUploadImage from './AskingFormImage/AskingFormUploadImage.vue'
-import AskingFormImagePreview from './AskingFormImage/AskingFormImagePreview.vue'
 import {
   UploadImageService,
   PreviewImage,
   ValidateMessage,
 } from '@/services/question/UploadImageService'
+import AskingFormUploadImage from './AskingFormImage/AskingFormUploadImage.vue'
+import AskingFormImagePreview from './AskingFormImage/AskingFormImagePreview.vue'
 
 const options: ComponentOption = {
   props: {

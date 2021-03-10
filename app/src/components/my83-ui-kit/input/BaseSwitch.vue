@@ -30,35 +30,6 @@ import {
 } from '@nuxtjs/composition-api'
 import { Option } from './type'
 
-export default defineComponent({
-  props: {
-    value: {
-      type: [String, Number],
-      required: true,
-    },
-    options: {
-      type: Array as () => Option[],
-      required: true,
-    },
-  },
-  setup(props, ctx) {
-    const baseSwitchEl = ref<HTMLElement | null>(null)
-    const offset = useCurrentSelectedPosition(
-      computed(() => props.value),
-      computed(() => baseSwitchEl.value)
-    )
-    const clickHandler = (value: string | number) => {
-      ctx.emit('update:value', value)
-    }
-
-    return {
-      clickHandler,
-      offset,
-      baseSwitchEl,
-    }
-  },
-})
-
 const useCurrentSelectedPosition = (
   currentSelectValue: ComputedRef<number | string>,
   el: ComputedRef<HTMLElement | null>
@@ -91,6 +62,35 @@ const useCurrentSelectedPosition = (
 
   return offset
 }
+
+export default defineComponent({
+  props: {
+    value: {
+      type: [String, Number],
+      required: true,
+    },
+    options: {
+      type: Array as () => Option[],
+      required: true,
+    },
+  },
+  setup(props, ctx) {
+    const baseSwitchEl = ref<HTMLElement | null>(null)
+    const offset = useCurrentSelectedPosition(
+      computed(() => props.value),
+      computed(() => baseSwitchEl.value)
+    )
+    const clickHandler = (value: string | number) => {
+      ctx.emit('update:value', value)
+    }
+
+    return {
+      clickHandler,
+      offset,
+      baseSwitchEl,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>

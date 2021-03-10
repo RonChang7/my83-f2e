@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
-import * as types from './seo.type'
 import { PageMeta } from '@/api/type'
+import * as types from './seo.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

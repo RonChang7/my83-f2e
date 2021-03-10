@@ -47,7 +47,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { InsuranceProductVuexState } from './Index.vue'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
 import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
@@ -61,6 +60,7 @@ import ProductQuerySection from '@/components/insurance/section/ProductQuerySect
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
+import { InsuranceProductVuexState } from './Index.vue'
 
 @Component({
   mixins: [DeviceMixin],

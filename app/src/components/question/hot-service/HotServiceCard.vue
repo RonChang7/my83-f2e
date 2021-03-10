@@ -20,7 +20,6 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { HotServiceContent } from './hot-service-content'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
@@ -28,6 +27,7 @@ import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import { nl2br } from '@/utils/text-parser'
+import { HotServiceContent } from './hot-service-content'
 
 export default {
   mixins: [DeviceMixin],

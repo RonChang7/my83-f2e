@@ -14,12 +14,12 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import BaseDropdownOption from '../base/BaseDropdownOption.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   OPEN_LOGIN_PANEL,
   UPDATE_AFTER_LOGIN_EVENT,
 } from '@/store/global/global.type'
+import BaseDropdownOption from '../base/BaseDropdownOption.vue'
 
 export default {
   components: {

@@ -15,8 +15,8 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import AnswerInteractionButton, { Type } from './AnswerInteractionButton.vue'
 import { LikeStatus } from '@/api/question/question.type'
+import AnswerInteractionButton, { Type } from './AnswerInteractionButton.vue'
 
 export default {
   components: {

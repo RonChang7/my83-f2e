@@ -24,8 +24,6 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import DesktopHeader from './desktop/DesktopHeader.vue'
-import MobileHeader from './mobile/MobileHeader.vue'
 import Affix from '@/components/base/affix/Affix.vue'
 import * as types from '@/store/header/header.type'
 import { GlobalVuexState } from '@/store/global-state'
@@ -37,6 +35,8 @@ import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
 import { Announcement } from '@/api/header/header.type'
+import MobileHeader from './mobile/MobileHeader.vue'
+import DesktopHeader from './desktop/DesktopHeader.vue'
 
 export default {
   mixins: [DeviceMixin, UserMetaMixin],

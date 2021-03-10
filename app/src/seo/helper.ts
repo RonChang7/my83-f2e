@@ -11,6 +11,7 @@ export const getJsonLdScript = (jsonLds: [] | null): Array<any> => {
       }
     } catch (e) {
       console.error(e)
+      return null
     }
   })
 }

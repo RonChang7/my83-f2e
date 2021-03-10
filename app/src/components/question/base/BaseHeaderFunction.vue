@@ -51,8 +51,6 @@ import qs from 'qs'
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { CancelReportDialogContent } from '../report/cancel-report-dialog-info'
-import { PostType } from '../helpers/type'
 import {
   AuthorInfo,
   QuestionPersonalize,
@@ -82,6 +80,8 @@ import {
 } from '@/store/question/question'
 import { GlobalDialogContent } from '@/store/global/index'
 import { SimpleResponse } from '@/api/type'
+import { PostType } from '../helpers/type'
+import { CancelReportDialogContent } from '../report/cancel-report-dialog-info'
 
 export default {
   components: {

@@ -1,5 +1,4 @@
 import { Module } from 'vuex'
-import * as types from './product.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/product'
 import {
@@ -7,6 +6,7 @@ import {
   Coverage,
   FetchProductFeePayload,
 } from '@/api/insurance/product.type'
+import * as types from './product.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

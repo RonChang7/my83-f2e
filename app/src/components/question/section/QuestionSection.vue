@@ -32,12 +32,6 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
-import QuestionTitle from '../question/QuestionTitle.vue'
-import BaseContent from '../base/BaseContent.vue'
-import ContentMeta from '../base/ContentMeta.vue'
-import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
-import QuestionTags from '../question/QuestionTags.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
   QuestionData,
@@ -48,6 +42,12 @@ import { textToUrl } from '@/utils/text-parser'
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
+import QuestionAuthorInfo from '../question/QuestionAuthorInfo.vue'
+import QuestionTitle from '../question/QuestionTitle.vue'
+import BaseContent from '../base/BaseContent.vue'
+import ContentMeta from '../base/ContentMeta.vue'
+import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
+import QuestionTags from '../question/QuestionTags.vue'
 const QuestionImages = () => import('../question/QuestionImages.vue')
 
 export default {

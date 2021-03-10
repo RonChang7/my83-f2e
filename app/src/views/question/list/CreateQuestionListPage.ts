@@ -16,6 +16,35 @@ import { Content } from '@/services/page/Content'
 import { CanonicalService } from '@/seo/canonical-service'
 const ListPage = () => import('../list/QuestionListPage.vue')
 
+const fetchList = (
+  pageType: PageType,
+  { from, route, store }: Context,
+  payload: FetchListPayload
+) => {
+  const currentParam = (store.state as QuestionListVuexState).questionList
+    .currentParam
+  const defaultPageParam = ['page', 'sort']
+  const searchPageParam = ['page', 'sort', 'q']
+  const currentPageParam =
+    pageType === PageType.Search ? searchPageParam : defaultPageParam
+
+  const isAllParamMatch = currentPageParam.every(
+    (key) => currentParam[key] === payload[key]
+  )
+
+  // 與目前搜尋字串、頁數或是排序條件不同才打 API
+  if (from?.path !== route.path || !isAllParamMatch) {
+    return store.dispatch(
+      `questionList/${
+        pageType === PageType.Search
+          ? FETCH_SEARCH_QUESTION_LIST
+          : FETCH_QUESTION_LIST
+      }`,
+      payload
+    )
+  }
+}
+
 export default {
   watchQuery: ['page', 'sort', 'q'],
   async asyncData(ctx) {
@@ -126,35 +155,6 @@ export default {
     })
   },
 } as ComponentOption
-
-const fetchList = (
-  pageType: PageType,
-  { from, route, store }: Context,
-  payload: FetchListPayload
-) => {
-  const currentParam = (store.state as QuestionListVuexState).questionList
-    .currentParam
-  const defaultPageParam = ['page', 'sort']
-  const searchPageParam = ['page', 'sort', 'q']
-  const currentPageParam =
-    pageType === PageType.Search ? searchPageParam : defaultPageParam
-
-  const isAllParamMatch = currentPageParam.every(
-    (key) => currentParam[key] === payload[key]
-  )
-
-  // 與目前搜尋字串、頁數或是排序條件不同才打 API
-  if (from?.path !== route.path || !isAllParamMatch) {
-    return store.dispatch(
-      `questionList/${
-        pageType === PageType.Search
-          ? FETCH_SEARCH_QUESTION_LIST
-          : FETCH_QUESTION_LIST
-      }`,
-      payload
-    )
-  }
-}
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
   Instance,

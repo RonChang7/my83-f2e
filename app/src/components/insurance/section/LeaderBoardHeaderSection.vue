@@ -71,6 +71,24 @@ import Affix from '@/components/base/affix/Affix.vue'
 import BaseSwitch from '@/components/my83-ui-kit/input/BaseSwitch.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 
+const useSwitch = ({ value }: SwitchPayload) => {
+  const options: Option[] = [
+    {
+      text: '最近熱門',
+      value: '',
+    },
+    {
+      text: 'MY83 專家推薦',
+      value: 'recommend',
+    },
+  ]
+
+  return {
+    options,
+    value: ref(value),
+  }
+}
+
 export default defineComponent({
   components: {
     Affix,
@@ -120,24 +138,6 @@ export default defineComponent({
     }
   },
 })
-
-const useSwitch = ({ value }: SwitchPayload) => {
-  const options: Option[] = [
-    {
-      text: '最近熱門',
-      value: '',
-    },
-    {
-      text: 'MY83 專家推薦',
-      value: 'recommend',
-    },
-  ]
-
-  return {
-    options,
-    value: ref(value),
-  }
-}
 
 interface SwitchPayload {
   value: string | number

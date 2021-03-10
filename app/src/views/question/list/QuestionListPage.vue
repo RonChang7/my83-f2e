@@ -35,10 +35,10 @@
       <QuestionLayoutWithFixedColumn
         v-if="pageType === 'list' || (pageType === 'search' && hasSearchResult)"
       >
-        <template v-slot:left>
+        <template #left>
           <ListQuestionSection />
         </template>
-        <template v-slot:left-bottom-offset>
+        <template #left-bottom-offset>
           <div class="pagination">
             <BasePagination
               v-if="shouldShowPagination"
@@ -47,7 +47,7 @@
             />
           </div>
         </template>
-        <template v-slot:right>
+        <template #right>
           <ListGuideSection v-if="isDesktop && shouldShowGuide" />
           <ListRecommendProductSection v-if="shouldShowRecommendProduct" />
           <PopularQuestionSection :max-post="isMobile ? 5 : 10" />

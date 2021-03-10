@@ -1,5 +1,5 @@
-import { SimpleResponse, Role } from '../type'
 import { LandingUrlInfo } from '@/services/auth/auth'
+import { SimpleResponse, Role } from '../type'
 
 export interface LoginResponse extends SimpleResponse {
   status?: number

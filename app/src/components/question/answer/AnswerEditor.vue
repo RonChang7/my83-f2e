@@ -50,7 +50,6 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
 import BaseRichTextEditor from '@/components/my83-ui-kit/editor/BaseRichTextEditor.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
@@ -69,6 +68,7 @@ import { AddAnswerResponse } from '@/api/question/question.type'
 import { scrollToElement } from '@/utils/scroll'
 import { htmlStrip } from '@/utils/text-parser'
 import { UserRole } from '@/services/auth/auth'
+import { CancelAnswerDialogContent } from './cancel-answer-dialog-info'
 const BaseCheckbox = () =>
   import('@/components/my83-ui-kit/input/BaseCheckbox.vue')
 const BaseInputText = () =>
