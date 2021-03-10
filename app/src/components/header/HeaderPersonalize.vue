@@ -64,8 +64,6 @@ import { Store } from 'vuex'
 import _ from 'lodash'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import HeaderMenuPanel from './HeaderMenuPanel.vue'
-import HeaderSalesDetail from './HeaderSalesDetail.vue'
 import { GlobalVuexState } from '@/store/global-state'
 import { HeaderNavItem, Personalize } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
@@ -78,6 +76,8 @@ import { logout } from '@/api/login/login'
 import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
+import HeaderSalesDetail from './HeaderSalesDetail.vue'
+import HeaderMenuPanel from './HeaderMenuPanel.vue'
 
 export default {
   mixins: [DeviceMixin],

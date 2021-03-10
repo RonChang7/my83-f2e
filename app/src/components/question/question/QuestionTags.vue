@@ -20,11 +20,11 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import QuestionTag from './QuestionTag.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { Tag } from '@/api/question/question.type'
 import BaseCompany from '@/assets/icon/24/BaseCompany.svg'
 import BaseTag from '@/assets/icon/24/BaseTag.svg'
+import QuestionTag from './QuestionTag.vue'
 
 export default {
   components: {

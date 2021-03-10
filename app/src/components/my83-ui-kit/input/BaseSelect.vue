@@ -2,12 +2,12 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { Option } from './type'
-import BaseMobileSelect from './BaseSelect/BaseMobileSelect.vue'
-import BaseDesktopSelect from './BaseSelect/BaseDesktopSelect.vue'
 import DeviceMixin, {
   Computed as DeviceMixinComputed,
 } from '@/mixins/device/device-mixins'
+import { Option } from './type'
+import BaseMobileSelect from './BaseSelect/BaseMobileSelect.vue'
+import BaseDesktopSelect from './BaseSelect/BaseDesktopSelect.vue'
 
 export default {
   mixins: [DeviceMixin],

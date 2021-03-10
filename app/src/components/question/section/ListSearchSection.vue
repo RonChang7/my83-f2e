@@ -17,10 +17,10 @@ import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Route } from 'vue-router'
+import BaseSearch from '@/components/my83-ui-kit/search/BaseSearch.vue'
 import QuestionTags, {
   Props as QuestionTagsProps,
 } from '../question/QuestionTags.vue'
-import BaseSearch from '@/components/my83-ui-kit/search/BaseSearch.vue'
 
 const options: ComponentOption = {
   components: {

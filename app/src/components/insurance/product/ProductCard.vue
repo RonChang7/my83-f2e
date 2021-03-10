@@ -1,6 +1,6 @@
 <template>
   <BaseCard class="ProductCard" :enable-hover="enabled">
-    <template v-slot:default>
+    <template #default>
       <div class="ProductCard__content">
         <div class="ProductCard__section">
           <div class="ProductCard__subSection">
@@ -90,7 +90,7 @@
         </div>
       </div>
     </template>
-    <template v-if="product.description" v-slot:footer>
+    <template v-if="product.description" #footer>
       {{ product.description }}
     </template>
   </BaseCard>
@@ -100,11 +100,11 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import CoverageBadge from '../coverages/CoverageBadge.vue'
 import { InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
+import CoverageBadge from '../coverages/CoverageBadge.vue'
 
 const options: ComponentOption = {
   components: {

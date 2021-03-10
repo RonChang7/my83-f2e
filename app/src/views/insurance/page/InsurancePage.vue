@@ -54,7 +54,6 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { InsuranceVuexState } from './Index.vue'
 import HeaderSection from '@/components/insurance/section/HeaderSection.vue'
 import ProductListSection from '@/components/insurance/section/ProductListSection.vue'
 import PromotionProductSection from '@/components/insurance/section/PromotionProductSection.vue'
@@ -73,6 +72,7 @@ import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
+import { InsuranceVuexState } from './Index.vue'
 
 const options: ComponentOption = {
   mixins: [DeviceMixin],

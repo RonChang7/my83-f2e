@@ -1,11 +1,11 @@
 import { Module } from 'vuex'
-import * as types from './header.type'
 import {
   HeaderNavItem,
   HeaderPersonalized,
   Announcement,
 } from '@/api/header/header.type'
 import * as api from '@/api/header/header'
+import * as types from './header.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

@@ -1,3 +1,4 @@
+import request from '@/api/request'
 import {
   AskingFormOptionResponse,
   CreateQuestionResponse,
@@ -5,7 +6,6 @@ import {
   SubmitQuestionPayload,
   SubmitQuestionResponse,
 } from './asking.type'
-import request from '@/api/request'
 
 /**
  * @description 取得發文分類選項

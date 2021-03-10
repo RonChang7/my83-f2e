@@ -40,11 +40,11 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import ProductCoverageCard from '../product/ProductCoverageCard.vue'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { Coverage } from '@/api/insurance/product.type'
 import BaseArrowDown from '@/assets/icon/24/BaseArrowDown.svg'
 import BaseArrowTop from '@/assets/icon/24/BaseArrowTop.svg'
+import ProductCoverageCard from '../product/ProductCoverageCard.vue'
 
 @Component({
   components: {

@@ -38,6 +38,7 @@ declare module '@nuxt/types' {
 }
 
 declare module 'vuex/types/index' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface Store<S> {
     $analytics: AnalyticsEventManager
     $recaptcha: ReCaptchaInstance

@@ -30,11 +30,11 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import ProductPromotion from './ProductPromotion.vue'
 import { Link } from '@/api/type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useAnalytics } from '@/utils/composition-api'
+import ProductPromotion from './ProductPromotion.vue'
 
 export default defineComponent({
   components: {
@@ -48,6 +48,7 @@ export default defineComponent({
     },
     fee: {
       type: Number,
+      default: null,
     },
     consultLink: {
       type: Object as () => Link,

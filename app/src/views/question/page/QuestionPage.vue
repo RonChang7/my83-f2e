@@ -15,7 +15,7 @@
         ref="fixedColumnLayout"
         :display-right-column="!isMobile"
       >
-        <template v-slot:left>
+        <template #left>
           <HotServiceSection v-if="isMobile && shouldShowGuide" />
 
           <GuideSection v-if="isMobile && shouldShowGuide" />
@@ -34,7 +34,7 @@
 
           <AnswersListSection />
         </template>
-        <template v-slot:left-bottom-offset>
+        <template #left-bottom-offset>
           <client-only>
             <AddAnswerSection
               v-if="userRole !== 'sales'"
@@ -49,7 +49,7 @@
             :max-post="5"
           />
         </template>
-        <template v-slot:right>
+        <template #right>
           <GuideSection v-if="shouldShowGuide" />
           <DesktopRecommendProductSection v-if="shouldShowRecommendProduct" />
           <RelatedQuestionSection />
@@ -74,7 +74,6 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { QuestionVuexState } from './Index.vue'
 import QuestionSection from '@/components/question/section/QuestionSection.vue'
 import AnswersListSection from '@/components/question/section/AnswersListSection.vue'
 import AddAnswerSection from '@/components/question/section/AddAnswerSection.vue'
@@ -98,6 +97,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
+import { QuestionVuexState } from './Index.vue'
 const QuestionDropdownPanel = () =>
   import('@/components/question/panel/QuestionDropdownPanel.vue')
 const ReportPanel = () => import('@/components/question/report/ReportPanel.vue')
