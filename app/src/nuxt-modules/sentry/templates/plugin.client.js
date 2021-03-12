@@ -6,7 +6,6 @@ const apiMethods = <%= JSON.stringify(options.apiMethods)%>
 export default function (ctx, inject) {
   const SentryMock = {}
   apiMethods.forEach(key => {
-    // eslint-disable-next-line no-console
     SentryMock[key] = <%= options.enableLogMockCalls
       ? '(...args) => console.warn(`$sentry.${key}() called, but Sentry plugin is disabled. Arguments:`, args)'
       : '_ => _'%>
