@@ -21,7 +21,13 @@ export interface EditQuestionResponse {
 
 export interface InsuranceTagOption {
   tag_type_name: string
+  description: string
   is_open: boolean
+  sections: TagSection[]
+}
+
+export interface TagSection {
+  name: string
   tag_ids: TagId[]
 }
 

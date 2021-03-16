@@ -58,7 +58,7 @@
       :required="true"
       :value.sync="form.insurance"
       :options="insuranceOption"
-      legend="請選擇「發問目的」與「投保對象」來帶出相關標籤，選擇符合內容的標籤能讓你的文章更容易被找到唷～"
+      legend="請選擇「發問目的」與「投保對象」來帶出相關標籤，選擇符合內容的標籤，能讓你的問題更容易被解答唷～ 標籤最多可選取 10 個。"
       :err-msg="errors.insurance ? errors.insurance.message : ''"
     />
     <AskingFormInputField
@@ -231,7 +231,8 @@ const options: ComponentOption = {
             ] as InsuranceTagOption[]).map((option) => {
               return {
                 label: option.name,
-                options: option.options,
+                description: option.description,
+                optionSections: option.sections,
                 enableFold: true,
                 isExpanded: expandAllPanel || option.isOpen,
               }
@@ -245,7 +246,8 @@ const options: ComponentOption = {
             >)[this.form.target].map((option) => {
               return {
                 label: option.name,
-                options: option.options,
+                description: option.description,
+                optionSections: option.sections,
                 enableFold: true,
                 isExpanded: expandAllPanel || option.isOpen,
               }

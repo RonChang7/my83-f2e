@@ -13,17 +13,30 @@
         <BaseArrowDown v-else />
       </div>
     </div>
-    <div v-if="shouldDisplayOptions" class="BaseTagSelect__options">
-      <template v-for="option in options">
-        <BaseTagOption
-          v-if="option.text"
-          :key="option.value"
-          :option="option"
-          :selected="isSelected(option.value)"
-          @click-option="clickOptionHandler"
-        />
-      </template>
+    <div v-if="description" class="BaseTagSelect__description">
+      {{ description }}
     </div>
+    <template v-if="shouldDisplayOptions">
+      <div
+        v-for="(section, index) in optionSections"
+        :key="index"
+        class="BaseTagSelect__options"
+        :class="{ indent: !!section.name }"
+      >
+        <div v-if="section.name" class="BaseTagSelect__title">
+          {{ section.name }}
+        </div>
+        <template v-for="option in section.options">
+          <BaseTagOption
+            v-if="option.text"
+            :key="option.value"
+            :option="option"
+            :selected="isSelected(option.value)"
+            @click-option="clickOptionHandler"
+          />
+        </template>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -48,7 +61,11 @@ const options: ComponentOption = {
       type: String,
       default: '',
     },
-    options: {
+    description: {
+      type: String,
+      default: '',
+    },
+    optionSections: {
       type: Array,
       required: true,
     },
@@ -125,7 +142,11 @@ export interface Computed {
 
 export interface Props {
   label: string
-  options: Option[]
+  description: string
+  optionSections: {
+    name: string
+    options: Option[]
+  }[]
   selected: (string | number)[]
   enableFold: boolean
   isExpanded: boolean
@@ -136,6 +157,7 @@ export default options
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/rwd.scss';
 
 .BaseTagSelect {
   &__header {
@@ -149,13 +171,48 @@ export default options
     }
   }
 
+  &__description {
+    margin: -8px 0 8px 0;
+    color: $gray-secondary;
+    font-size: 0.75rem;
+
+    @include max-media('xl') {
+      margin: -4px 0 12px 0;
+    }
+  }
+
+  &__title {
+    color: $gray-secondary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding-bottom: 6px;
+  }
+
   &__label {
     color: $gray-primary;
     margin: 8px 0;
   }
 
   &__options {
-    padding: 5px 0;
+    &:first-child {
+      padding-top: 5px;
+    }
+
+    &:last-child {
+      padding-bottom: 5px;
+    }
+
+    &.indent {
+      padding-left: 20px;
+
+      @include max-media('xl') {
+        padding-left: 16px;
+      }
+
+      &:not(:last-child) {
+        padding-bottom: 8px;
+      }
+    }
   }
 }
 </style>
