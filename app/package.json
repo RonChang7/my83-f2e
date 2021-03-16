@@ -10,15 +10,15 @@
     "start": "nuxt start",
     "lint": "eslint --ext .ts,.js,.vue ./src",
     "lintfix": "eslint --ext .ts,.js,.vue ./src --fix",
-    "stylelint": "stylelint ./src/**/**/*.{css,scss,sass,vue}",
-    "stylelintfix": "stylelint ./src/**/**/*.{css,scss,sass,vue} --fix",
+    "stylelint": "stylelint './src/**/*.{css,scss,sass,vue}'",
+    "stylelintfix": "stylelint './src/**/*.{css,scss,sass,vue}' --fix",
     "test": "jest",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
   "lint-staged": {
     "*.{ts,js,vue}": "eslint --ext .ts,.js,.vue",
-    "*.{css,sass,scss,vue}": "stylelint .{css,sass,scss,vue}"
+    "*.{css,sass,scss,vue}": "stylelint '.{css,sass,scss,vue}'"
   },
   "husky": {
     "hooks": {
