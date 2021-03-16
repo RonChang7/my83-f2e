@@ -38,10 +38,10 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { NavTab, Props as InfoModalProps } from '../modal/InsuranceTipModal.vue'
 import { LinkButton } from '@/api/type'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
+import { NavTab, Props as InfoModalProps } from '../modal/InsuranceTipModal.vue'
 
 const options: ComponentOption = {
   components: {

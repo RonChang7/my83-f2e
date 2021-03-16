@@ -12,17 +12,13 @@ module.exports = {
   extends: [
     '@nuxtjs',
     '@nuxtjs/eslint-config-typescript',
-    'prettier',
-    'prettier/vue',
     'plugin:prettier/recommended',
     'plugin:nuxt/recommended',
   ],
-  plugins: ['prettier'],
+  plugins: ['sort-class-members'],
   // add your custom rules here
   rules: {
-    camelcase: 'off',
-    semi: ['error', 'never'],
-    'standard/no-callback-literal': 0,
+    // prettier
     'prettier/prettier': [
       'error',
       {
@@ -31,17 +27,25 @@ module.exports = {
         arrowParens: 'always',
         singleQuote: true,
         trailingComma: 'es5',
-        htmlWhitespaceSensitivity: 'ignore'
-      }
+        htmlWhitespaceSensitivity: 'ignore',
+      },
     ],
-    '@typescript-eslint/member-ordering': 'error',
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["error", {
-      "vars": "all",
-      "args": "after-used",
-      "ignoreRestSiblings": false
-    }],
-    "no-console": ["warn", { allow: ["warn", "error"] }],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    camelcase: 'off',
+    semi: ['error', 'never'],
+    'standard/no-callback-literal': 0,
     'no-useless-constructor': 'off',
+    '@typescript-eslint/member-ordering': 'error',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'after-used',
+        ignoreRestSiblings: false,
+      },
+    ],
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
   },
 }

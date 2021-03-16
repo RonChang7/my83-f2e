@@ -1,7 +1,7 @@
 <template>
   <BaseCard class="ListRecommendProductSection">
-    <template v-slot:title>{{ promotionHeader }}</template>
-    <template v-slot>
+    <template #title>{{ promotionHeader }}</template>
+    <template #default>
       <GlobalLink
         v-for="promotion in promotions"
         :key="promotion.title"

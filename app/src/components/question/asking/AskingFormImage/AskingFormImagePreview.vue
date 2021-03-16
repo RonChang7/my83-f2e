@@ -20,11 +20,11 @@ import {
   PropType,
 } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import ImagePreviewThumbnail from '../../base/ImagePreviewThumbnail.vue'
 import {
   PreviewImage,
   ValidateMessage,
 } from '@/services/question/UploadImageService'
+import ImagePreviewThumbnail from '../../base/ImagePreviewThumbnail.vue'
 
 const options: ComponentOption = {
   components: {

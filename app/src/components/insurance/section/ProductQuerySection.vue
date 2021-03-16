@@ -24,12 +24,12 @@
       <div class="ProductQuerySection__column">
         商品類型
         <BaseTooltip :offset="8" placement="bottom-start">
-          <template v-slot:button>
+          <template #button>
             <div class="ProductQuerySection__column__icon">
               <BaseInfo />
             </div>
           </template>
-          <template v-slot:content>
+          <template #content>
             <ContractTypeCard />
           </template>
         </BaseTooltip>
@@ -38,12 +38,12 @@
       <div class="ProductQuerySection__column">
         保障類型
         <BaseTooltip :offset="8" placement="bottom-start">
-          <template v-slot:button>
+          <template #button>
             <div class="ProductQuerySection__column__icon">
               <BaseInfo />
             </div>
           </template>
-          <template v-slot:content>
+          <template #content>
             <WholeLifeTypeCard />
           </template>
         </BaseTooltip>
@@ -64,18 +64,17 @@ import {
   ref,
   watch,
 } from '@nuxtjs/composition-api'
-import ProductQueryField from '../product/ProductQueryField.vue'
-import ProductFee from '../product/ProductFee.vue'
-import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
-import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import { useStore } from '@/utils/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
 import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
-
 import { useProductQuery } from '@/services/product/ProductQueryScheme'
+import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
+import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
+import ProductFee from '../product/ProductFee.vue'
+import ProductQueryField from '../product/ProductQueryField.vue'
 
 export default defineComponent({
   components: {
@@ -183,11 +182,6 @@ export default defineComponent({
     }
   },
 })
-
-interface UpdatePremiumQueryPayload {
-  id: string
-  value: string | number
-}
 </script>
 
 <style lang="scss" scoped>

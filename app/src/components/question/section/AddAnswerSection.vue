@@ -32,7 +32,6 @@ import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
-import { AvatarMap } from '../helpers/reply-default-avatar'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import {
@@ -45,6 +44,7 @@ import DeviceMixin, {
 import UserMetaMixin, {
   ComponentInstance as UserMetaMixinComponentInstance,
 } from '@/mixins/user/user-meta'
+import { AvatarMap } from '../helpers/reply-default-avatar'
 const AnswerEditor = () => import('../answer/AnswerEditor.vue')
 
 export default {

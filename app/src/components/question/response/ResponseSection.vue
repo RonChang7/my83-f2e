@@ -25,13 +25,13 @@
 import Vue from 'vue'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
+import { ResponseData } from '@/api/question/question.type'
+import { textToUrl } from '@/utils/text-parser'
+import { UserRole } from '@/services/auth/auth'
 import ContentMeta from '../base/ContentMeta.vue'
 import BaseAuthorInfo from '../base/BaseAuthorInfo.vue'
 import BaseContent from '../base/BaseContent.vue'
 import BaseHeaderFunction from '../base/BaseHeaderFunction.vue'
-import { ResponseData } from '@/api/question/question.type'
-import { textToUrl } from '@/utils/text-parser'
-import { UserRole } from '@/services/auth/auth'
 
 export default {
   components: {

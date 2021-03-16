@@ -1,5 +1,4 @@
 import { Module } from 'vuex'
-import * as types from './insurance.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/insurance'
 import {
@@ -24,6 +23,7 @@ import {
   LinkButton,
 } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
+import * as types from './insurance.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

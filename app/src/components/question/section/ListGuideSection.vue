@@ -1,7 +1,7 @@
 <template>
   <BaseCard class="ListGuideSection">
-    <template v-slot:title>討論區使用指南</template>
-    <template v-slot>
+    <template #title>討論區使用指南</template>
+    <template #default>
       <ol>
         <li><span>發問</span></li>
         <li><span>等待業務員回覆</span></li>

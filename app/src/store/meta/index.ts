@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
-import * as types from './meta.type'
 import * as api from '@/api/meta/meta'
+import * as types from './meta.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

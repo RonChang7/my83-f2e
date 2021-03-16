@@ -10,9 +10,9 @@
 
 <script lang="ts">
 import { computed, defineComponent } from '@nuxtjs/composition-api'
-import LeaderBoardCard from '../product/LeaderBoardCard.vue'
 import { useStore } from '@/utils/composition-api'
 import { InsuranceLeaderBoardVuexState } from '@/views/insurance/leader-board/Index.vue'
+import LeaderBoardCard from '../product/LeaderBoardCard.vue'
 
 export default defineComponent({
   components: {

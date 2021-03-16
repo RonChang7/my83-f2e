@@ -26,6 +26,14 @@ export const useCountdownTimer = (endTimeTimestamp?: number) => {
     countdownTimer.sec = padLeft(sec, 2)
   }
 
+  const stopTimer = () => {
+    timer !== null && window.clearInterval(timer)
+  }
+
+  const resetEndTime = () => {
+    countdownTimer.endTimeTimestamp = 0
+  }
+
   const setupTimer = () => {
     let secBeforeEnd =
       countdownTimer.endTimeTimestamp - Math.round(Date.now() / 1000)
@@ -46,14 +54,6 @@ export const useCountdownTimer = (endTimeTimestamp?: number) => {
         resetEndTime()
       }
     }, 1000)
-  }
-
-  const stopTimer = () => {
-    timer !== null && window.clearInterval(timer)
-  }
-
-  const resetEndTime = () => {
-    countdownTimer.endTimeTimestamp = 0
   }
 
   onMounted(() => {

@@ -1,8 +1,8 @@
 import { Module } from 'vuex'
-import * as types from './leader-board.type'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/leader-board'
 import { SortType, LeaderBoard } from '@/api/insurance/leader-board.type'
+import * as types from './leader-board.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
   return {

@@ -1,12 +1,12 @@
 import _ from 'lodash'
 import { reactive, set } from '@nuxtjs/composition-api'
-import { Field } from './field.type'
 import {
   Validator,
   Rule,
   ValidateMessage,
   ValidateState,
 } from '@/services/validator/Validator'
+import { Field } from './field.type'
 
 type FormData = Record<string, any>
 

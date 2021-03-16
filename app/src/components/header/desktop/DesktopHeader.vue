@@ -17,11 +17,11 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
+import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import { UserRole } from '@/services/auth/auth'
 import HeaderPersonalize from '../HeaderPersonalize.vue'
 import HeaderAnnouncement from '../HeaderAnnouncement.vue'
 import DesktopHeaderNav from './DesktopHeaderNav.vue'
-import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { UserRole } from '@/services/auth/auth'
 
 export default defineComponent({
   components: {

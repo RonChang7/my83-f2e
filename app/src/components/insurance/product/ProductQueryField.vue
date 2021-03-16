@@ -48,12 +48,12 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import IntervalTextInput from './input-field/IntervalTextInput.vue'
-import Select from './input-field/Select.vue'
-import Radio from './input-field/Radio.vue'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import { Field, InputType } from '@/services/form/field.type'
 import { ValidateMessage } from '@/services/validator/Validator'
+import IntervalTextInput from './input-field/IntervalTextInput.vue'
+import Select from './input-field/Select.vue'
+import Radio from './input-field/Radio.vue'
 
 @Component({
   components: {

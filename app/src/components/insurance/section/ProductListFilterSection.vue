@@ -1,7 +1,7 @@
 <template>
   <BaseCard class="ProductListFilterSection">
-    <template v-slot:title>投保資料</template>
-    <template v-slot>
+    <template #title>投保資料</template>
+    <template #default>
       <div class="ProductListFilterSection__content">
         <ProductQueryField
           v-for="option in options"
@@ -19,13 +19,13 @@
 <script lang="ts">
 import _ from 'lodash'
 import { defineComponent, ref } from '@nuxtjs/composition-api'
-import ProductQueryField from '../product/ProductQueryField.vue'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { InsuranceFilterScheme } from '@/services/product/InsuranceFilterScheme'
 import { UpdateInsuranceListFilterPayload } from '@/store/insurance/insurance'
 import { useRoute, useRouter, useStore } from '@/utils/composition-api'
 import { getFirstQuery } from '@/utils/query-string'
+import ProductQueryField from '../product/ProductQueryField.vue'
 
 export default defineComponent({
   components: {
