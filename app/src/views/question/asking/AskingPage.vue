@@ -30,6 +30,7 @@ import AskingFormSection from '@/components/question/section/AskingFormSection.v
 import {
   AskingFormOptionResponse,
   EditQuestionContent,
+  InsuranceTagOption as ApiInsuranceTagOption,
 } from '@/api/question/asking.type'
 import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 
@@ -88,34 +89,14 @@ const options: ComponentOption = {
         this.formOption.mapping_insurance_tag_ids,
         (result, value, key) => {
           if (_.isArray(value)) {
-            result[key] = value.map((item) => {
-              return {
-                name: item.tag_type_name,
-                isOpen: item.is_open,
-                options: item.tag_ids.map((tagId) => {
-                  return {
-                    text: this.formOption.tag_list[tagId],
-                    value: tagId,
-                  }
-                }),
-              }
-            })
+            result[key] = value.map(this.insuranceTagTransformer)
           } else {
             result[key] = _.reduce(
               value,
               (option, optionValue, optionKey) => {
-                option[optionKey] = optionValue.map((item) => {
-                  return {
-                    name: item.tag_type_name,
-                    isOpen: item.is_open,
-                    options: item.tag_ids.map((tagId) => {
-                      return {
-                        text: this.formOption.tag_list[tagId],
-                        value: tagId,
-                      }
-                    }),
-                  }
-                })
+                option[optionKey] = optionValue.map(
+                  this.insuranceTagTransformer
+                )
                 return option
               },
               {}
@@ -127,6 +108,26 @@ const options: ComponentOption = {
       )
 
       return option
+    },
+  },
+  methods: {
+    insuranceTagTransformer(item) {
+      return {
+        name: item.tag_type_name,
+        description: item.description,
+        isOpen: item.is_open,
+        sections: item.sections.map((section) => {
+          return {
+            name: section.name,
+            options: section.tag_ids.map((tagId) => {
+              return {
+                text: this.formOption.tag_list[tagId],
+                value: tagId,
+              }
+            }),
+          }
+        }),
+      }
     },
   },
   mounted() {
@@ -156,7 +157,9 @@ export interface Data {
   isMounted: boolean
 }
 
-export type Methods = {}
+export type Methods = {
+  insuranceTagTransformer(item: ApiInsuranceTagOption): InsuranceTagOption
+}
 
 export interface Computed {
   transformFormOption: TransformFormOption
@@ -169,8 +172,12 @@ export interface Props {
 
 export interface InsuranceTagOption {
   name: string
+  description: string
   isOpen: boolean
-  options: SelectOption[]
+  sections: {
+    name: string
+    options: SelectOption[]
+  }[]
 }
 
 export interface TransformFormOption {
