@@ -3,24 +3,34 @@
 @mixin tag {
   display: inline-block;
   line-height: 22px;
-  padding: 6px 12px;
+  padding: 5px 11px;
   font-size: 0.875rem;
+  border: 1px solid;
   border-radius: 4px;
   user-select: none;
   cursor: pointer;
 }
 
+@mixin tag-sm {
+  line-height: 20px;
+  padding: 1px 9px;
+  font-weight: 500;
+}
+
 @mixin tag-default {
   background: $primary-bg;
+  border-color: $primary-bg;
   color: $gray-secondary;
 
   &.active {
     background: $primary-bright-color;
+    border-color: $primary-bright-color;
     color: $primary-color;
 
     @include hover-supported {
       &:hover:not(.disabled) {
         background: $primary-light-color;
+        border-color: $primary-light-color;
       }
     }
   }
@@ -28,6 +38,7 @@
   @include hover-supported {
     &:hover:not(.disabled) {
       background: $gray-quaternary;
+      border-color: $gray-quaternary;
     }
   }
 
@@ -36,3 +47,57 @@
     cursor: not-allowed;
   }
 }
+
+@mixin tag-style($color) {
+  $bg: map-get($tag-background-colors, #{$color});
+  $border: map-get($tag-border-colors, #{$color});
+  $text: map-get($tag-text-colors, #{$color});
+
+  background: $bg;
+  border-color: $border;
+  color: $text;
+
+  @include hover-supported {
+    &:hover {
+      background: darken($bg, 10%);
+      border-color: darken($border, 10%);
+      color: darken($text, 15%);
+    }
+  }
+}
+
+@mixin tag-style-outline($color) {
+  $bg: map-get($tag-background-colors, #{$color});
+  $border: map-get($tag-border-colors, #{$color});
+  $text: map-get($tag-text-colors, #{$color});
+
+  background: $bg;
+  border-color: $border;
+  color: $text;
+  cursor: auto;
+}
+
+// tag color style
+$tag-color-list: yellow, brown, blue, green;
+$tag-color-outline-list: primary-outline;
+$tag-background-colors: (
+  'yellow': #ffe9a5,
+  'brown': #dcc9b7,
+  'blue': #ceecfc,
+  'green': #d3efd2,
+  'primary-outline': #fff,
+);
+$tag-border-colors: (
+  'yellow': #ffe9a5,
+  'brown': #dcc9b7,
+  'blue': #ceecfc,
+  'green': #d3efd2,
+  'primary-outline': $primary-color,
+);
+$tag-text-colors: (
+  'yellow': #b45516,
+  'brown': #8e5d31,
+  'blue': #2182dc,
+  'green': #129a00,
+  'primary-outline': $primary-color,
+);

@@ -10,8 +10,21 @@ import { computed, defineComponent } from '@nuxtjs/composition-api'
 export default defineComponent({
   props: {
     type: {
-      type: String as () => 'default',
+      type: String,
       default: 'default',
+      validator: (value: string) =>
+        [
+          'default',
+          'yellow',
+          'brown',
+          'blue',
+          'green',
+          'primary-outline',
+        ].includes(value),
+    },
+    small: {
+      type: Boolean,
+      default: false,
     },
     active: {
       type: Boolean,
@@ -26,6 +39,7 @@ export default defineComponent({
     const classObject = computed(() => {
       return {
         [`BaseTag__${props.type}`]: true,
+        BaseTag__sm: props.small,
         active: props.active,
         disabled: props.disabled,
       }
@@ -45,8 +59,24 @@ export default defineComponent({
 .BaseTag {
   @include tag;
 
+  &__sm {
+    @include tag-sm;
+  }
+
   &__default {
     @include tag-default;
+  }
+
+  @each $color in $tag-color-list {
+    &__#{$color} {
+      @include tag-style(#{$color});
+    }
+  }
+
+  @each $color in $tag-color-outline-list {
+    &__#{$color} {
+      @include tag-style-outline(#{$color});
+    }
   }
 }
 </style>
