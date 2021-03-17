@@ -113,9 +113,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
@@ -124,7 +122,7 @@ import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductFeatureTag from './ProductFeatureTag.vue'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     BaseCard,
     BaseButton,
@@ -134,7 +132,7 @@ const options: ComponentOption = {
   },
   props: {
     product: {
-      type: Object,
+      type: Object as () => InsuranceProduct,
       required: true,
     },
     enabled: {
@@ -142,70 +140,33 @@ const options: ComponentOption = {
       default: true,
     },
   },
-  computed: {
-    features() {
-      return this.product.features.join('．')
-    },
-    viewCount() {
-      return this.product.view_count
-        ? `有 ${this.product.view_count} 人有興趣`
-        : ''
-    },
-    enableCoverageFlexWrap() {
-      return (
-        this.product.coverages.length > 0 &&
-        this.product.coverage_charts.length === 0
-      )
-    },
-    buttonText() {
-      return this.enabled ? this.product.btn.text : '條件不符合'
-    },
-  },
-  methods: {
-    getFormattedFee(fee) {
+  setup(props) {
+    const features = computed(() => props.product.features.join('．'))
+    const viewCount = computed(() =>
+      props.product.view_count ? `有 ${props.product.view_count} 人有興趣` : ''
+    )
+    const enableCoverageFlexWrap = computed(
+      () =>
+        props.product.coverages.length > 0 &&
+        props.product.coverage_charts.length === 0
+    )
+    const buttonText = computed(() =>
+      props.enabled ? props.product.btn.text : '條件不符合'
+    )
+    const getFormattedFee = (fee: number | null) => {
       const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
-    },
+    }
+
+    return {
+      features,
+      viewCount,
+      enableCoverageFlexWrap,
+      buttonText,
+      getFormattedFee,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {
-  getFormattedFee(fee: number | null): string
-}
-
-export interface Computed {
-  features: string
-  viewCount: string
-  enableCoverageFlexWrap: boolean
-  buttonText: string
-}
-
-export interface Props {
-  product: InsuranceProduct
-  enabled: boolean
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>

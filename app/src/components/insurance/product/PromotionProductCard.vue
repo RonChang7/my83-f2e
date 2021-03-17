@@ -64,16 +64,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
 import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
 import ProductFeatureTag from './ProductFeatureTag.vue'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     BaseButton,
     ProductFeatureTag,
@@ -81,7 +79,7 @@ const options: ComponentOption = {
   },
   props: {
     product: {
-      type: Object,
+      type: Object as () => PromotionInsuranceProduct,
       required: true,
     },
     enabled: {
@@ -89,63 +87,27 @@ const options: ComponentOption = {
       default: true,
     },
   },
-  computed: {
-    features() {
-      return this.product.features.join('．')
-    },
-    viewCount() {
-      return this.product.view_count
-        ? `有 ${this.product.view_count} 人有興趣`
-        : ''
-    },
-    buttonText() {
-      return this.enabled ? this.product.btn.text : '條件不符合'
-    },
-  },
-  methods: {
-    getFormattedFee(fee) {
+  setup(props) {
+    const features = computed(() => props.product.features.join('．'))
+    const viewCount = computed(() =>
+      props.product.view_count ? `有 ${props.product.view_count} 人有興趣` : ''
+    )
+    const buttonText = computed(() =>
+      props.enabled ? props.product.btn.text : '條件不符合'
+    )
+    const getFormattedFee = (fee: number | null) => {
       const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
-    },
+    }
+
+    return {
+      features,
+      viewCount,
+      buttonText,
+      getFormattedFee,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {
-  getFormattedFee(fee: number): string
-}
-
-export interface Computed {
-  features: string
-  viewCount: string
-  buttonText: string
-}
-
-export interface Props {
-  product: PromotionInsuranceProduct
-  enabled: boolean
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>

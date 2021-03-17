@@ -85,63 +85,65 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { useStore } from '@/utils/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import DeviceMixin from '@/mixins/device/device-mixins'
 import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
 import ProductFeatureTag from '../product/ProductFeatureTag.vue'
 
-@Component({
+export default defineComponent({
   components: {
     GlobalLink,
     BaseButton,
     BaseTag,
     ProductFeatureTag,
   },
+  setup() {
+    const store = useStore<InsuranceProductVuexState>()
+    const { isMobile } = useDevice()
+    const breadcrumbs = computed(
+      () => store.state.pageMeta.pageMeta?.breadcrumbs
+    )
+    const company = computed(
+      () => store.state.insuranceProduct.product?.product.company
+    )
+    const name = computed(
+      () => store.state.insuranceProduct.product?.product.name
+    )
+    const features = computed(() =>
+      store.state.insuranceProduct.product?.product.features.join('．')
+    )
+    const viewCount = computed(
+      () => store.state.insuranceProduct.product?.product.view_count
+    )
+    const files = computed(() => store.state.insuranceProduct.product?.files)
+    const onlineProduct = computed(
+      () => store.state.insuranceProduct.product?.online_product
+    )
+    const badges = computed(
+      () => store.state.insuranceProduct.product?.product.badges
+    )
+    const rankingBadge = computed(
+      () => store.state.insuranceProduct.product?.product.ranking_badge
+    )
+
+    return {
+      isMobile,
+      breadcrumbs,
+      company,
+      name,
+      features,
+      viewCount,
+      files,
+      onlineProduct,
+      badges,
+      rankingBadge,
+    }
+  },
 })
-export default class ProductHeaderSection extends Mixins(DeviceMixin) {
-  get storeState() {
-    return this.$store.state as InsuranceProductVuexState
-  }
-
-  get breadcrumbs() {
-    return this.storeState.pageMeta.pageMeta?.breadcrumbs
-  }
-
-  get company() {
-    return this.storeState.insuranceProduct.product?.product.company
-  }
-
-  get name() {
-    return this.storeState.insuranceProduct.product?.product.name
-  }
-
-  get features() {
-    return this.storeState.insuranceProduct.product?.product.features.join('．')
-  }
-
-  get viewCount() {
-    return this.storeState.insuranceProduct.product?.product.view_count
-  }
-
-  get files() {
-    return this.storeState.insuranceProduct.product?.files
-  }
-
-  get onlineProduct() {
-    return this.storeState.insuranceProduct.product?.online_product
-  }
-
-  get badges() {
-    return this.storeState.insuranceProduct.product?.product.badges
-  }
-
-  get rankingBadge() {
-    return this.storeState.insuranceProduct.product?.product.ranking_badge
-  }
-}
 </script>
 
 <style lang="scss" scoped>
