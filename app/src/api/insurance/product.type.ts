@@ -36,6 +36,8 @@ export interface ProductData {
   name: string
   description: string
   company: string
+  badges: LinkButton[]
+  ranking_badge: RankingBadge
   features: string[]
   contract_type: ContractType
   whole_life_type: WholeLifeType
@@ -116,4 +118,9 @@ export interface PremiumQuery {
   plan_id: number
   job_level?: number
   amount?: number
+}
+
+export interface RankingBadge {
+  text: string
+  description: string
 }
