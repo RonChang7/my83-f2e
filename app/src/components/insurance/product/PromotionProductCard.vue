@@ -3,6 +3,24 @@
     <div class="PromotionProductCard__section">
       <div class="PromotionProductCard__company">{{ product.company }}</div>
       <div class="PromotionProductCard__name">{{ product.name }}</div>
+      <div
+        v-if="product.badges.length || product.ranking_badge"
+        class="PromotionProductCard__featureTags"
+      >
+        <ProductFeatureTag
+          v-for="(tag, index) in product.badges"
+          :key="index"
+          :tag="tag"
+        />
+        <div
+          v-if="product.ranking_badge"
+          class="PromotionProductCard__rankingTag"
+        >
+          <BaseTag small type="primary-outline">
+            {{ product.ranking_badge.text }}
+          </BaseTag>
+        </div>
+      </div>
       <template v-if="!product.promotion">
         <div class="PromotionProductCard__features">
           {{ features }}
@@ -52,10 +70,14 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
+import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
+import ProductFeatureTag from './ProductFeatureTag.vue'
 
 const options: ComponentOption = {
   components: {
     BaseButton,
+    ProductFeatureTag,
+    BaseTag,
   },
   props: {
     product: {
@@ -153,7 +175,6 @@ export default options
     color: $secondary-color;
     font-weight: 500;
     padding: 3px 0;
-    margin-bottom: 8px;
   }
 
   &__name {
@@ -162,7 +183,23 @@ export default options
     color: $gray-primary;
     font-size: 1.125rem;
     font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
+  }
+
+  &__featureTags {
+    & > * {
+      display: inline-block;
+      margin: 0 8px 10px 0;
+    }
+  }
+
+  &__rankingTag {
+    > span {
+      margin-left: 4px;
+      color: $primary-color;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
   }
 
   &__features,

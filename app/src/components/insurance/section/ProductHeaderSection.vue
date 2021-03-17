@@ -44,6 +44,22 @@
           {{ onlineProduct.text }}
         </BaseButton>
       </div>
+      <div
+        v-if="badges.length || rankingBadge"
+        class="ProductHeaderSection__featureTags"
+      >
+        <ProductFeatureTag
+          v-for="(tag, index) in badges"
+          :key="index"
+          :tag="tag"
+        />
+        <div v-if="rankingBadge" class="ProductHeaderSection__rankingTag">
+          <BaseTag small type="primary-outline">
+            {{ rankingBadge.text }}
+          </BaseTag>
+          <span>{{ rankingBadge.description }}</span>
+        </div>
+      </div>
       <div class="ProductHeaderSection__features">{{ features }}</div>
       <div v-if="viewCount" class="ProductHeaderSection__viewCount">
         有
@@ -74,11 +90,15 @@ import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
+import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
+import ProductFeatureTag from '../product/ProductFeatureTag.vue'
 
 @Component({
   components: {
     GlobalLink,
     BaseButton,
+    BaseTag,
+    ProductFeatureTag,
   },
 })
 export default class ProductHeaderSection extends Mixins(DeviceMixin) {
@@ -112,6 +132,14 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
 
   get onlineProduct() {
     return this.storeState.insuranceProduct.product?.online_product
+  }
+
+  get badges() {
+    return this.storeState.insuranceProduct.product?.product.badges
+  }
+
+  get rankingBadge() {
+    return this.storeState.insuranceProduct.product?.product.ranking_badge
   }
 }
 </script>
@@ -165,6 +193,22 @@ export default class ProductHeaderSection extends Mixins(DeviceMixin) {
   &__onlineProduct {
     width: 136px;
     padding: 6px 0 8px;
+  }
+
+  &__featureTags {
+    & > * {
+      display: inline-block;
+      margin: 0 8px 6px 0;
+    }
+  }
+
+  &__rankingTag {
+    > span {
+      margin-left: 4px;
+      color: $primary-color;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
   }
 
   &__features,
