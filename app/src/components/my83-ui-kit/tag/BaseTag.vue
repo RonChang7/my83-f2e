@@ -69,13 +69,13 @@ export default defineComponent({
 
   @each $color in $tag-color-list {
     &__#{$color} {
-      @include tag-style(#{$color});
+      @include tag-style($color);
     }
   }
 
   @each $color in $tag-color-outline-list {
     &__#{$color} {
-      @include tag-style-outline(#{$color});
+      @include tag-style-outline($color);
     }
   }
 }
