@@ -228,6 +228,10 @@ export default defineComponent({
     & > * {
       display: inline-block;
       margin: 0 8px 10px 0;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 
