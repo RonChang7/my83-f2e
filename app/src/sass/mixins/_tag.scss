@@ -49,9 +49,9 @@
 }
 
 @mixin tag-style($color) {
-  $bg: map-get($tag-background-colors, #{$color});
-  $border: map-get($tag-border-colors, #{$color});
-  $text: map-get($tag-text-colors, #{$color});
+  $bg: map-get($tag-background-colors, $color);
+  $border: map-get($tag-border-colors, $color);
+  $text: map-get($tag-text-colors, $color);
 
   background: $bg;
   border-color: $border;
@@ -67,9 +67,9 @@
 }
 
 @mixin tag-style-outline($color) {
-  $bg: map-get($tag-background-colors, #{$color});
-  $border: map-get($tag-border-colors, #{$color});
-  $text: map-get($tag-text-colors, #{$color});
+  $bg: map-get($tag-background-colors, $color);
+  $border: map-get($tag-border-colors, $color);
+  $text: map-get($tag-text-colors, $color);
 
   background: $bg;
   border-color: $border;
@@ -78,7 +78,7 @@
 }
 
 // tag color style
-$tag-color-list: yellow, brown, blue, green;
+$tag-color-list: 'yellow', 'brown', 'blue', 'green';
 $tag-color-outline-list: primary-outline;
 $tag-background-colors: (
   'yellow': #ffe9a5,
