@@ -149,9 +149,11 @@ export default defineComponent({
   }
 
   &__featureTags {
+    margin-bottom: 6px;
+
     & > * {
       display: inline-block;
-      margin: 0 8px 10px 0;
+      margin: 0 5px 4px 0;
 
       &:last-child {
         margin-right: 0;

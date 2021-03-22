@@ -225,9 +225,11 @@ export default defineComponent({
   }
 
   &__featureTags {
+    margin-bottom: 2px;
+
     & > * {
       display: inline-block;
-      margin: 0 8px 10px 0;
+      margin: 0 5px 8px 0;
 
       &:last-child {
         margin-right: 0;
@@ -237,7 +239,7 @@ export default defineComponent({
 
   &__rankingTag {
     > span {
-      margin-left: 4px;
+      margin-left: 3px;
       color: $primary-color;
       font-size: 0.875em;
       font-weight: 500;
