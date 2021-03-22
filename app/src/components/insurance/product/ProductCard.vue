@@ -229,7 +229,7 @@ export default defineComponent({
 
     & > * {
       display: inline-block;
-      margin: 0 5px 8px 0;
+      margin: 0 8px 8px 0;
 
       &:last-child {
         margin-right: 0;
