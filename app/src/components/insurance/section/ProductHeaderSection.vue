@@ -206,7 +206,7 @@ export default defineComponent({
 
   &__rankingTag {
     > span {
-      margin-left: 4px;
+      margin-left: 3px;
       color: $primary-color;
       font-size: 0.875em;
       font-weight: 500;
