@@ -76,7 +76,7 @@ class PageFilterService {
 
   get isDefaultFilter() {
     const { query, store } = this.ctx
-    if (_.isEmpty(query)) return false
+    if (_.isEmpty(query) || !this.filterKeys.length) return false
 
     return this.filterKeys.every(
       (key) =>
@@ -88,7 +88,7 @@ class PageFilterService {
 
   get isEmptyFilter() {
     const { query } = this.ctx
-    if (_.isEmpty(query)) return true
+    if (_.isEmpty(query) || !this.filterKeys.length) return true
 
     return this.filterKeys.every((key) => getFirstQuery(query[key]) === '')
   }
@@ -123,6 +123,7 @@ const opinions: ComponentOption = {
     const insurance = route.params.insurance
     const insuranceStore = (store.state as InsuranceVuexState).insurance
     const currentInsurance = insuranceStore.staticData.id
+    const isExternal = !!insuranceStore.filter.defaultPremiumConfig
 
     const fetchPageData: Promise<any>[] = []
 
@@ -166,6 +167,7 @@ const opinions: ComponentOption = {
     }
 
     if (
+      isExternal &&
       !(
         pageFilter.isFirstLanding &&
         (pageFilter.isDefaultFilter || pageFilter.isEmptyFilter)
