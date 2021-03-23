@@ -149,9 +149,11 @@ export default defineComponent({
   }
 
   &__featureTags {
+    @include inline-block-space-remove-parent;
     margin-bottom: 6px;
 
     & > * {
+      @include inline-block-space-remove-child;
       display: inline-block;
       margin: 0 8px 4px 0;
 
@@ -159,10 +161,6 @@ export default defineComponent({
         margin-right: 0;
       }
     }
-  }
-
-  &__rankingTag {
-    margin-left: -3px;
   }
 
   &__features,

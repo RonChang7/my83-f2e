@@ -198,15 +198,16 @@ export default defineComponent({
   }
 
   &__featureTags {
+    @include inline-block-space-remove-parent;
+
     & > * {
+      @include inline-block-space-remove-child;
       display: inline-block;
       margin: 0 8px 6px 0;
     }
   }
 
   &__rankingTag {
-    margin-left: -3px;
-
     > span {
       margin-left: 3px;
       color: $primary-color;

@@ -225,9 +225,11 @@ export default defineComponent({
   }
 
   &__featureTags {
+    @include inline-block-space-remove-parent;
     margin-bottom: 2px;
 
     & > * {
+      @include inline-block-space-remove-child;
       display: inline-block;
       margin: 0 8px 8px 0;
 
@@ -238,8 +240,6 @@ export default defineComponent({
   }
 
   &__rankingTag {
-    margin-left: -3px;
-
     > span {
       margin-left: 3px;
       color: $primary-color;
