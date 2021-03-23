@@ -238,6 +238,8 @@ export default defineComponent({
   }
 
   &__rankingTag {
+    margin-left: -3px;
+
     > span {
       margin-left: 3px;
       color: $primary-color;

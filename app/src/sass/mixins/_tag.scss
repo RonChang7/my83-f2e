@@ -50,8 +50,8 @@
 
 @mixin tag-style($color) {
   $bg: map-get($tag-background-colors, $color);
-  $border: map-get($tag-border-colors, $color);
   $text: map-get($tag-text-colors, $color);
+  $border: transparentize($text, 0.8);
 
   background: $bg;
   border-color: $border;
@@ -60,7 +60,7 @@
   @include hover-supported {
     &:hover {
       background: darken($bg, 10%);
-      border-color: darken($border, 10%);
+      border-color: darken($bg, 10%);
       color: darken($text, 15%);
     }
   }

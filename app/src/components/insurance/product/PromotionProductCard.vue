@@ -162,12 +162,7 @@ export default defineComponent({
   }
 
   &__rankingTag {
-    > span {
-      margin-left: 4px;
-      color: $primary-color;
-      font-size: 0.875em;
-      font-weight: 500;
-    }
+    margin-left: -3px;
   }
 
   &__features,
