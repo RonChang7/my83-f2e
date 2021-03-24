@@ -8,6 +8,22 @@
               {{ product.company }}
             </div>
             <h3 class="ProductCard__name">{{ product.name }}</h3>
+            <div
+              v-if="product.badges.length || product.ranking_badge"
+              class="ProductCard__featureTags"
+            >
+              <ProductFeatureTag
+                v-for="(tag, index) in product.badges"
+                :key="index"
+                :tag="tag"
+              />
+              <div v-if="product.ranking_badge" class="ProductCard__rankingTag">
+                <BaseTag small type="primary-outline">
+                  {{ product.ranking_badge.text }}
+                </BaseTag>
+                <span>{{ product.ranking_badge.description }}</span>
+              </div>
+            </div>
             <div v-if="features" class="ProductCard__features">
               {{ features }}
             </div>
@@ -97,24 +113,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import { InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
+import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
+import ProductFeatureTag from './ProductFeatureTag.vue'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     BaseCard,
     BaseButton,
+    ProductFeatureTag,
+    BaseTag,
     CoverageBadge,
   },
   props: {
     product: {
-      type: Object,
+      type: Object as () => InsuranceProduct,
       required: true,
     },
     enabled: {
@@ -122,70 +140,33 @@ const options: ComponentOption = {
       default: true,
     },
   },
-  computed: {
-    features() {
-      return this.product.features.join('．')
-    },
-    viewCount() {
-      return this.product.view_count
-        ? `有 ${this.product.view_count} 人有興趣`
-        : ''
-    },
-    enableCoverageFlexWrap() {
-      return (
-        this.product.coverages.length > 0 &&
-        this.product.coverage_charts.length === 0
-      )
-    },
-    buttonText() {
-      return this.enabled ? this.product.btn.text : '條件不符合'
-    },
-  },
-  methods: {
-    getFormattedFee(fee) {
+  setup(props) {
+    const features = computed(() => props.product.features.join('．'))
+    const viewCount = computed(() =>
+      props.product.view_count ? `有 ${props.product.view_count} 人有興趣` : ''
+    )
+    const enableCoverageFlexWrap = computed(
+      () =>
+        props.product.coverages.length > 0 &&
+        props.product.coverage_charts.length === 0
+    )
+    const buttonText = computed(() =>
+      props.enabled ? props.product.btn.text : '條件不符合'
+    )
+    const getFormattedFee = (fee: number | null) => {
       const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
       return `${feeString}元 /年`
-    },
+    }
+
+    return {
+      features,
+      viewCount,
+      enableCoverageFlexWrap,
+      buttonText,
+      getFormattedFee,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {
-  getFormattedFee(fee: number | null): string
-}
-
-export interface Computed {
-  features: string
-  viewCount: string
-  enableCoverageFlexWrap: boolean
-  buttonText: string
-}
-
-export interface Props {
-  product: InsuranceProduct
-  enabled: boolean
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
@@ -241,6 +222,30 @@ export default options
     font-weight: 500;
     margin: 0;
     margin-bottom: 8px;
+  }
+
+  &__featureTags {
+    @include inline-block-space-remove-parent;
+    margin-bottom: 2px;
+
+    & > * {
+      @include inline-block-space-remove-child;
+      display: inline-block;
+      margin: 0 8px 8px 0;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  &__rankingTag {
+    > span {
+      margin-left: 3px;
+      color: $primary-color;
+      font-size: 0.875em;
+      font-weight: 500;
+    }
   }
 
   &__features,
