@@ -57,13 +57,14 @@
   border-color: $border;
   color: $text;
 
-  @include hover-supported {
-    &:hover {
-      background: darken($bg, 10%);
-      border-color: darken($bg, 10%);
-      color: darken($text, 15%);
-    }
-  }
+  // @TODO: 暫時移除 hover 效果，因為目前標籤不可點擊
+  // @include hover-supported {
+  //   &:hover {
+  //     background: darken($bg, 10%);
+  //     border-color: darken($bg, 10%);
+  //     color: darken($text, 15%);
+  //   }
+  // }
 }
 
 @mixin tag-style-outline($color) {
