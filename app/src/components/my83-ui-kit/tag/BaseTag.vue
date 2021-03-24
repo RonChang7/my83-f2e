@@ -5,15 +5,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 
-const options: ComponentOption = {
+export default defineComponent({
   props: {
     type: {
-      type: String as () => Props['type'],
+      type: String,
       default: 'default',
+      validator: (value: string) =>
+        [
+          'default',
+          'yellow',
+          'brown',
+          'blue',
+          'green',
+          'primary-outline',
+        ].includes(value),
+    },
+    small: {
+      type: Boolean,
+      default: false,
     },
     active: {
       type: Boolean,
@@ -24,50 +35,21 @@ const options: ComponentOption = {
       default: false,
     },
   },
-  computed: {
-    classObject() {
+  setup(props) {
+    const classObject = computed(() => {
       return {
-        [`BaseTag__${this.type}`]: true,
-        active: this.active,
-        disabled: this.disabled,
+        [`BaseTag__${props.type}`]: true,
+        BaseTag__sm: props.small,
+        active: props.active,
+        disabled: props.disabled,
       }
-    },
+    })
+
+    return {
+      classObject,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  classObject: Record<string, boolean>
-}
-
-export interface Props {
-  type: 'default'
-  active: boolean
-  disabled: boolean
-}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
@@ -77,8 +59,24 @@ export default options
 .BaseTag {
   @include tag;
 
+  &__sm {
+    @include tag-sm;
+  }
+
   &__default {
     @include tag-default;
+  }
+
+  @each $color in $tag-color-list {
+    &__#{$color} {
+      @include tag-style($color);
+    }
+  }
+
+  @each $color in $tag-color-outline-list {
+    &__#{$color} {
+      @include tag-style-outline($color);
+    }
   }
 }
 </style>

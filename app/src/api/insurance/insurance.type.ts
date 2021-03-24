@@ -6,6 +6,7 @@ import {
   LinkButton,
   PageResponse,
 } from '../type'
+import { RankingBadge } from './product.type'
 
 export interface InsurancePageStaticData {
   id: string
@@ -131,6 +132,8 @@ export interface BaseInsuranceProduct {
   fee: number
   btn: LinkButton
   features: string[]
+  badges: LinkButton[]
+  ranking_badge: RankingBadge
   coverage_age: string | null
   view_count: number
 }
