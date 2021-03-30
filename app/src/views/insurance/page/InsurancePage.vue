@@ -17,8 +17,22 @@
       <PromotionProductSection />
     </div>
 
+    <div class="InsurancePage__row mb-0">
+      <ProductListTitleSection @scrollToFAQ="scrollToFAQ" />
+    </div>
+
     <div class="InsurancePage__rowWithTowColumns">
-      <div class="column left">
+      <div class="column thin">
+        <ProductListFilterSection
+          v-if="!isMobile && shouldShowProductListFilter"
+        />
+        <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
+        <FaqSection v-if="isMobile" id="faq" class="faq" />
+        <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
+        <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
+        <InsuranceLinkSection />
+      </div>
+      <div class="column wider">
         <ProductListSection ref="ProductListSection">
           <ProductListFilterSection
             v-if="isMobile && shouldShowProductListFilter"
@@ -30,16 +44,6 @@
             @to-page="(index) => $emit('to-page', index)"
           />
         </div>
-      </div>
-      <div class="column right">
-        <ProductListFilterSection
-          v-if="!isMobile && shouldShowProductListFilter"
-        />
-        <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
-        <FaqSection v-if="isMobile" id="faq" class="faq" />
-        <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
-        <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
-        <InsuranceLinkSection />
       </div>
     </div>
 
@@ -55,6 +59,7 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import HeaderSection from '@/components/insurance/section/HeaderSection.vue'
+import ProductListTitleSection from '@/components/insurance/section/ProductListTitleSection.vue'
 import ProductListSection from '@/components/insurance/section/ProductListSection.vue'
 import PromotionProductSection from '@/components/insurance/section/PromotionProductSection.vue'
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
@@ -78,6 +83,7 @@ const options: ComponentOption = {
   mixins: [DeviceMixin],
   components: {
     HeaderSection,
+    ProductListTitleSection,
     ProductListSection,
     PromotionProductSection,
     PromotionSection,
@@ -129,6 +135,13 @@ const options: ComponentOption = {
         offset,
       })
     },
+    scrollToFAQ() {
+      scrollToElement({
+        el: document.querySelector('#faq')! as HTMLElement,
+        vertical: true,
+        offset: 32,
+      })
+    },
   },
   watch: {
     // handle page position when navigate via pagination
@@ -174,6 +187,7 @@ export type Methods = {
   updateInfoModalActiveTab(tab: InsuranceTipModalProps['activeTab']): void
   openInfoModal(): void
   scrollToProductListSection(): void
+  scrollToFAQ(): void
 }
 
 export interface Computed {
@@ -252,7 +266,7 @@ export default options
 
   &__rowWithTowColumns {
     @include max-media('xl') {
-      flex-direction: column;
+      flex-direction: column-reverse;
     }
 
     .column {
@@ -264,13 +278,13 @@ export default options
         margin-right: 0;
       }
 
-      &.left {
-        width: 740px;
+      &.wider {
+        width: 836px;
       }
 
-      &.right {
-        width: 360px;
-        margin-top: 107px;
+      &.thin {
+        width: 264px;
+        margin-top: 20px;
 
         > .faq {
           background: #fff;
@@ -282,8 +296,8 @@ export default options
         }
       }
 
-      &.left,
-      &.right {
+      &.thin,
+      &.wider {
         @include max-media('xl') {
           width: 100%;
         }
