@@ -1,17 +1,5 @@
 <template>
   <div class="ProductListSection">
-    <h2 class="ProductListSection__title">
-      全部商品
-      <a
-        class="ProductListSection__faq"
-        href="#faq"
-        @click.prevent="scrollToFAQ"
-      >
-        <BaseFAQ />
-        常見問題
-      </a>
-    </h2>
-    <div class="ProductListSection__description">{{ description }}</div>
     <slot />
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
@@ -53,15 +41,12 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
-import BaseFAQ from '@/assets/icon/24/BaseFAQ.svg'
-import { scrollToElement } from '@/utils/scroll'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductCard from '../product/ProductCard.vue'
 
 const options: ComponentOption = {
   components: {
-    BaseFAQ,
     ProductCard,
     CoverageBadge,
   },
@@ -72,23 +57,10 @@ const options: ComponentOption = {
     insuranceProducts() {
       return this.$store.state.insurance.insuranceList || []
     },
-    description() {
-      return (
-        this.$store.state.insurance.staticData.productListDescription ||
-        '依熱門度排序。費率以 30 歲女性為基準。'
-      )
-    },
   },
   methods: {
     isEnabled(product) {
       return product.fee !== null
-    },
-    scrollToFAQ() {
-      scrollToElement({
-        el: document.querySelector('#faq')! as HTMLElement,
-        vertical: true,
-        offset: 32,
-      })
     },
     clickProductCard(product) {
       const { isExternal } = this.$store.state.insurance.staticData
@@ -134,7 +106,6 @@ export interface Data {}
 
 export type Methods = {
   isEnabled(product: InsuranceProduct): boolean
-  scrollToFAQ(): void
   clickProductCard(product: InsuranceProduct): void
   clickProductButton(productName: string): void
 }
@@ -142,7 +113,6 @@ export type Methods = {
 export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
-  description: string
 }
 
 export interface Props {}
@@ -157,39 +127,6 @@ export default options
 
 .ProductListSection {
   margin-top: 20px;
-
-  &__title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0;
-    color: $gray-primary;
-    font-size: 1.75rem;
-    font-weight: 500;
-
-    > a {
-      font-weight: 500;
-      margin-right: 10px;
-
-      @include hover('_secondary', $has-svg: true);
-
-      @include max-media('xl') {
-        margin: 0;
-      }
-    }
-  }
-
-  &__description {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: $gray-primary;
-    margin-bottom: 20px;
-
-    @include max-media('xl') {
-      margin-top: 8px;
-    }
-  }
 
   &__idealCoverage {
     @include card-primary;
@@ -238,10 +175,6 @@ export default options
         }
       }
     }
-  }
-
-  &__faq {
-    font-size: 1rem;
   }
 
   &__product {
