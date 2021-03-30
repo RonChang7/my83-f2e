@@ -9,8 +9,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
-import { useStore } from '@/utils/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { InsuranceLeaderBoardVuexState } from '@/views/insurance/leader-board/Index.vue'
 import LeaderBoardCard from '../product/LeaderBoardCard.vue'
 

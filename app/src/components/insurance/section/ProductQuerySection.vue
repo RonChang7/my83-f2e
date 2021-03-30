@@ -62,9 +62,9 @@ import {
   onMounted,
   reactive,
   ref,
+  useStore,
   watch,
 } from '@nuxtjs/composition-api'
-import { useStore } from '@/utils/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
 import { useDevice } from '@/mixins/device/device-mixins'

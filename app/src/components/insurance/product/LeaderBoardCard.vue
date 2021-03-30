@@ -54,8 +54,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { defineComponent, PropType } from '@nuxtjs/composition-api'
-import { useRouter } from '@/utils/composition-api'
+import { defineComponent, PropType, useRouter } from '@nuxtjs/composition-api'
 import { Link } from '@/api/type'
 import { Section } from '@/api/insurance/leader-board.type'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
@@ -76,7 +75,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const router = useRouter()!
+    const router = useRouter()
     const pageviewsFormatter = (number: number) => {
       return number ? delimitIntegerWithSymbol(number) : ''
     }

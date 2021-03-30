@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
