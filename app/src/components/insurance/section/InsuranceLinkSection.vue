@@ -33,13 +33,15 @@ import {
   defineComponent,
   Ref,
   ref,
+  useRoute,
+  useStore,
   watch,
 } from '@nuxtjs/composition-api'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { HeaderNavItem } from '@/api/header/header.type'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
-import { useAnalytics, useRoute, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({

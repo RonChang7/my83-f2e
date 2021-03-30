@@ -16,12 +16,12 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import RelatedSection from '@/components/base/related/RelatedSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({

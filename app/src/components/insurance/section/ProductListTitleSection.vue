@@ -16,10 +16,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseFAQ from '@/assets/icon/24/BaseFAQ.svg'
-import { useStore } from '@/utils/composition-api'
 
 export default defineComponent({
   components: {

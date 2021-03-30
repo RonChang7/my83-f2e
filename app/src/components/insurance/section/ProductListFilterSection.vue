@@ -18,12 +18,17 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { defineComponent, ref } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  ref,
+  useRoute,
+  useRouter,
+  useStore,
+} from '@nuxtjs/composition-api'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { InsuranceFilterScheme } from '@/services/product/InsuranceFilterScheme'
 import { UpdateInsuranceListFilterPayload } from '@/store/insurance/insurance'
-import { useRoute, useRouter, useStore } from '@/utils/composition-api'
 import { getFirstQuery } from '@/utils/query-string'
 import ProductQueryField from '../product/ProductQueryField.vue'
 
@@ -34,7 +39,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<InsuranceVuexState>()
-    const router = useRouter()!
+    const router = useRouter()
     const route = useRoute()
     const options = ref({})
     const formData = ref({})

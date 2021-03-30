@@ -27,9 +27,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 

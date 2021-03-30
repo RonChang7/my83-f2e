@@ -62,8 +62,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
-import { useStore, useRouter, useRoute } from '@/utils/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useRoute,
+  useRouter,
+  useStore,
+  watch,
+} from '@nuxtjs/composition-api'
 import { getFirstQuery } from '@/utils/query-string'
 import { InsuranceLeaderBoardVuexState } from '@/views/insurance/leader-board/Index.vue'
 import { Option } from '@/components/my83-ui-kit/input/type'
@@ -97,7 +104,7 @@ export default defineComponent({
   mixins: [DeviceMixin],
   setup() {
     const store = useStore<InsuranceLeaderBoardVuexState>()
-    const router = useRouter()!
+    const router = useRouter()
     const route = useRoute()
 
     const title = computed(() => store.state.insuranceLeaderBoard.title)

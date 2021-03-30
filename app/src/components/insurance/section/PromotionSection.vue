@@ -37,10 +37,11 @@ import {
   nextTick,
   onMounted,
   ref,
+  useStore,
 } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
