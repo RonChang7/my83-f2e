@@ -25,6 +25,7 @@
       <div class="column thin">
         <ProductListFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
+          :multi-section="true"
         />
         <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
@@ -112,7 +113,7 @@ const options: ComponentOption = {
       return !!this.$store.state.insurance.promotionProducts?.length
     },
     shouldShowProductListFilter() {
-      return !!this.$store.state.insurance.filter.defaultPremiumConfig
+      return !!this.$store.state.insurance.filter.config
     },
     shouldShowPagination() {
       if (!this.pagination) return false
