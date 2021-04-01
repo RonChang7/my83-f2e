@@ -9,6 +9,8 @@ import {
   InsuranceListResponse,
   FetchInsuranceListPayload,
   InsuranceProductFeeResponse,
+  InsuranceListFilterResponse,
+  FilterValue,
 } from './insurance.type'
 
 /**
@@ -69,13 +71,24 @@ export const fetchInsuranceList = async (
 }
 
 /**
+ * @description 取得險種篩選條件
+ * @param {string} insurance 險種名
+ */
+export const fetchInsuranceListFilter = async (
+  insurance: string
+): Promise<InsuranceListFilterResponse> => {
+  const { data } = await request.get(`/api/insurance/${insurance}/tags-filter`)
+  return data
+}
+
+/**
  * @description 取得無險種頁篩選險種商品價格
  * @param {number[]} productIds
- * @param {Record<string, string | number>} premiumConfig
+ * @param {FilterValue} premiumConfig
  */
 export const updateInsuranceProductFee = async (
   productIds: number[],
-  premiumConfig: Record<string, string | number>
+  premiumConfig: FilterValue
 ): Promise<InsuranceProductFeeResponse> => {
   const { data } = await request.get<InsuranceProductFeeResponse>(
     `/api/insurance/product-fee-list`,
