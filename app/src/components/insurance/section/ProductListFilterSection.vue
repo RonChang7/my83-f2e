@@ -1,19 +1,42 @@
 <template>
-  <BaseCard class="ProductListFilterSection">
-    <template #title>投保資料</template>
-    <template #default>
-      <div class="ProductListFilterSection__content">
-        <ProductQueryField
-          v-for="option in options"
-          :key="option.id"
-          class="ProductListFilterSection__field"
-          :option="option"
-          :value="formData[option.id]"
-          @update="update"
-        />
-      </div>
+  <div>
+    <template v-if="multiSection">
+      <BaseCard
+        v-for="option in options"
+        :key="option.id"
+        class="ProductListFilterSection"
+      >
+        <template #title>{{ option.name }}</template>
+        <template #default>
+          <div class="ProductListFilterSection__content">
+            <ProductQueryField
+              class="ProductListFilterSection__field"
+              :option="option"
+              :value="formData[option.id]"
+              :disable-label="multiSection"
+              @update="update"
+            />
+          </div>
+        </template>
+      </BaseCard>
     </template>
-  </BaseCard>
+    <BaseCard v-else class="ProductListFilterSection">
+      <template #title>投保資料</template>
+      <template #default>
+        <div class="ProductListFilterSection__content">
+          <ProductQueryField
+            v-for="option in options"
+            :key="option.id"
+            class="ProductListFilterSection__field"
+            :option="option"
+            :value="formData[option.id]"
+            radio-type="button"
+            @update="update"
+          />
+        </div>
+      </template>
+    </BaseCard>
+  </div>
 </template>
 
 <script lang="ts">
@@ -37,6 +60,12 @@ export default defineComponent({
     BaseCard,
     ProductQueryField,
   },
+  props: {
+    multiSection: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup() {
     const store = useStore<InsuranceVuexState>()
     const router = useRouter()
@@ -44,26 +73,20 @@ export default defineComponent({
     const options = ref({})
     const formData = ref({})
 
-    const {
-      premiumConfig,
-      defaultPremiumConfig: defaultFilterPremiumConfig,
-    } = store.state.insurance.filter
-    const filterPremiumConfig = _.keys(defaultFilterPremiumConfig).reduce(
-      (acc, cur) => {
-        if (getFirstQuery(route.value.query[cur])) {
-          acc[cur] = getFirstQuery(route.value.query[cur])
-        }
-        return acc
-      },
-      {}
-    )
+    const { defaultValue, config } = store.state.insurance.filter
+    const filterInitValue = _.keys(config).reduce((acc, cur) => {
+      if (getFirstQuery(route.value.query[cur])) {
+        acc[cur] = getFirstQuery(route.value.query[cur])
+      }
+      return acc
+    }, {})
 
     const scheme = new InsuranceFilterScheme(
-      premiumConfig,
-      _.isEmpty(filterPremiumConfig)
-        ? defaultFilterPremiumConfig
-        : filterPremiumConfig
+      config,
+      _.isEmpty(filterInitValue) ? defaultValue : filterInitValue
     )
+
+    console.log('scheme', scheme)
 
     scheme.form.setSubmit(() => {
       router.push({

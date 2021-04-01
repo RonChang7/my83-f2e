@@ -57,6 +57,7 @@ export class FieldFactory<T extends FieldType> {
         }
         break
       }
+      case InputType.CHECKBOX:
       case InputType.RADIO:
       case InputType.OPTION: {
         const transformOptions = (options as InsuranceOption[]).map(

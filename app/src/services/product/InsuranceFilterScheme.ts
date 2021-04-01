@@ -5,17 +5,6 @@ import { Field, FieldType, InputType } from '@/services/form/field.type'
 import { InsuranceListData } from '@/api/insurance/insurance.type'
 
 export class InsuranceFilterScheme {
-  private static fieldList: FieldListObject[] = [
-    {
-      id: 'gender',
-      name: '性別',
-    },
-    {
-      id: 'vehicle_type',
-      name: '車種',
-    },
-  ]
-
   form: FormService
 
   private fields: Field<FieldType>[] = []
@@ -29,12 +18,9 @@ export class InsuranceFilterScheme {
     if (!premiumConfig || !defaultPremiumConfig) return
 
     _.forEach(premiumConfig, (value, key) => {
-      const name = InsuranceFilterScheme.fieldList.find(
-        (field) => field.id === key
-      )!.name
       const field = new FieldFactory({
         id: key,
-        name,
+        name: value.name,
         options: value.values,
         type: InsuranceFilterScheme.getOptionType(value.type)!,
       })
@@ -49,19 +35,16 @@ export class InsuranceFilterScheme {
 
   private static getOptionType(
     type: string
-  ): InputType.RADIO | InputType.OPTION | undefined {
+  ): InputType.RADIO | InputType.CHECKBOX | InputType.OPTION | undefined {
     switch (type) {
       case 'radio':
         return InputType.RADIO
+      case 'checkbox':
+        return InputType.CHECKBOX
       case 'option':
         return InputType.OPTION
       default:
         return undefined
     }
   }
-}
-
-interface FieldListObject {
-  id: string
-  name: string
 }
