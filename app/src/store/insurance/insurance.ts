@@ -12,9 +12,10 @@ import {
   InsuranceProduct,
   IdealCoverage,
   InsuranceListMeta,
-  PremiumConfig,
-  PremiumConfigOption,
+  FilterValue,
+  FilterOption,
   ProductFeeList,
+  InsuranceListFilterResponse,
 } from '@/api/insurance/insurance.type'
 import {
   RelatedBlog,
@@ -55,8 +56,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         insuranceList: null,
         insuranceIdealCoverages: null,
         filter: {
-          defaultPremiumConfig: null,
-          premiumConfig: null,
+          defaultValue: null,
+          config: null,
         },
       }
     },
@@ -107,9 +108,20 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
+      [types.FETCH_INSURANCE_LIST_FILTER]({ commit }, insurance: string) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceListFilter(insurance)
+            .then((data) => {
+              commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
       [types.UPDATE_INSURANCE_PRODUCT_FEE](
         { state, commit },
-        payload: PremiumConfig
+        payload: FilterValue
       ) {
         const productListIds =
           state.insuranceList?.map((product) => product.id) || []
@@ -193,13 +205,22 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.announcement = data.announcement_btn
         state.insuranceList = data.products
         state.insuranceIdealCoverages = data.ideal_coverages
-        state.filter.premiumConfig = data.premium_config
-        state.filter.defaultPremiumConfig = data.default_premium_config
+        if (['car', 'motor'].includes(state.staticData.id)) {
+          state.filter.config = data.premium_config
+          state.filter.defaultValue = data.default_premium_config
+        }
       },
       [types.UPDATE_INSURANCE_LIST_META](state, meta: InsuranceListMeta) {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
         }
+      },
+      [types.UPDATE_INSURANCE_LIST_FILTER](
+        state,
+        data: InsuranceListFilterResponse
+      ) {
+        state.filter.config = data.filter_config
+        state.filter.defaultValue = data.default_filter_config
       },
       [types.UPDATE_INSURANCE_LIST_PRODUCT_FEE](
         state,
@@ -269,12 +290,12 @@ export interface State {
   insuranceList: InsuranceProduct[] | null
   insuranceIdealCoverages: IdealCoverage[] | null
   filter: {
-    defaultPremiumConfig: PremiumConfig | null
-    premiumConfig: Record<string, PremiumConfigOption> | null
+    defaultValue: FilterValue | null
+    config: Record<string, FilterOption> | null
   }
 }
 
-export interface CurrentParam extends PremiumConfig {
+export interface CurrentParam extends FilterValue {
   page: number
 }
 
