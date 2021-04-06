@@ -2,19 +2,25 @@
   <div>
     <template v-if="multiSection">
       <BaseCard
-        v-for="option in options"
-        :key="option.id"
+        v-for="field in fields"
+        :key="field.id"
         class="ProductListFilterSection"
       >
-        <template #title>{{ option.name }}</template>
+        <template #title>{{ field.name }}</template>
         <template #default>
           <div class="ProductListFilterSection__content">
             <ProductQueryField
-              class="ProductListFilterSection__field"
-              :option="option"
-              :value="formData[option.id]"
+              class="ProductListFilterSection__field mb-0"
+              :field="field"
+              :value="formData[field.id]"
               :disable-label="multiSection"
+              radio-type="radio"
               @update="update"
+            />
+            <BaseInputMessage
+              v-if="validateState[field.id] && validateState[field.id].message"
+              :msg="validateState[field.id].message"
+              type="error"
             />
           </div>
         </template>
@@ -25,12 +31,11 @@
       <template #default>
         <div class="ProductListFilterSection__content">
           <ProductQueryField
-            v-for="option in options"
-            :key="option.id"
+            v-for="field in fields"
+            :key="field.id"
             class="ProductListFilterSection__field"
-            :option="option"
-            :value="formData[option.id]"
-            radio-type="button"
+            :field="field"
+            :value="formData[field.id]"
             @update="update"
           />
         </div>
@@ -41,24 +46,18 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import {
-  defineComponent,
-  ref,
-  useRoute,
-  useRouter,
-  useStore,
-} from '@nuxtjs/composition-api'
+import { defineComponent, useRoute, useStore } from '@nuxtjs/composition-api'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { InsuranceFilterScheme } from '@/services/product/InsuranceFilterScheme'
-import { UpdateInsuranceListFilterPayload } from '@/store/insurance/insurance'
-import { getFirstQuery } from '@/utils/query-string'
+import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
 import ProductQueryField from '../product/ProductQueryField.vue'
 
 export default defineComponent({
   components: {
     BaseCard,
     ProductQueryField,
+    BaseInputMessage,
   },
   props: {
     multiSection: {
@@ -68,46 +67,31 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<InsuranceVuexState>()
-    const router = useRouter()
     const route = useRoute()
-    const options = ref({})
-    const formData = ref({})
 
     const { defaultValue, config } = store.state.insurance.filter
-    const filterInitValue = _.keys(config).reduce((acc, cur) => {
-      if (getFirstQuery(route.value.query[cur])) {
-        acc[cur] = getFirstQuery(route.value.query[cur])
+    const queryStringValue = _.keys(config).reduce((acc, cur) => {
+      if (!_.isUndefined(route.value.query[cur])) {
+        acc[cur] = route.value.query[cur]
       }
       return acc
     }, {})
 
-    const scheme = new InsuranceFilterScheme(
-      config,
-      _.isEmpty(filterInitValue) ? defaultValue : filterInitValue
-    )
-
-    console.log('scheme', scheme)
-
-    scheme.form.setSubmit(() => {
-      router.push({
-        query: {
-          ...route.value.query,
-          ...scheme.form.formData,
-        },
-      })
-    })
-    options.value = scheme.form.fields
-    formData.value = scheme.form.formData
-
-    const update = ({ id, value }: UpdateInsuranceListFilterPayload) => {
-      scheme.form.updateFormData(id, value)
-      scheme.form.submit()
+    const initValue = {
+      ...defaultValue,
+      ...queryStringValue,
     }
 
+    const { fields, formData, update, validateState } = useInsuranceFilterForm(
+      config,
+      initValue
+    )
+
     return {
-      options,
+      fields,
       formData,
       update,
+      validateState,
     }
   },
 })
