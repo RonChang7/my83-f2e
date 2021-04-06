@@ -31,7 +31,6 @@
         <FaqSection v-if="isMobile" id="faq" class="faq" />
         <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
         <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
-        <InsuranceLinkSection />
       </div>
       <div class="column wider">
         <ProductListSection ref="ProductListSection">
@@ -65,7 +64,6 @@ import ProductListSection from '@/components/insurance/section/ProductListSectio
 import PromotionProductSection from '@/components/insurance/section/PromotionProductSection.vue'
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import FaqSection from '@/components/insurance/section/FaqSection.vue'
-import InsuranceLinkSection from '@/components/insurance/section/InsuranceLinkSection.vue'
 import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSection.vue'
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
 import ProductListFilterSection from '@/components/insurance/section/ProductListFilterSection.vue'
@@ -90,7 +88,6 @@ const options: ComponentOption = {
     PromotionSection,
     InsuranceTipModal,
     FaqSection,
-    InsuranceLinkSection,
     RelatedBlogSection,
     RelatedQuestionSection,
     ProductListFilterSection,
