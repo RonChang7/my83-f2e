@@ -1,27 +1,27 @@
 <template>
   <div class="ProductQueryField">
     <span v-if="!disableLabel" class="ProductQueryField__name">
-      {{ option.name }}：
+      {{ field.name }}：
     </span>
     <div class="ProductQueryField__field">
       <IntervalTextInput
-        v-if="option.type === 'NUMBER'"
+        v-if="field.type === 'NUMBER'"
         :value="value"
-        :option="option"
+        :option="field"
         :validate-state="validateState"
         @update="(e) => updateValue(e)"
         @blur="$emit('blur')"
       />
       <BaseInputText
-        v-if="option.type === 'TEXT'"
+        v-if="field.type === 'TEXT'"
         :value="value || ''"
-        :placeholder="option.placeholder"
-        :disabled="option.disabled"
+        :placeholder="field.placeholder"
+        :disabled="field.disabled"
       />
       <Select
-        v-if="option.type === 'OPTION' && option.options"
+        v-if="field.type === 'OPTION' && field.options"
         :value="value"
-        :options="option.options"
+        :options="field.options"
         @update="
           (e) => {
             updateValue(e)
@@ -29,9 +29,9 @@
           }
         "
       />
-      <template v-if="option.type === 'RADIO' && option.options">
+      <template v-if="field.type === 'RADIO' && field.options">
         <Radio
-          v-for="radioOption in option.options"
+          v-for="radioOption in field.options"
           :key="radioOption.value"
           :text="radioOption.text"
           :value="radioOption.value"
@@ -45,9 +45,9 @@
           "
         />
       </template>
-      <template v-if="option.type === 'CHECKBOX' && option.options">
+      <template v-if="field.type === 'CHECKBOX' && field.options">
         <Checkbox
-          v-for="checkboxOption in option.options"
+          v-for="checkboxOption in field.options"
           :key="checkboxOption.value"
           :text="checkboxOption.text"
           :value="checkboxOption.value"
@@ -85,7 +85,7 @@ import Checkbox from './input-field/Checkbox.vue'
 })
 export default class ProductQueryField extends Vue {
   @Prop({ type: Object, required: true })
-  option!: Field<any>
+  field!: Field<any>
 
   @Prop({ type: [String, Number, Array] })
   value: string | number | (string | number)[]
@@ -96,13 +96,13 @@ export default class ProductQueryField extends Vue {
   @Prop({ type: Boolean, default: false })
   disableLabel: boolean
 
-  @Prop({ type: String, default: 'radio' })
+  @Prop({ type: String, default: 'button' })
   radioType: 'radio' | 'button'
 
   updateValue(value: string | number) {
     this.$emit('update', {
-      id: this.option.id,
-      value: this.option.type === InputType.NUMBER ? Number(value) : value,
+      id: this.field.id,
+      value: this.field.type === InputType.NUMBER ? Number(value) : value,
     })
   }
 }

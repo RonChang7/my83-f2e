@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { RuleItem } from 'async-validator'
 import { Field, FieldType, InputType } from '@/services/form/field.type'
 import { Rule } from '@/services/validator/Validator'
 import {
@@ -24,6 +25,7 @@ export class FieldFactory<T extends FieldType> {
     options,
     type,
     unit,
+    rule,
   }: FieldFactoryPayload<OptionValueType>) {
     switch (type) {
       case InputType.NUMBER: {
@@ -53,6 +55,7 @@ export class FieldFactory<T extends FieldType> {
             min,
             max,
             message: `${name}不符`,
+            ...rule,
           },
         }
         break
@@ -80,6 +83,7 @@ export class FieldFactory<T extends FieldType> {
         this.validator = {
           [id]: {
             required: true,
+            ...rule,
           },
         }
         break
@@ -94,4 +98,5 @@ export interface FieldFactoryPayload<T extends OptionValueType> {
   options: ProductOption<T> | InsuranceOption[]
   type: InputType
   unit?: string
+  rule?: RuleItem
 }

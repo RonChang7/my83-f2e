@@ -6,7 +6,7 @@ import {
   ValidateMessage,
   ValidateState,
 } from '@/services/validator/Validator'
-import { Field } from './field.type'
+import { Field, InputType } from './field.type'
 
 type FormData = Record<string, any>
 
@@ -33,6 +33,7 @@ export class FormService implements Form {
   ) {
     this.validator = new Validator(validateRules)
     this.initValidateState()
+    this.normalizedFormData()
   }
 
   get fields() {
@@ -92,5 +93,16 @@ export class FormService implements Form {
       return acc
     }, {})
     this._validateState = reactive(initValidateState)
+  }
+
+  private normalizedFormData() {
+    this.fields.forEach((field) => {
+      if (
+        field.type === InputType.CHECKBOX &&
+        !_.isArray(this._formData[field.id])
+      ) {
+        this._formData[field.id] = [this._formData[field.id]]
+      }
+    })
   }
 }
