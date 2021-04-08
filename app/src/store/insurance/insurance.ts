@@ -24,6 +24,7 @@ import {
   LinkButton,
 } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
+import { externalInsuranceRouteNames } from '@/routes/insurance'
 import * as types from './insurance.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
@@ -96,7 +97,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchInsuranceList(payload)
             .then(({ data, meta, page_meta, json_ld }) => {
-              commit(types.UPDATE_INSURANCE_LIST_DATA, data)
+              commit(types.UPDATE_INSURANCE_LIST_DATA, {
+                insurance: payload.insurance,
+                data,
+              })
               commit(types.UPDATE_INSURANCE_LIST_META, meta)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
                 root: true,
@@ -200,12 +204,15 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.staticData.principle = data.principle
         state.staticData.faq = data.faq
       },
-      [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
+      [types.UPDATE_INSURANCE_LIST_DATA](
+        state,
+        { insurance, data }: { insurance: string; data: InsuranceListData }
+      ) {
         state.title = data.title
         state.announcement = data.announcement_btn
         state.insuranceList = data.products
         state.insuranceIdealCoverages = data.ideal_coverages
-        if (['car', 'motor'].includes(state.staticData.id)) {
+        if (externalInsuranceRouteNames.includes(insurance)) {
           state.filter.config = data.premium_config
           state.filter.defaultValue = data.default_premium_config
         }
