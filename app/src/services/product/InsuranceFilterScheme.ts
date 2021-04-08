@@ -1,7 +1,12 @@
 import _ from 'lodash'
 import { RuleItem } from 'async-validator'
-import { getCurrentInstance, reactive, ref } from '@nuxtjs/composition-api'
-import { Rule } from '@/services/validator/Validator'
+import {
+  computed,
+  getCurrentInstance,
+  reactive,
+  ref,
+} from '@nuxtjs/composition-api'
+import { Rule, ValidateMessage } from '@/services/validator/Validator'
 import { FormService } from '@/services/form/FormService'
 import { FieldFactory } from '@/services/form/FieldFactory'
 import { Field, FieldType, InputType } from '@/services/form/field.type'
@@ -84,12 +89,19 @@ export const useInsuranceFilterForm = (
 
   const fields = ref(scheme.form.fields)
   const formData = ref(scheme.form.formData)
-  const validateState = ref({})
+  const validateState = ref<Record<string, ValidateMessage | null>>({})
   const validateAll = async () => {
     const result = await scheme.form.validateAll()
     validateState.value = reactive(scheme.form.validateState)
     return result
   }
+
+  const isAllValidated = computed(() =>
+    _.every(validateState.value, (state) => {
+      if (state && state.state === 'error') return false
+      return true
+    })
+  )
 
   const update = async ({ id, value }: UpdateInsuranceListFilterPayload) => {
     scheme.form.updateFormData(id, value)
@@ -103,5 +115,6 @@ export const useInsuranceFilterForm = (
     validateState,
     update,
     validateAll,
+    isAllValidated,
   }
 }

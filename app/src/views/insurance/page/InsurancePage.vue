@@ -25,7 +25,6 @@
       <div class="column thin">
         <ProductListFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
-          :multi-section="true"
         />
         <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
         <FaqSection v-if="isMobile" id="faq" class="faq" />
@@ -145,6 +144,11 @@ const options: ComponentOption = {
     // handle page position when navigate via pagination
     '$route.query.page'() {
       this.scrollToProductListSection()
+    },
+    '$store.state.insurance.staticData.id'() {
+      this.$nextTick(() => {
+        window.scroll(0, 0)
+      })
     },
   },
 }

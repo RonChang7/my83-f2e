@@ -46,11 +46,18 @@
 
 <script lang="ts">
 import _ from 'lodash'
-import { defineComponent, useRoute, useStore } from '@nuxtjs/composition-api'
+import {
+  defineComponent,
+  useRoute,
+  useRouter,
+  useStore,
+  watch,
+} from '@nuxtjs/composition-api'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
+import { InsuranceListType } from '@/routes/insurance'
 import ProductQueryField from '../product/ProductQueryField.vue'
 
 export default defineComponent({
@@ -59,15 +66,12 @@ export default defineComponent({
     ProductQueryField,
     BaseInputMessage,
   },
-  props: {
-    multiSection: {
-      type: Boolean,
-      default: false,
-    },
-  },
   setup() {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
+    const router = useRouter()
+
+    const multiSection = !(route.value.name === InsuranceListType.EXTERNAL)
 
     const { defaultValue, config } = store.state.insurance.filter
     const queryStringValue = _.keys(config).reduce((acc, cur) => {
@@ -82,12 +86,30 @@ export default defineComponent({
       ...queryStringValue,
     }
 
-    const { fields, formData, update, validateState } = useInsuranceFilterForm(
-      config,
-      initValue
+    const {
+      fields,
+      formData,
+      update,
+      validateState,
+      isAllValidated,
+    } = useInsuranceFilterForm(config, initValue)
+
+    watch(
+      () => formData.value,
+      _.debounce(() => {
+        if (isAllValidated.value) {
+          router.push({
+            query: formData.value,
+          })
+        }
+      }, 1500),
+      {
+        deep: true,
+      }
     )
 
     return {
+      multiSection,
       fields,
       formData,
       update,
