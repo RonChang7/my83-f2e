@@ -1,5 +1,11 @@
 import { CreateRouteFunction } from '@/nuxt-modules/flexible-routes/module'
 import { RouteConfig } from '@/types/router'
+export enum InsuranceListType {
+  FEATURE_TAG = 'insuranceFeatureTagList',
+  EXTERNAL = 'insuranceExternalList',
+  NORMAL = 'insuranceNormalList',
+}
+export const externalInsuranceRouteNames = ['car', 'motor']
 
 export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
   return [
@@ -24,7 +30,16 @@ export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
       },
     },
     {
-      name: 'insuranceList',
+      name: InsuranceListType.EXTERNAL,
+      path: `/insurance/:insurance(${externalInsuranceRouteNames.join('|')})`,
+      component: resolve('@/views/insurance/page/Index.vue'),
+      meta: {
+        showScrollToTop: true,
+        requiredStoreModules: ['insurance'],
+      },
+    },
+    {
+      name: InsuranceListType.NORMAL,
       path: '/insurance/:insurance',
       component: resolve('@/views/insurance/page/Index.vue'),
       meta: {
