@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import request from '@/api/request'
 import { decorateSeoQueryString } from '@/api/decorate-seo-to-api'
 import {
@@ -57,13 +58,32 @@ export const fetchPromotionProducts = async (
 export const fetchInsuranceList = async (
   payload: FetchInsuranceListPayload
 ): Promise<InsuranceListResponse> => {
-  const { insurance, page } = payload
+  const { insurance, page, filters } = payload
+
+  const filtersTransformer = (
+    filters: FetchInsuranceListPayload['filters']
+  ) => {
+    if (filters === null) return {}
+
+    return _.reduce(
+      filters,
+      (result, value, key) => {
+        result[key] =
+          typeof value === 'string' || typeof value === 'number'
+            ? value
+            : value.join(',')
+        return result
+      },
+      {}
+    )
+  }
 
   const { data } = await request.get<InsuranceListResponse>(
     decorateSeoQueryString(`/api/insurance/${insurance}/products`),
     {
       params: {
         page,
+        ...filtersTransformer(filters),
       },
     }
   )

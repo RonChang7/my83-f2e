@@ -1,3 +1,4 @@
+import { Route } from 'vue-router'
 import {
   Link,
   RelatedBlog,
@@ -72,6 +73,10 @@ export interface InsuranceListResponse extends PageResponse<InsuranceListData> {
 export interface FetchInsuranceListPayload {
   insurance: string
   page: number
+  filters:
+    | Record<string, string | number | (string | number)[]>
+    | null
+    | Route['query']
 }
 
 export interface InsuranceListFilterResponse {
