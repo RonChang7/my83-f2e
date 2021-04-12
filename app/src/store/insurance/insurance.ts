@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Module } from 'vuex'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/insurance'
@@ -144,6 +145,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 data.product_fee_list
               )
               commit(types.UPDATE_PROMOTION_PRODUCT_FEE, data.product_fee_list)
+              commit(types.UPDATE_CURRENT_FILTER_CONFIG, payload)
               resolve()
             })
             .catch((error) => {
@@ -220,6 +222,22 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_INSURANCE_LIST_META](state, meta: InsuranceListMeta) {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
+          currentFilterConfig: meta.current_filter_config,
+        }
+      },
+      [types.UPDATE_CURRENT_FILTER_CONFIG](state, config: FilterValue) {
+        if (state.meta) {
+          state.meta.currentFilterConfig = _.reduce(
+            config,
+            (result, value, key) => {
+              result[key] = _.isArray(value)
+                ? value.map((_) => _.toString())
+                : value.toString()
+
+              return result
+            },
+            {} as Record<string, string | string[]>
+          )
         }
       },
       [types.UPDATE_INSURANCE_LIST_FILTER](
@@ -275,6 +293,7 @@ export interface State {
   currentParam: CurrentParam
   meta: {
     pagination: Pagination
+    currentFilterConfig: Record<string, string | string[]>
   } | null
   staticData: {
     id: string
