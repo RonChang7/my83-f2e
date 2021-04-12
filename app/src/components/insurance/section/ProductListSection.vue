@@ -31,6 +31,16 @@
       "
       @click.native="isEnabled(product) ? clickProductCard(product) : null"
     />
+    <div v-if="!insuranceProducts.length" class="ProductListSection__noResult">
+      <img
+        :src="`${$imageBucketUrl}/front/insurance/filter-not-found@2x.png`"
+        alt="filter not fount"
+      />
+      <div class="title">沒有符合條件的商品</div>
+      <div class="description">
+        換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
+      </div>
+    </div>
   </div>
 </template>
 
@@ -206,6 +216,34 @@ export default options
 
     &__product:not(:last-child) {
       margin-bottom: 10px;
+    }
+  }
+
+  &__noResult {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 64px;
+
+    @include max-media('xl') {
+      padding: 0 20px;
+    }
+
+    img {
+      width: 160px;
+      height: 160px;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      color: $gray-primary;
+      font-size: 1.125rem;
+      font-weight: 500;
+    }
+
+    .description {
+      font-size: 0.875rem;
     }
   }
 }
