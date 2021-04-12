@@ -130,6 +130,7 @@ export interface Option {
 
 export interface InsuranceListMeta {
   pagination: PaginationResponse
+  current_filter_config: Record<string, string | string[]>
 }
 
 export interface IdealCoverage {
