@@ -1,143 +1,252 @@
 <script lang="ts">
 import _ from 'lodash'
-import Vue from 'vue'
+import qs from 'qs'
+import {
+  defineAsyncComponent,
+  defineComponent,
+  h,
+  useRoute,
+  useRouter,
+} from '@nuxtjs/composition-api'
+import { Route } from 'vue-router'
 import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
 import { Context } from '@nuxt/types'
 import { ErrorPageType } from '@/config/error-page.config'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/insurance'
 import { Content } from '@/services/page/Content'
+import { InsuranceListType } from '@/routes/insurance'
 import { FetchInsuranceListPayload } from '@/api/insurance/insurance.type'
 import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
   UPDATE_INSURANCE_PRODUCT_FEE,
+  FETCH_INSURANCE_LIST_FILTER,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 import { isAxiosError } from '@/api/helper'
 import { CanonicalService } from '@/seo/canonical-service'
-const InsurancePage = () => import('./InsurancePage.vue')
+const InsurancePage = defineAsyncComponent(() => import('./InsurancePage.vue'))
 
-const fetchList = (
-  insurance: string,
-  { query, store, from, route }: Context
-) => {
-  const insuranceStore = (store.state as InsuranceVuexState).insurance
-  const page = /^\d+$/.test(getFirstQuery(query.page))
-    ? Number(getFirstQuery(query.page))
-    : 1
-  const currentParam = insuranceStore.currentParam
-  const currentInsurance = insuranceStore.staticData.id
+class PageDataService {
+  private routeName: InsuranceListType
 
-  const payload: FetchInsuranceListPayload = {
-    insurance,
-    page,
+  private from: Route
+
+  private route: Route
+
+  private store: Store<InsuranceVuexState>
+
+  constructor(ctx: Context) {
+    this.routeName = ctx.route!.name as InsuranceListType
+    this.from = ctx.from
+    this.route = ctx.route
+    this.store = ctx.store
   }
 
-  if (
-    from?.name !== route?.name ||
-    insurance !== currentInsurance ||
-    page !== currentParam.page
-  ) {
-    return store.dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
-  }
-}
-
-class PageFilterService {
-  private filterKeys: string[]
-
-  constructor(private ctx: Context) {
-    this.filterKeys = _.keys(
-      (ctx.store.state as InsuranceVuexState).insurance.filter
-        .defaultPremiumConfig
-    )
+  public fetchData() {
+    return [
+      ...this.fetchPageData(),
+      ...this.fetchListData(),
+      ...this.updateFilterData(),
+    ]
   }
 
-  removeFilterQueryString() {
-    const { query, redirect } = this.ctx
-    this.filterKeys.forEach((key) => {
-      delete query[key]
-    })
+  public getNormalizedQuery() {
+    const removedQuery: string[] = []
 
-    redirect({
-      query,
-    })
+    if (this.isDefaultFilter) {
+      removedQuery.push(...this.filterKeys)
+    }
+
+    return _.omit(this.route.query, removedQuery)
   }
 
-  async fetchInsuranceProductFee() {
-    await this.ctx.store.dispatch(
+  public updateExternalProductFee() {
+    return this.store.dispatch(
       `insurance/${UPDATE_INSURANCE_PRODUCT_FEE}`,
-      this.premiumConfig
+      this.getCurrentFilter()
     )
   }
 
-  get isDefaultFilter() {
-    const { query, store } = this.ctx
-    if (_.isEmpty(query) || !this.filterKeys.length) return false
+  private fetchPageData() {
+    if (this.insurance === this.currentInsurance) return []
 
-    return this.filterKeys.every(
-      (key) =>
-        getFirstQuery(query[key]) ===
-        (store.state as InsuranceVuexState).insurance.filter
-          .defaultPremiumConfig?.[key]
+    switch (this.routeName) {
+      case InsuranceListType.NORMAL:
+        return [
+          this.store.dispatch(`insurance/${FETCH_PAGE_DATA}`, this.insurance),
+          this.store.dispatch(
+            `insurance/${FETCH_INSURANCE_LIST_FILTER}`,
+            this.insurance
+          ),
+        ]
+      case InsuranceListType.EXTERNAL:
+        return [
+          this.store.dispatch(`insurance/${FETCH_PAGE_DATA}`, this.insurance),
+        ]
+      default:
+        return []
+    }
+  }
+
+  private fetchListData() {
+    const page = /^\d+$/.test(getFirstQuery(this.route.query.page))
+      ? Number(getFirstQuery(this.route.query.page))
+      : 1
+    const currentParam = this.store.state.insurance.currentParam
+
+    const payload: FetchInsuranceListPayload = {
+      insurance: this.insurance,
+      page,
+      filters: this.route.query,
+    }
+
+    if (
+      this.from?.name !== this.route?.name ||
+      this.insurance !== this.currentInsurance ||
+      page !== currentParam.page
+    ) {
+      return [
+        this.store
+          .dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
+          .then(() => {
+            if (this.route.name === InsuranceListType.EXTERNAL) {
+              return this.updateExternalProductFee()
+            }
+          }),
+      ]
+    }
+    return []
+  }
+
+  private updateFilterData() {
+    if (this.insurance !== this.currentInsurance) return []
+
+    const oldFilterQuery = _.pick(this.from?.query, this.filterKeys)
+    const newFilterQuery = _.pick(this.route.query, this.filterKeys)
+    const defaultQuery = this.store.state.insurance.filter.defaultValue
+    const currentApiFilterConfig = this.store.state.insurance.meta
+      ?.currentFilterConfig
+
+    if (
+      _.isEqual(
+        _.isEmpty(newFilterQuery)
+          ? this.normalizeQuery(defaultQuery)
+          : this.normalizeQuery(newFilterQuery),
+        this.normalizeQuery(currentApiFilterConfig)
+      )
+    )
+      return []
+
+    if (_.isEqual(oldFilterQuery, newFilterQuery)) return []
+    switch (this.routeName) {
+      case InsuranceListType.NORMAL: {
+        const payload: FetchInsuranceListPayload = {
+          insurance: this.insurance,
+          page: 1,
+          filters: this.getCurrentFilter(),
+        }
+        return [
+          this.store.dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload),
+        ]
+      }
+      case InsuranceListType.EXTERNAL:
+        return [this.updateExternalProductFee()]
+      default:
+        return []
+    }
+  }
+
+  public get isDefaultFilter() {
+    if (_.isEmpty(this.route.query) || !this.filterKeys.length) return false
+
+    const query = qs.parse(
+      qs.stringify(this.route.query, { arrayFormat: 'repeat' })
+    )
+    const defaultQuery = qs.parse(
+      qs.stringify(this.store.state.insurance.filter.defaultValue, {
+        arrayFormat: 'repeat',
+      })
+    )
+
+    return _.isEqual(
+      this.normalizeQuery(query),
+      this.normalizeQuery(defaultQuery)
     )
   }
 
-  get isEmptyFilter() {
-    const { query } = this.ctx
-    if (_.isEmpty(query) || !this.filterKeys.length) return true
-
-    return this.filterKeys.every((key) => getFirstQuery(query[key]) === '')
+  private get insurance() {
+    return this.route.params.insurance
   }
 
-  get isFirstLanding() {
-    const { from, route } = this.ctx
-    return (
-      from === undefined || from.params.insurance !== route.params.insurance
-    )
+  private get currentInsurance() {
+    return this.store.state.insurance.staticData.id
   }
 
-  private get premiumConfig() {
-    const { query, store } = this.ctx
-    const premiumConfig = this.filterKeys.reduce((acc, cur) => {
-      if (getFirstQuery(query[cur])) {
-        acc[cur] = getFirstQuery(query[cur])
+  private get filterKeys() {
+    return _.keys(this.store.state.insurance.filter.defaultValue)
+  }
+
+  private getCurrentFilter() {
+    const filterFromQuery = this.filterKeys.reduce((acc, cur) => {
+      if (this.route.query[cur]) {
+        acc[cur] = this.route.query[cur]
       }
       return acc
     }, {})
 
-    return _.isEmpty(premiumConfig)
-      ? (store.state as InsuranceVuexState).insurance.filter
-          .defaultPremiumConfig
-      : premiumConfig
+    return _.isEmpty(filterFromQuery)
+      ? this.store.state.insurance.filter.defaultValue
+      : {
+          ...this.store.state.insurance.filter.defaultValue,
+          ...filterFromQuery,
+        }
+  }
+
+  private normalizeQuery(query?: Record<string, any> | null) {
+    if (!query) return query
+
+    return _.reduce(
+      _.cloneDeep(query),
+      (result, value, key) => {
+        result[key] = _.isArray(value) ? value.sort() : value
+        return result
+      },
+      {}
+    )
   }
 }
 
-const opinions: ComponentOption = {
-  watchQuery: true,
+export default defineComponent({
+  scrollToTop: false,
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const toPage = (index: number) => {
+      router.push({
+        query: {
+          ...route.value.query,
+          page: String(index),
+        },
+      })
+    }
+
+    return () =>
+      h(InsurancePage, {
+        on: {
+          'to-page': toPage,
+        },
+      })
+  },
   async asyncData(ctx) {
-    const { error, route, query, store, redirect } = ctx
-    const insurance = route.params.insurance
-    const insuranceStore = (store.state as InsuranceVuexState).insurance
-    const currentInsurance = insuranceStore.staticData.id
-    const isExternal = !!insuranceStore.filter.defaultPremiumConfig
+    const { error, route, query, redirect } = ctx
+    const store = ctx.store as Store<InsuranceVuexState>
+    const pageDataService = new PageDataService(ctx)
 
     const fetchPageData: Promise<any>[] = []
-
-    if (insurance !== currentInsurance) {
-      fetchPageData.push(
-        store.dispatch(`insurance/${FETCH_PAGE_DATA}`, insurance)
-      )
-    }
-
-    const fetchListData = fetchList(insurance, ctx)
-
-    if (fetchListData) {
-      fetchPageData.push(fetchListData)
-    }
+    fetchPageData.push(...pageDataService.fetchData())
 
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
@@ -160,20 +269,9 @@ const opinions: ComponentOption = {
       })
     }
 
-    const pageFilter = new PageFilterService(ctx)
-
-    if (pageFilter.isDefaultFilter) {
-      return pageFilter.removeFilterQueryString()
-    }
-
-    if (
-      isExternal &&
-      !(
-        pageFilter.isFirstLanding &&
-        (pageFilter.isDefaultFilter || pageFilter.isEmptyFilter)
-      )
-    ) {
-      await pageFilter.fetchInsuranceProductFee()
+    if (pageDataService.isDefaultFilter) {
+      redirect({ query: pageDataService.getNormalizedQuery() })
+      return
     }
 
     const shouldRedirect = query.page === '1'
@@ -184,16 +282,14 @@ const opinions: ComponentOption = {
 
     // 如果頁面超過最大頁面，則導回該險種第一頁
     if (
-      insuranceStore.meta!.pagination.currentPage >
-      insuranceStore.meta!.pagination.totalPage
+      store.state.insurance.meta!.pagination.currentPage >
+      store.state.insurance.meta!.pagination.totalPage
     ) {
       redirect({ name: route.name! })
     }
   },
   head() {
-    const filterKeys = _.keys(
-      this.$store.state.insurance.filter.defaultPremiumConfig
-    )
+    const filterKeys = _.keys(this.$store.state.insurance.filter.defaultValue)
     const canonical = CanonicalService.getCanonical({
       hostname: this.$env.HOST_URL,
       route: this.$route,
@@ -217,58 +313,10 @@ const opinions: ComponentOption = {
       ],
     }
   },
-  methods: {
-    toPage(index) {
-      this.$router.push({
-        query: {
-          ...this.$route.query,
-          page: String(index),
-        },
-      })
-    },
-  },
-  render(h) {
-    return h(InsurancePage, {
-      on: {
-        'to-page': this.toPage,
-      },
-    })
-  },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<InsuranceVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {
-  toPage(index: number): void
-}
-
-export interface Computed {}
-
-export interface Props {}
+  watchQuery: true,
+})
 
 export interface InsuranceVuexState extends GlobalVuexState {
   insurance: State
 }
-
-export default opinions
 </script>
