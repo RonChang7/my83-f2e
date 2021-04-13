@@ -10,7 +10,9 @@
       篩選商品
       <template v-if="filterNumberCount">({{ filterNumberCount }})</template>
     </BaseButton>
-    <div class="MobileFilterSection__description">{{ description }}</div>
+    <div class="MobileFilterSection__description">
+      {{ productListDescription }}
+    </div>
     <BaseInfoModal :visible="visiblePanel" @close="closePanel">
       <div class="MobileFilterSection__title">
         <BaseFilter24 class="mr-1" />
@@ -98,6 +100,12 @@ export default defineComponent({
     BaseFilter18,
     BaseFilter24,
   },
+  props: {
+    productListDescription: {
+      type: String,
+      default: '',
+    },
+  },
   setup(props, ctx) {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
@@ -120,11 +128,6 @@ export default defineComponent({
     }
 
     const form = ref(useInsuranceFilterForm(config, initValue))
-    const description = computed(
-      () =>
-        store.state.insurance.staticData.productListDescription ||
-        '依熱門度排序。費率以 30 歲女性為基準。'
-    )
 
     const filterNumberCount = computed(() => {
       return _.reduce(
@@ -173,7 +176,6 @@ export default defineComponent({
       reset,
       submit,
       filterNumberCount,
-      description,
     }
   },
 })
