@@ -60,6 +60,10 @@ export default defineComponent({
     font-size: 1.75rem;
     font-weight: 500;
 
+    @include max-media('xl') {
+      font-size: 1.375rem;
+    }
+
     > a {
       font-weight: 500;
       margin-right: 10px;
@@ -79,7 +83,7 @@ export default defineComponent({
     color: $gray-primary;
 
     @include max-media('xl') {
-      margin-top: 8px;
+      display: none;
     }
   }
 

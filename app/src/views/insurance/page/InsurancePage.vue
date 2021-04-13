@@ -23,7 +23,7 @@
 
     <div class="InsurancePage__rowWithTowColumns">
       <div class="column thin">
-        <ProductListFilterSection
+        <ProductListDesktopFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
         />
         <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
@@ -33,8 +33,9 @@
       </div>
       <div class="column wider">
         <ProductListSection ref="ProductListSection">
-          <ProductListFilterSection
+          <ProductListMobileFilterSection
             v-if="isMobile && shouldShowProductListFilter"
+            @submit="scrollToProductListSection"
           />
         </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
@@ -65,7 +66,8 @@ import PromotionSection from '@/components/insurance/section/PromotionSection.vu
 import FaqSection from '@/components/insurance/section/FaqSection.vue'
 import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSection.vue'
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
-import ProductListFilterSection from '@/components/insurance/section/ProductListFilterSection.vue'
+import ProductListDesktopFilterSection from '@/components/insurance/section/product-list-filter/DesktopFilterSection.vue'
+import ProductListMobileFilterSection from '@/components/insurance/section/product-list-filter/MobileFilterSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
 import InsuranceTipModal, {
@@ -89,7 +91,8 @@ const options: ComponentOption = {
     FaqSection,
     RelatedBlogSection,
     RelatedQuestionSection,
-    ProductListFilterSection,
+    ProductListDesktopFilterSection,
+    ProductListMobileFilterSection,
     BasePagination,
   },
   data() {
@@ -124,7 +127,7 @@ const options: ComponentOption = {
       this.infoModal.visible = true
     },
     scrollToProductListSection() {
-      const offset = this.isMobile ? 65 : 90
+      const offset = this.isMobile ? 105 : 160
 
       scrollToElement({
         el: this.$refs.ProductListSection.$el as HTMLElement,

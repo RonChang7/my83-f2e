@@ -1,6 +1,5 @@
 <template>
   <div class="ProductListSection">
-    <slot />
     <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
       <div class="ProductListSection__idealCoverage__title">
         <span>MY83 建議</span>
@@ -17,6 +16,7 @@
         />
       </div>
     </div>
+    <slot />
     <ProductCard
       v-for="product in insuranceProducts"
       :key="product.id"
@@ -199,20 +199,6 @@ export default options
 
   @include max-media('xl') {
     margin-top: 8px;
-
-    &__title,
-    &__description {
-      padding: 0 20px;
-    }
-
-    &__title {
-      font-size: 1.375rem;
-    }
-
-    &__description {
-      font-size: 0.875rem;
-      margin-bottom: 12px;
-    }
 
     &__product:not(:last-child) {
       margin-bottom: 10px;
