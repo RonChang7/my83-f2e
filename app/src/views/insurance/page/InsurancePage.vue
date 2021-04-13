@@ -18,7 +18,10 @@
     </div>
 
     <div class="InsurancePage__row mb-0">
-      <ProductListTitleSection @scrollToFAQ="scrollToFAQ" />
+      <ProductListTitleSection
+        :product-list-description="productListDescription"
+        @scrollToFAQ="scrollToFAQ"
+      />
     </div>
 
     <div class="InsurancePage__rowWithTowColumns">
@@ -35,6 +38,7 @@
         <ProductListSection ref="ProductListSection">
           <ProductListMobileFilterSection
             v-if="isMobile && shouldShowProductListFilter"
+            :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
         </ProductListSection>
@@ -118,6 +122,12 @@ const options: ComponentOption = {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
     },
+    productListDescription() {
+      return (
+        this.$store.state.insurance.staticData.productListDescription ||
+        '依熱門度排序。費率以 30 歲女性為基準。'
+      )
+    },
   },
   methods: {
     updateInfoModalActiveTab(tab) {
@@ -200,6 +210,7 @@ export interface Computed {
   shouldShowPromotionProduct: boolean
   shouldShowProductListFilter: boolean
   shouldShowPagination: boolean
+  productListDescription: string
 }
 
 export interface Props {}

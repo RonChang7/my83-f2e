@@ -11,30 +11,25 @@
         常見問題
       </a>
     </h2>
-    <div class="ProductListTitleSection__description">{{ description }}</div>
+    <div class="ProductListTitleSection__description">
+      {{ productListDescription }}
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
-import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
+import { defineComponent } from '@nuxtjs/composition-api'
 import BaseFAQ from '@/assets/icon/24/BaseFAQ.svg'
 
 export default defineComponent({
   components: {
     BaseFAQ,
   },
-  setup() {
-    const store = useStore<InsuranceVuexState>()
-    const description = computed(
-      () =>
-        store.state.insurance.staticData.productListDescription ||
-        '依熱門度排序。費率以 30 歲女性為基準。'
-    )
-
-    return {
-      description,
-    }
+  props: {
+    productListDescription: {
+      type: String,
+      default: '',
+    },
   },
 })
 </script>
