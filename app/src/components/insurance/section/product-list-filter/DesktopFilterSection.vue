@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <div class="DesktopFilterSection__wrapper">
     <template v-if="multiSection">
       <BaseCard
         v-for="field in fields"
         :key="field.id"
-        class="ProductListFilterSection"
+        class="DesktopFilterSection"
       >
         <template #title>{{ field.name }}</template>
         <template #default>
-          <div class="ProductListFilterSection__content">
+          <div class="DesktopFilterSection__content">
             <ProductQueryField
-              class="ProductListFilterSection__field mb-0"
+              class="DesktopFilterSection__field mb-0"
               :field="field"
               :value="formData[field.id]"
               :disable-label="multiSection"
@@ -26,14 +26,14 @@
         </template>
       </BaseCard>
     </template>
-    <BaseCard v-else class="ProductListFilterSection">
+    <BaseCard v-else class="DesktopFilterSection">
       <template #title>投保資料</template>
       <template #default>
-        <div class="ProductListFilterSection__content">
+        <div class="DesktopFilterSection__content">
           <ProductQueryField
             v-for="field in fields"
             :key="field.id"
-            class="ProductListFilterSection__field"
+            class="DesktopFilterSection__field"
             :field="field"
             :value="formData[field.id]"
             @update="update"
@@ -58,7 +58,7 @@ import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vu
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
 import { InsuranceListType } from '@/routes/insurance'
-import ProductQueryField from '../product/ProductQueryField.vue'
+import ProductQueryField from '../../product/ProductQueryField.vue'
 
 export default defineComponent({
   components: {
@@ -123,7 +123,7 @@ export default defineComponent({
 @import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
-.ProductListFilterSection {
+.DesktopFilterSection {
   margin-bottom: 20px;
 
   &__content {
@@ -137,10 +137,6 @@ export default defineComponent({
     &:last-child {
       margin-bottom: 0;
     }
-  }
-
-  @include max-media('xl') {
-    margin-bottom: 10px;
   }
 }
 </style>
