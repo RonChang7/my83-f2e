@@ -1,7 +1,7 @@
 <template>
-  <RelatedSection
+  <LinkListSection
     v-if="relatedBlogs.length"
-    :related-data="relatedBlogs"
+    :list-data="relatedBlogs"
     :max-post="maxPost"
     title="相關文章"
     @click-link="tracking"
@@ -10,14 +10,14 @@
 
 <script lang="ts">
 import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
-import RelatedSection from '@/components/base/related/RelatedSection.vue'
+import LinkListSection from '@/components/my83-ui-kit/list/link/LinkListSection.vue'
 import { QuestionVuexState } from '@/views/question/page/Index.vue'
 import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
-    RelatedSection,
+    LinkListSection,
   },
   props: {
     maxPost: {

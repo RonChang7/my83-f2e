@@ -1,16 +1,16 @@
 <template>
-  <div class="RelatedCard" :class="{ last }">
-    <div class="RelatedCard__index">{{ index }}</div>
-    <div class="RelatedCard__content">
-      <div class="RelatedCard__title">{{ title }}</div>
-      <div class="RelatedCard__meta">
-        <span v-if="viewCount !== null" class="RelatedCard__count">
+  <div class="LinkCard" :class="{ last }">
+    <div class="LinkCard__index">{{ index }}</div>
+    <div class="LinkCard__content">
+      <div class="LinkCard__title">{{ title }}</div>
+      <div class="LinkCard__meta">
+        <span v-if="viewCount !== null" class="LinkCard__count">
           <BaseView />
-          {{ numberTransform(viewCount) }}
+          {{ delimitIntegerWithSymbol(viewCount) }}
         </span>
-        <span v-if="answerCount !== null" class="RelatedCard__count">
+        <span v-if="answerCount !== null" class="LinkCard__count">
           <BaseComment />
-          {{ numberTransform(answerCount) }}
+          {{ delimitIntegerWithSymbol(answerCount) }}
         </span>
       </div>
     </div>
@@ -18,14 +18,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { defineComponent } from '@nuxtjs/composition-api'
 import BaseView from '@/assets/icon/18/BaseView.svg'
 import BaseComment from '@/assets/icon/18/BaseComment.svg'
 import { delimitIntegerWithSymbol } from '@/utils/digital'
 
-export default {
+export default defineComponent({
   components: {
     BaseView,
     BaseComment,
@@ -52,57 +50,23 @@ export default {
       default: false,
     },
   },
-  methods: {
-    numberTransform(number) {
-      return delimitIntegerWithSymbol(number)
-    },
+  setup() {
+    return {
+      delimitIntegerWithSymbol,
+    }
   },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {
-  numberTransform(number: number): string
-}
-
-export interface Computed {}
-
-export interface Props {
-  index: number
-  title: string
-  viewCount: number
-  answerCount: number
-  last: boolean
-}
+})
 </script>
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
 @import '@/sass/rwd.scss';
 
-.RelatedCard {
+.LinkCard {
   $self: &;
 
   display: flex;
-  padding: 16px 0;
+  padding: 12px 0;
   border-bottom: 1px solid $gray-quaternary;
 
   &.last {
@@ -123,7 +87,7 @@ export interface Props {
     color: $primary-color;
     font-size: 1.25rem;
     font-weight: 500;
-    padding-right: 22px;
+    padding-right: 14px;
     max-width: 33px;
 
     @include max-media('xl') {
@@ -140,8 +104,9 @@ export interface Props {
   }
 
   &__title {
+    margin: 0 0 4px;
     color: $gray-primary;
-    margin: 2px 0 6px;
+    font-size: 0.875rem;
 
     @include max-media('xl') {
       margin-top: 0;
