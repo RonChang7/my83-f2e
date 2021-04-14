@@ -1,7 +1,7 @@
 <template>
   <div v-if="relatedBlogs.length" class="RelatedBlogSection">
-    <RelatedSection
-      :related-data="relatedBlogs"
+    <LinkListSection
+      :list-data="relatedBlogs"
       :max-post="maxPost"
       :title="title"
       @click-link="tracking"
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
-import RelatedSection from '@/components/base/related/RelatedSection.vue'
+import LinkListSection from '@/components/my83-ui-kit/list/link/LinkListSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
@@ -26,7 +26,7 @@ import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
-    RelatedSection,
+    LinkListSection,
     GlobalLink,
     BaseArrowRight,
   },
