@@ -3,6 +3,7 @@
     <h2 class="ProductListTitleSection__title">
       全部商品
       <a
+        v-if="!isFeatureTagPage"
         class="ProductListTitleSection__faq"
         href="#faq"
         @click.prevent="$emit('scrollToFAQ')"
@@ -29,6 +30,10 @@ export default defineComponent({
     productListDescription: {
       type: String,
       default: '',
+    },
+    isFeatureTagPage: {
+      type: Boolean,
+      default: false,
     },
   },
 })

@@ -4,7 +4,7 @@
       <h1 class="HeaderSection__title">{{ title }}</h1>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="HeaderSection__description" v-html="description" />
-      <div class="HeaderSection__link">
+      <div v-if="buttonInfos.length" class="HeaderSection__link">
         <BaseButton
           v-for="button in buttonInfos"
           :key="button.value"
@@ -47,20 +47,34 @@ const options: ComponentOption = {
   components: {
     BaseButton,
   },
+  props: {
+    isFeatureTagPage: {
+      type: Boolean,
+      default: false,
+    },
+  },
   computed: {
     title() {
       return this.$store.state.insurance.title
     },
     description() {
-      return this.$store.state.insurance.staticData.description
+      return this.isFeatureTagPage
+        ? this.$store.state.insurance.description
+        : this.$store.state.insurance.staticData.description
     },
     name() {
-      return this.$store.state.insurance.staticData.abbr
+      return this.isFeatureTagPage
+        ? ''
+        : this.$store.state.insurance.staticData.abbr
     },
     image() {
-      return this.$store.state.insurance.staticData.image
+      return this.isFeatureTagPage
+        ? ''
+        : this.$store.state.insurance.staticData.image
     },
     buttonInfos() {
+      if (this.isFeatureTagPage) return []
+
       const buttonInfos: NavTab[] = []
       if (this.$store.state.insurance.staticData.isExternal) {
         buttonInfos.push({
@@ -129,7 +143,9 @@ export interface Computed {
   announcement: LinkButton | null
 }
 
-export interface Props {}
+export interface Props {
+  isFeatureTagPage: boolean
+}
 
 export default options
 </script>
