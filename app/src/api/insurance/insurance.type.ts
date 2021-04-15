@@ -100,6 +100,7 @@ export interface PromotionInsuranceProductResponse {
 
 export interface InsuranceListData {
   title: string
+  description: string
   ideal_coverages: IdealCoverage[] | null
   products: InsuranceProduct[]
   default_premium_config: FilterValue | null

@@ -22,6 +22,8 @@ import {
   FETCH_INSURANCE_LIST,
   UPDATE_INSURANCE_PRODUCT_FEE,
   FETCH_INSURANCE_LIST_FILTER,
+  FETCH_TAG_LIST_FILTER,
+  FETCH_TAG_LIST,
 } from '@/store/insurance/insurance.type'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
@@ -86,6 +88,13 @@ class PageDataService {
         return [
           this.store.dispatch(`insurance/${FETCH_PAGE_DATA}`, this.insurance),
         ]
+      case InsuranceListType.FEATURE_TAG:
+        return [
+          this.store.dispatch(
+            `insurance/${FETCH_TAG_LIST_FILTER}`,
+            this.insurance
+          ),
+        ]
       default:
         return []
     }
@@ -108,15 +117,23 @@ class PageDataService {
       this.insurance !== this.currentInsurance ||
       page !== currentParam.page
     ) {
-      return [
-        this.store
-          .dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
-          .then(() => {
-            if (this.route.name === InsuranceListType.EXTERNAL) {
-              return this.updateExternalProductFee()
-            }
-          }),
-      ]
+      switch (this.routeName) {
+        case InsuranceListType.NORMAL:
+        case InsuranceListType.EXTERNAL:
+          return [
+            this.store
+              .dispatch(`insurance/${FETCH_INSURANCE_LIST}`, payload)
+              .then(() => {
+                if (this.route.name === InsuranceListType.EXTERNAL) {
+                  return this.updateExternalProductFee()
+                }
+              }),
+          ]
+        case InsuranceListType.FEATURE_TAG:
+          return [this.store.dispatch(`insurance/${FETCH_TAG_LIST}`, payload)]
+        default:
+          return []
+      }
     }
     return []
   }
@@ -154,6 +171,14 @@ class PageDataService {
       }
       case InsuranceListType.EXTERNAL:
         return [this.updateExternalProductFee()]
+      case InsuranceListType.FEATURE_TAG: {
+        const payload: FetchInsuranceListPayload = {
+          insurance: this.insurance,
+          page: 1,
+          filters: this.getCurrentFilter(),
+        }
+        return [this.store.dispatch(`insurance/${FETCH_TAG_LIST}`, payload)]
+      }
       default:
         return []
     }
@@ -211,6 +236,8 @@ class PageDataService {
     return _.reduce(
       _.cloneDeep(query),
       (result, value, key) => {
+        if (_.isEmpty(value)) return result
+
         result[key] = _.isArray(value) ? value.sort() : value
         return result
       },

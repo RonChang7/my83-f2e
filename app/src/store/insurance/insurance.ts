@@ -51,6 +51,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           faq: null,
         },
         title: '',
+        description: '',
         announcement: null,
         relatedBlogs: null,
         relatedQuestions: null,
@@ -117,6 +118,37 @@ export const createStoreModule = <R>(): Module<State, R> => {
         return new Promise<void>((resolve, reject) => {
           api
             .fetchInsuranceListFilter(insurance)
+            .then((data) => {
+              commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_TAG_LIST]({ commit }, payload: FetchInsuranceListPayload) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceTagList(payload)
+            .then(({ data, meta, page_meta, json_ld }) => {
+              commit(types.UPDATE_INSURANCE_LIST_DATA, {
+                insurance: payload.insurance,
+                data,
+              })
+              commit(types.UPDATE_INSURANCE_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
+              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_TAG_LIST_FILTER]({ commit }, insurance: string) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceTagListFilter(insurance)
             .then((data) => {
               commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
               resolve()
@@ -210,7 +242,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state,
         { insurance, data }: { insurance: string; data: InsuranceListData }
       ) {
+        state.staticData.id = insurance
         state.title = data.title
+        state.description = data.description
         state.announcement = data.announcement_btn
         state.insuranceList = data.products
         state.insuranceIdealCoverages = data.ideal_coverages
@@ -309,6 +343,7 @@ export interface State {
     faq: Faq[] | null
   }
   title: string
+  description: string
   announcement: LinkButton | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null

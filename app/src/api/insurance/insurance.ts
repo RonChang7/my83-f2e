@@ -14,6 +14,22 @@ import {
   FilterValue,
 } from './insurance.type'
 
+const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
+  if (filters === null) return {}
+
+  return _.reduce(
+    filters,
+    (result, value, key) => {
+      result[key] =
+        typeof value === 'string' || typeof value === 'number'
+          ? value
+          : value.join(',')
+      return result
+    },
+    {}
+  )
+}
+
 /**
  * @description 取得險種頁靜態資料
  * @param {string} host Nuxt server host name
@@ -59,24 +75,6 @@ export const fetchInsuranceList = async (
   payload: FetchInsuranceListPayload
 ): Promise<InsuranceListResponse> => {
   const { insurance, page, filters } = payload
-
-  const filtersTransformer = (
-    filters: FetchInsuranceListPayload['filters']
-  ) => {
-    if (filters === null) return {}
-
-    return _.reduce(
-      filters,
-      (result, value, key) => {
-        result[key] =
-          typeof value === 'string' || typeof value === 'number'
-            ? value
-            : value.join(',')
-        return result
-      },
-      {}
-    )
-  }
 
   const { data } = await request.get<InsuranceListResponse>(
     decorateSeoQueryString(`/api/insurance/${insurance}/products`),
@@ -145,6 +143,40 @@ export const fetchRelatedQuestions = async (
 ): Promise<RelatedQuestionsResponse> => {
   const { data } = await request.get<RelatedQuestionsResponse>(
     `/api/insurance/${insurance}/related-questions`
+  )
+  return data
+}
+
+/**
+ * @description 取得主題標籤頁商品
+ * @param {FetchInsuranceListPayload} payload
+ */
+export const fetchInsuranceTagList = async (
+  payload: FetchInsuranceListPayload
+): Promise<InsuranceListResponse> => {
+  const { insurance, page, filters } = payload
+
+  const { data } = await request.get<InsuranceListResponse>(
+    decorateSeoQueryString(`/api/insurance/tags/${insurance}/products`),
+    {
+      params: {
+        page,
+        ...filtersTransformer(filters),
+      },
+    }
+  )
+  return data
+}
+
+/**
+ * @description 取得主題標籤頁篩選條件
+ * @param {string} insurance 主題標籤名
+ */
+export const fetchInsuranceTagListFilter = async (
+  insurance: string
+): Promise<InsuranceListFilterResponse> => {
+  const { data } = await request.get(
+    `/api/insurance/tags/${insurance}/tags-filter`
   )
   return data
 }

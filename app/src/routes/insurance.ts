@@ -47,5 +47,14 @@ export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
         requiredStoreModules: ['insurance'],
       },
     },
+    {
+      name: InsuranceListType.FEATURE_TAG,
+      path: '/tags/:insurance',
+      component: resolve('@/views/insurance/page/Index.vue'),
+      meta: {
+        showScrollToTop: true,
+        requiredStoreModules: ['insurance'],
+      },
+    },
   ]
 }
