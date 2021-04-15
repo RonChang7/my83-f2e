@@ -1,6 +1,7 @@
 <template>
   <div class="InsurancePage">
     <InsuranceTipModal
+      v-if="!isFeatureTagPage"
       :visible.sync="infoModal.visible"
       :active-tab.sync="infoModal.activeTab"
       @update-active-tab="updateInfoModalActiveTab"
@@ -8,17 +9,24 @@
 
     <div class="InsurancePage__row">
       <HeaderSection
+        :is-feature-tag-page="isFeatureTagPage"
         @update-active-tab="updateInfoModalActiveTab"
         @open-modal="openInfoModal"
       />
     </div>
 
-    <div v-if="shouldShowPromotionProduct" class="InsurancePage__row promotion">
-      <PromotionProductSection />
+    <div
+      v-if="!isFeatureTagPage && shouldShowPromotionProduct"
+      class="InsurancePage__row promotion"
+    >
+      <PromotionProductSection
+        :show-promotion-ad="isDesktop && !shouldShowDesktopPromotionAd"
+      />
     </div>
 
     <div class="InsurancePage__row mb-0">
       <ProductListTitleSection
+        :is-feature-tag-page="isFeatureTagPage"
         :product-list-description="productListDescription"
         @scrollToFAQ="scrollToFAQ"
       />
@@ -29,10 +37,15 @@
         <ProductListDesktopFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
         />
-        <PromotionSection :page-type="$store.state.insurance.staticData.abbr" />
-        <FaqSection v-if="isMobile" id="faq" class="faq" />
-        <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
-        <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
+        <PromotionSection
+          v-if="isDesktop && shouldShowDesktopPromotionAd"
+          :page-type="$store.state.insurance.staticData.abbr"
+        />
+        <template v-if="!isFeatureTagPage">
+          <FaqSection v-if="isMobile" id="faq" class="faq" />
+          <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
+          <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
+        </template>
       </div>
       <div class="column wider">
         <ProductListSection ref="ProductListSection">
@@ -41,6 +54,12 @@
             :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
+          <template #ad>
+            <PromotionSection
+              v-if="isMobile"
+              :page-type="$store.state.insurance.staticData.abbr"
+            />
+          </template>
         </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
@@ -51,7 +70,11 @@
       </div>
     </div>
 
-    <div v-if="!isMobile" id="faq" class="InsurancePage__row faq">
+    <div
+      v-if="!isMobile && !isFeatureTagPage"
+      id="faq"
+      class="InsurancePage__row faq"
+    >
       <FaqSection />
     </div>
   </div>
@@ -81,6 +104,7 @@ import DeviceMixin, {
   ComponentInstance as DeviceMixinComponentInstance,
 } from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
+import { InsuranceListType } from '@/routes/insurance'
 import { InsuranceVuexState } from './Index.vue'
 
 const options: ComponentOption = {
@@ -115,6 +139,15 @@ const options: ComponentOption = {
     shouldShowPromotionProduct() {
       return !!this.$store.state.insurance.promotionProducts?.length
     },
+    shouldShowDesktopPromotionAd() {
+      return (
+        !this.$store.state.insurance.promotionProducts ||
+        (this.$store.state.insurance.promotionProducts &&
+          this.$store.state.insurance.promotionProducts.length === 0) ||
+        (this.$store.state.insurance.promotionProducts &&
+          this.$store.state.insurance.promotionProducts.length > 3)
+      )
+    },
     shouldShowProductListFilter() {
       return !!this.$store.state.insurance.filter.config
     },
@@ -127,6 +160,9 @@ const options: ComponentOption = {
         this.$store.state.insurance.staticData.productListDescription ||
         '依熱門度排序。費率以 30 歲女性為基準。'
       )
+    },
+    isFeatureTagPage() {
+      return this.$route.name === InsuranceListType.FEATURE_TAG
     },
   },
   methods: {
@@ -208,9 +244,11 @@ export type Methods = {
 export interface Computed {
   pagination: Pagination | null
   shouldShowPromotionProduct: boolean
+  shouldShowDesktopPromotionAd: boolean
   shouldShowProductListFilter: boolean
   shouldShowPagination: boolean
   productListDescription: string
+  isFeatureTagPage: boolean
 }
 
 export interface Props {}
@@ -273,10 +311,10 @@ export default options
   }
 
   .pagination {
-    margin-top: 40px;
+    margin-top: 16px;
 
     @include max-media('xl') {
-      margin: 30px 0 20px;
+      margin: 0 0 20px;
     }
   }
 
