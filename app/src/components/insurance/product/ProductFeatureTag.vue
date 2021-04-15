@@ -1,5 +1,5 @@
 <template>
-  <GlobalLink :to="tag.link.path">
+  <GlobalLink :to="tag.link.path" @click.native.stop="">
     <BaseTag class="ProductFeatureTag" small :type="tagTypeMap[tag.name]">
       {{ tag.name }}
     </BaseTag>
