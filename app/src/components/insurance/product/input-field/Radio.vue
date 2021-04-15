@@ -47,7 +47,7 @@ export default class Radio extends Vue {
 
   &.radio {
     ::v-deep .label {
-      font-size: 1rem;
+      font-size: 1rem !important;
     }
   }
 }

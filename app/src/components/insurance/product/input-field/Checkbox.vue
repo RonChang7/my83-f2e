@@ -43,7 +43,7 @@ export default class Checkbox extends Vue {
 <style lang="scss" scoped>
 .checkbox {
   ::v-deep .label {
-    font-size: 1rem;
+    font-size: 1rem !important;
   }
 }
 </style>
