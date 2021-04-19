@@ -311,18 +311,23 @@ export default options
 
   .mask {
     width: 836px;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba($primary-bg, 0.8);
     position: absolute;
     border-radius: 4px;
     z-index: 1;
 
     > span {
+      @include shadow('01');
+
       position: absolute;
-      left: calc(50% - 40px);
-      top: calc(50% - 20px);
+      left: calc(50% - 75px);
+      top: calc(50% - 30px);
       background: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 16px 48px;
+      border-radius: 60px;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: $gray-primary;
     }
   }
 }
