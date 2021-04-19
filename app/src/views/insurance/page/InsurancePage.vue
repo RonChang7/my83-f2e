@@ -36,6 +36,7 @@
       <div class="column thin">
         <ProductListDesktopFilterSection
           v-if="!isMobile && shouldShowProductListFilter"
+          @loading="setLoadingStatus"
         />
         <PromotionSection
           v-if="isDesktop && shouldShowDesktopPromotionAd"
@@ -48,7 +49,7 @@
         </template>
       </div>
       <div class="column wider">
-        <ProductListSection ref="ProductListSection">
+        <ProductListSection ref="ProductListSection" :is-loading="isLoading">
           <ProductListMobileFilterSection
             v-if="isMobile && shouldShowProductListFilter"
             :product-list-description="productListDescription"
@@ -129,6 +130,7 @@ const options: ComponentOption = {
         visible: false,
         activeTab: '',
       },
+      isLoading: false,
     }
   },
   computed: {
@@ -188,6 +190,9 @@ const options: ComponentOption = {
         offset: 32,
       })
     },
+    setLoadingStatus(status) {
+      this.isLoading = status
+    },
   },
   watch: {
     // handle page position when navigate via pagination
@@ -197,6 +202,11 @@ const options: ComponentOption = {
     '$store.state.insurance.staticData.id'() {
       this.$nextTick(() => {
         window.scroll(0, 0)
+      })
+    },
+    '$store.state.insurance.insuranceList'() {
+      this.$nextTick(() => {
+        this.isLoading = false
       })
     },
   },
@@ -232,6 +242,7 @@ export interface Data {
     visible: boolean
     activeTab: InsuranceTipModalProps['activeTab'] | ''
   }
+  isLoading: boolean
 }
 
 export type Methods = {
@@ -239,6 +250,7 @@ export type Methods = {
   openInfoModal(): void
   scrollToProductListSection(): void
   scrollToFAQ(): void
+  setLoadingStatus(status: boolean): void
 }
 
 export interface Computed {
