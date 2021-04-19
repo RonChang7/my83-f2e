@@ -66,7 +66,7 @@ export default defineComponent({
     ProductQueryField,
     BaseInputMessage,
   },
-  setup() {
+  setup(props, ctx) {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
     const router = useRouter()
@@ -94,15 +94,27 @@ export default defineComponent({
       isAllValidated,
     } = useInsuranceFilterForm(config, initValue)
 
+    const updateQuery = _.debounce(() => {
+      if (
+        _.isEqual(route.value.query, formData.value) ||
+        _.isEmpty(route.value.query)
+      ) {
+        ctx.emit('loading', false)
+      }
+
+      if (isAllValidated.value) {
+        router.push({
+          query: formData.value,
+        })
+      }
+    }, 1500)
+
     watch(
       () => formData.value,
-      _.debounce(() => {
-        if (isAllValidated.value) {
-          router.push({
-            query: formData.value,
-          })
-        }
-      }, 1500),
+      () => {
+        ctx.emit('loading', isAllValidated.value)
+        updateQuery()
+      },
       {
         deep: true,
       }

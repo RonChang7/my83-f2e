@@ -17,45 +17,57 @@
       </div>
     </div>
     <slot />
-    <ProductCard
-      v-for="product in insuranceProducts.slice(0, 5)"
-      :key="product.id"
-      class="ProductListSection__product"
-      :class="{ enabled: isEnabled(product) }"
-      :product="product"
-      :enabled="isEnabled(product)"
-      @click-button="
-        isEnabled(product)
-          ? clickProductButton(`${product.company}${product.name}`)
-          : null
-      "
-      @click.native="isEnabled(product) ? clickProductCard(product) : null"
-    />
-    <div v-if="!insuranceProducts.length" class="ProductListSection__noResult">
-      <img
-        :src="`${$imageBucketUrl}/front/insurance/filter-not-found@2x.png`"
-        alt="filter not fount"
-      />
-      <div class="title">沒有符合條件的商品</div>
-      <div class="description">
-        換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
+    <div ref="listWrapper" class="ProductListSection__listWrapper">
+      <div
+        v-if="isLoading"
+        class="mask"
+        :style="{ height: `${mask.height}px` }"
+      >
+        <span>載入中</span>
       </div>
+      <ProductCard
+        v-for="product in insuranceProducts.slice(0, 5)"
+        :key="product.id"
+        class="ProductListSection__product"
+        :class="{ enabled: isEnabled(product) }"
+        :product="product"
+        :enabled="isEnabled(product)"
+        @click-button="
+          isEnabled(product)
+            ? clickProductButton(`${product.company}${product.name}`)
+            : null
+        "
+        @click.native="isEnabled(product) ? clickProductCard(product) : null"
+      />
+      <div
+        v-if="!insuranceProducts.length"
+        class="ProductListSection__noResult"
+      >
+        <img
+          :src="`${$imageBucketUrl}/front/insurance/filter-not-found@2x.png`"
+          alt="filter not fount"
+        />
+        <div class="title">沒有符合條件的商品</div>
+        <div class="description">
+          換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
+        </div>
+      </div>
+      <slot name="ad"></slot>
+      <ProductCard
+        v-for="product in insuranceProducts.slice(5)"
+        :key="product.id"
+        class="ProductListSection__product"
+        :class="{ enabled: isEnabled(product) }"
+        :product="product"
+        :enabled="isEnabled(product)"
+        @click-button="
+          isEnabled(product)
+            ? clickProductButton(`${product.company}${product.name}`)
+            : null
+        "
+        @click.native="isEnabled(product) ? clickProductCard(product) : null"
+      />
     </div>
-    <slot name="ad"></slot>
-    <ProductCard
-      v-for="product in insuranceProducts.slice(5)"
-      :key="product.id"
-      class="ProductListSection__product"
-      :class="{ enabled: isEnabled(product) }"
-      :product="product"
-      :enabled="isEnabled(product)"
-      @click-button="
-        isEnabled(product)
-          ? clickProductButton(`${product.company}${product.name}`)
-          : null
-      "
-      @click.native="isEnabled(product) ? clickProductCard(product) : null"
-    />
     <div v-if="insuranceProducts.length" class="ProductListSection__disclaimer">
       本平台呈現資料僅供參考，實際情況會依據個人需求而不同。本站保險商品資訊來自保險事業發展中心及各保險公司網站，商品實際費率與資訊，請以各家保險公司公開資訊為主。
     </div>
@@ -77,6 +89,19 @@ const options: ComponentOption = {
   components: {
     ProductCard,
     CoverageBadge,
+  },
+  props: {
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      mask: {
+        height: 0,
+      },
+    }
   },
   computed: {
     idealCoverages() {
@@ -108,6 +133,20 @@ const options: ComponentOption = {
       })
     },
   },
+  watch: {
+    insuranceProducts: {
+      immediate: true,
+      handler() {
+        if (process.server) return
+
+        this.$nextTick(() => {
+          this.mask.height = parseInt(
+            window.getComputedStyle(this.$refs.listWrapper).height
+          )
+        })
+      },
+    },
+  },
 }
 
 export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
@@ -128,9 +167,16 @@ export type ComponentInstance = CombinedVueInstance<
 
 export interface Instance extends Vue {
   $store: Store<InsuranceVuexState>
+  $refs: {
+    listWrapper: HTMLElement
+  }
 }
 
-export interface Data {}
+export interface Data {
+  mask: {
+    height: number
+  }
+}
 
 export type Methods = {
   isEnabled(product: InsuranceProduct): boolean
@@ -143,7 +189,9 @@ export interface Computed {
   insuranceProducts: InsuranceProduct[]
 }
 
-export interface Props {}
+export interface Props {
+  isLoading: boolean
+}
 
 export default options
 </script>
@@ -252,11 +300,29 @@ export default options
   }
 
   &__disclaimer {
+    padding-top: 16px;
     font-size: 0.75rem;
     color: $gray-secondary;
 
     @include max-media('xl') {
       padding: 0 16px 30px;
+    }
+  }
+
+  .mask {
+    width: 836px;
+    background: rgba(0, 0, 0, 0.25);
+    position: absolute;
+    border-radius: 4px;
+    z-index: 1;
+
+    > span {
+      position: absolute;
+      left: calc(50% - 40px);
+      top: calc(50% - 20px);
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
     }
   }
 }
