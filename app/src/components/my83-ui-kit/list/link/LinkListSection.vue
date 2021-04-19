@@ -1,7 +1,7 @@
 <template>
   <div class="LinkListSection">
     <div class="LinkListSection__title">{{ title }}</div>
-    <div class="LinkListSection__content">
+    <div class="LinkListSection__content" :class="{ thin }">
       <GlobalLink
         v-for="(item, index) in filteredListData"
         :key="index"
@@ -44,6 +44,10 @@ export default defineComponent({
       type: Number,
       required: true,
     },
+    thin: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(props) {
     const filteredListData = computed(() =>
@@ -84,7 +88,11 @@ export interface ListData {
   }
 
   &__content {
-    padding: 0 20px;
+    padding: 0 30px;
+
+    &.thin {
+      padding: 0 20px;
+    }
   }
 
   &__title {

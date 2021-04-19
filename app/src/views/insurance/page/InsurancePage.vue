@@ -44,8 +44,8 @@
         />
         <template v-if="!isFeatureTagPage">
           <FaqSection v-if="isMobile" id="faq" class="faq" />
-          <RelatedBlogSection :max-post="isMobile ? 5 : 10" />
-          <RelatedQuestionSection :max-post="isMobile ? 5 : 10" />
+          <RelatedBlogSection :max-post="isMobile ? 5 : 10" :thin="true" />
+          <RelatedQuestionSection :max-post="isMobile ? 5 : 10" :thin="true" />
         </template>
       </div>
       <div class="column wider">
