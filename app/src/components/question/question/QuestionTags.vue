@@ -4,8 +4,8 @@
       <component :is="iconName" />
     </div>
     <div class="QuestionTags__tag">
-      <template v-for="tag in tags">
-        <GlobalLink :key="tag.id" :to="tag.link.path">
+      <template v-for="(tag, index) in tags">
+        <GlobalLink :key="index" :to="tag.link.path">
           <QuestionTag :text="tag.name" />
         </GlobalLink>
       </template>
@@ -14,19 +14,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import {
-  ThisTypedComponentOptionsWithRecordProps,
-  PropType,
-} from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent } from '@nuxtjs/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { Tag } from '@/api/question/question.type'
 import BaseCompany from '@/assets/icon/24/BaseCompany.svg'
 import BaseTag from '@/assets/icon/24/BaseTag.svg'
 import QuestionTag from './QuestionTag.vue'
 
-export default {
+type iconType = 'tag' | 'company' | ''
+
+export default defineComponent({
   components: {
     GlobalLink,
     QuestionTag,
@@ -35,17 +32,17 @@ export default {
   },
   props: {
     iconType: {
-      type: String,
+      type: String as () => iconType,
       default: '',
     },
     tags: {
-      type: Array as PropType<Props['tags']>,
+      type: Array as () => Tag[],
       required: true,
     },
   },
-  computed: {
-    iconName() {
-      switch (this.iconType) {
+  setup(props) {
+    const iconName = computed(() => {
+      switch (props.iconType) {
         case 'tag':
           return 'BaseTag'
         case 'company':
@@ -53,40 +50,13 @@ export default {
         default:
           return null
       }
-    },
+    })
+
+    return {
+      iconName,
+    }
   },
-} as ComponentOption
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  iconName: string | null
-}
-
-export interface Props {
-  iconType: 'tag' | 'company' | ''
-  tags: Tag[]
-}
+})
 </script>
 
 <style lang="scss" scoped>

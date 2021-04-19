@@ -1,109 +1,138 @@
 <template>
   <div class="ListSearchSection">
-    <BaseSearch
-      placeholder="新生兒保險、銀髮族長照險..."
-      :value.sync="value"
-      @submit="search"
-    />
+    <BaseSearch placeholder="搜尋討論區" :value.sync="value" @submit="search" />
     <div class="ListSearchSection__HotKeyword">
-      <span>熱門關鍵字：</span>
-      <QuestionTags :tags="hotKeyword" />
+      <template v-if="!isMobile">
+        <div v-for="(keyword, index) in keywords" :key="index">
+          {{ keyword.name }}：
+          <QuestionTags :tags="keyword.tags" />
+        </div>
+      </template>
+      <template v-else>
+        <QuestionTags :tags="mobileTags" />
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
-import { Route } from 'vue-router'
+import _ from 'lodash'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useContext,
+  useRoute,
+  useRouter,
+  useStore,
+  watch,
+} from '@nuxtjs/composition-api'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
+import { Link } from '@/api/type'
 import BaseSearch from '@/components/my83-ui-kit/search/BaseSearch.vue'
-import QuestionTags, {
-  Props as QuestionTagsProps,
-} from '../question/QuestionTags.vue'
+import QuestionTags from '../question/QuestionTags.vue'
 
-const options: ComponentOption = {
+interface Keyword {
+  name: string
+  tags: {
+    id: number
+    name: string
+    link: Link
+  }[]
+}
+
+export default defineComponent({
   components: {
     BaseSearch,
     QuestionTags,
   },
-  data() {
-    return {
-      value: '',
-    }
-  },
-  computed: {
-    // @TODO: 這邊熱門關鍵字前端先寫死，之後會改成透過 API 給值
-    hotKeyword() {
-      const keywords = ['新生兒保險', '小資族', '儲蓄險', '意外險', '理賠']
-      return keywords.map((w, index) => {
-        return {
-          id: index,
-          name: w,
-          link: {
-            path: `/question/search?q=${w}`,
-            url: `${this.$env.HOST_URL}/question/search?q=${w}`,
-          },
-        }
-      })
-    },
-  },
-  methods: {
-    search() {
-      if (!this.value.trim()) return
+  setup() {
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore<QuestionListVuexState>()
+    const { isMobile } = useDevice()
+    const { $env } = useContext()
 
-      this.$router.push({
+    const value = ref('')
+    const keywords = ref<Keyword[]>([])
+    const hotKeywords = computed(() => {
+      return (
+        store.state.questionList.meta?.keywords.others.map((w, index) => {
+          return {
+            id: index,
+            name: w,
+            link: {
+              path: `/question/search?q=${w}`,
+              url: `${$env.HOST_URL}/question/search?q=${w}`,
+            },
+          }
+        }) || []
+      )
+    })
+    const hotTags = computed(() => {
+      return (
+        store.state.questionList.meta?.keywords.tags.map((w, index) => {
+          return {
+            id: index,
+            name: w,
+            link: {
+              path: `/question/search?q=${w}`,
+              url: `${$env.HOST_URL}/question/search?q=${w}`,
+            },
+          }
+        }) || []
+      )
+    })
+    const mobileTags = computed(() =>
+      _.shuffle([
+        ..._.sampleSize(hotKeywords.value, 3),
+        ..._.sampleSize(hotTags.value, 3),
+      ])
+    )
+
+    keywords.value = [
+      {
+        name: '熱門關鍵字',
+        tags: hotKeywords.value,
+      },
+      {
+        name: '熱門標籤',
+        tags: hotTags.value,
+      },
+    ]
+
+    const search = () => {
+      if (!value.value.trim()) return
+
+      router.push({
         name: 'questionSearch',
         query: {
-          q: this.value,
+          q: value.value,
         },
       })
-    },
-  },
-  watch: {
-    '$route.query': {
-      immediate: true,
-      handler(val: Route['query']) {
-        this.value =
-          this.$route.name === 'questionSearch' && val.q ? String(val.q) : ''
+    }
+
+    watch(
+      () => route.value.query,
+      (val) => {
+        value.value =
+          route.value.name === 'questionSearch' && val.q ? String(val.q) : ''
       },
-    },
+      {
+        immediate: true,
+      }
+    )
+
+    return {
+      isMobile,
+      value,
+      keywords,
+      mobileTags,
+      search,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {}
-
-export interface Data {
-  value: string
-}
-
-export type Methods = {
-  search(): void
-}
-
-export interface Computed {
-  hotKeyword: QuestionTagsProps['tags']
-}
-
-export interface Props {}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
@@ -111,7 +140,7 @@ export default options
 @import '@/sass/rwd.scss';
 
 .ListSearchSection {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 
   @include max-media('xl') {
     margin-bottom: 0;
@@ -119,8 +148,13 @@ export default options
 
   &__HotKeyword {
     display: flex;
+    flex-direction: column;
     margin-top: 12px;
     color: $gray-primary;
+
+    > div {
+      display: flex;
+    }
 
     @include max-media('xl') {
       margin-top: 8px;
