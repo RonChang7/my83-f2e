@@ -12,12 +12,6 @@
     </GlobalLink>
     <div class="MobileHeader__function">
       <HeaderAnnouncement v-if="announcement" :announcement="announcement" />
-      <GlobalLink
-        v-if="shouldShowAskingButton"
-        :to="{ name: 'questionAsking' }"
-      >
-        <AskingRoundButton />
-      </GlobalLink>
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
     </div>
@@ -64,15 +58,6 @@ export default {
     }
   },
   computed: {
-    shouldShowAskingButton() {
-      if (process.server || !this.isMounted) return false
-
-      return (
-        this.userRole === 'sales' &&
-        (this.$route.name === 'questionList' ||
-          this.$route.name === 'questionSearch')
-      )
-    },
     showCloseMenu() {
       return this.$route.name === 'headerMenu'
     },
@@ -118,7 +103,6 @@ export type Methods = {
 }
 
 export interface Computed {
-  shouldShowAskingButton: boolean
   showCloseMenu: boolean
 }
 
