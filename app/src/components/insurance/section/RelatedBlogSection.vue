@@ -4,6 +4,7 @@
       :list-data="relatedBlogs"
       :max-post="maxPost"
       :title="title"
+      thin
       @click-link="tracking"
     />
     <div class="RelatedBlogSection__footer">
@@ -34,6 +35,10 @@ export default defineComponent({
     maxPost: {
       type: Number,
       default: 10,
+    },
+    thin: {
+      type: Boolean,
+      default: false,
     },
   },
   setup() {
