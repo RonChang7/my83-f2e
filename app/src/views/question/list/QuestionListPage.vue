@@ -50,6 +50,7 @@
         <template #right>
           <ListGuideSection v-if="isDesktop && shouldShowGuide" />
           <ListRecommendProductSection v-if="shouldShowRecommendProduct" />
+          <ListAskingSection v-if="isMobile && !shouldShowHotService" />
           <PopularQuestionSection :max-post="isMobile ? 5 : 10" />
           <PopularBlogSection :max-post="isMobile ? 5 : 10" />
         </template>
@@ -220,29 +221,29 @@ export default options
   &__row {
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 
     @include max-media('xl') {
       flex-direction: column;
 
       &.search {
-        order: 0;
-        padding: 20px;
+        order: 2;
+        padding: 0 20px 12px;
       }
 
       &.banner {
-        order: 1;
+        order: 0;
         margin-bottom: 0;
       }
 
       &.hot {
-        order: 2;
-        margin-bottom: 0;
+        order: 1;
+        margin-bottom: 12px;
       }
 
       &.asking {
         order: 3;
-        margin-bottom: 0;
+        margin: -12px 0 0;
       }
 
       &.content {
