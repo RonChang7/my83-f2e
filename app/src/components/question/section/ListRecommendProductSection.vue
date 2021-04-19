@@ -18,11 +18,9 @@
           <div class="title">
             {{ promotion.title }}
           </div>
-          <div v-if="promotion.consultations_count > 50" class="count">
+          <div class="count">
             已經有 {{ promotion.consultations_count }} 人在此規劃保險
           </div>
-          <!-- @todo: 之後要刪除 -->
-          <div v-else class="count">專為熟齡朋友準備的高CP值商品</div>
         </div>
         <div class="ListRecommendProductSection__promotion__button">
           <BaseButton size="l-a" :is-full-width="true">去看看</BaseButton>
@@ -33,70 +31,39 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseLazyImage from '@/components/base/lazy-load-image/BaseLazyImage.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
-import { PromotionsResponse, Promotion } from '@/api/question/list.type'
 
-const options: ComponentOption = {
+export default defineComponent({
   components: {
     BaseCard,
     BaseButton,
     BaseLazyImage,
     GlobalLink,
   },
-  computed: {
-    promotionHeader() {
-      return this.$store.state.questionList.promotions
-        ? this.$store.state.questionList.promotions.header
+  setup() {
+    const store = useStore<QuestionListVuexState>()
+    const promotionHeader = computed(() =>
+      store.state.questionList.promotions
+        ? store.state.questionList.promotions.header
         : ''
-    },
-    promotions() {
-      return this.$store.state.questionList.promotions
-        ? this.$store.state.questionList.promotions.promotions
+    )
+    const promotions = computed(() =>
+      store.state.questionList.promotions
+        ? store.state.questionList.promotions.promotions
         : []
-    },
+    )
+
+    return {
+      promotionHeader,
+      promotions,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<QuestionListVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {}
-
-export interface Computed {
-  promotionHeader: PromotionsResponse['data']['header']
-  promotions: Promotion[]
-}
-
-export interface Props {}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
