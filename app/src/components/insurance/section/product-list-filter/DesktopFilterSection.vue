@@ -53,6 +53,8 @@ import {
   useStore,
   watch,
 } from '@nuxtjs/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
@@ -70,8 +72,13 @@ export default defineComponent({
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
     const router = useRouter()
+    const analytics = useAnalytics()
 
     const multiSection = !(route.value.name === InsuranceListType.EXTERNAL)
+    const pageType =
+      route.value.name === InsuranceListType.FEATURE_TAG
+        ? '主題標籤頁'
+        : '險種頁'
 
     const { defaultValue, config } = store.state.insurance.filter
     const queryStringValue = _.keys(config).reduce((acc, cur) => {
@@ -89,10 +96,28 @@ export default defineComponent({
     const {
       fields,
       formData,
-      update,
+      update: updateField,
       validateState,
       isAllValidated,
     } = useInsuranceFilterForm(config, initValue)
+
+    const tracking = (label: string) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '篩選商品',
+        action: pageType,
+        label,
+      })
+    }
+
+    const update: typeof updateField = (payload) => {
+      const trackingLabel = fields.value.find(
+        (field) => field.id === payload.id
+      )?.name
+      if (trackingLabel) {
+        tracking(trackingLabel)
+      }
+      return updateField(payload)
+    }
 
     const updateQuery = _.debounce(() => {
       if (
