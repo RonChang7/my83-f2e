@@ -34,7 +34,7 @@
               :value="form.formData[field.id]"
               :disable-label="true"
               radio-type="radio"
-              @update="form.update"
+              @update="update"
             />
             <BaseInputMessage
               v-if="
@@ -82,13 +82,16 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
+import { useAnalytics } from '@/utils/composition-api'
+import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
+import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInfoModal from '@/components/my83-ui-kit/modal/BaseInfoModal.vue'
 import BaseFilter18 from '@/assets/icon/18/BaseFilter.svg'
 import BaseFilter24 from '@/assets/icon/24/BaseFilter.svg'
+import { InsuranceListType } from '@/routes/insurance'
 import ProductQueryField from '../../product/ProductQueryField.vue'
 
 export default defineComponent({
@@ -110,6 +113,12 @@ export default defineComponent({
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
     const router = useRouter()
+    const analytics = useAnalytics()
+
+    const pageType =
+      route.value.name === InsuranceListType.FEATURE_TAG
+        ? '主題標籤頁'
+        : '險種頁'
 
     const visiblePanel = ref(false)
     const openPanel = () => (visiblePanel.value = true)
@@ -128,6 +137,24 @@ export default defineComponent({
     }
 
     const form = ref(useInsuranceFilterForm(config, initValue))
+
+    const tracking = (label: string) => {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+        category: '篩選商品',
+        action: pageType,
+        label,
+      })
+    }
+
+    const update: typeof form.value.update = (payload) => {
+      const trackingLabel = form.value.fields.find(
+        (field) => field.id === payload.id
+      )?.name
+      if (trackingLabel) {
+        tracking(trackingLabel)
+      }
+      return form.value.update(payload)
+    }
 
     const filterNumberCount = computed(() => {
       return _.reduce(
@@ -170,6 +197,7 @@ export default defineComponent({
 
     return {
       form,
+      update,
       visiblePanel,
       openPanel,
       closePanel,
@@ -239,6 +267,8 @@ export default defineComponent({
   }
 
   &__section {
+    position: relative;
+
     &__title {
       padding: 12px 0 10px;
     }
