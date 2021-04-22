@@ -52,7 +52,9 @@
           換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
         </div>
       </div>
-      <slot name="ad"></slot>
+      <div class="ProductListSection__ad">
+        <slot name="ad"></slot>
+      </div>
       <ProductCard
         v-for="product in insuranceProducts.slice(5)"
         :key="product.id"
@@ -271,6 +273,10 @@ export default options
     }
   }
 
+  &__ad {
+    margin-top: -10px;
+  }
+
   &__noResult {
     display: flex;
     flex-direction: column;
@@ -285,7 +291,7 @@ export default options
     img {
       width: 160px;
       height: 160px;
-      margin-bottom: 10px;
+      margin: 36px 0 10px;
     }
 
     .title {
@@ -295,7 +301,9 @@ export default options
     }
 
     .description {
+      text-align: center;
       font-size: 0.875rem;
+      margin: 4px 0 40px;
     }
   }
 
@@ -305,7 +313,7 @@ export default options
     color: $gray-secondary;
 
     @include max-media('xl') {
-      padding: 0 16px 30px;
+      padding: 10px 16px 30px;
     }
   }
 
