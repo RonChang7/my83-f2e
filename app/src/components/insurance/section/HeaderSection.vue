@@ -1,7 +1,9 @@
 <template>
   <div class="HeaderSection">
     <div class="HeaderSection__content">
-      <h1 class="HeaderSection__title">{{ title }}</h1>
+      <h1 class="HeaderSection__title" :class="{ 'no-image': !image }">
+        {{ title }}
+      </h1>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div class="HeaderSection__description" v-html="description" />
       <div v-if="buttonInfos.length" class="HeaderSection__link">
@@ -179,14 +181,11 @@ export default options
     width: 750px;
   }
 
-  &__description {
-    margin-bottom: 32px;
-  }
-
   &__link {
     $width: 230px;
 
     display: flex;
+    margin-top: 32px;
 
     ::v-deep #{$self}__button {
       width: $width;
@@ -215,6 +214,10 @@ export default options
     h1 {
       font-size: 1.75rem;
       margin: 0 92px 42px 0;
+
+      &.no-image {
+        margin: 0 0 16px 0;
+      }
     }
 
     &__content {

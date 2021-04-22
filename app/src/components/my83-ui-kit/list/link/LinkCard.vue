@@ -110,6 +110,7 @@ export default defineComponent({
 
     @include max-media('xl') {
       margin-top: 0;
+      font-size: 1rem;
     }
   }
 
