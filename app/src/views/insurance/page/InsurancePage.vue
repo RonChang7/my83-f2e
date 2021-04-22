@@ -49,7 +49,10 @@
         </template>
       </div>
       <div class="column wider">
-        <ProductListSection ref="ProductListSection" :is-loading="isLoading">
+        <ProductListSection
+          ref="ProductListSection"
+          :is-loading="!isExternalPage && isLoading"
+        >
           <ProductListMobileFilterSection
             v-if="isMobile && shouldShowProductListFilter"
             :product-list-description="productListDescription"
@@ -166,6 +169,9 @@ const options: ComponentOption = {
     isFeatureTagPage() {
       return this.$route.name === InsuranceListType.FEATURE_TAG
     },
+    isExternalPage() {
+      return this.$route.name === InsuranceListType.EXTERNAL
+    },
   },
   methods: {
     updateInfoModalActiveTab(tab) {
@@ -261,6 +267,7 @@ export interface Computed {
   shouldShowPagination: boolean
   productListDescription: string
   isFeatureTagPage: boolean
+  isExternalPage: boolean
 }
 
 export interface Props {}
