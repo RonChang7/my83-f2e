@@ -107,7 +107,7 @@ export default defineComponent({
           query: formData.value,
         })
       }
-    }, 1500)
+    }, 1000)
 
     watch(
       () => formData.value,
