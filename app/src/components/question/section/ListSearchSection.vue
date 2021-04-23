@@ -1,6 +1,10 @@
 <template>
   <div class="ListSearchSection">
-    <BaseSearch placeholder="搜尋討論區" :value.sync="value" @submit="search" />
+    <BaseSearch
+      placeholder="搜尋討論區"
+      :value.sync="searchInputValue"
+      @submit="search"
+    />
     <div class="ListSearchSection__HotKeyword">
       <template v-if="!isMobile">
         <div v-for="(keyword, index) in keywords" :key="index">
@@ -27,6 +31,7 @@ import {
   useStore,
   watch,
 } from '@nuxtjs/composition-api'
+import { Route } from 'vue-router'
 import { useDevice } from '@/mixins/device/device-mixins'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
 import { Link } from '@/api/type'
@@ -54,17 +59,17 @@ export default defineComponent({
     const { isMobile } = useDevice()
     const { $env } = useContext()
 
-    const value = ref('')
+    const searchInputValue = ref('')
     const keywords = ref<Keyword[]>([])
     const hotKeywords = computed(() => {
       return (
-        store.state.questionList.meta?.keywords.others.map((w, index) => {
+        store.state.questionList.meta?.keywords.others.map((keyword, index) => {
           return {
             id: index,
-            name: w,
+            name: keyword,
             link: {
-              path: `/question/search?q=${w}`,
-              url: `${$env.HOST_URL}/question/search?q=${w}`,
+              path: `/question/search?q=${keyword}`,
+              url: `${$env.HOST_URL}/question/search?q=${keyword}`,
             },
           }
         }) || []
@@ -72,13 +77,13 @@ export default defineComponent({
     })
     const hotTags = computed(() => {
       return (
-        store.state.questionList.meta?.keywords.tags.map((w, index) => {
+        store.state.questionList.meta?.keywords.tags.map((keyword, index) => {
           return {
             id: index,
-            name: w,
+            name: keyword,
             link: {
-              path: `/question/search?q=${w}`,
-              url: `${$env.HOST_URL}/question/search?q=${w}`,
+              path: `/question/search?q=${keyword}`,
+              url: `${$env.HOST_URL}/question/search?q=${keyword}`,
             },
           }
         }) || []
@@ -103,22 +108,24 @@ export default defineComponent({
     ]
 
     const search = () => {
-      if (!value.value.trim()) return
+      if (!searchInputValue.value.trim()) return
 
       router.push({
         name: 'questionSearch',
         query: {
-          q: value.value,
+          q: searchInputValue.value,
         },
       })
     }
 
+    const updateQueryValue = (val: Route['query']) => {
+      searchInputValue.value =
+        route.value.name === 'questionSearch' && val.q ? String(val.q) : ''
+    }
+
     watch(
       () => route.value.query,
-      (val) => {
-        value.value =
-          route.value.name === 'questionSearch' && val.q ? String(val.q) : ''
-      },
+      (val) => updateQueryValue(val),
       {
         immediate: true,
       }
@@ -126,7 +133,7 @@ export default defineComponent({
 
     return {
       isMobile,
-      value,
+      searchInputValue,
       keywords,
       mobileTags,
       search,
