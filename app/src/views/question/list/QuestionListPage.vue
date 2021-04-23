@@ -6,7 +6,10 @@
     <div class="QuestionListPage__row banner">
       <BannerSection v-if="pageType === 'list'" />
     </div>
-    <div class="QuestionListPage__row search">
+    <div
+      class="QuestionListPage__row search"
+      :class="{ 'pt-0': pageType !== 'search' }"
+    >
       <div class="left" :class="[pageType]">
         <ListSearchSection />
       </div>
@@ -228,7 +231,11 @@ export default options
 
       &.search {
         order: 2;
-        padding: 0 20px 12px;
+        padding: 12px 20px;
+      }
+
+      &.searchResultCount {
+        order: 3;
       }
 
       &.banner {
