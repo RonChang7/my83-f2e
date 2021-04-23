@@ -6,7 +6,10 @@
     <div class="QuestionListPage__row banner">
       <BannerSection v-if="pageType === 'list'" />
     </div>
-    <div class="QuestionListPage__row search">
+    <div
+      class="QuestionListPage__row search"
+      :class="{ 'pt-0': pageType !== 'search' }"
+    >
       <div class="left" :class="[pageType]">
         <ListSearchSection />
       </div>
@@ -50,6 +53,7 @@
         <template #right>
           <ListGuideSection v-if="isDesktop && shouldShowGuide" />
           <ListRecommendProductSection v-if="shouldShowRecommendProduct" />
+          <ListAskingSection v-if="isMobile && !shouldShowHotService" />
           <PopularQuestionSection :max-post="isMobile ? 5 : 10" />
           <PopularBlogSection :max-post="isMobile ? 5 : 10" />
         </template>
@@ -220,29 +224,33 @@ export default options
   &__row {
     display: flex;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 
     @include max-media('xl') {
       flex-direction: column;
 
       &.search {
-        order: 0;
-        padding: 20px;
+        order: 2;
+        padding: 12px 20px;
+      }
+
+      &.searchResultCount {
+        order: 3;
       }
 
       &.banner {
-        order: 1;
+        order: 0;
         margin-bottom: 0;
       }
 
       &.hot {
-        order: 2;
-        margin-bottom: 0;
+        order: 1;
+        margin-bottom: 12px;
       }
 
       &.asking {
         order: 3;
-        margin-bottom: 0;
+        margin: -12px 0 0;
       }
 
       &.content {
@@ -256,14 +264,14 @@ export default options
   }
 
   .searchResultCount {
-    margin: -20px 0 20px;
+    margin-bottom: 10px;
 
     > span {
       width: 1120px;
 
       @include max-media('xl') {
         width: 100%;
-        padding: 10px 20px 0px;
+        padding: 4px 20px 0px;
       }
     }
   }
