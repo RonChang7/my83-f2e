@@ -39,7 +39,13 @@ export type QuestionListData = Omit<
 export interface QuestionListMeta {
   pagination: PaginationResponse
   sort: QuestionListSortType
+  keywords: QuestionListKeywords
   q?: string
+}
+
+export interface QuestionListKeywords {
+  others: string[]
+  tags: string[]
 }
 
 export type QuestionListSortType = 'latest'

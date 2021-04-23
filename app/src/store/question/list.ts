@@ -10,6 +10,7 @@ import {
   FetchQuestionListPayload,
   FetchSearchQuestionListPayload,
   PromotionsResponse,
+  QuestionListKeywords,
 } from '@/api/question/list.type'
 import { Pagination } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
@@ -125,6 +126,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
           sort: meta.sort,
+          keywords: meta.keywords,
         }
       },
       [types.UPDATE_POPULAR_QUESTIONS](state, data: PopularQuestion[]) {
@@ -159,6 +161,7 @@ export interface State {
   meta: {
     pagination: Pagination
     sort: QuestionListSortType
+    keywords: QuestionListKeywords
   } | null
   popularQuestions: PopularQuestion[] | null
   popularBlogs: PopularBlog[] | null
