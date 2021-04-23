@@ -47,15 +47,11 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<QuestionListVuexState>()
-    const promotionHeader = computed(() =>
-      store.state.questionList.promotions
-        ? store.state.questionList.promotions.header
-        : ''
+    const promotionHeader = computed(
+      () => store.state.questionList.promotions?.header ?? ''
     )
-    const promotions = computed(() =>
-      store.state.questionList.promotions
-        ? store.state.questionList.promotions.promotions
-        : []
+    const promotions = computed(
+      () => store.state.questionList.promotions?.promotions ?? []
     )
 
     return {
