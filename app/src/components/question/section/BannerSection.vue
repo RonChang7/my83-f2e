@@ -1,9 +1,7 @@
 <script lang="ts">
-import Vue from 'vue'
-import { FunctionalComponentOptions } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import { defineComponent } from '@nuxtjs/composition-api'
 
-const options: ComponentOption = {
+export default defineComponent({
   functional: true,
   render(h) {
     return h('div', { staticClass: 'BannerSection' }, [
@@ -15,17 +13,7 @@ const options: ComponentOption = {
       ]),
     ])
   },
-}
-
-export type ComponentOption = FunctionalComponentOptions<Props>
-
-export type ComponentInstance = CombinedVueInstance<Instance, {}, {}, {}, Props>
-
-export interface Instance extends Vue {}
-
-export interface Props {}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
@@ -42,7 +30,7 @@ $background-max-width: 1600px;
     bottom no-repeat;
   background-size: contain;
   width: 100%;
-  height: 270px;
+  height: 200px;
   color: $gray-primary;
   font-size: 1.125rem;
 
@@ -75,9 +63,9 @@ $background-max-width: 1600px;
   }
 
   @include max-media('xl') {
-    height: 120px;
+    height: 112px;
     justify-content: flex-start;
-    padding-top: 7px;
+    padding-top: 12px;
 
     div {
       display: flex;
