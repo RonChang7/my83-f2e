@@ -150,10 +150,16 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     margin-top: 12px;
+    font-size: 0.875rem;
     color: $gray-primary;
 
     > div {
       display: flex;
+      align-items: center;
+
+      > div {
+        margin: 0;
+      }
     }
 
     @include max-media('xl') {
