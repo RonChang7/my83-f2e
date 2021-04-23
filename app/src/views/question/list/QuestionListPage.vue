@@ -264,14 +264,14 @@ export default options
   }
 
   .searchResultCount {
-    margin: -20px 0 20px;
+    margin-bottom: 10px;
 
     > span {
       width: 1120px;
 
       @include max-media('xl') {
         width: 100%;
-        padding: 10px 20px 0px;
+        padding: 4px 20px 0px;
       }
     }
   }

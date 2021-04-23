@@ -156,7 +156,7 @@ export default defineComponent({
   &__HotKeyword {
     display: flex;
     flex-direction: column;
-    margin-top: 12px;
+    margin-top: 8px;
     font-size: 0.875rem;
     color: $gray-primary;
 
@@ -170,8 +170,6 @@ export default defineComponent({
     }
 
     @include max-media('xl') {
-      margin-top: 8px;
-
       > span {
         display: none;
       }
