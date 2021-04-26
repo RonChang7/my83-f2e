@@ -121,7 +121,7 @@ export default defineComponent({
     BaseInputMessage,
   },
   setup() {
-    const { $sentry } = useContext()
+    const { $sentry, $notification } = useContext()
     const store = useStore<InsuranceProductVuexState>()
     const visible = ref(false)
     const submitStatus = ref(true)
@@ -159,6 +159,7 @@ export default defineComponent({
           reporterContact: formData.reporterContact,
         })
 
+        $notification.success('回報成功，感謝你的協助！')
         closePanel()
       } catch (err) {
         submitStatus.value = false
