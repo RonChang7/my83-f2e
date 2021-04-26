@@ -155,6 +155,7 @@ export default {
       )
 
       if (typeof result === 'boolean' && result) {
+        this.$notification.success('檢舉成功，請待平台審核處理')
         this.closePanel()
       } else {
         this.$set(this.errors, 'submit', {
