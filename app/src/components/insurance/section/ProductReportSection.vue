@@ -1,7 +1,7 @@
 <template>
   <div class="ProductReportSection">
     <BaseInfoModal :visible="visible" :lock-scroll="true" @close="closePanel">
-      <div class="ProductReportSection__modal">
+      <div ref="modalEl" class="ProductReportSection__modal">
         <div class="ProductReportSection__title">商品資訊回報</div>
         <div class="ProductReportSection__description">
           MY83
@@ -111,6 +111,7 @@ import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputTextarea from '@/components/my83-ui-kit/input/BaseInputTextarea.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { productReport } from '@/api/insurance/product'
+import { scrollToPosition } from '@/utils/scroll'
 
 export default defineComponent({
   components: {
@@ -126,6 +127,7 @@ export default defineComponent({
     const visible = ref(false)
     const submitStatus = ref(true)
     const isLoading = ref(false)
+    const modalEl = ref<HTMLElement | null>(null)
     const productName = store.state.insuranceProduct.product!.product.name
 
     const {
@@ -138,7 +140,14 @@ export default defineComponent({
     } = useProductReport()
 
     const formData = reactive(scheme.form.formData)
-    const openPanel = () => (visible.value = true)
+    const openPanel = () => {
+      visible.value = true
+      scrollToPosition({
+        to: 0,
+        container: modalEl.value as HTMLElement,
+        vertical: true,
+      })
+    }
     const closePanel = () => {
       visible.value = false
       reset()
@@ -182,6 +191,7 @@ export default defineComponent({
       submit: () => scheme.form.submit(),
       submitStatus,
       isLoading,
+      modalEl,
     }
   },
 })
@@ -237,6 +247,7 @@ export default defineComponent({
   &__form {
     display: flex;
     flex-direction: column;
+    flex: 0 0 auto;
 
     &__action {
       margin-top: 30px;
