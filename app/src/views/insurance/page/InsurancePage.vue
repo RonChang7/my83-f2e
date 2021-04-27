@@ -40,6 +40,7 @@
         />
         <PromotionSection
           v-if="isDesktop && shouldShowDesktopPromotionAd"
+          class="promotion"
           :page-type="$store.state.insurance.staticData.abbr"
         />
         <template v-if="!isFeatureTagPage">
@@ -327,6 +328,10 @@ export default options
         margin-bottom: 20px;
       }
     }
+  }
+
+  .promotion {
+    margin: 6px 0 -4px;
   }
 
   .pagination {

@@ -285,7 +285,7 @@ export default defineComponent({
     }
 
     &__field {
-      margin-bottom: 12px;
+      margin-bottom: 12px !important;
     }
 
     ::v-deep &__message {

@@ -161,7 +161,7 @@ export default defineComponent({
 @import '@/sass/rwd.scss';
 
 .DesktopFilterSection {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 
   &__content {
     padding: 16px 0;
