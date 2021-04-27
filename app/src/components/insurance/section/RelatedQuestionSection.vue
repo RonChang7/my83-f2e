@@ -88,7 +88,7 @@ export default defineComponent({
     align-items: center;
     justify-content: flex-end;
     font-size: 0.875rem;
-    margin: 0 0px 20px;
+    margin: 0 0px 16px;
     margin-top: -10px;
 
     @include max-media('xl') {

@@ -1,6 +1,6 @@
 <template>
   <div class="HeaderSection">
-    <div class="HeaderSection__content">
+    <div class="HeaderSection__content" :class="{ 'w-100': isFeatureTagPage }">
       <h1 class="HeaderSection__title" :class="{ 'no-image': !image }">
         {{ title }}
       </h1>
@@ -179,6 +179,10 @@ export default options
 
   &__content {
     width: 750px;
+
+    &.w-100 {
+      width: 100%;
+    }
   }
 
   &__link {
