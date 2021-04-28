@@ -59,9 +59,8 @@
             :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
-          <template #ad>
+          <template v-if="isMobile" #ad>
             <PromotionSection
-              v-if="isMobile"
               :page-type="$store.state.insurance.staticData.abbr"
             />
           </template>

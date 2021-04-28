@@ -52,7 +52,7 @@
           換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
         </div>
       </div>
-      <div class="ProductListSection__ad">
+      <div :class="{ ProductListSection__ad: hasAd }">
         <slot name="ad"></slot>
       </div>
       <ProductCard
@@ -84,6 +84,7 @@ import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
+import { isSlotExist } from '@/utils/render-helper'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductCard from '../product/ProductCard.vue'
 
@@ -111,6 +112,9 @@ const options: ComponentOption = {
     },
     insuranceProducts() {
       return this.$store.state.insurance.insuranceList || []
+    },
+    hasAd() {
+      return isSlotExist('ad', this)
     },
   },
   methods: {
@@ -189,6 +193,7 @@ export type Methods = {
 export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
+  hasAd: boolean
 }
 
 export interface Props {
