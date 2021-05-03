@@ -7,7 +7,7 @@ export interface FetchProductFeePayload extends PremiumQuery {
   amountUnit?: number
 }
 
-export interface ProductReportPayload {
+export interface ProductReportRequest {
   id: number
   content: string
   refLink: string

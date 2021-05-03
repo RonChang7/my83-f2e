@@ -4,7 +4,7 @@ import {
   ProductResponse,
   ProductFeeResponse,
   FetchProductFeePayload,
-  ProductReportPayload,
+  ProductReportRequest,
 } from './product.type'
 
 export const fetchProduct = async (id: string): Promise<ProductResponse> => {
@@ -43,7 +43,7 @@ export const productReport = async ({
   refLink,
   reporter,
   reporterContact,
-}: ProductReportPayload) => {
+}: ProductReportRequest) => {
   const { data } = await request.post(`/api/insurance/product/${id}/report`, {
     content,
     ref_link: refLink,
