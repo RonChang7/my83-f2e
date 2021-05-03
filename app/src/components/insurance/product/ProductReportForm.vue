@@ -121,6 +121,11 @@ export default defineComponent({
       }
     }
 
+    const resetForm = () => {
+      reset()
+      submitStatus.value = true
+    }
+
     scheme.form.setSubmit(async () => {
       isLoading.value = true
 
@@ -153,7 +158,7 @@ export default defineComponent({
 
     watch(
       () => props.visible,
-      (val) => val && reset()
+      (val) => val && resetForm()
     )
 
     return {
