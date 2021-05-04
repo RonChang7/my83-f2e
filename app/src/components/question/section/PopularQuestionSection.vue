@@ -1,7 +1,7 @@
 <template>
-  <RelatedSection
+  <LinkListSection
     v-if="popularQuestions.length"
-    :related-data="popularQuestions"
+    :list-data="popularQuestions"
     :max-post="maxPost"
     title="人氣問答"
     @click-link="tracking"
@@ -9,15 +9,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
-import RelatedSection from '@/components/base/related/RelatedSection.vue'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
+import LinkListSection from '@/components/my83-ui-kit/list/link/LinkListSection.vue'
 import { QuestionListVuexState } from '@/views/question/list/CreateQuestionListPage'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
-    RelatedSection,
+    LinkListSection,
   },
   props: {
     maxPost: {

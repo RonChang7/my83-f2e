@@ -1,8 +1,8 @@
 <template>
   <div v-if="hotProducts.length" class="PopularProductSection">
-    <RelatedSection
+    <LinkListSection
       :title="title"
-      :related-data="hotProducts"
+      :list-data="hotProducts"
       :max-post="5"
       @click-link="tracking"
     />
@@ -16,17 +16,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
-import RelatedSection from '@/components/base/related/RelatedSection.vue'
+import LinkListSection from '@/components/my83-ui-kit/list/link/LinkListSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
-    RelatedSection,
+    LinkListSection,
     GlobalLink,
     BaseArrowRight,
   },

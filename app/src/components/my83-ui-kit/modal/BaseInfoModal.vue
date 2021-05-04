@@ -121,6 +121,7 @@ export default options
     top: 15px;
     right: 15px;
     cursor: pointer;
+    z-index: 1;
 
     @include hover('_gray-secondary-darker', $has-svg: true);
   }

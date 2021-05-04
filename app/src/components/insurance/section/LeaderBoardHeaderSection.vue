@@ -62,14 +62,21 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from '@nuxtjs/composition-api'
-import { useStore, useRouter, useRoute } from '@/utils/composition-api'
+import {
+  computed,
+  defineComponent,
+  ref,
+  useRoute,
+  useRouter,
+  useStore,
+  watch,
+} from '@nuxtjs/composition-api'
 import { getFirstQuery } from '@/utils/query-string'
 import { InsuranceLeaderBoardVuexState } from '@/views/insurance/leader-board/Index.vue'
 import { Option } from '@/components/my83-ui-kit/input/type'
 import Affix from '@/components/base/affix/Affix.vue'
 import BaseSwitch from '@/components/my83-ui-kit/input/BaseSwitch.vue'
-import DeviceMixin from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
 
 const useSwitch = ({ value }: SwitchPayload) => {
   const options: Option[] = [
@@ -94,11 +101,11 @@ export default defineComponent({
     Affix,
     BaseSwitch,
   },
-  mixins: [DeviceMixin],
   setup() {
     const store = useStore<InsuranceLeaderBoardVuexState>()
-    const router = useRouter()!
+    const router = useRouter()
     const route = useRoute()
+    const { isMobile } = useDevice()
 
     const title = computed(() => store.state.insuranceLeaderBoard.title)
     const description = computed(
@@ -135,6 +142,7 @@ export default defineComponent({
       options,
       value,
       updateValue,
+      isMobile,
     }
   },
 })
