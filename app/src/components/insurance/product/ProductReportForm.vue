@@ -100,7 +100,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const isError = ref(true)
+    const isError = ref(false)
     const isLoading = ref(false)
 
     const {
@@ -123,7 +123,7 @@ export default defineComponent({
 
     const resetForm = () => {
       reset()
-      isError.value = true
+      isError.value = false
     }
 
     scheme.form.setSubmit(async () => {
@@ -145,7 +145,7 @@ export default defineComponent({
           status: 'success',
         })
       } catch (error) {
-        isError.value = false
+        isError.value = true
 
         emit('submit-status', {
           status: 'error',
