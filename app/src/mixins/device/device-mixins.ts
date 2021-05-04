@@ -1,12 +1,11 @@
 import Vue from 'vue'
 import { Store } from 'vuex'
-import { computed } from '@nuxtjs/composition-api'
+import { computed, useStore } from '@nuxtjs/composition-api'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { Vue as VuePropertyDecorator, Component } from 'vue-property-decorator'
 import { GlobalVuexState } from '@/store/global-state'
 import { UserAgent } from '@/store/global/index'
-import { useStore } from '@/utils/composition-api'
 
 @Component
 export default class DeviceMixin extends VuePropertyDecorator {

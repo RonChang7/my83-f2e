@@ -6,6 +6,7 @@ export const enum InputType {
   TEXTAREA = 'TEXTAREA',
   RADIO = 'RADIO',
   OPTION = 'OPTION',
+  CHECKBOX = 'CHECKBOX',
 }
 
 export const enum FieldType {
@@ -27,7 +28,7 @@ interface FieldBaseScheme {
 }
 
 interface FieldOptionScheme {
-  type: InputType.OPTION | InputType.RADIO
+  type: InputType.OPTION | InputType.RADIO | InputType.CHECKBOX
   options: SelectOption[]
 }
 
