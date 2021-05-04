@@ -119,7 +119,7 @@ class VariableRateScheme {
 
   private formData: Record<string, any>
 
-  private validateRules: Record<string, Rule<string>> = {}
+  private validateRules: Rule<string> = {}
 
   private plans: Plan[]
 
@@ -218,7 +218,7 @@ class VariableRateScheme {
         if (id && validator) {
           this.validateRules = {
             ...this.validateRules,
-            ...validator,
+            validator,
           }
         }
         return fieldFactory?.field

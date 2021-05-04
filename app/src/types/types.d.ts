@@ -3,6 +3,7 @@ import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventM
 import { ReCaptchaInstance } from '@/services/recaptcha'
 import { Auth } from '@/services/auth/auth'
 import 'cookie-universal-nuxt'
+import { Notyf } from 'notyf'
 
 /**
  * Extends types in Vue and Nuxt
@@ -15,6 +16,7 @@ declare module 'vue/types/vue' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $auth: Auth
+    readonly $notification: Notyf
   }
 }
 declare module '@nuxt/types' {
@@ -25,6 +27,7 @@ declare module '@nuxt/types' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $auth: Auth
+    readonly $notification: Notyf
   }
 
   interface NuxtAppOptions {
@@ -34,6 +37,7 @@ declare module '@nuxt/types' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $auth: Auth
+    readonly $notification: Notyf
   }
 }
 
@@ -46,5 +50,6 @@ declare module 'vuex/types/index' {
     readonly $env: Record<string, any>
     readonly $imageBucketUrl: string
     readonly $auth: Auth
+    readonly $notification: Notyf
   }
 }

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Module } from 'vuex'
 import { UPDATE_PAGE_META, UPDATE_JSON_LD } from '@/store/seo/seo.type'
 import * as api from '@/api/insurance/insurance'
@@ -12,9 +13,10 @@ import {
   InsuranceProduct,
   IdealCoverage,
   InsuranceListMeta,
-  PremiumConfig,
-  PremiumConfigOption,
+  FilterValue,
+  FilterOption,
   ProductFeeList,
+  InsuranceListFilterResponse,
 } from '@/api/insurance/insurance.type'
 import {
   RelatedBlog,
@@ -23,6 +25,7 @@ import {
   LinkButton,
 } from '@/api/type'
 import { paginationResponseDataTransform } from '@/utils/api-data-transform'
+import { externalInsuranceRouteNames } from '@/routes/insurance'
 import * as types from './insurance.type'
 
 export const createStoreModule = <R>(): Module<State, R> => {
@@ -48,6 +51,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
           faq: null,
         },
         title: '',
+        description: '',
         announcement: null,
         relatedBlogs: null,
         relatedQuestions: null,
@@ -55,8 +59,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
         insuranceList: null,
         insuranceIdealCoverages: null,
         filter: {
-          defaultPremiumConfig: null,
-          premiumConfig: null,
+          defaultValue: null,
+          config: null,
         },
       }
     },
@@ -95,7 +99,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchInsuranceList(payload)
             .then(({ data, meta, page_meta, json_ld }) => {
-              commit(types.UPDATE_INSURANCE_LIST_DATA, data)
+              commit(types.UPDATE_INSURANCE_LIST_DATA, {
+                insurance: payload.insurance,
+                data,
+              })
               commit(types.UPDATE_INSURANCE_LIST_META, meta)
               commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
                 root: true,
@@ -107,9 +114,51 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
+      [types.FETCH_INSURANCE_LIST_FILTER]({ commit }, insurance: string) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceListFilter(insurance)
+            .then((data) => {
+              commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_TAG_LIST]({ commit }, payload: FetchInsuranceListPayload) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceTagList(payload)
+            .then(({ data, meta, page_meta, json_ld }) => {
+              commit(types.UPDATE_INSURANCE_LIST_DATA, {
+                insurance: payload.insurance,
+                data,
+              })
+              commit(types.UPDATE_INSURANCE_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
+              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_TAG_LIST_FILTER]({ commit }, insurance: string) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceTagListFilter(insurance)
+            .then((data) => {
+              commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
       [types.UPDATE_INSURANCE_PRODUCT_FEE](
         { state, commit },
-        payload: PremiumConfig
+        payload: FilterValue
       ) {
         const productListIds =
           state.insuranceList?.map((product) => product.id) || []
@@ -128,6 +177,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 data.product_fee_list
               )
               commit(types.UPDATE_PROMOTION_PRODUCT_FEE, data.product_fee_list)
+              commit(types.UPDATE_CURRENT_FILTER_CONFIG, payload)
               resolve()
             })
             .catch((error) => {
@@ -188,18 +238,48 @@ export const createStoreModule = <R>(): Module<State, R> => {
         state.staticData.principle = data.principle
         state.staticData.faq = data.faq
       },
-      [types.UPDATE_INSURANCE_LIST_DATA](state, data: InsuranceListData) {
+      [types.UPDATE_INSURANCE_LIST_DATA](
+        state,
+        { insurance, data }: { insurance: string; data: InsuranceListData }
+      ) {
+        state.staticData.id = insurance
         state.title = data.title
+        state.description = data.description
         state.announcement = data.announcement_btn
         state.insuranceList = data.products
         state.insuranceIdealCoverages = data.ideal_coverages
-        state.filter.premiumConfig = data.premium_config
-        state.filter.defaultPremiumConfig = data.default_premium_config
+        if (externalInsuranceRouteNames.includes(insurance)) {
+          state.filter.config = data.premium_config
+          state.filter.defaultValue = data.default_premium_config
+        }
       },
       [types.UPDATE_INSURANCE_LIST_META](state, meta: InsuranceListMeta) {
         state.meta = {
           pagination: paginationResponseDataTransform(meta.pagination),
+          currentFilterConfig: meta.current_filter_config,
         }
+      },
+      [types.UPDATE_CURRENT_FILTER_CONFIG](state, config: FilterValue) {
+        if (state.meta) {
+          state.meta.currentFilterConfig = _.reduce(
+            config,
+            (result, value, key) => {
+              result[key] = _.isArray(value)
+                ? value.map((_) => _.toString())
+                : value.toString()
+
+              return result
+            },
+            {} as Record<string, string | string[]>
+          )
+        }
+      },
+      [types.UPDATE_INSURANCE_LIST_FILTER](
+        state,
+        data: InsuranceListFilterResponse
+      ) {
+        state.filter.config = data.filter_config
+        state.filter.defaultValue = data.default_filter_config
       },
       [types.UPDATE_INSURANCE_LIST_PRODUCT_FEE](
         state,
@@ -247,6 +327,7 @@ export interface State {
   currentParam: CurrentParam
   meta: {
     pagination: Pagination
+    currentFilterConfig: Record<string, string | string[]>
   } | null
   staticData: {
     id: string
@@ -262,6 +343,7 @@ export interface State {
     faq: Faq[] | null
   }
   title: string
+  description: string
   announcement: LinkButton | null
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
@@ -269,12 +351,12 @@ export interface State {
   insuranceList: InsuranceProduct[] | null
   insuranceIdealCoverages: IdealCoverage[] | null
   filter: {
-    defaultPremiumConfig: PremiumConfig | null
-    premiumConfig: Record<string, PremiumConfigOption> | null
+    defaultValue: FilterValue | null
+    config: Record<string, FilterOption> | null
   }
 }
 
-export interface CurrentParam extends PremiumConfig {
+export interface CurrentParam extends FilterValue {
   page: number
 }
 

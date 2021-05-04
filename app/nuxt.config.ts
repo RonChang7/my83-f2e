@@ -78,6 +78,10 @@ const config: NuxtConfig = {
       src: '@/plugins/recaptcha',
       mode: 'client',
     },
+    {
+      src: '@/plugins/toast-notifications',
+      mode: 'client',
+    },
   ],
   /*
    ** Nuxt.js dev-modules

@@ -1,3 +1,4 @@
+import { Route } from 'vue-router'
 import {
   Link,
   RelatedBlog,
@@ -72,6 +73,15 @@ export interface InsuranceListResponse extends PageResponse<InsuranceListData> {
 export interface FetchInsuranceListPayload {
   insurance: string
   page: number
+  filters:
+    | Record<string, string | number | (string | number)[]>
+    | null
+    | Route['query']
+}
+
+export interface InsuranceListFilterResponse {
+  default_filter_config: Record<string, string[]>
+  filter_config: Record<string, FilterOption>
 }
 
 export interface InsuranceProductFeeResponse {
@@ -90,25 +100,29 @@ export interface PromotionInsuranceProductResponse {
 
 export interface InsuranceListData {
   title: string
+  description: string
   ideal_coverages: IdealCoverage[] | null
   products: InsuranceProduct[]
-  default_premium_config: PremiumConfig | null
-  premium_config: Record<string, PremiumConfigOption> | null
+  default_premium_config: FilterValue | null
+  premium_config: Record<string, FilterOption> | null
   announcement_btn: LinkButton | null
 }
 
-export type PremiumConfig = Record<string, string | number>
+export type FilterValue = Record<string, string | number | (string | number)[]>
 
-export interface PremiumConfigOption {
+export interface FilterOption {
+  name: string
   type: OptionValueType
   values: Option[]
 }
 
-export type OptionValueType = OptionType | RadioType
+export type OptionValueType = OptionType | RadioType | CheckboxType
 
 export type OptionType = 'option'
 
 export type RadioType = 'radio'
+
+export type CheckboxType = 'checkbox'
 
 export interface Option {
   key: string
@@ -117,6 +131,7 @@ export interface Option {
 
 export interface InsuranceListMeta {
   pagination: PaginationResponse
+  current_filter_config: Record<string, string | string[]>
 }
 
 export interface IdealCoverage {

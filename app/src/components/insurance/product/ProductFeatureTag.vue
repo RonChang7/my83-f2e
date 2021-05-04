@@ -1,18 +1,21 @@
 <template>
-  <BaseTag class="ProductFeatureTag" small :type="tagTypeMap[tag.text]">
-    {{ tag.text }}
-  </BaseTag>
+  <GlobalLink :to="tag.link.path" @click.native.stop="">
+    <BaseTag class="ProductFeatureTag" small :type="tagTypeMap[tag.name]">
+      {{ tag.name }}
+    </BaseTag>
+  </GlobalLink>
 </template>
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
 import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
 import { LinkButton } from '@/api/type'
-// @TODO: 暫時移除 hyperlink，因為目前標籤不可點擊
+import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 
 export default defineComponent({
   components: {
     BaseTag,
+    GlobalLink,
   },
   props: {
     tag: {
@@ -36,10 +39,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style lang="scss" scoped>
-// @TODO: 暫時移除游標效果，因為目前標籤不可點擊
-.ProductFeatureTag {
-  cursor: auto;
-}
-</style>
