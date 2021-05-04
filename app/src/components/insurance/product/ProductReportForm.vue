@@ -47,7 +47,7 @@
         </div>
       </div>
       <BaseInputMessage
-        v-if="!submitStatus"
+        v-if="isError"
         msg="發送失敗，請重新再試一次"
         text-align="right"
       />
@@ -100,7 +100,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const submitStatus = ref(true)
+    const isError = ref(true)
     const isLoading = ref(false)
 
     const {
@@ -123,7 +123,7 @@ export default defineComponent({
 
     const resetForm = () => {
       reset()
-      submitStatus.value = true
+      isError.value = true
     }
 
     scheme.form.setSubmit(async () => {
@@ -145,7 +145,7 @@ export default defineComponent({
           status: 'success',
         })
       } catch (error) {
-        submitStatus.value = false
+        isError.value = false
 
         emit('submit-status', {
           status: 'error',
@@ -168,7 +168,7 @@ export default defineComponent({
       isAllValidated,
       update,
       submit: () => scheme.form.submit(),
-      submitStatus,
+      isError,
       isLoading,
     }
   },
