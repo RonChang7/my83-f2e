@@ -241,9 +241,9 @@ export default defineComponent({
 
   &__rankingTag {
     > span {
-      margin-left: 3px;
+      margin-left: 6px;
       color: $primary-color;
-      font-size: 0.875em;
+      font-size: 0.875rem;
       font-weight: 500;
     }
   }

@@ -25,8 +25,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { FieldOption } from '@/services/product/field.type'
-import { IntervalType } from '@/api/insurance/product.type'
+import { Field, FieldType } from '@/services/form/field.type'
 import BaseInputText from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { ValidateMessage } from '@/services/validator/Validator'
@@ -42,7 +41,7 @@ export default class IntervalTextInput extends Vue {
   value!: string | number
 
   @Prop({ type: Object, required: true })
-  option: FieldOption<IntervalType>
+  option: Field<FieldType.INTERVAL>
 
   @Prop({ type: Object })
   validateState: ValidateMessage

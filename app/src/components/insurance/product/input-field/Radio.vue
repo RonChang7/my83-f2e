@@ -1,7 +1,7 @@
 <template>
-  <div class="radio">
+  <div class="radio" :class="type">
     <BaseRadio
-      type="button"
+      :type="type"
       :label="text"
       :value="value"
       :current-selected-value="currentSelectedValue"
@@ -28,16 +28,27 @@ export default class Radio extends Vue {
 
   @Prop({ type: String, default: '' })
   text: string
+
+  @Prop({ type: String, default: 'radio' })
+  type: 'radio' | 'button'
 }
 </script>
 
 <style lang="scss" scoped>
 .radio {
-  display: inline-block;
-  width: 64px;
+  &.button {
+    display: inline-block;
+    width: 64px;
 
-  &:not(:last-child) {
-    margin-right: 8px;
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
+  }
+
+  &.radio {
+    ::v-deep .label {
+      font-size: 1rem !important;
+    }
   }
 }
 </style>
