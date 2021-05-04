@@ -34,6 +34,7 @@
         <ProductPromotionSalesSection v-if="isDesktop" page-type="商品頁" />
         <PromotionSection v-else page-type="商品頁" />
         <PopularProductSection />
+        <ProductReportSection />
       </div>
     </div>
 
@@ -57,6 +58,7 @@ import ProductPromotionSalesSection from '@/components/insurance/section/Product
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import PopularProductSection from '@/components/insurance/section/PopularProductSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
+import ProductReportSection from '@/components/insurance/section/ProductReportSection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
@@ -76,6 +78,7 @@ import { InsuranceProductVuexState } from './Index.vue'
     PopularProductSection,
     ProductQuerySection,
     BaseScrollToTopButton,
+    ProductReportSection,
   },
 })
 export default class InsuranceProduct extends DeviceMixin {

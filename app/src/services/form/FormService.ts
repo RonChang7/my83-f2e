@@ -29,7 +29,7 @@ export class FormService implements Form {
   constructor(
     private _fields: Field<any>[],
     private _formData: Record<string, any>,
-    validateRules: Record<string, Rule<string>>
+    validateRules: Rule<string>
   ) {
     this.validator = new Validator(validateRules)
     this.initValidateState()

@@ -3,6 +3,7 @@ import { Option as SelectOption } from '@/components/my83-ui-kit/input/type'
 export const enum InputType {
   NUMBER = 'NUMBER',
   TEXT = 'TEXT',
+  TEXTAREA = 'TEXTAREA',
   RADIO = 'RADIO',
   OPTION = 'OPTION',
   CHECKBOX = 'CHECKBOX',
@@ -12,15 +13,18 @@ export const enum FieldType {
   INTERVAL = 'interval',
   OPTION = 'option',
   TEXT = 'text',
+  TEXTAREA = 'textarea',
 }
 
 interface FieldBaseScheme {
   id: string
   name: string
+  required?: boolean
   prefix?: string
   postfix?: string
   placeholder?: string
   disabled?: boolean
+  legend?: string
 }
 
 interface FieldOptionScheme {
@@ -36,7 +40,8 @@ interface FieldIntervalScheme {
 }
 
 interface FieldTextScheme {
-  type: InputType.TEXT
+  type: InputType.TEXT | InputType.TEXTAREA
+  length?: number
 }
 
 type FieldScheme<T> = T extends FieldType.INTERVAL

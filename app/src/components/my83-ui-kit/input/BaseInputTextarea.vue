@@ -144,6 +144,7 @@ export interface Props {
 .BaseInputTextarea {
   &__input {
     @include input;
+    display: block;
     line-height: $line-height;
     resize: none;
   }

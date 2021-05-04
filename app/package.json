@@ -45,6 +45,7 @@
     "lodash": "^4.17.20",
     "morgan": "^1.10.0",
     "normalize.css": "^8.0.1",
+    "notyf": "^3.9.0",
     "nuxt": "2.15.2",
     "nuxt-env": "^0.1.0",
     "nuxt-user-agent": "^1.2.2",

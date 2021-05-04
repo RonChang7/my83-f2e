@@ -26,6 +26,7 @@ export class FieldFactory<T extends FieldType> {
     type,
     unit,
     rule,
+    legend,
   }: FieldFactoryPayload<OptionValueType>) {
     switch (type) {
       case InputType.NUMBER: {
@@ -35,6 +36,7 @@ export class FieldFactory<T extends FieldType> {
         const field: Field<FieldType.INTERVAL> = {
           id,
           name,
+          required: rule?.required === undefined ? true : rule?.required,
           type,
           min,
           max,
@@ -75,6 +77,7 @@ export class FieldFactory<T extends FieldType> {
         const field: Field<FieldType.OPTION> = {
           id,
           name,
+          required: rule?.required === undefined ? true : rule?.required,
           type,
           options: transformOptions,
         }
@@ -88,6 +91,29 @@ export class FieldFactory<T extends FieldType> {
         }
         break
       }
+      case InputType.TEXT:
+      case InputType.TEXTAREA: {
+        const { placeholder, length } = options as TextOption
+        const field: Field<FieldType.TEXT | InputType.TEXTAREA> = {
+          id,
+          name,
+          required: rule?.required === undefined ? true : rule?.required,
+          type,
+          placeholder,
+          length,
+          legend,
+        }
+
+        this.field = field as Field<T>
+        this.validator = {
+          [id]: {
+            required: true,
+            type: 'string',
+            ...rule,
+          },
+        }
+        break
+      }
     }
   }
 }
@@ -95,8 +121,14 @@ export class FieldFactory<T extends FieldType> {
 export interface FieldFactoryPayload<T extends OptionValueType> {
   id: string
   name: string
-  options: ProductOption<T> | InsuranceOption[]
+  options: ProductOption<T> | InsuranceOption[] | TextOption
   type: InputType
   unit?: string
   rule?: RuleItem
+  legend?: string
+}
+
+export interface TextOption {
+  placeholder?: string
+  length?: number
 }
