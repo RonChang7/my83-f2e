@@ -11,8 +11,7 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { FieldOption } from '@/services/product/field.type'
-import { OptionType } from '@/api/insurance/product.type'
+import { Field, FieldType } from '@/services/form/field.type'
 import BaseSelect from '@/components/my83-ui-kit/input/BaseSelect.vue'
 
 @Component({
@@ -22,7 +21,7 @@ import BaseSelect from '@/components/my83-ui-kit/input/BaseSelect.vue'
 })
 export default class Select extends Vue {
   @Prop({ type: Array, required: true })
-  options!: FieldOption<OptionType>['options']
+  options!: Field<FieldType.OPTION>['options']
 
   @Prop({ type: [String, Number] })
   value!: string | number

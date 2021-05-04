@@ -1,9 +1,10 @@
 <template>
   <div v-if="relatedBlogs.length" class="RelatedBlogSection">
-    <RelatedSection
-      :related-data="relatedBlogs"
+    <LinkListSection
+      :list-data="relatedBlogs"
       :max-post="maxPost"
       :title="title"
+      thin
       @click-link="tracking"
     />
     <div class="RelatedBlogSection__footer">
@@ -16,17 +17,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
-import RelatedSection from '@/components/base/related/RelatedSection.vue'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
+import LinkListSection from '@/components/my83-ui-kit/list/link/LinkListSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
 export default defineComponent({
   components: {
-    RelatedSection,
+    LinkListSection,
     GlobalLink,
     BaseArrowRight,
   },
@@ -34,6 +35,10 @@ export default defineComponent({
     maxPost: {
       type: Number,
       default: 10,
+    },
+    thin: {
+      type: Boolean,
+      default: false,
     },
   },
   setup() {
@@ -78,7 +83,7 @@ export default defineComponent({
     align-items: center;
     justify-content: flex-end;
     font-size: 0.875rem;
-    margin: 0 0px 20px;
+    margin: 0 0px 16px;
     margin-top: -10px;
 
     @include max-media('xl') {

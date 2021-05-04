@@ -85,10 +85,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { useStore } from '@/utils/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'

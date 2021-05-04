@@ -22,6 +22,11 @@
         "
         @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
+      <PromotionSection
+        v-if="showPromotionAd"
+        class="promotionSales"
+        :page-type="$store.state.insurance.staticData.abbr"
+      />
     </BaseHorizontalList>
   </div>
 </template>
@@ -32,6 +37,7 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
+import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
@@ -43,6 +49,13 @@ const options: ComponentOption = {
   components: {
     BaseHorizontalList,
     PromotionProductCard,
+    PromotionSection,
+  },
+  props: {
+    showPromotionAd: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     description() {
@@ -146,6 +159,11 @@ export default options
     &:not(:last-of-type) {
       margin-right: 16px;
     }
+  }
+
+  .promotionSales {
+    width: 240px;
+    margin-top: 20px;
   }
 
   @include max-media('xl') {

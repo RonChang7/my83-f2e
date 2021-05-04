@@ -1,20 +1,20 @@
 <template>
   <div class="PromotionSection__wrapper">
     <div ref="section" class="PromotionSection">
-      <div class="PromotionSection__title">想買保險，但不知道怎麼挑？</div>
+      <div class="PromotionSection__title">
+        <!-- eslint-disable-next-line prettier/prettier -->
+        想買保險，<br class="newline" />但不知道怎麼挑？
+      </div>
       <div class="PromotionSection__content">
         <div class="PromotionSection__description">
-          直接到 MY83 保險達人榜，
-          <br class="newline" />
-          免費詢問站上活躍的業務員，
-          <br class="newline" />
+          直接到 MY83 保險達人榜， 免費詢問站上活躍的業務員，
           讓專業、好評、回覆迅速的業務員來幫你！
         </div>
         <div v-if="isDesktop" class="PromotionSection__activeSalesCount">
           {{ activeSalesCountWording }}
         </div>
         <BaseButton
-          size="l-b"
+          size="l-a"
           type="quaternary"
           to="/searchSales"
           :is-full-width="!isDesktop"
@@ -37,10 +37,11 @@ import {
   nextTick,
   onMounted,
   ref,
+  useStore,
 } from '@nuxtjs/composition-api'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { useAnalytics, useStore } from '@/utils/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 
@@ -113,25 +114,24 @@ export default defineComponent({
 .PromotionSection {
   @include card-primary;
 
-  background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-desktop@2x.png')
+  background: url('#{$image-bucket-url}/front/insurance/bg-ad-sales-desktop-2@2x.png')
     center -1px / contain no-repeat;
   background-color: #ffccb1;
   border: 0;
-  padding: 30px 30px 24px;
+  padding: 20px;
   text-align: center;
   margin-bottom: 20px;
 
   &__title {
     color: #fff;
-    font-size: 1.375rem;
+    font-size: 1.125rem;
     font-weight: 500;
   }
 
   &__description {
-    width: 192px;
     font-size: 0.875rem;
     color: $gray-primary;
-    margin: 40px 0 20px;
+    margin: 118px 0 12px;
     text-align: left;
   }
 

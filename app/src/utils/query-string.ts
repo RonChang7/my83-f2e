@@ -14,7 +14,7 @@ export function addQueryStringToPath(path: string, queryMap: {} | string) {
 
   return _.isEmpty(newQueryData)
     ? originalPath
-    : originalPath + '?' + qs.stringify(newQueryData)
+    : originalPath + '?' + qs.stringify(newQueryData, { arrayFormat: 'repeat' })
 }
 
 export const getFirstQuery = (

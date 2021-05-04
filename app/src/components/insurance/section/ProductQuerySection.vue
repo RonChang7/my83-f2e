@@ -2,12 +2,12 @@
   <div class="ProductQuerySection">
     <div ref="content" class="ProductQuerySection__content">
       <ProductQueryField
-        v-for="option in options"
-        :key="option.id"
+        v-for="field in fields"
+        :key="field.id"
         class="ProductQuerySection__field"
-        :option="option"
-        :value="formData[option.id]"
-        :validate-state="validateState[option.id]"
+        :field="field"
+        :value="formData[field.id]"
+        :validate-state="validateState[field.id]"
         @update="update"
         @blur="submit"
       />
@@ -62,9 +62,9 @@ import {
   onMounted,
   reactive,
   ref,
+  useStore,
   watch,
 } from '@nuxtjs/composition-api'
-import { useStore } from '@/utils/composition-api'
 import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
 import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
 import { useDevice } from '@/mixins/device/device-mixins'
@@ -90,7 +90,7 @@ export default defineComponent({
     const { isDesktop } = useDevice()
     const content = ref<HTMLElement | null>(null)
     const feeCardHeight = ref(0)
-    const options = ref({})
+    const fields = ref({})
     const formData = ref({})
     const submit = ref({})
 
@@ -140,7 +140,7 @@ export default defineComponent({
 
     const createReactive = () => {
       formData.value = reactive(scheme.form.formData)
-      options.value = reactive(scheme.form.fields)
+      fields.value = reactive(scheme.form.fields)
       validateState.value = reactive(scheme.form.validateState)
       scheme.form.setSubmit(fetchProductFee)
       submit.value = () => scheme.form.submit()
@@ -168,7 +168,7 @@ export default defineComponent({
 
     return {
       content,
-      options,
+      fields,
       formData,
       validateState,
       update,
