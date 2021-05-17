@@ -137,9 +137,11 @@ export default {
     },
     enableSearchInput() {
       this.shouldShowSearch = true
+      this.$emit('search-active', true)
     },
     disableSearchInput() {
       this.shouldShowSearch = false
+      this.$emit('search-active', false)
     },
     // 取得螢幕寬度
     getScreenWidth() {

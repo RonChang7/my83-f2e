@@ -9,14 +9,17 @@
     </GlobalLink>
     <nav>
       <DesktopHeaderNav :user-role="userRole" />
-      <HeaderAnnouncement v-if="announcement" :announcement="announcement" />
-      <HeaderPersonalize />
+      <HeaderAnnouncement
+        v-if="announcement && !searchInputState"
+        :announcement="announcement"
+      />
+      <HeaderPersonalize @search-active="updateSearchInputState" />
     </nav>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '@nuxtjs/composition-api'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import { UserRole } from '@/services/auth/auth'
 import HeaderPersonalize from '../HeaderPersonalize.vue'
@@ -43,6 +46,17 @@ export default defineComponent({
       type: Object,
       default: null,
     },
+  },
+  setup() {
+    const searchInputState = ref(false)
+    const updateSearchInputState = (state: boolean) => {
+      searchInputState.value = state
+    }
+
+    return {
+      updateSearchInputState,
+      searchInputState,
+    }
   },
 })
 </script>
