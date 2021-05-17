@@ -12,6 +12,10 @@
     </GlobalLink>
     <div class="MobileHeader__function">
       <HeaderAnnouncement v-if="announcement" :announcement="announcement" />
+      <div v-if="shouldShowSearch" class="MobileHeader__search">
+        <HeaderSearch @close="disableSearchInput" />
+      </div>
+      <BaseSearch v-else @click="enableSearchInput" />
       <BaseClose v-if="showCloseMenu" @click.native="closeMenuHandler" />
       <BaseMenu v-else @click.native="openMenuHandler" />
     </div>
@@ -26,17 +30,21 @@ import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
 import AskingRoundButton from '@/components/my83-ui-kit/button/AskingRoundButton.vue'
 import BaseMenu from '@/assets/icon/24/BaseMenu.svg'
 import BaseClose from '@/assets/icon/24/BaseClose.svg'
+import BaseSearch from '@/assets/icon/24/BaseSearch.svg'
 import { UserRole } from '@/services/auth/auth'
 import { Announcement } from '@/api/header/header.type'
 import HeaderAnnouncement from '../HeaderAnnouncement.vue'
+import HeaderSearch from '../HeaderSearch.vue'
 
 export default {
   components: {
     HeaderAnnouncement,
+    HeaderSearch,
     GlobalLink,
     AskingRoundButton,
     BaseMenu,
     BaseClose,
+    BaseSearch,
   },
   props: {
     enableRwd: {
@@ -55,6 +63,7 @@ export default {
   data() {
     return {
       isMounted: false,
+      shouldShowSearch: false,
     }
   },
   computed: {
@@ -68,6 +77,12 @@ export default {
     },
     openMenuHandler() {
       this.$router.push('/header-menu')
+    },
+    enableSearchInput() {
+      this.shouldShowSearch = true
+    },
+    disableSearchInput() {
+      this.shouldShowSearch = false
     },
   },
   mounted() {
@@ -95,11 +110,14 @@ export interface Instance extends Vue {}
 
 export interface Data {
   isMounted: boolean
+  shouldShowSearch: boolean
 }
 
 export type Methods = {
   closeMenuHandler(): void
   openMenuHandler(): void
+  enableSearchInput(): void
+  disableSearchInput(): void
 }
 
 export interface Computed {
@@ -140,6 +158,17 @@ export interface Props {
     &::v-deep > svg {
       flex: 0 0 auto;
     }
+  }
+
+  &__search {
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background: #fff;
   }
 
   .logo {

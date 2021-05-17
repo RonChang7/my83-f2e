@@ -42,6 +42,7 @@
       <div
         v-if="!insuranceProducts.length"
         class="ProductListSection__noResult"
+        :class="{ isEmptySearchResult }"
       >
         <img
           :src="`${$imageBucketUrl}/front/insurance/filter-not-found@2x.png`"
@@ -52,7 +53,10 @@
           換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
         </div>
       </div>
-      <div :class="{ ProductListSection__ad: hasAd }">
+      <div
+        v-if="!isEmptySearchResult"
+        :class="{ ProductListSection__ad: hasAd }"
+      >
         <slot name="ad"></slot>
       </div>
       <ProductCard
@@ -77,6 +81,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -85,6 +90,7 @@ import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { isSlotExist } from '@/utils/render-helper'
+import { InsuranceListType } from '@/routes/insurance'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductCard from '../product/ProductCard.vue'
 
@@ -115,6 +121,15 @@ const options: ComponentOption = {
     },
     hasAd() {
       return isSlotExist('ad', this)
+    },
+    isEmptySearchResult() {
+      return (
+        this.$route.name === InsuranceListType.SEARCH &&
+        !_.every(
+          this.$store.state.insurance.filter.config,
+          (field) => !!field.values.length
+        )
+      )
     },
   },
   methods: {
@@ -194,6 +209,7 @@ export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
   hasAd: boolean
+  isEmptySearchResult: boolean
 }
 
 export interface Props {
@@ -309,6 +325,18 @@ export default options
       text-align: center;
       font-size: 0.875rem;
       margin: 4px 0 40px;
+    }
+
+    &.isEmptySearchResult {
+      padding-top: 0px;
+
+      img {
+        margin-top: 10px;
+      }
+
+      .description {
+        margin-bottom: 0;
+      }
     }
   }
 
