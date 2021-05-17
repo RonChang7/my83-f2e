@@ -161,6 +161,8 @@ export interface Props {
   }
 
   &__search {
+    @include shadow('02');
+
     position: fixed;
     left: 0;
     width: 100vw;
