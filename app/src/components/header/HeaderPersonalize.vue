@@ -4,6 +4,15 @@
       v-if="checkItemEmpty(menu) && checkItemEmpty(personalize)"
       class="HeaderPersonalize__unauthorized"
     >
+      <li v-if="isDesktop" class="HeaderPersonalize__icon">
+        <HeaderSearch
+          v-if="shouldShowSearch"
+          ref="searchEl"
+          class="HeaderPersonalize__search unauthorized"
+          @close="disableSearchInput"
+        />
+        <BaseSearch v-else @click="enableSearchInput" />
+      </li>
       <li>
         <GlobalLink to="/signup/sales" class="HeaderPersonalize__name">
           我是業務員
@@ -22,6 +31,16 @@
           class="HeaderPersonalize__name"
           :sales-info="personalize.sales"
         />
+      </li>
+      <li v-if="isDesktop" class="HeaderPersonalize__icon">
+        <HeaderSearch
+          v-if="shouldShowSearch"
+          ref="searchEl"
+          class="HeaderPersonalize__search"
+          :class="{ sales: !!personalize.sales }"
+          @close="disableSearchInput"
+        />
+        <BaseSearch v-else @click="enableSearchInput" />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -59,9 +78,9 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
-import _ from 'lodash'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { GlobalVuexState } from '@/store/global-state'
@@ -71,6 +90,7 @@ import BaseNotification from '@/assets/icon/24/BaseNotification.svg'
 import BaseBadge from '@/components/my83-ui-kit/badge/BaseBadge.vue'
 import BaseArrowDown from '@/assets/icon/18/BaseArrowDown.svg'
 import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
+import BaseSearch from '@/assets/icon/24/BaseSearch.svg'
 import * as types from '@/store/global/global.type'
 import { logout } from '@/api/login/login'
 import DeviceMixin, {
@@ -78,6 +98,7 @@ import DeviceMixin, {
 } from '@/mixins/device/device-mixins'
 import HeaderSalesDetail from './HeaderSalesDetail.vue'
 import HeaderMenuPanel from './HeaderMenuPanel.vue'
+const HeaderSearch = () => import('./HeaderSearch.vue')
 
 export default {
   mixins: [DeviceMixin],
@@ -88,7 +109,9 @@ export default {
     BaseBadge,
     BaseArrowDown,
     BaseArrowRight,
+    BaseSearch,
     HeaderMenuPanel,
+    HeaderSearch,
   },
   props: {
     fromHeaderMenu: {
@@ -99,6 +122,7 @@ export default {
   data() {
     return {
       shouldShowMenu: false,
+      shouldShowSearch: false,
       screenWidth: 0,
     }
   },
@@ -110,6 +134,12 @@ export default {
       if (this.screenWidth >= 1200) return
 
       this.shouldShowMenu = !this.shouldShowMenu
+    },
+    enableSearchInput() {
+      this.shouldShowSearch = true
+    },
+    disableSearchInput() {
+      this.shouldShowSearch = false
     },
     // 取得螢幕寬度
     getScreenWidth() {
@@ -197,6 +227,7 @@ export interface Instance
 
 export interface Data {
   shouldShowMenu: boolean
+  shouldShowSearch: boolean
   screenWidth: number
 }
 
@@ -204,6 +235,8 @@ export type Methods = {
   reloadHandler: Function
   checkItemEmpty(item: Personalize | Menu): boolean
   menuToggle(): void
+  enableSearchInput(): void
+  disableSearchInput(): void
   getScreenWidth(): void
   showLoginPanel(): void
   logout(): void
@@ -256,6 +289,7 @@ interface Menu extends HeaderNavItem {
 
     li {
       display: flex;
+      align-items: center;
       cursor: pointer;
 
       @include max-media('xl') {
@@ -292,6 +326,10 @@ interface Menu extends HeaderNavItem {
         padding: 0 25px;
       }
     }
+  }
+
+  &__icon {
+    @include hover('_gray-secondary-darker', $has-svg: true);
   }
 
   &__name {
@@ -383,6 +421,19 @@ interface Menu extends HeaderNavItem {
       &--show {
         display: flex;
       }
+    }
+  }
+
+  &__search {
+    position: absolute;
+    right: 150px;
+
+    &.sales {
+      right: 165px;
+    }
+
+    &.unauthorized {
+      right: 250px;
     }
   }
 }

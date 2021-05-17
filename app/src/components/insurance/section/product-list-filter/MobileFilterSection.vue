@@ -118,6 +118,8 @@ export default defineComponent({
     const pageType =
       route.value.name === InsuranceListType.FEATURE_TAG
         ? '主題標籤頁'
+        : route.value.name === InsuranceListType.SEARCH
+        ? '搜尋結果頁'
         : '險種頁'
 
     const visiblePanel = ref(false)
@@ -184,9 +186,13 @@ export default defineComponent({
     }
 
     const submit = () => {
-      router.push({
-        query: form.value.formData,
-      })
+      const query = form.value.formData
+
+      if (route.value.name === InsuranceListType.SEARCH) {
+        query.q = route.value.query.q
+      }
+
+      router.push({ query })
 
       closePanel()
 

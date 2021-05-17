@@ -1,11 +1,11 @@
 <template>
   <div class="HeaderSection">
-    <div class="HeaderSection__content" :class="{ 'w-100': isFeatureTagPage }">
+    <div class="HeaderSection__content" :class="{ 'w-100': !isInsurancePage }">
       <h1 class="HeaderSection__title" :class="{ 'no-image': !image }">
         {{ title }}
       </h1>
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <div class="HeaderSection__description" v-html="description" />
+      <!-- eslint-disable-next-line vue/no-v-html prettier/prettier -->
+      <div v-if="description" class="HeaderSection__description" v-html="description" />
       <div v-if="buttonInfos.length" class="HeaderSection__link">
         <BaseButton
           v-for="button in buttonInfos"
@@ -50,7 +50,7 @@ const options: ComponentOption = {
     BaseButton,
   },
   props: {
-    isFeatureTagPage: {
+    isInsurancePage: {
       type: Boolean,
       default: false,
     },
@@ -60,22 +60,22 @@ const options: ComponentOption = {
       return this.$store.state.insurance.title
     },
     description() {
-      return this.isFeatureTagPage
-        ? this.$store.state.insurance.description
-        : this.$store.state.insurance.staticData.description
+      return this.isInsurancePage
+        ? this.$store.state.insurance.staticData.description
+        : this.$store.state.insurance.description
     },
     name() {
-      return this.isFeatureTagPage
-        ? ''
-        : this.$store.state.insurance.staticData.abbr
+      return this.isInsurancePage
+        ? this.$store.state.insurance.staticData.abbr
+        : ''
     },
     image() {
-      return this.isFeatureTagPage
-        ? ''
-        : this.$store.state.insurance.staticData.image
+      return this.isInsurancePage
+        ? this.$store.state.insurance.staticData.image
+        : ''
     },
     buttonInfos() {
-      if (this.isFeatureTagPage) return []
+      if (!this.isInsurancePage) return []
 
       const buttonInfos: NavTab[] = []
       if (this.$store.state.insurance.staticData.isExternal) {
@@ -146,7 +146,7 @@ export interface Computed {
 }
 
 export interface Props {
-  isFeatureTagPage: boolean
+  isInsurancePage: boolean
 }
 
 export default options
@@ -173,8 +173,12 @@ export default options
 
   h1 {
     font-size: 2.25rem;
-    margin: 0 0 20px;
+    margin: 0;
     font-weight: 500;
+  }
+
+  &__description {
+    margin-top: 20px;
   }
 
   &__content {
@@ -230,6 +234,7 @@ export default options
     }
 
     &__description {
+      margin: 0;
       line-height: 1.5rem;
     }
 

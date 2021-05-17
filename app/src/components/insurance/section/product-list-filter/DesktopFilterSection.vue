@@ -2,7 +2,7 @@
   <div class="DesktopFilterSection__wrapper">
     <template v-if="multiSection">
       <BaseCard
-        v-for="field in fields"
+        v-for="field in form.fields"
         :key="field.id"
         class="DesktopFilterSection"
       >
@@ -12,14 +12,17 @@
             <ProductQueryField
               class="DesktopFilterSection__field mb-0"
               :field="field"
-              :value="formData[field.id]"
+              :value="form.formData[field.id]"
               :disable-label="multiSection"
               radio-type="radio"
               @update="update"
             />
             <BaseInputMessage
-              v-if="validateState[field.id] && validateState[field.id].message"
-              :msg="validateState[field.id].message"
+              v-if="
+                form.validateState[field.id] &&
+                form.validateState[field.id].message
+              "
+              :msg="form.validateState[field.id].message"
               type="error"
             />
           </div>
@@ -31,11 +34,11 @@
       <template #default>
         <div class="DesktopFilterSection__content">
           <ProductQueryField
-            v-for="field in fields"
+            v-for="field in form.fields"
             :key="field.id"
             class="DesktopFilterSection__field"
             :field="field"
-            :value="formData[field.id]"
+            :value="form.formData[field.id]"
             @update="update"
           />
         </div>
@@ -48,6 +51,7 @@
 import _ from 'lodash'
 import {
   defineComponent,
+  ref,
   useRoute,
   useRouter,
   useStore,
@@ -78,8 +82,11 @@ export default defineComponent({
     const pageType =
       route.value.name === InsuranceListType.FEATURE_TAG
         ? '主題標籤頁'
+        : route.value.name === InsuranceListType.SEARCH
+        ? '搜尋結果頁'
         : '險種頁'
 
+    let isResetForm = false
     const { defaultValue, config } = store.state.insurance.filter
     const queryStringValue = _.keys(config).reduce((acc, cur) => {
       if (!_.isUndefined(route.value.query[cur])) {
@@ -93,13 +100,7 @@ export default defineComponent({
       ...queryStringValue,
     }
 
-    const {
-      fields,
-      formData,
-      update: updateField,
-      validateState,
-      isAllValidated,
-    } = useInsuranceFilterForm(config, initValue)
+    const form = ref(useInsuranceFilterForm(config, initValue))
 
     const tracking = (label: string) => {
       analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
@@ -109,35 +110,42 @@ export default defineComponent({
       })
     }
 
-    const update: typeof updateField = (payload) => {
-      const trackingLabel = fields.value.find(
+    const update: typeof form.value.update = (payload) => {
+      const trackingLabel = form.value.fields.find(
         (field) => field.id === payload.id
       )?.name
       if (trackingLabel) {
         tracking(trackingLabel)
       }
-      return updateField(payload)
+      isResetForm = false
+      return form.value.update(payload)
     }
 
     const updateQuery = _.debounce(() => {
       if (
-        _.isEqual(route.value.query, formData.value) ||
+        _.isEqual(route.value.query, form.value.formData) ||
         _.isEmpty(route.value.query)
       ) {
         ctx.emit('loading', false)
       }
 
-      if (isAllValidated.value) {
-        router.push({
-          query: formData.value,
-        })
+      if (form.value.isAllValidated) {
+        const query = form.value.formData
+
+        if (route.value.name === InsuranceListType.SEARCH) {
+          query.q = route.value.query.q
+        }
+
+        router.push({ query })
       }
     }, 1000)
 
     watch(
-      () => formData.value,
+      () => form.value.formData,
       () => {
-        ctx.emit('loading', isAllValidated.value)
+        if (isResetForm) return
+
+        ctx.emit('loading', form.value.isAllValidated)
         updateQuery()
       },
       {
@@ -145,12 +153,19 @@ export default defineComponent({
       }
     )
 
+    watch(
+      () => store.state.insurance.filter.config,
+      () => {
+        isResetForm = true
+        const { defaultValue, config } = store.state.insurance.filter
+        form.value = useInsuranceFilterForm(config, defaultValue)
+      }
+    )
+
     return {
       multiSection,
-      fields,
-      formData,
+      form,
       update,
-      validateState,
     }
   },
 })

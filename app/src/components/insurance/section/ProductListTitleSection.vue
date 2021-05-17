@@ -1,9 +1,9 @@
 <template>
   <div class="ProductListTitleSection">
     <h2 class="ProductListTitleSection__title">
-      全部商品
+      {{ title }}
       <a
-        v-if="!isFeatureTagPage"
+        v-if="isInsurancePage"
         class="ProductListTitleSection__faq"
         href="#faq"
         @click.prevent="$emit('scrollToFAQ')"
@@ -19,8 +19,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useRoute } from '@nuxtjs/composition-api'
 import BaseFAQ from '@/assets/icon/24/BaseFAQ.svg'
+import { InsuranceListType } from '@/routes/insurance'
 
 export default defineComponent({
   components: {
@@ -31,10 +32,22 @@ export default defineComponent({
       type: String,
       default: '',
     },
-    isFeatureTagPage: {
+    isInsurancePage: {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    const route = useRoute()
+    const title = computed(() =>
+      route.value.name === InsuranceListType.SEARCH
+        ? `${route.value.query.q} 的相關商品`
+        : '全部商品'
+    )
+
+    return {
+      title,
+    }
   },
 })
 </script>

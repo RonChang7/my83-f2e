@@ -1,7 +1,13 @@
 <template>
   <div class="PromotionProductSection">
-    <h2 class="PromotionProductSection__title">推薦商品</h2>
-    <div class="PromotionProductSection__description">
+    <div class="PromotionProductSection__header">
+      <h2 class="PromotionProductSection__title">{{ title }}</h2>
+      <GlobalLink v-if="isSearchPage" to="/product/leaderboard">
+        <span>看更多熱門商品</span>
+        <BaseArrowRight />
+      </GlobalLink>
+    </div>
+    <div v-if="description" class="PromotionProductSection__description">
       {{ description }}
     </div>
     <BaseHorizontalList
@@ -23,118 +29,136 @@
         @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
       <PromotionSection
-        v-if="showPromotionAd"
+        v-if="shouldShowPromotionAd"
         class="promotionSales"
-        :page-type="$store.state.insurance.staticData.abbr"
+        :page-type="pageType"
       />
     </BaseHorizontalList>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Store } from 'vuex'
-import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
-import { CombinedVueInstance } from 'vue/types/vue'
+import {
+  computed,
+  defineComponent,
+  useRoute,
+  useRouter,
+  useStore,
+} from '@nuxtjs/composition-api'
+import { useAnalytics } from '@/utils/composition-api'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
+import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
+import BaseArrowRight from '@/assets/icon/18/BaseArrowRight.svg'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
-import DeviceMixin from '@/mixins/device/device-mixins'
+import { useDevice } from '@/mixins/device/device-mixins'
+import { InsuranceListType } from '@/routes/insurance'
 import PromotionProductCard from '../product/PromotionProductCard.vue'
 
-const options: ComponentOption = {
-  mixins: [DeviceMixin],
+export default defineComponent({
   components: {
     BaseHorizontalList,
     PromotionProductCard,
     PromotionSection,
+    GlobalLink,
+    BaseArrowRight,
   },
   props: {
-    showPromotionAd: {
+    shouldShowPromotionAd: {
       type: Boolean,
       default: false,
     },
   },
-  computed: {
-    description() {
-      return this.$store.state.insurance.staticData.isExternal
-        ? this.$store.state.insurance.staticData.promotionWording
+  setup() {
+    const store = useStore<InsuranceVuexState>()
+    const route = useRoute()
+    const router = useRouter()
+    const analytics = useAnalytics()
+    const { isDesktop } = useDevice()
+
+    const isSearchPage = computed(
+      () => route.value.name === InsuranceListType.SEARCH
+    )
+    const title = computed(() => (isSearchPage.value ? '熱門商品' : '推薦商品'))
+    const description = computed(() => {
+      return isSearchPage.value
+        ? ''
+        : store.state.insurance.staticData.isExternal
+        ? store.state.insurance.staticData.promotionWording
         : 'MY83 嚴選的高保障的保單，讓你挑選保險商品不再耗時傷神！'
-    },
-    promotionProducts() {
-      return this.$store.state.insurance.promotionProducts
-    },
-  },
-  methods: {
-    isEnabled(product) {
+    })
+    const promotionProducts = computed(
+      () => store.state.insurance.promotionProducts
+    )
+    const pageType = computed(() => store.state.insurance.staticData.abbr)
+
+    const isEnabled = (product: PromotionInsuranceProduct) => {
       return product.fee !== null
-    },
-    clickProductCard(product) {
-      const { isExternal } = this.$store.state.insurance.staticData
+    }
+    const clickProductCard = (product: PromotionInsuranceProduct) => {
+      const isExternal = isSearchPage.value
+        ? false
+        : store.state.insurance.staticData.isExternal
       if (isExternal) {
         window.location.href = product.btn.link.url
       } else {
-        this.$router.push(product.btn.link.path)
+        router.push(product.btn.link.path)
       }
-    },
-    clickPromotionProductButton(productName) {
-      const insuranceType = this.$store.state.insurance.staticData.abbr
+    }
+    const clickPromotionProductButton = (productName: string) => {
+      const insuranceType = isSearchPage.value
+        ? '商品搜尋頁'
+        : store.state.insurance.staticData.abbr
 
-      this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
+      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '險種頁商品CTA',
         action: '推薦商品',
         label: `${insuranceType} ${productName}`,
       })
-    },
+    }
+
+    return {
+      isDesktop,
+      isSearchPage,
+      title,
+      description,
+      promotionProducts,
+      pageType,
+      isEnabled,
+      clickProductCard,
+      clickPromotionProductButton,
+    }
   },
-}
-
-export type ComponentOption = ThisTypedComponentOptionsWithRecordProps<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export type ComponentInstance = CombinedVueInstance<
-  Instance,
-  Data,
-  Methods,
-  Computed,
-  Props
->
-
-export interface Instance extends Vue {
-  $store: Store<InsuranceVuexState>
-}
-
-export interface Data {}
-
-export type Methods = {
-  isEnabled(product: PromotionInsuranceProduct): boolean
-  clickProductCard(product: PromotionInsuranceProduct): void
-  clickPromotionProductButton(productName: string): void
-}
-
-export interface Computed {
-  description: string
-  promotionProducts: PromotionInsuranceProduct[] | null
-}
-
-export interface Props {}
-
-export default options
+})
 </script>
 
 <style lang="scss" scoped>
 @import '@/sass/variables.scss';
+@import '@/sass/mixins.scss';
 @import '@/sass/rwd.scss';
 
 .PromotionProductSection {
   width: 1120px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > a {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+
+      @include hover('_gray-secondary-darker', $has-svg: true);
+
+      > span {
+        margin-right: 4px;
+      }
+    }
+  }
 
   &__title,
   &__description {
