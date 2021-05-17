@@ -17,7 +17,9 @@ import {
   FilterOption,
   ProductFeeList,
   InsuranceListFilterResponse,
+  FetchInsuranceSearchListPayload,
 } from '@/api/insurance/insurance.type'
+import { RecommendProduct } from '@/api/question/question.type'
 import {
   RelatedBlog,
   RelatedQuestion,
@@ -56,6 +58,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         relatedBlogs: null,
         relatedQuestions: null,
         promotionProducts: null,
+        recommendProducts: null,
         insuranceList: null,
         insuranceIdealCoverages: null,
         filter: {
@@ -123,6 +126,54 @@ export const createStoreModule = <R>(): Module<State, R> => {
               resolve()
             })
             .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_INSURANCE_SEARCH_LIST](
+        { commit },
+        payload: FetchInsuranceSearchListPayload
+      ) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceSearchList(payload)
+            .then(({ data, meta, page_meta, json_ld }) => {
+              commit(types.UPDATE_INSURANCE_LIST_DATA, {
+                insurance: '',
+                data,
+              })
+              commit(types.UPDATE_INSURANCE_LIST_META, meta)
+              commit(`pageMeta/${UPDATE_PAGE_META}`, page_meta, {
+                root: true,
+              })
+              commit(`jsonLd/${UPDATE_JSON_LD}`, json_ld, { root: true })
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_INSURANCE_SEARCH_LIST_FILTER]({ commit }, q: string) {
+        return new Promise<InsuranceListFilterResponse>((resolve, reject) => {
+          api
+            .fetchInsuranceSearchListFilter(q)
+            .then((data) => {
+              commit(types.UPDATE_INSURANCE_LIST_FILTER, data)
+              commit(types.UPDATE_PROMOTION_PRODUCTS, [])
+              commit(types.UPDATE_RECOMMEND_PRODUCTS, [])
+              resolve(data)
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_SEARCH_NO_RESULT]({ commit }) {
+        return new Promise<void>((resolve) => {
+          api
+            .fetchSearchNoResult()
+            .then((data) => {
+              commit(types.UPDATE_PROMOTION_PRODUCTS, data.promotion_products)
+              commit(types.UPDATE_RECOMMEND_PRODUCTS, data.recommend_products)
+              resolve()
+            })
+            .catch(() => resolve())
         })
       },
       [types.FETCH_TAG_LIST]({ commit }, payload: FetchInsuranceListPayload) {
@@ -310,6 +361,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       ) {
         state.promotionProducts = data
       },
+      [types.UPDATE_RECOMMEND_PRODUCTS](state, data: RecommendProduct[]) {
+        state.recommendProducts = data
+      },
       [types.UPDATE_RELATED_BLOGS](state, data: RelatedBlog[]) {
         state.relatedBlogs = data
       },
@@ -348,6 +402,7 @@ export interface State {
   relatedQuestions: RelatedQuestion[] | null
   relatedBlogs: RelatedBlog[] | null
   promotionProducts: PromotionInsuranceProduct[] | null
+  recommendProducts: RecommendProduct[] | null
   insuranceList: InsuranceProduct[] | null
   insuranceIdealCoverages: IdealCoverage[] | null
   filter: {

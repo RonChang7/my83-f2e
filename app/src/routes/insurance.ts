@@ -4,6 +4,7 @@ export enum InsuranceListType {
   FEATURE_TAG = 'insuranceFeatureTagList',
   EXTERNAL = 'insuranceExternalList',
   NORMAL = 'insuranceNormalList',
+  SEARCH = 'insuranceSearchList',
 }
 export const externalInsuranceRouteNames = ['car', 'motor']
 
@@ -27,6 +28,15 @@ export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
           desktop: true,
         },
         requiredStoreModules: ['insuranceProduct'],
+      },
+    },
+    {
+      name: InsuranceListType.SEARCH,
+      path: '/insurance/:insurance(search)',
+      component: resolve('@/views/insurance/page/Index.vue'),
+      meta: {
+        showScrollToTop: true,
+        requiredStoreModules: ['insurance'],
       },
     },
     {
