@@ -7,6 +7,7 @@
   background: $input-field-default-bg;
   border-radius: $border-radius;
   color: $gray-primary;
+  appearance: none;
 
   &:focus {
     outline: 0;
@@ -33,5 +34,15 @@
   &[type="password"]:not(:placeholder-shown) {
     font-family: caption;
     letter-spacing: 4px;
+  }
+}
+
+@mixin hide-search-input-cross {
+  // clears the 'X' from Chrome
+  &[type="search"]::-webkit-search-decoration,
+  &[type="search"]::-webkit-search-cancel-button,
+  &[type="search"]::-webkit-search-results-button,
+  &[type="search"]::-webkit-search-results-decoration {
+    display: none;
   }
 }

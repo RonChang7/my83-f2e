@@ -2,15 +2,17 @@
   <div class="HeaderSearch">
     <div class="HeaderSearch__input" :class="{ focus: isFocus }">
       <BaseSearch />
-      <BaseInput
-        ref="inputEl"
-        :value.sync="searchText"
-        placeholder="搜尋保險商品"
-        type="search"
-        @focus="isFocus = true"
-        @blur="isFocus = false"
-        @enter="submit"
-      />
+      <form action="" @submit.prevent="">
+        <BaseInput
+          ref="inputEl"
+          :value.sync="searchText"
+          placeholder="搜尋保險商品"
+          type="search"
+          @focus="isFocus = true"
+          @blur="isFocus = false"
+          @enter="submit"
+        />
+      </form>
       <div class="HeaderSearch__close">
         <!-- eslint-disable-next-line vue/attribute-hyphenation -->
         <BaseClose viewBox="0 0 24 24" @click="$emit('close')" />
@@ -29,6 +31,7 @@ import Vue from 'vue'
 import {
   defineComponent,
   nextTick,
+  onMounted,
   ref,
   useRoute,
   useRouter,
@@ -76,6 +79,10 @@ export default defineComponent({
       }
     )
 
+    onMounted(() => {
+      inputEl.value!.$el.querySelector('input')!.focus()
+    })
+
     return {
       inputEl,
       isFocus,
@@ -116,6 +123,8 @@ export default defineComponent({
 
     ::v-deep input {
       border-radius: 0;
+
+      @include hide-search-input-cross;
     }
   }
 
