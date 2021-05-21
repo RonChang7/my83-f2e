@@ -143,7 +143,7 @@ export interface Props {
   align-items: center;
   justify-content: space-between;
   height: 56px;
-  padding: 0 15px;
+  padding: 0 10px;
 
   &__function {
     display: flex;
@@ -174,9 +174,9 @@ export interface Props {
   }
 
   .logo {
-    width: 148px;
-    height: 34px;
-    margin-right: 5px;
+    width: 134px;
+    height: 31px;
+    margin-right: 10px;
   }
 
   &.no-shadow {

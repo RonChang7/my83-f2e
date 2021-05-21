@@ -75,7 +75,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   height: 60px;
-  padding: 0 30px;
+  padding: 0 20px;
 
   .logo {
     width: 148px;

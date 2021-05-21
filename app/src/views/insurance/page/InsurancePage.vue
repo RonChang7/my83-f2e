@@ -83,7 +83,7 @@
 
     <div
       v-if="isSearchPage & isEmptySearchResult"
-      class="InsurancePage__row promotion"
+      class="InsurancePage__row promotion bottom"
     >
       <PromotionProductSection />
     </div>
@@ -184,10 +184,10 @@ const options: ComponentOption = {
       return !(this.pagination.totalPage === 1)
     },
     productListDescription() {
-      return (
-        this.$store.state.insurance.staticData.productListDescription ||
-        '依熱門度排序。費率以 30 歲女性為基準。'
-      )
+      return this.$store.state.insurance.staticData.productListDescription ||
+        this.shouldShowProductListFilter
+        ? '依熱門度排序。費率以 30 歲女性為基準。'
+        : ''
     },
     isInsurancePage() {
       return (
@@ -365,6 +365,14 @@ export default options
 
       @include min-media('xl') {
         margin-bottom: 20px;
+      }
+
+      &.bottom {
+        margin-bottom: 90px;
+
+        @include max-media('xl') {
+          margin-bottom: 110px;
+        }
       }
     }
   }
