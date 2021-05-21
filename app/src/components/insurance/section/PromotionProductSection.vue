@@ -2,7 +2,11 @@
   <div class="PromotionProductSection">
     <div class="PromotionProductSection__header">
       <h2 class="PromotionProductSection__title">{{ title }}</h2>
-      <GlobalLink v-if="isSearchPage" to="/product/leaderboard">
+      <GlobalLink
+        v-if="isSearchPage"
+        to="/product/leaderboard"
+        @click.native="clickMoreProduct"
+      >
         <span>看更多熱門商品</span>
         <BaseArrowRight />
       </GlobalLink>
@@ -55,6 +59,7 @@ import { PromotionInsuranceProduct } from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { useDevice } from '@/mixins/device/device-mixins'
 import { InsuranceListType } from '@/routes/insurance'
+import { scrollToPosition } from '@/utils/scroll'
 import PromotionProductCard from '../product/PromotionProductCard.vue'
 
 export default defineComponent({
@@ -119,6 +124,18 @@ export default defineComponent({
       })
     }
 
+    const clickMoreProduct = () => {
+      // @TODO: 之後調整 排行榜頁面 scroll to top issue
+      const removeHookCb = router.afterEach(() => {
+        scrollToPosition({
+          to: 0,
+          container: window,
+          vertical: true,
+        })
+        removeHookCb()
+      })
+    }
+
     return {
       isDesktop,
       isSearchPage,
@@ -129,6 +146,7 @@ export default defineComponent({
       isEnabled,
       clickProductCard,
       clickPromotionProductButton,
+      clickMoreProduct,
     }
   },
 })
