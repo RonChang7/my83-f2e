@@ -97,6 +97,7 @@ export default defineComponent({
     .product {
       width: 274px;
       flex: 0 0 auto;
+      margin-bottom: 0;
 
       &:not(:last-of-type) {
         margin-right: 7px;
