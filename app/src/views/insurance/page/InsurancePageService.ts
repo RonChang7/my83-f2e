@@ -399,13 +399,13 @@ export class InsurancePageService {
   }
 
   private handleFetchFailed(err: any) {
-    if (!isAxiosError(err)) throw err
-
     if (err instanceof OnRedirectingException) {
       const redirectLink = err.getRedirectLink()
       this.ctx.redirect(redirectLink)
       return
     }
+
+    if (!isAxiosError(err)) throw err
 
     const statusCode = err.response?.status === 404 ? err.response.status : 500
     const message = statusCode ? ErrorPageType.DEFAULT : ErrorPageType.SERVER
