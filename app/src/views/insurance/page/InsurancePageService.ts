@@ -67,10 +67,9 @@ abstract class InsurancePage {
 
   constructor(protected ctx: Context) {
     this.store = this.ctx.store
-    this.acceptFilterKeys = [
-      ..._.keys(this.store.state.insurance.filter.defaultValue),
-      'q',
-    ]
+    this.acceptFilterKeys = _.keys(
+      this.store.state.insurance.filter.defaultValue
+    )
     this.page = new Page(this.ctx.route)
     this.filter = new Filter(this.ctx.route.query, this.acceptFilterKeys)
     this.searchKeyword = getFirstQuery(this.ctx.route.query.q)

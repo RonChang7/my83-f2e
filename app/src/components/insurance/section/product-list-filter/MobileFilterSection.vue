@@ -81,6 +81,7 @@ import {
   useRoute,
   useRouter,
   useStore,
+  watch,
 } from '@nuxtjs/composition-api'
 import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
@@ -162,7 +163,7 @@ export default defineComponent({
       return _.reduce(
         form.value.formData,
         (result, value, key) => {
-          if (!defaultValue) return result
+          if (!defaultValue || defaultValue[key] === undefined) return result
 
           if (_.isArray(defaultValue[key])) {
             !_.isEqual(
@@ -200,6 +201,11 @@ export default defineComponent({
         ctx.emit('submit')
       })
     }
+
+    watch(
+      () => store.state.insurance.filter.config,
+      () => reset()
+    )
 
     return {
       form,
