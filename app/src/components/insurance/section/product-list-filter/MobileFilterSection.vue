@@ -193,6 +193,10 @@ export default defineComponent({
         query.q = route.value.query.q
       }
 
+      /**
+       * @TODO: 之後可以簡化 query 的呈現方式
+       * https://github.com/UPN-TW/my83-f2e/pull/205#issuecomment-843952614
+       */
       router.push({ query })
 
       closePanel()

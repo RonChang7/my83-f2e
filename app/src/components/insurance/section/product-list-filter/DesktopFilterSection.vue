@@ -51,6 +51,7 @@
 import _ from 'lodash'
 import {
   defineComponent,
+  nextTick,
   ref,
   useRoute,
   useRouter,
@@ -122,10 +123,10 @@ export default defineComponent({
     }
 
     const updateQuery = _.debounce(() => {
-      if (
-        _.isEqual(route.value.query, form.value.formData) ||
-        _.isEmpty(route.value.query)
-      ) {
+      const searchKeyword = route.value.query.q
+      const routeQuery = _.omit(route.value.query, ['q'])
+
+      if (_.isEqual(routeQuery, form.value.formData) || _.isEmpty(routeQuery)) {
         ctx.emit('loading', false)
       }
 
@@ -133,9 +134,13 @@ export default defineComponent({
         const query = form.value.formData
 
         if (route.value.name === InsuranceListType.SEARCH) {
-          query.q = route.value.query.q
+          query.q = searchKeyword
         }
 
+        /**
+         * @TODO: 之後可以簡化 query 的呈現方式
+         * https://github.com/UPN-TW/my83-f2e/pull/205#issuecomment-843952614
+         */
         router.push({ query })
       }
     }, 1000)
@@ -145,8 +150,10 @@ export default defineComponent({
       () => {
         if (isResetForm) return
 
-        ctx.emit('loading', form.value.isAllValidated)
-        updateQuery()
+        nextTick(() => {
+          ctx.emit('loading', form.value.isAllValidated)
+          updateQuery()
+        })
       },
       {
         deep: true,
