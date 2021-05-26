@@ -19,9 +19,7 @@
       v-if="isInsurancePage && shouldShowPromotionProduct"
       class="InsurancePage__row promotion"
     >
-      <PromotionProductSection
-        :should-show-promotion-ad="isDesktop && !shouldShowDesktopPromotionAd"
-      />
+      <PromotionProductSection />
     </div>
 
     <div class="InsurancePage__row mb-0">
@@ -35,7 +33,7 @@
     <div class="InsurancePage__rowWithTowColumns">
       <div v-if="shouldShowProductListFilter" class="column thin">
         <ProductListDesktopFilterSection
-          v-if="!isMobile && shouldShowProductListFilter"
+          v-if="!isMobile"
           @loading="setLoadingStatus"
         />
         <PromotionSection
@@ -52,6 +50,7 @@
       <div class="column wider">
         <ProductListSection
           ref="ProductListSection"
+          :is-empty-search-result="isSearchPage && !shouldShowProductListFilter"
           :is-loading="!isExternalPage && isLoading"
         >
           <ProductListMobileFilterSection
@@ -75,14 +74,14 @@
     </div>
 
     <div
-      v-if="isSearchPage & isEmptySearchResult"
+      v-if="isSearchPage && !shouldShowProductListFilter"
       class="InsurancePage__row promotion"
     >
       <PromotionBundleSection />
     </div>
 
     <div
-      v-if="isSearchPage & isEmptySearchResult"
+      v-if="isSearchPage && !shouldShowProductListFilter"
       class="InsurancePage__row promotion bottom"
     >
       <PromotionProductSection />
@@ -162,21 +161,16 @@ const options: ComponentOption = {
       return !!this.$store.state.insurance.promotionProducts?.length
     },
     shouldShowDesktopPromotionAd() {
-      return (
-        !this.$store.state.insurance.promotionProducts ||
-        (this.$store.state.insurance.promotionProducts &&
-          this.$store.state.insurance.promotionProducts.length === 0) ||
-        (this.$store.state.insurance.promotionProducts &&
-          this.$store.state.insurance.promotionProducts.length > 3)
+      return !(
+        this.$store.state.insurance.promotionProducts &&
+        this.$store.state.insurance.promotionProducts.length > 0 &&
+        this.$store.state.insurance.promotionProducts.length <= 3
       )
     },
     shouldShowProductListFilter() {
-      return (
-        !!this.$store.state.insurance.filter.config &&
-        _.every(
-          this.$store.state.insurance.filter.config,
-          (field) => !!field.values.length
-        )
+      return _.every(
+        this.$store.state.insurance.filter.config,
+        (field) => field.values.length > 0
       )
     },
     shouldShowPagination() {
@@ -200,15 +194,6 @@ const options: ComponentOption = {
     },
     isSearchPage() {
       return this.$route.name === InsuranceListType.SEARCH
-    },
-    isEmptySearchResult() {
-      return (
-        this.$route.name === InsuranceListType.SEARCH &&
-        !_.every(
-          this.$store.state.insurance.filter.config,
-          (field) => !!field.values.length
-        )
-      )
     },
   },
   methods: {
@@ -307,7 +292,6 @@ export interface Computed {
   isInsurancePage: boolean
   isExternalPage: boolean
   isSearchPage: boolean
-  isEmptySearchResult: boolean
 }
 
 export interface Props {}
@@ -321,6 +305,7 @@ export default options
 @import '@/sass/rwd.scss';
 
 .InsurancePage {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding-top: 40px;
