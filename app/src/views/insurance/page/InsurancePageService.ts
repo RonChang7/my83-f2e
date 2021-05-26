@@ -1,10 +1,10 @@
 import _ from 'lodash'
-import { Route } from 'vue-router'
 import { Store } from 'vuex'
 import { Context } from '@nuxt/types'
 import { Content } from '@/services/page/Content'
 import { ErrorPageType } from '@/config/error-page.config'
 import { Filter } from '@/services/filter/Filter'
+import { Page } from '@/services/page/insurance/Page'
 import { InsuranceListType } from '@/routes/insurance'
 import { getFirstQuery } from '@/utils/query-string'
 import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
@@ -32,28 +32,6 @@ interface StoreState {
   insurance: State
 }
 
-export class Page {
-  public insurance: string = ''
-
-  public pagination: number = 1
-
-  public name: InsuranceListType | '' = ''
-
-  constructor(route: Route | undefined) {
-    if (!route) return
-
-    this.insurance = route.params.insurance
-    this.pagination = /^\d+$/.test(getFirstQuery(route.query.page))
-      ? Number(getFirstQuery(route.query.page))
-      : 1
-    this.name = route.name as InsuranceListType
-  }
-
-  public isEqualInsurance(page: Page) {
-    return this.name === page.name && this.insurance === page.insurance
-  }
-}
-
 abstract class InsurancePage {
   protected page: Page
 
@@ -63,8 +41,6 @@ abstract class InsurancePage {
 
   protected store: Store<StoreState>
 
-  protected searchKeyword: string
-
   constructor(protected ctx: Context) {
     this.store = this.ctx.store
     this.acceptFilterKeys = _.keys(
@@ -72,7 +48,7 @@ abstract class InsurancePage {
     )
     this.page = new Page(this.ctx.route)
     this.filter = new Filter(this.ctx.route.query, this.acceptFilterKeys)
-    this.searchKeyword = getFirstQuery(this.ctx.route.query.q)
+    this.page.searchKeyword = getFirstQuery(this.ctx.route.query.q)
   }
 
   public async fetch(): Promise<unknown[]> {
@@ -83,22 +59,22 @@ abstract class InsurancePage {
 
     if (
       !this.page.isEqualInsurance(previousPage) ||
-      this.searchKeyword !== previousSearchKeyword
+      !this.page.isEqualSearchKeyword(previousSearchKeyword)
     ) {
       pageRequest.push(...this.fetchPageDataRequests())
     }
 
     if (
       !this.page.isEqualInsurance(previousPage) ||
-      this.page.pagination !== currentPagination ||
-      this.searchKeyword !== previousSearchKeyword
+      !this.page.isEqualPagination(currentPagination) ||
+      !this.page.isEqualSearchKeyword(previousSearchKeyword)
     ) {
       pageRequest.push(...this.fetchListDataRequests())
     }
 
     if (
       this.page.isEqualInsurance(previousPage) &&
-      this.searchKeyword === previousSearchKeyword
+      this.page.isEqualSearchKeyword(previousSearchKeyword)
     ) {
       const previousFilter = new Filter(
         this.ctx.from?.query,
@@ -269,7 +245,7 @@ class SearchInsurancePage extends InsurancePage {
     return [
       (this.store.dispatch(
         `insurance/${FETCH_INSURANCE_SEARCH_LIST_FILTER}`,
-        this.searchKeyword
+        this.page.searchKeyword
       ) as Promise<InsuranceListFilterResponse>).then((data) => {
         const isEmptySearchFilter = !_.every(
           data.filter_config,
@@ -285,7 +261,7 @@ class SearchInsurancePage extends InsurancePage {
 
   protected fetchListDataRequests() {
     const payload: FetchInsuranceSearchListPayload = {
-      q: this.searchKeyword,
+      q: this.page.searchKeyword,
       page: this.page.pagination,
       filters: this.ctx.route.query,
     }
@@ -301,7 +277,7 @@ class SearchInsurancePage extends InsurancePage {
     )
 
     const payload: FetchInsuranceSearchListPayload = {
-      q: this.searchKeyword,
+      q: this.page.searchKeyword,
       page: 1,
       filters: {
         ...defaultFilterQuery,
