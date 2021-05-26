@@ -49,7 +49,7 @@ import {
   useRouter,
   useStore,
 } from '@nuxtjs/composition-api'
-import { useAnalytics } from '@/utils/composition-api'
+import { useAnalytics, useNuxtLinkChecker } from '@/utils/composition-api'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
 import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
 import GlobalLink from '@/components/base/global-link/GlobalLink.vue'
@@ -70,22 +70,23 @@ export default defineComponent({
     GlobalLink,
     BaseArrowRight,
   },
-  props: {
-    shouldShowPromotionAd: {
-      type: Boolean,
-      default: false,
-    },
-  },
   setup() {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
     const router = useRouter()
     const analytics = useAnalytics()
     const { isDesktop } = useDevice()
+    const { isNuxtLink } = useNuxtLinkChecker()
 
     const isSearchPage = computed(
       () => route.value.name === InsuranceListType.SEARCH
     )
+    const isInsurancePage = computed(
+      () =>
+        route.value.name === InsuranceListType.NORMAL ||
+        route.value.name === InsuranceListType.EXTERNAL
+    )
+
     const title = computed(() => (isSearchPage.value ? '熱門商品' : '推薦商品'))
     const description = computed(() => {
       return isSearchPage.value
@@ -98,24 +99,29 @@ export default defineComponent({
       () => store.state.insurance.promotionProducts
     )
     const pageType = computed(() => store.state.insurance.staticData.abbr)
+    const shouldShowPromotionAd = computed(() => {
+      return (
+        isDesktop.value &&
+        promotionProducts &&
+        promotionProducts.value!.length > 0 &&
+        promotionProducts.value!.length <= 3
+      )
+    })
 
     const isEnabled = (product: PromotionInsuranceProduct) => {
       return product.fee !== null
     }
     const clickProductCard = (product: PromotionInsuranceProduct) => {
-      const isExternal = isSearchPage.value
-        ? false
-        : store.state.insurance.staticData.isExternal
-      if (isExternal) {
-        window.location.href = product.btn.link.url
-      } else {
+      if (isNuxtLink(product.btn.link.path)) {
         router.push(product.btn.link.path)
+      } else {
+        window.location.href = product.btn.link.url
       }
     }
     const clickPromotionProductButton = (productName: string) => {
-      const insuranceType = isSearchPage.value
-        ? '商品搜尋頁'
-        : store.state.insurance.staticData.abbr
+      if (!isInsurancePage.value) return
+
+      const insuranceType = store.state.insurance.staticData.abbr
 
       analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
         category: '險種頁商品CTA',
@@ -144,6 +150,7 @@ export default defineComponent({
       promotionProducts,
       pageType,
       isEnabled,
+      shouldShowPromotionAd,
       clickProductCard,
       clickPromotionProductButton,
       clickMoreProduct,
