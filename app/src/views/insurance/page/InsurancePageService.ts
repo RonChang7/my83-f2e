@@ -249,7 +249,7 @@ class SearchInsurancePage extends InsurancePage {
       ) as Promise<InsuranceListFilterResponse>).then((data) => {
         const isEmptySearchFilter = !_.every(
           data.filter_config,
-          (field) => !!field.values.length
+          (field) => field.values.length > 0
         )
 
         return isEmptySearchFilter
