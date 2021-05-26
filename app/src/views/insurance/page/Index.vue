@@ -1,5 +1,4 @@
 <script lang="ts">
-import _ from 'lodash'
 import {
   defineAsyncComponent,
   defineComponent,
@@ -7,7 +6,6 @@ import {
   useRoute,
   useRouter,
 } from '@nuxtjs/composition-api'
-import { Store } from 'vuex'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/insurance'
 import { CanonicalService } from '@/seo/canonical-service'
@@ -44,14 +42,10 @@ export default defineComponent({
     service.reconcileRoute()
   },
   head() {
-    const filterKeys = _.keys(
-      (this.$store as Store<InsuranceVuexState>).state.insurance.filter
-        .defaultValue
-    )
     const canonical = CanonicalService.getCanonical({
       hostname: this.$env.HOST_URL,
       route: this.$route,
-      acceptedQueryStringKeys: ['page', 'q', ...filterKeys],
+      acceptedQueryStringKeys: ['page', 'q'],
     })
 
     return {
