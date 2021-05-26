@@ -39,20 +39,10 @@
         "
         @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
-      <div
+      <ProductListNoResult
         v-if="!insuranceProducts.length"
-        class="ProductListSection__noResult"
-        :class="{ isEmptySearchResult }"
-      >
-        <img
-          :src="`${$imageBucketUrl}/front/insurance/filter-not-found@2x.png`"
-          alt="filter not fount"
-        />
-        <div class="title">沒有符合條件的商品</div>
-        <div class="description">
-          換個篩選條件試試看吧！調整保險種類、保障類型、商品類型等項目。
-        </div>
-      </div>
+        :is-empty-search-result="isEmptySearchResult"
+      />
       <div
         v-if="!isEmptySearchResult"
         :class="{ ProductListSection__ad: hasAd }"
@@ -93,14 +83,20 @@ import { isSlotExist } from '@/utils/render-helper'
 import { InsuranceListType } from '@/routes/insurance'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductCard from '../product/ProductCard.vue'
+import ProductListNoResult from '../product/ProductListNoResult.vue'
 
 const options: ComponentOption = {
   components: {
     ProductCard,
     CoverageBadge,
+    ProductListNoResult,
   },
   props: {
     isLoading: {
+      type: Boolean,
+      default: false,
+    },
+    isEmptySearchResult: {
       type: Boolean,
       default: false,
     },
@@ -122,13 +118,10 @@ const options: ComponentOption = {
     hasAd() {
       return isSlotExist('ad', this)
     },
-    isEmptySearchResult() {
+    isInsurancePage() {
       return (
-        this.$route.name === InsuranceListType.SEARCH &&
-        !_.every(
-          this.$store.state.insurance.filter.config,
-          (field) => !!field.values.length
-        )
+        this.$route.name === InsuranceListType.NORMAL ||
+        this.$route.name === InsuranceListType.EXTERNAL
       )
     },
   },
@@ -136,15 +129,20 @@ const options: ComponentOption = {
     isEnabled(product) {
       return product.fee !== null
     },
+    isNuxtLink(path) {
+      const matches = this.$router.getMatchedComponents(path)
+      return !_.isEmpty(matches)
+    },
     clickProductCard(product) {
-      const { isExternal } = this.$store.state.insurance.staticData
-      if (isExternal) {
-        window.location.href = product.btn.link.url
-      } else {
+      if (this.isNuxtLink(product.btn.link.path)) {
         this.$router.push(product.btn.link.path)
+      } else {
+        window.location.href = product.btn.link.url
       }
     },
     clickProductButton(productName) {
+      if (!this.isInsurancePage) return
+
       const insuranceType = this.$store.state.insurance.staticData.abbr
 
       this.$analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
@@ -201,6 +199,7 @@ export interface Data {
 
 export type Methods = {
   isEnabled(product: InsuranceProduct): boolean
+  isNuxtLink(path: string): boolean
   clickProductCard(product: InsuranceProduct): void
   clickProductButton(productName: string): void
 }
@@ -209,11 +208,12 @@ export interface Computed {
   idealCoverages: IdealCoverage[]
   insuranceProducts: InsuranceProduct[]
   hasAd: boolean
-  isEmptySearchResult: boolean
+  isInsurancePage: boolean
 }
 
 export interface Props {
   isLoading: boolean
+  isEmptySearchResult: boolean
 }
 
 export default options
@@ -296,48 +296,6 @@ export default options
 
   &__ad {
     margin-top: -10px;
-  }
-
-  &__noResult {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 64px;
-
-    @include max-media('xl') {
-      padding: 0 20px;
-    }
-
-    img {
-      width: 160px;
-      height: 160px;
-      margin: 36px 0 10px;
-    }
-
-    .title {
-      color: $gray-primary;
-      font-size: 1.125rem;
-      font-weight: 500;
-    }
-
-    .description {
-      text-align: center;
-      font-size: 0.875rem;
-      margin: 4px 0 40px;
-    }
-
-    &.isEmptySearchResult {
-      padding-top: 0px;
-
-      img {
-        margin-top: 10px;
-      }
-
-      .description {
-        margin-bottom: 0;
-      }
-    }
   }
 
   &__disclaimer {
