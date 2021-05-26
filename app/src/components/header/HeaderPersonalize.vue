@@ -11,7 +11,7 @@
           class="HeaderPersonalize__search unauthorized"
           @close="disableSearchInput"
         />
-        <BaseSearch v-else @click="enableSearchInput" />
+        <BaseSearch @click="enableSearchInput" />
       </li>
       <li>
         <GlobalLink to="/signup/sales" class="HeaderPersonalize__name">
@@ -37,10 +37,9 @@
           v-if="shouldShowSearch"
           ref="searchEl"
           class="HeaderPersonalize__search"
-          :class="{ sales: !!personalize.sales }"
           @close="disableSearchInput"
         />
-        <BaseSearch v-else @click="enableSearchInput" />
+        <BaseSearch @click="enableSearchInput" />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -428,14 +427,10 @@ interface Menu extends HeaderNavItem {
 
   &__search {
     position: absolute;
-    right: 150px;
-
-    &.sales {
-      right: 165px;
-    }
+    right: 135px;
 
     &.unauthorized {
-      right: 250px;
+      right: 230px;
     }
   }
 }
