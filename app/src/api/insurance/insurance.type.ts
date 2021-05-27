@@ -1,4 +1,5 @@
 import { Route } from 'vue-router'
+import { RecommendProduct } from '../question/question.type'
 import {
   Link,
   RelatedBlog,
@@ -70,6 +71,15 @@ export interface InsuranceListResponse extends PageResponse<InsuranceListData> {
   meta: InsuranceListMeta
 }
 
+export interface FetchInsuranceSearchListPayload {
+  q: string
+  page: number
+  filters:
+    | Record<string, string | number | (string | number)[]>
+    | null
+    | Route['query']
+}
+
 export interface FetchInsuranceListPayload {
   insurance: string
   page: number
@@ -77,6 +87,11 @@ export interface FetchInsuranceListPayload {
     | Record<string, string | number | (string | number)[]>
     | null
     | Route['query']
+}
+
+export interface SearchNoResultResponse {
+  recommend_products: RecommendProduct[]
+  promotion_products: PromotionInsuranceProduct[]
 }
 
 export interface InsuranceListFilterResponse {

@@ -1,41 +1,39 @@
 <template>
   <div class="InsurancePage">
     <InsuranceTipModal
-      v-if="!isFeatureTagPage"
+      v-if="isInsurancePage"
       :visible.sync="infoModal.visible"
       :active-tab.sync="infoModal.activeTab"
       @update-active-tab="updateInfoModalActiveTab"
     />
 
-    <div class="InsurancePage__row">
+    <div class="InsurancePage__row" :class="{ 'mb-0': isSearchPage }">
       <HeaderSection
-        :is-feature-tag-page="isFeatureTagPage"
+        :is-insurance-page="isInsurancePage"
         @update-active-tab="updateInfoModalActiveTab"
         @open-modal="openInfoModal"
       />
     </div>
 
     <div
-      v-if="!isFeatureTagPage && shouldShowPromotionProduct"
+      v-if="isInsurancePage && shouldShowPromotionProduct"
       class="InsurancePage__row promotion"
     >
-      <PromotionProductSection
-        :show-promotion-ad="isDesktop && !shouldShowDesktopPromotionAd"
-      />
+      <PromotionProductSection />
     </div>
 
     <div class="InsurancePage__row mb-0">
       <ProductListTitleSection
-        :is-feature-tag-page="isFeatureTagPage"
+        :is-insurance-page="isInsurancePage"
         :product-list-description="productListDescription"
         @scrollToFAQ="scrollToFAQ"
       />
     </div>
 
     <div class="InsurancePage__rowWithTowColumns">
-      <div class="column thin">
+      <div v-if="shouldShowProductListFilter" class="column thin">
         <ProductListDesktopFilterSection
-          v-if="!isMobile && shouldShowProductListFilter"
+          v-if="!isMobile"
           @loading="setLoadingStatus"
         />
         <PromotionSection
@@ -43,7 +41,7 @@
           class="promotion-ad"
           :page-type="$store.state.insurance.staticData.abbr"
         />
-        <template v-if="!isFeatureTagPage">
+        <template v-if="isInsurancePage">
           <FaqSection v-if="isMobile" id="faq" class="faq" />
           <RelatedBlogSection :max-post="isMobile ? 5 : 10" :thin="true" />
           <RelatedQuestionSection :max-post="isMobile ? 5 : 10" :thin="true" />
@@ -52,6 +50,7 @@
       <div class="column wider">
         <ProductListSection
           ref="ProductListSection"
+          :is-empty-search-result="isSearchPage && !shouldShowProductListFilter"
           :is-loading="!isExternalPage && isLoading"
         >
           <ProductListMobileFilterSection
@@ -75,7 +74,21 @@
     </div>
 
     <div
-      v-if="!isMobile && !isFeatureTagPage"
+      v-if="isSearchPage && !shouldShowProductListFilter"
+      class="InsurancePage__row promotion"
+    >
+      <PromotionBundleSection />
+    </div>
+
+    <div
+      v-if="isSearchPage && !shouldShowProductListFilter"
+      class="InsurancePage__row promotion bottom"
+    >
+      <PromotionProductSection />
+    </div>
+
+    <div
+      v-if="!isMobile && isInsurancePage"
       id="faq"
       class="InsurancePage__row faq"
     >
@@ -85,6 +98,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import Vue from 'vue'
 import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
@@ -99,6 +113,7 @@ import RelatedBlogSection from '@/components/insurance/section/RelatedBlogSectio
 import RelatedQuestionSection from '@/components/insurance/section/RelatedQuestionSection.vue'
 import ProductListDesktopFilterSection from '@/components/insurance/section/product-list-filter/DesktopFilterSection.vue'
 import ProductListMobileFilterSection from '@/components/insurance/section/product-list-filter/MobileFilterSection.vue'
+import PromotionBundleSection from '@/components/insurance/section/PromotionBundleSection.vue'
 import BasePagination from '@/components/my83-ui-kit/pagination/BasePagination.vue'
 import { Pagination } from '@/api/type'
 import InsuranceTipModal, {
@@ -125,6 +140,7 @@ const options: ComponentOption = {
     RelatedQuestionSection,
     ProductListDesktopFilterSection,
     ProductListMobileFilterSection,
+    PromotionBundleSection,
     BasePagination,
   },
   data() {
@@ -145,32 +161,39 @@ const options: ComponentOption = {
       return !!this.$store.state.insurance.promotionProducts?.length
     },
     shouldShowDesktopPromotionAd() {
-      return (
-        !this.$store.state.insurance.promotionProducts ||
-        (this.$store.state.insurance.promotionProducts &&
-          this.$store.state.insurance.promotionProducts.length === 0) ||
-        (this.$store.state.insurance.promotionProducts &&
-          this.$store.state.insurance.promotionProducts.length > 3)
+      return !(
+        this.$store.state.insurance.promotionProducts &&
+        this.$store.state.insurance.promotionProducts.length > 0 &&
+        this.$store.state.insurance.promotionProducts.length <= 3
       )
     },
     shouldShowProductListFilter() {
-      return !!this.$store.state.insurance.filter.config
+      return _.every(
+        this.$store.state.insurance.filter.config,
+        (field) => field.values.length > 0
+      )
     },
     shouldShowPagination() {
       if (!this.pagination) return false
       return !(this.pagination.totalPage === 1)
     },
     productListDescription() {
-      return (
-        this.$store.state.insurance.staticData.productListDescription ||
-        '依熱門度排序。費率以 30 歲女性為基準。'
-      )
+      return this.$store.state.insurance.staticData.productListDescription ||
+        this.shouldShowProductListFilter
+        ? '依熱門度排序。費率以 30 歲女性為基準。'
+        : ''
     },
-    isFeatureTagPage() {
-      return this.$route.name === InsuranceListType.FEATURE_TAG
+    isInsurancePage() {
+      return (
+        this.$route.name === InsuranceListType.NORMAL ||
+        this.$route.name === InsuranceListType.EXTERNAL
+      )
     },
     isExternalPage() {
       return this.$route.name === InsuranceListType.EXTERNAL
+    },
+    isSearchPage() {
+      return this.$route.name === InsuranceListType.SEARCH
     },
   },
   methods: {
@@ -266,8 +289,9 @@ export interface Computed {
   shouldShowProductListFilter: boolean
   shouldShowPagination: boolean
   productListDescription: string
-  isFeatureTagPage: boolean
+  isInsurancePage: boolean
   isExternalPage: boolean
+  isSearchPage: boolean
 }
 
 export interface Props {}
@@ -281,6 +305,7 @@ export default options
 @import '@/sass/rwd.scss';
 
 .InsurancePage {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding-top: 40px;
@@ -325,6 +350,14 @@ export default options
 
       @include min-media('xl') {
         margin-bottom: 20px;
+      }
+
+      &.bottom {
+        margin-bottom: 90px;
+
+        @include max-media('xl') {
+          margin-bottom: 110px;
+        }
       }
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <form class="BaseSearch" @submit.prevent="submit">
+  <form class="BaseSearch" action="" @submit.prevent="submit">
     <input
       class="BaseSearch__search"
       type="search"

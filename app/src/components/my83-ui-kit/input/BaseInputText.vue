@@ -13,7 +13,7 @@
       @input="input"
       @blur="$emit('blur')"
       @focus="$emit('focus')"
-      @keyup.enter="$emit('enter')"
+      @keypress.enter="$emit('enter')"
     />
     <div
       v-if="type === 'password'"
