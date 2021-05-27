@@ -81,6 +81,7 @@ import {
   useRoute,
   useRouter,
   useStore,
+  watch,
 } from '@nuxtjs/composition-api'
 import { useAnalytics } from '@/utils/composition-api'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
@@ -118,6 +119,8 @@ export default defineComponent({
     const pageType =
       route.value.name === InsuranceListType.FEATURE_TAG
         ? '主題標籤頁'
+        : route.value.name === InsuranceListType.SEARCH
+        ? '搜尋結果頁'
         : '險種頁'
 
     const visiblePanel = ref(false)
@@ -160,7 +163,7 @@ export default defineComponent({
       return _.reduce(
         form.value.formData,
         (result, value, key) => {
-          if (!defaultValue) return result
+          if (!defaultValue || defaultValue[key] === undefined) return result
 
           if (_.isArray(defaultValue[key])) {
             !_.isEqual(
@@ -184,9 +187,17 @@ export default defineComponent({
     }
 
     const submit = () => {
-      router.push({
-        query: form.value.formData,
-      })
+      const query = form.value.formData
+
+      if (route.value.name === InsuranceListType.SEARCH) {
+        query.q = route.value.query.q
+      }
+
+      /**
+       * @TODO: 之後可以簡化 query 的呈現方式
+       * https://github.com/UPN-TW/my83-f2e/pull/205#issuecomment-843952614
+       */
+      router.push({ query })
 
       closePanel()
 
@@ -194,6 +205,11 @@ export default defineComponent({
         ctx.emit('submit')
       })
     }
+
+    watch(
+      () => store.state.insurance.filter.config,
+      () => reset()
+    )
 
     return {
       form,

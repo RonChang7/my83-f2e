@@ -12,6 +12,8 @@ import {
   InsuranceProductFeeResponse,
   InsuranceListFilterResponse,
   FilterValue,
+  FetchInsuranceSearchListPayload,
+  SearchNoResultResponse,
 } from './insurance.type'
 
 const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
@@ -178,5 +180,53 @@ export const fetchInsuranceTagListFilter = async (
   const { data } = await request.get(
     `/api/insurance/tags/${insurance}/tags-filter`
   )
+  return data
+}
+
+/**
+ * @description 取得商品搜尋頁商品
+ * @param {FetchInsuranceSearchListPayload} payload
+ */
+export const fetchInsuranceSearchList = async (
+  payload: FetchInsuranceSearchListPayload
+): Promise<InsuranceListResponse> => {
+  const { q, page, filters } = payload
+
+  const { data } = await request.get<InsuranceListResponse>(
+    decorateSeoQueryString(`/api/insurance/search`),
+    {
+      params: {
+        q,
+        page,
+        ...filtersTransformer(filters),
+      },
+    }
+  )
+  return data
+}
+
+/**
+ * @description 取得商品搜尋頁篩選條件
+ * @param {string} q 搜尋關鍵字
+ */
+export const fetchInsuranceSearchListFilter = async (
+  q: string
+): Promise<InsuranceListFilterResponse> => {
+  const { data } = await request.get(`/api/insurance/search/tags-filter`, {
+    params: {
+      q,
+    },
+  })
+  return data
+}
+
+/**
+ * @description 取得搜尋關鍵字無資料的內容
+ */
+export const fetchSearchNoResult = async (): Promise<
+  SearchNoResultResponse
+> => {
+  const { data } = await request.get(`/api/insurance/search-no-result`)
+
   return data
 }
