@@ -122,7 +122,7 @@ export interface Props {
   li {
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 10px;
     cursor: pointer;
 
     @include hover('_gray-secondary-lighter', $has-svg: true) {
