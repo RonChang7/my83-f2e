@@ -10,8 +10,15 @@ import { OnRedirectingException } from '@/api/errors/OnRedirectingException'
 
 export default (({ app, req }) => {
   const preventInterceptorsList = ['/api/auth/logout']
-  const { APP_ENV, API_URL, API_SERVER_BASIC_AUTH_BASE64 } = app.$env
+  const {
+    APP_ENV,
+    CLIENT_API_URL,
+    SERVER_API_URL,
+    SERVER_API_HOST,
+    API_SERVER_BASIC_AUTH_BASE64,
+  } = app.$env
   const requestInstance = Request.getInstance()
+  const API_URL = process.server ? SERVER_API_URL : CLIENT_API_URL
 
   request.defaults.baseURL = API_URL
 
@@ -35,7 +42,7 @@ export default (({ app, req }) => {
     request.defaults.headers.common =
       req && req.headers ? Object.assign({}, req.headers) : {}
 
-    delete request.defaults.headers.common.host
+    request.defaults.headers.common.host = SERVER_API_HOST
 
     // Don't accept brotli encoding because Node can't parse it
     request.defaults.headers.common['accept-encoding'] = 'gzip, deflate'
