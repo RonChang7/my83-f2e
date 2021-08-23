@@ -105,8 +105,10 @@ const config: NuxtConfig = {
         keys: [
           // secret: Only inject the var server side
           { key: 'APP_ENV' },
-          { key: 'API_URL' },
           { key: 'HOST_URL' },
+          { key: 'CLIENT_API_URL' },
+          { key: 'SERVER_API_URL', secret: true },
+          { key: 'SERVER_API_HOST', secret: true },
           { key: 'API_SERVER_BASIC_AUTH_BASE64' },
           { key: 'JWT_TOKEN_NAME' },
           { key: 'HEALTH_CHECK_AGENT_STRING' },
