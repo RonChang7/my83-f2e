@@ -12,11 +12,14 @@ const ignoreErrorInBeforeSend: IgnoreErrorInBeforeSend[] = [
   {
     check: (event, hint) => {
       // Ignore fbevent.js postMessage error in iOS device
+
       // eslint-disable-next-line dot-notation
       if (hint?.originalException?.['stack']) {
-        // eslint-disable-next-line dot-notation
-        const errorStack = JSON.stringify(hint.originalException['stack'])
-        return /postMessage/.test(errorStack)
+        try {
+          // eslint-disable-next-line dot-notation
+          const errorStack = JSON.stringify(hint.originalException['stack'])
+          return /postMessage/.test(errorStack)
+        } catch (error) {}
       }
 
       return false
