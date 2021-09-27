@@ -12,11 +12,14 @@ const ignoreErrorInBeforeSend: IgnoreErrorInBeforeSend[] = [
   {
     check: (event, hint) => {
       // Ignore fbevent.js postMessage error in iOS device
+
       // eslint-disable-next-line dot-notation
       if (hint?.originalException?.['stack']) {
-        // eslint-disable-next-line dot-notation
-        const errorStack = JSON.stringify(hint.originalException['stack'])
-        return /postMessage/.test(errorStack)
+        try {
+          // eslint-disable-next-line dot-notation
+          const errorStack = JSON.stringify(hint.originalException['stack'])
+          return /postMessage/.test(errorStack)
+        } catch (error) {}
       }
 
       return false
@@ -41,6 +44,21 @@ const ignoreErrorInBeforeSend: IgnoreErrorInBeforeSend[] = [
       )
 
       return shouldIgnoreError
+    },
+  },
+  {
+    check: (event, hint) => {
+      // Ignore Microsoft Outlook SafeLink crawler error when send new EDM
+      // Ref: https://forum.sentry.io/t/unhandledrejection-non-error-promise-rejection-captured-with-value/14062
+
+      if (hint?.originalException) {
+        try {
+          const errorStack = JSON.stringify(hint.originalException)
+          return /Object Not Found Matching Id:/.test(errorStack)
+        } catch (error) {}
+      }
+
+      return false
     },
   },
 ]
