@@ -1,11 +1,14 @@
 <template>
   <div class="AnswerSalesRule">
-    <div class="AnswerSalesRule__title">MY83 討論區板規</div>
+    <div class="AnswerSalesRule__title">MY83 討論區版規</div>
     <div class="AnswerSalesRule__content">
       <ol>
         <li>
           <span class="text-error">[注意]</span>
           依主管機關規定，保險業務員不可以用「商品即將停售」或「保費即將調漲」作為宣傳或銷售訴求，向客戶招攬保險。
+        </li>
+        <li>
+          為維護業務員使用平台的公平性，請一律以「與本名無直接關連」的暱稱來發表言論。
         </li>
         <li>
           為保有較佳的使用體驗，請勿在給保戶的公開內容中，提供其他保險平台的連結。可以使用其他方式，如整理列表或表格，讓用戶更方便參考資訊內容。
