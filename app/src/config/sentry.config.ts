@@ -53,8 +53,8 @@ const ignoreErrorInBeforeSend: IgnoreErrorInBeforeSend[] = [
 
       if (hint?.originalException) {
         try {
-          const errorStack = JSON.stringify(hint.originalException)
-          return /Object Not Found Matching Id:/.test(errorStack)
+          const exception = JSON.stringify(hint.originalException)
+          return /Object Not Found Matching Id:/.test(exception)
         } catch (error) {}
       }
 
