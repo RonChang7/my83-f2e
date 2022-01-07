@@ -71,6 +71,7 @@ const baseOptions: BaseOptions = {
   ignoreErrors: [
     'Network Error',
     /postMessage/,
+    /instantSearchSDKJSBridgeClearHighlight/,
     // Chrome extensions, https://docs.sentry.io/clients/javascript/tips/
     /extensions\//i,
     /^chrome:\/\//i,
