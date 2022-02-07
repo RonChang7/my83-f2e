@@ -79,6 +79,9 @@
             服務專線：
             <a href="tel:0223638833">(02) 2363-8833</a>
           </p>
+          <p class="epidemic_announcement">
+            因疫情防治實行居家辦公，客服暫時不受理電話服務，請透過信箱聯繫
+          </p>
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
           <p class="tips d-flex align-items-center">
             <img
@@ -305,6 +308,12 @@ footer {
     border-top: 1px solid #b4b4b4;
     padding-top: 10px;
     margin-top: 20px;
+  }
+
+  .epidemic_announcement {
+    color: $primary-color;
+    font-size: 0.75rem;
+    font-weight: 500;
   }
 }
 </style>
