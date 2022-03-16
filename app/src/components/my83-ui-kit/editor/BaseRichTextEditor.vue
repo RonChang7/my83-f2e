@@ -35,7 +35,14 @@ export default {
     },
   },
   data() {
-    const plugins = ['table', 'link', 'paste', 'fullscreen', 'lists']
+    const plugins = [
+      'table',
+      'link',
+      'paste',
+      'fullscreen',
+      'lists',
+      'autoresize',
+    ]
 
     return {
       isFocus: false,
@@ -74,6 +81,9 @@ export default {
         paste_webkit_styles: 'color text-decoration',
         paste_retain_style_properties: 'color text-decoration',
 
+        // autoresize
+        autoresize_bottom_margin: 0,
+
         /**
          * valid HTML element
          * https://www.tiny.cloud/docs/configure/content-filtering/#valid_elements
@@ -82,8 +92,6 @@ export default {
           'br,@[style],strong,em,span,p/div,ul,ol,li,a[href|target|rel=noopener nofollow],caption[*],table[*],tbody[*],thead[*],tfoot[*],td[*],tr[*]',
 
         mobile: {
-          plugins: [...plugins, 'autoresize'],
-          autoresize_bottom_margin: 0,
           max_height: 450,
         },
       },
