@@ -3,28 +3,16 @@ name: default
 
 steps:
 
-  - name: restore-cache
-    image: drillster/drone-volume-cache
-    volumes:
-      - name: cache
-        path: /cache
-    settings:
-      restore: true
-      mount:
-        - ./app/node_modules
-    when:
-      branch: master
-      event: push
-
   - name: build-app
     image: node:14-alpine
+    volumes:
+      - name: node_modules
+        path: /drone/src/app/node_modules
     user: root
     commands:
       - cd app
       - npm install
       - npm run build
-    depends_on:
-      - restore-cache
     when:
       branch: master
       event: push
@@ -58,21 +46,6 @@ steps:
       branch: master
       event: push
 
-  - name: rebuild-cache
-    image: drillster/drone-volume-cache
-    volumes:
-      - name: cache
-        path: /cache
-    settings:
-      rebuild: true
-      mount:
-        - ./app/node_modules
-    depends_on:
-      - remove-source-map
-    when:
-      branch: master
-      event: push
-
   - name: remove-devDependencies
     image: node:14-alpine
     user: root
@@ -80,7 +53,7 @@ steps:
       - cd app
       - npm prune --production
     depends_on:
-      - rebuild-cache
+      - remove-source-map
     when:
       branch: master
       event: push
@@ -253,9 +226,9 @@ steps:
       event: tag
 
 volumes:
-  - name: cache
+  - name: node_modules
     host:
-      path: /tmp/drone-cache
+      path: /tmp/drone-cache/${DRONE_REPO_NAME}/node_modules
   - name: secret
     host:
       path: /home/drone/secret/my83/my83-f2e
