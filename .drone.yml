@@ -63,9 +63,6 @@ steps:
 
   - name: push-image
     image: plugins/gcr
-    volumes:
-      - name: production_node_modules
-        path: /drone/src/app/node_modules
     settings:
       registry: asia.gcr.io
       repo: my83-253509/my83-f2e
