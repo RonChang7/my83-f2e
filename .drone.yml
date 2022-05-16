@@ -6,7 +6,7 @@ steps:
   - name: build-app
     image: node:14-alpine
     volumes:
-      - name: build_node_modules
+      - name: node_modules
         path: /drone/src/app/node_modules
     user: root
     commands:
@@ -49,9 +49,6 @@ steps:
   - name: remove-devDependencies
     image: node:14-alpine
     user: root
-    volumes:
-      - name: production_node_modules
-        path: /drone/src/app/node_modules
     commands:
       - cd app
       - npm prune --production
@@ -229,12 +226,9 @@ steps:
       event: tag
 
 volumes:
-  - name: build_node_modules
+  - name: node_modules
     host:
-      path: /tmp/drone-cache/${DRONE_REPO_NAME}/build/node_modules
-  - name: production_node_modules
-    host:
-      path: /tmp/drone-cache/${DRONE_REPO_NAME}/production/node_modules
+      path: /tmp/drone-cache/${DRONE_REPO_NAME}/node_modules
   - name: secret
     host:
       path: /home/drone/secret/my83/my83-f2e
