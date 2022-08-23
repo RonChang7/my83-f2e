@@ -18,7 +18,7 @@ steps:
       event: push
 
   - name: create-sentry-release
-    image: getsentry/sentry-cli:1.60.1
+    image: getsentry/sentry-cli:1.74.5
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
@@ -179,7 +179,7 @@ steps:
       event: tag
 
   - name: create-sentry-deploy
-    image: getsentry/sentry-cli:1.60.1
+    image: getsentry/sentry-cli:1.74.5
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
