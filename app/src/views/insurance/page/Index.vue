@@ -36,10 +36,14 @@ export default defineComponent({
       })
   },
   async asyncData(ctx) {
-    const service = new InsurancePageService(ctx)
+    try {
+      const service = new InsurancePageService(ctx)
 
-    await service.fetchData()
-    service.reconcileRoute()
+      await service.fetchData()
+      service.reconcileRoute()
+    } catch (err) {
+      console.error(err)
+    }
   },
   head() {
     const canonical = CanonicalService.getCanonical({
