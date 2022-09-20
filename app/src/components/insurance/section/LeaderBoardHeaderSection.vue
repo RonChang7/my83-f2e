@@ -85,7 +85,7 @@ const useSwitch = ({ value }: SwitchPayload) => {
       value: '',
     },
     {
-      text: 'MY83 專家推薦',
+      text: '口碑推薦',
       value: 'recommend',
     },
   ]
