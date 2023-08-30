@@ -10,14 +10,14 @@ export const externalInsuranceRouteNames = ['car', 'motor']
 
 export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
   return [
-    {
-      name: 'insuranceLeaderBoard',
-      path: '/product/leaderboard',
-      component: resolve('@/views/insurance/leader-board/Index.vue'),
-      meta: {
-        requiredStoreModules: ['insuranceLeaderBoard'],
-      },
-    },
+    // {
+    //   name: 'insuranceLeaderBoard',
+    //   path: '/product/leaderboard',
+    //   component: resolve('@/views/insurance/leader-board/Index.vue'),
+    //   meta: {
+    //     requiredStoreModules: ['insuranceLeaderBoard'],
+    //   },
+    // },
     {
       name: 'insuranceProduct',
       path: '/product/:id(\\d+)',
@@ -39,24 +39,24 @@ export const createRoutes: CreateRouteFunction<RouteConfig> = (resolve) => {
         requiredStoreModules: ['insurance'],
       },
     },
-    {
-      name: InsuranceListType.EXTERNAL,
-      path: `/insurance/:insurance(${externalInsuranceRouteNames.join('|')})`,
-      component: resolve('@/views/insurance/page/Index.vue'),
-      meta: {
-        showScrollToTop: true,
-        requiredStoreModules: ['insurance'],
-      },
-    },
-    {
-      name: InsuranceListType.NORMAL,
-      path: '/insurance/:insurance',
-      component: resolve('@/views/insurance/page/Index.vue'),
-      meta: {
-        showScrollToTop: true,
-        requiredStoreModules: ['insurance'],
-      },
-    },
+    // {
+    //   name: InsuranceListType.EXTERNAL,
+    //   path: `/insurance/:insurance(${externalInsuranceRouteNames.join('|')})`,
+    //   component: resolve('@/views/insurance/page/Index.vue'),
+    //   meta: {
+    //     showScrollToTop: true,
+    //     requiredStoreModules: ['insurance'],
+    //   },
+    // },
+    // {
+    //   name: InsuranceListType.NORMAL,
+    //   path: '/insurance/:insurance',
+    //   component: resolve('@/views/insurance/page/Index.vue'),
+    //   meta: {
+    //     showScrollToTop: true,
+    //     requiredStoreModules: ['insurance'],
+    //   },
+    // },
     {
       name: InsuranceListType.FEATURE_TAG,
       path: '/tags/:insurance',
