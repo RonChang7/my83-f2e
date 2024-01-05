@@ -104,30 +104,6 @@ steps:
       branch: master
       event: push
 
-  - name: notify-deploy-staging
-    image: plugins/slack
-    settings:
-      channel: my83-deploy
-      webhook:
-        from_secret: NOTIFY_SLACK_WEBHOOK
-      template: >
-        *{{ repo.name }}*
-        {{#if build.pull }}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
-        {{else}}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
-        {{/if}}
-        Link: http://staging-front.my83.com.tw
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-        Author: {{ build.author }}
-        <{{ build.link }}|Visit build page ↗>
-    depends_on:
-      - deploy-staging
-    when:
-      branch: master
-      event: push
-
   - name: tagged-image
     image: plugins/docker
     privileged: true
@@ -191,35 +167,6 @@ steps:
     depends_on:
       - deploy-production
     when:
-      branch: master
-      ref:
-        - refs/tags/v*
-      event: tag
-
-  - name: notify-deploy-prod
-    image: plugins/slack
-    settings:
-      channel: my83-deploy
-      webhook:
-        from_secret: NOTIFY_SLACK_WEBHOOK
-      template: >
-        *{{ repo.name }}*
-        {{#if build.pull }}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
-        {{else}}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
-        {{/if}}
-        Link: http://front.my83.com.tw
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-        Author: {{ build.author }}
-        <{{ build.link }}|Visit build page ↗>
-    depends_on:
-      - create-sentry-deploy
-    when:
-      status:
-        - success
-        - failure
       branch: master
       ref:
         - refs/tags/v*
