@@ -76,58 +76,6 @@ steps:
       branch: master
       event: push
 
-  - name: deploy-staging
-    image: nixery.dev/kubectl/bash/gnused
-    volumes:
-      - name: secret
-        path: /drone-secret
-    environment:
-      K8S_SERVER:
-        from_secret: K8S_SERVER
-      K8S_TOKEN:
-        from_secret: K8S_TOKEN
-    commands:
-      # 設定 k8s context
-      - kubectl config set-cluster main-cluster --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
-      - kubectl config set-credentials deploy-account --token=$${K8S_TOKEN}
-      - kubectl config set-context default-context --cluster=main-cluster --user=deploy-account --namespace=my83-f2e
-      - kubectl config use-context default-context
-      # 更新 env secret
-      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-staging --from-env-file=/drone-secret/env.staging --dry-run -o yaml | kubectl apply -f -
-      # 用 yaml 部署
-      - cd kubernetes/
-      - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_COMMIT_SHA}/" ./staging.yaml
-      - kubectl apply -f ./staging.yaml
-    depends_on:
-      - push-image
-    when:
-      branch: master
-      event: push
-
-  - name: notify-deploy-staging
-    image: plugins/slack
-    settings:
-      channel: my83-deploy
-      webhook:
-        from_secret: NOTIFY_SLACK_WEBHOOK
-      template: >
-        *{{ repo.name }}*
-        {{#if build.pull }}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
-        {{else}}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
-        {{/if}}
-        Link: http://staging-front.my83.com.tw
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-        Author: {{ build.author }}
-        <{{ build.link }}|Visit build page ↗>
-    depends_on:
-      - deploy-staging
-    when:
-      branch: master
-      event: push
-
   - name: tagged-image
     image: plugins/docker
     privileged: true
@@ -196,35 +144,6 @@ steps:
         - refs/tags/v*
       event: tag
 
-  - name: notify-deploy-prod
-    image: plugins/slack
-    settings:
-      channel: my83-deploy
-      webhook:
-        from_secret: NOTIFY_SLACK_WEBHOOK
-      template: >
-        *{{ repo.name }}*
-        {{#if build.pull }}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}*: <https://github.com/{{ repo.owner }}/{{ repo.name }}/pull/{{ build.pull }}|Pull Request #{{ build.pull }}>
-        {{else}}
-          *{{#success build.status}}✔{{ else }}✘{{/success}} {{ uppercasefirst build.status }}: Build #{{ build.number }}* (type: `{{ build.event }}`)
-        {{/if}}
-        Link: http://front.my83.com.tw
-        Commit: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commit/{{ build.commit }}|{{ truncate build.commit 8 }}>
-        Branch: <https://github.com/{{ repo.owner }}/{{ repo.name }}/commits/{{ build.branch }}|{{ build.branch }}>
-        Author: {{ build.author }}
-        <{{ build.link }}|Visit build page ↗>
-    depends_on:
-      - create-sentry-deploy
-    when:
-      status:
-        - success
-        - failure
-      branch: master
-      ref:
-        - refs/tags/v*
-      event: tag
-
 volumes:
   - name: node_modules
     host:
@@ -236,3 +155,6 @@ volumes:
 trigger:
   branch:
     - master
+
+image_pull_secrets:
+  - MY83_DOCKER_CONFIG
