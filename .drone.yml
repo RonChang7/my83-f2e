@@ -155,3 +155,6 @@ volumes:
 trigger:
   branch:
     - master
+
+image_pull_secrets:
+  - MY83_DOCKER_CONFIG
