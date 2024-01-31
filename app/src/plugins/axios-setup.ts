@@ -136,6 +136,14 @@ export default (({ app, req }) => {
           } else if (status === 401 && error === 'invalid_token') {
             app.$auth.logout()
             return Promise.reject(err)
+          } else if (
+            status === 302 &&
+            err.response?.data?.status === 'FORCE-REDIRECT'
+          ) {
+            window.location.href =
+              err.response.data.redirectTo +
+              '?returnUrl=' +
+              window.location.href
           } else {
             if (checkRedirectResponse(err.response)) {
               const res: AxiosResponse<RedirectErrorResponseBody> = err.response
