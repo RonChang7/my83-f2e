@@ -1,20 +1,34 @@
 <template>
   <div class="LoginSignUpForm">
     <div class="LoginSignUpForm__title">註冊 只需 1 分鐘就能完成！</div>
+    <div class="form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="agreeCheckbox"
+        v-model="privacyCheck"
+      />
+      <label class="form-check-label" for="agreeCheckbox">
+        我已詳細閱讀並同意「
+        <GlobalLink to="/terms">服務條款</GlobalLink>
+        」、「
+        <GlobalLink to="/privacy">隱私權政策</GlobalLink>
+        」
+      </label>
+      <span class="text-danger" v-if="privacyCheckErrorShow">請勾選同意</span>
+    </div>
     <FacebookLoginButton
       :state="state"
+      :clickable="privacyCheck"
       text="以 Facebook 註冊"
       @login="facebookSignUp"
+      @alert="alertPrivacyCheck"
     />
     <BaseInputMessage text-align="center" :msg="message" />
 
     <div class="LoginSignUpForm__info">
       為確保用戶真實性，僅提供 Facebook 註冊
       <br />
-      註冊即代表你已閱讀並同意
-      <GlobalLink to="/terms">服務條款</GlobalLink>
-      及
-      <GlobalLink to="/privacy">隱私權政策</GlobalLink>
     </div>
     <a @click.prevent="$emit('to-panel', 'login')">我要登入</a>
   </div>
@@ -39,9 +53,14 @@ export default {
     return {
       state: '',
       message: '',
+      privacyCheck: false,
+      privacyCheckErrorShow: false,
     }
   },
   methods: {
+    alertPrivacyCheck() {
+      this.privacyCheckErrorShow = true
+    },
     async facebookSignUp(fbToken) {
       this.state = 'loading'
 
@@ -68,6 +87,13 @@ export default {
           this.state = 'error'
           this.message = message
         }
+      }
+    },
+  },
+  watch: {
+    privacyCheck(value) {
+      if (value) {
+        this.privacyCheckErrorShow = false
       }
     },
   },
@@ -142,6 +168,14 @@ export interface Props {}
 
   a {
     font-weight: 500;
+  }
+
+  .form-check {
+    margin-bottom: 10px;
+  }
+
+  .text-danger {
+    color: #b40016;
   }
 }
 </style>
