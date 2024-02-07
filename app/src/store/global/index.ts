@@ -114,6 +114,9 @@ export interface GlobalDialogContent {
   rightButtonType?: string
   rightButtonCloseDialogAfterClick?: boolean
   defaultActionButton?: 'left' | 'right'
+  checkBeforeAction?: boolean
+  checkBeforeActionText?: string
+  checkBeforeActionErrMsg?: string
   errMsg?: string
   leftConfirmFn?: Function
   rightConfirmFn?: Function

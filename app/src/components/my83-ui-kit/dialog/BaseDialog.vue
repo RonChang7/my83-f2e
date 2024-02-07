@@ -14,12 +14,30 @@
       <BaseClose class="BaseDialog__close" @click.native="closePanel" />
       <div v-if="title" class="BaseDialog__title">{{ title }}</div>
       <div v-if="content" class="BaseDialog__content">{{ content }}</div>
+      <div v-if="checkBeforeAction" class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="beforeActionCheck"
+          v-model="beforeActionCheck"
+        />
+        <label
+          class="form-check-label"
+          for="beforeActionCheck"
+          v-html="checkBeforeActionText"
+        ></label>
+        <BaseInputMessage
+          :msg="checkBeforeActionErrMsg"
+          text-align="center"
+          v-if="beforeActionErrShow"
+        />
+      </div>
       <div class="BaseDialog__action">
         <BaseButton
           :is-full-width="true"
           :type="leftButtonType"
           size="l-a"
-          @click.native="$emit('left-confirm')"
+          @click.native="confirm('left')"
         >
           {{ leftButtonText }}
         </BaseButton>
@@ -28,7 +46,7 @@
           :is-full-width="true"
           :type="rightButtonType"
           size="l-a"
-          @click.native="$emit('right-confirm')"
+          @click.native="confirm('right')"
         >
           {{ rightButtonText }}
         </BaseButton>
@@ -91,18 +109,41 @@ export default {
       type: String,
       default: 'right',
     },
+    checkBeforeAction: {
+      type: Boolean,
+      default: false,
+    },
+    checkBeforeActionText: {
+      type: String,
+      default: '',
+    },
+    checkBeforeActionErrMsg: {
+      type: String,
+      default: '',
+    },
     errMsg: {
       type: String,
       default: '',
     },
+  },
+  data() {
+    return {
+      beforeActionCheck: false,
+      beforeActionErrShow: false,
+    }
   },
   methods: {
     closePanel() {
       this.$emit('update:visible', false)
       this.$emit('close')
     },
-    enterToConfirm() {
-      switch (this.defaultActionButton) {
+    confirm(action) {
+      if (this.checkBeforeAction && !this.beforeActionCheck) {
+        this.beforeActionErrShow = true
+        return
+      }
+
+      switch (action) {
         case 'left':
           this.$emit('left-confirm')
           break
@@ -112,6 +153,9 @@ export default {
         default:
           break
       }
+    },
+    enterToConfirm() {
+      this.confirm(this.defaultActionButton)
     },
   },
   watch: {
@@ -124,6 +168,11 @@ export default {
           })
         }
       },
+    },
+    beforeActionCheck(value) {
+      if (value) {
+        this.beforeActionErrShow = false
+      }
     },
   },
 } as ComponentOption
