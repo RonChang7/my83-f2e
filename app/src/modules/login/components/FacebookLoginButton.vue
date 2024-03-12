@@ -55,9 +55,17 @@ export default {
       type: String,
       default: '',
     },
+    clickable: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     async login(facebookLogin) {
+      if (!this.clickable) {
+        this.$emit('alert')
+        return
+      }
       const token = await facebookLogin()
       this.$emit('login', token)
     },
