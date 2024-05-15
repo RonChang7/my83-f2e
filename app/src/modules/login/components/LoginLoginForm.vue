@@ -206,8 +206,12 @@ export default {
         if (status === 401) {
           this.$store.dispatch(`global/${types.UPDATE_GLOBAL_DIALOG}`, {
             ...FacebookLoginNotMy83User,
-            leftConfirmFn: () => this.facebookSignUp(fbToken, 'client'),
-            rightConfirmFn: () => this.facebookSignUp(fbToken, 'sales'),
+            leftConfirmFn: () => {
+              window.location.href = '/account/signup'
+            },
+            rightConfirmFn: () => {
+              window.location.href = '/signup/sales'
+            },
           } as GlobalDialogContent)
 
           this.$store.dispatch(`global/${types.OPEN_GLOBAL_DIALOG}`)
