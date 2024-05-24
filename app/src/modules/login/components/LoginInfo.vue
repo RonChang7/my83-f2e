@@ -7,7 +7,7 @@
         alt="my83 logo"
       />
     </div>
-    <div class="wording">全台灣最大保險社群平台</div>
+    <div class="wording">透明自由的保險討論平台</div>
     <img
       class="introduction"
       :src="`${parent.$imageBucketUrl}/front/login/img-brand-feature.png`"
