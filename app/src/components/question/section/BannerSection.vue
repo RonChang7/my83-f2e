@@ -7,7 +7,7 @@ export default defineComponent({
     return h('div', { staticClass: 'BannerSection' }, [
       h('h1', '保險討論區'),
       h('div', [
-        h('h2', '全台最大保險討論平台'),
+        h('h2', '透明自由的保險討論平台'),
         h('span', '，'),
         h('p', '只要是保險，什麼都能問'),
       ]),
