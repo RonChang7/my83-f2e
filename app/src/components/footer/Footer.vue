@@ -17,59 +17,9 @@
           出發，推薦最優質保險商品，找到最合適的業務員
         </div>
       </section>
-      <section class="report">
-        <h3 class="title">媒體報導</h3>
-        <div class="content">
-          <a
-            class="logo"
-            href="https://www.cw.com.tw/article/article.action?id=5064306"
-            target="_blank"
-            rel="noopener"
-          >
-            <BaseLazyImage
-              :image-url="`${$imageBucketUrl}/front/footer/cw.png`"
-              image-alt="天下雜誌"
-              :ignore-placeholder="true"
-              :image-loaded-style="footerImageStyle"
-            />
-          </a>
-          <a
-            class="logo"
-            href="https://news.cnyes.com/news/id/3547407"
-            target="_blank"
-            rel="noopener"
-          >
-            <BaseLazyImage
-              :image-url="`${$imageBucketUrl}/front/footer/cnyes.png`"
-              image-alt="鉅亨網"
-              :ignore-placeholder="true"
-              :image-loaded-style="footerImageStyle"
-            />
-          </a>
-          <a
-            class="logo"
-            href="https://www.youtube.com/watch?v=XVqFOSUUBgw"
-            target="_blank"
-            rel="noopener"
-          >
-            <BaseLazyImage
-              :image-url="`${$imageBucketUrl}/front/footer/HIT_FM.jpg`"
-              image-alt="HIT_FM"
-              :ignore-placeholder="true"
-              :image-loaded-style="footerImageStyle"
-            />
-          </a>
-        </div>
-      </section>
       <section class="contact">
         <h3 class="title">幫助</h3>
         <div class="content">
-          <p class="d-flex align-items-center">
-            <a class="mr-2" href="#" @click.prevent="openZendeskChat">
-              線上客服
-            </a>
-            <LoadingIcon v-if="zendeskLoading" size="0.875rem" />
-          </p>
           <p><GlobalLink to="/faq">常見問題</GlobalLink></p>
           <p>
             服務信箱：
@@ -77,7 +27,7 @@
           </p>
           <p>
             服務專線：
-            <a href="tel:0223638833">(02) 2363-8833</a>
+            <a href="tel:0225455970#752">02-25455970 # 752</a>
           </p>
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
           <p class="tips d-flex align-items-center">
@@ -114,7 +64,7 @@
       </section>
     </div>
     <div class="copyright">
-      Copyright © {{ currentYear }} 上恩資訊股份有限公司 UPN Inc. All Rights
+      Copyright © {{ currentYear }} 錠嵂保險經紀人股份有限公司. All Rights
       Reserved.
     </div>
   </footer>
