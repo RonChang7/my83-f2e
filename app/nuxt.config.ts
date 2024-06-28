@@ -122,12 +122,14 @@ const config: NuxtConfig = {
           { key: 'RECAPTCHA_SITE_KEY' },
           { key: 'RECAPTCHA_VERSION' },
           { key: 'IMAGE_BUCKET_URL' },
+          { key: 'GOOGLE_TAG_MANAGER_ID' },
         ],
       },
     ],
     'nuxt-user-agent',
     'nuxt-webfontloader',
     'cookie-universal-nuxt',
+    '@nuxtjs/gtm',
   ],
   webfontloader: {
     google: {
@@ -146,6 +148,10 @@ const config: NuxtConfig = {
         memoryLimit: Number(process.env.TS_TYPE_CHECK_MEMORY_LIMIT) || 2048, // default: 2048MB
       },
     },
+  },
+  gtm: {
+    id: process.env.GOOGLE_TAG_MANAGER_ID,
+    pageTracking: true,
   },
   /*
    ** Build configuration
