@@ -1,7 +1,7 @@
 import { Plugin as NuxtPlugin } from '@nuxt/types'
 import { AnalyticsEventManager } from '@/analytics/event-manager/AnalyticsEventManager'
 import { FacebookPixel } from '@/analytics/implementations/facebook-pixel'
-import { GoogleAnalytics } from '@/analytics/implementations/google-analytics'
+import { GoogleTagManager } from '~/analytics/implementations/google-tag-manager'
 
 export default (({ app }, inject) => {
   const {
@@ -9,11 +9,11 @@ export default (({ app }, inject) => {
     TRACKING_ENABLE,
     TRACKING_DEV_LOG_ENABLE,
     FACEBOOK_PIXEL_IDS,
-    GOOGLE_ANALYTICS_ID,
+    GOOGLE_TAG_MANAGER_ID,
   } = app.$env
 
   const facebook = FacebookPixel.getInstance()
-  const googleAnalytics = GoogleAnalytics.getInstance()
+  const googleTagManager = GoogleTagManager.getInstance()
 
   const trackingLogEnable =
     TRACKING_DEV_LOG_ENABLE === 'true' && APP_ENV !== 'production'
@@ -25,10 +25,10 @@ export default (({ app }, inject) => {
     ids: FACEBOOK_PIXEL_IDS.split(',').map((e) => e.trim()),
   })
 
-  googleAnalytics.init({
+  googleTagManager.init({
     trackingLogEnable,
     trackingEnable,
-    id: GOOGLE_ANALYTICS_ID,
+    id: GOOGLE_TAG_MANAGER_ID,
   })
 
   const AEM = AnalyticsEventManager.getInstance()

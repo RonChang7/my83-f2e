@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@nuxtjs/composition-api": "^0.22.4",
+    "@nuxtjs/gtm": "^2.4.0",
     "@popperjs/core": "^2.5.4",
     "@sentry/integrations": "^6.2.1",
     "@sentry/node": "^6.2.1",
