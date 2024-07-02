@@ -31,6 +31,7 @@ export class GoogleTagManager {
     this.trackingLogEnable = trackingLogEnable
     this.id = id
 
+    this.injectGtmScript()
     this.setup()
   }
 
@@ -60,6 +61,18 @@ export class GoogleTagManager {
       eventLabel: payload.eventLabel,
       eventValue: payload.eventValue,
     })
+  }
+
+  private injectGtmScript() {
+    if (!this.trackingEnable) return
+
+    const gtmInject = (window as any)._gtm_inject
+    if (gtmInject) {
+      gtmInject(this.id)
+      console.log('GTM script injected by GoogleTagManager class:', this.id)
+    } else {
+      console.error('GTM inject function not found')
+    }
   }
 
   private pushToDataLayer(data: any) {
