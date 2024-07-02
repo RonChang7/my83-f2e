@@ -69,7 +69,6 @@ export class GoogleTagManager {
     const gtmInject = (window as any)._gtm_inject
     if (gtmInject) {
       gtmInject(this.id)
-      console.log('GTM script injected by GoogleTagManager class:', this.id)
     } else {
       console.error('GTM inject function not found')
     }
