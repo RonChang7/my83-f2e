@@ -25,10 +25,10 @@
             服務信箱：
             <a href="mailto:service@my83.com.tw">service@my83.com.tw</a>
           </p>
-          <p>
+          <!-- <p>
             服務專線：
             <a href="tel:0225455970#752">02-25455970 # 752</a>
-          </p>
+          </p> -->
           <p>服務時間：週一至週五 10:00-12:00 14:00-18:00</p>
           <p class="tips d-flex align-items-center">
             <img
