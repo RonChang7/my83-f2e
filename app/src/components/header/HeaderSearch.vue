@@ -13,10 +13,6 @@
           @enter="submit"
         />
       </form>
-      <div class="HeaderSearch__close">
-        <!-- eslint-disable-next-line vue/attribute-hyphenation -->
-        <BaseClose viewBox="0 0 24 24" @click="$emit('close')" />
-      </div>
     </div>
     <div class="HeaderSearch__mobileClose">
       <BaseButton size="s" type="secondary" @click.native="$emit('close')">
@@ -38,7 +34,6 @@ import {
   watch,
 } from '@nuxtjs/composition-api'
 import BaseSearch from '@/assets/icon/18/BaseSearch.svg'
-import BaseClose from '@/assets/icon/24/BaseClose.svg'
 import BaseInput from '@/components/my83-ui-kit/input/BaseInputText.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { scrollToPosition } from '@/utils/scroll'
@@ -46,7 +41,6 @@ import { scrollToPosition } from '@/utils/scroll'
 export default defineComponent({
   components: {
     BaseSearch,
-    BaseClose,
     BaseInput,
     BaseButton,
   },
@@ -125,22 +119,6 @@ export default defineComponent({
       border-radius: 0;
 
       @include hide-search-input-cross;
-    }
-  }
-
-  &__close {
-    display: flex;
-    position: relative;
-    top: -10px;
-    right: -8px;
-
-    > svg {
-      width: 12px;
-      height: 12px;
-    }
-
-    @include max-media('xl') {
-      display: none;
     }
   }
 
