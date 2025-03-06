@@ -8,7 +8,7 @@
         {{ amountConvert(coverage.amount) }} 元
       </div>
     </div>
-    <div v-if="coverage.ideal_amount" class="ProductCoverageCard__coverage">
+    <!-- <div v-if="coverage.ideal_amount" class="ProductCoverageCard__coverage">
       <Ring
         :length="60"
         :line-width="4"
@@ -21,7 +21,7 @@
         <span>{{ idealCoverageWording }}</span>
         的比例
       </div>
-    </div>
+    </div> -->
     <div v-if="coverage.content" class="ProductCoverageCard__content">
       {{ coverage.content }}
     </div>

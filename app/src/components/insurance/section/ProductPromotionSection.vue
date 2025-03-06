@@ -13,7 +13,7 @@
           class="ProductPromotionSection__faq"
           @click="openModal"
         >
-          如何在 MY83 購買保險？
+          想獲得保險相關建議？
         </div>
       </div>
       <div class="ProductPromotionSection__action">
@@ -24,14 +24,14 @@
           :is-full-width="isMobile"
           @click.native="tracking"
         >
-          免費找業務員
+          免費諮詢手機
         </BaseButton>
         <div
           v-if="!isMobile"
           class="ProductPromotionSection__faq"
           @click="openModal"
         >
-          如何在 MY83 購買保險？
+          想獲得保險相關建議？
         </div>
       </div>
     </div>
@@ -91,7 +91,7 @@ export default defineComponent({
 .ProductPromotionSection {
   display: flex;
 
-  @include min-media('sm') {
+  @include min-media('xl') {
     justify-content: center;
     max-width: 680px;
     width: 100%;
@@ -103,7 +103,7 @@ export default defineComponent({
     color: #fff;
   }
 
-  @include max-media('sm') {
+  @include max-media('xl') {
     justify-content: space-between;
     align-items: center;
     position: fixed;
@@ -128,7 +128,7 @@ export default defineComponent({
       margin-bottom: -4px;
     }
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       font-size: 1.125rem;
       font-weight: 500;
 
@@ -143,7 +143,7 @@ export default defineComponent({
     margin-left: 40px;
     text-align: center;
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       margin: 0;
       width: 128px;
     }
@@ -157,7 +157,7 @@ export default defineComponent({
 
     @include hover('_white');
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       margin: 0;
       font-size: 0.75rem;
 

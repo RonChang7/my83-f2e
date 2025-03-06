@@ -6,11 +6,11 @@
       <ProductHeaderSection />
     </div>
 
-    <div class="InsuranceProduct__row thin">
+    <!-- <div class="InsuranceProduct__row thin">
       <div class="column left">
         <ProductDescription />
       </div>
-    </div>
+    </div> -->
 
     <div class="InsuranceProduct__row">
       <div class="column left">
@@ -22,19 +22,17 @@
     </div>
 
     <div class="InsuranceProduct__row withColumns">
-      <div class="column left">
+      <div class="column">
         <ProductCoverageSection />
-        <ProductRuleSection />
+        <!-- <ProductRuleSection /> -->
         <ProductPromotionSection
           v-if="shouldShowProductPromotionSection"
           @open-modal="openInfoModal"
         />
-      </div>
-      <div class="column right">
-        <ProductPromotionSalesSection v-if="isDesktop" page-type="商品頁" />
-        <PromotionSection v-else page-type="商品頁" />
-        <PopularProductSection />
-        <ProductReportSection />
+        <ProductReportSection class="InsuranceProduct__report" />
+        <div class="InsuranceProduct__hint">
+          本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
+        </div>
       </div>
     </div>
 
@@ -242,6 +240,20 @@ export default class InsuranceProduct extends DeviceMixin {
           }
         }
       }
+    }
+  }
+
+  &__report {
+    margin: 36px auto;
+    width: 264px;
+    padding: 0;
+  }
+
+  &__hint {
+    text-align: center;
+    margin: 36px 16px 72px;
+    @include max-media('sm') {
+      text-align: left;
     }
   }
 }

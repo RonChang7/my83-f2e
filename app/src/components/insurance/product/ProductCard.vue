@@ -21,7 +21,7 @@
                 <BaseTag small type="primary-outline">
                   {{ product.ranking_badge.text }}
                 </BaseTag>
-                <span>{{ product.ranking_badge.description }}</span>
+                <!-- <span>{{ product.ranking_badge.description }}</span> -->
               </div>
             </div>
             <div v-if="features" class="ProductCard__features">
@@ -72,11 +72,11 @@
         </div>
         <div class="ProductCard__section">
           <div class="ProductCard__subSection">
-            <div class="ProductCard__plan">
+            <!-- <div class="ProductCard__plan">
               推薦計畫：
               <br />
               {{ product.plan }}
-            </div>
+            </div> -->
             <transition name="fade" mode="out-in">
               <div :key="product.fee" class="ProductCard__fee">
                 <span
@@ -90,9 +90,9 @@
             </transition>
           </div>
           <div class="ProductCard__subSection">
-            <div v-if="viewCount" class="ProductCard__viewCount">
+            <!-- <div v-if="viewCount" class="ProductCard__viewCount">
               {{ viewCount }}
-            </div>
+            </div> -->
             <BaseButton
               class="ProductCard__btn"
               :to="enabled ? product.btn.link : null"
@@ -106,9 +106,9 @@
         </div>
       </div>
     </template>
-    <template v-if="product.description" #footer>
+    <!-- <template v-if="product.description" #footer>
       {{ product.description }}
-    </template>
+    </template> -->
   </BaseCard>
 </template>
 

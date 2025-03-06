@@ -27,14 +27,14 @@
         />
       </div>
     </div>
-    <div class="ProductCoverageSection__row">
+    <!-- <div class="ProductCoverageSection__row">
       <div v-if="claims.length" class="ProductCoverageSection__claim">
         <h3>其他理賠說明</h3>
         <ul>
           <li v-for="(claim, index) in claims" :key="index">{{ claim }}</li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

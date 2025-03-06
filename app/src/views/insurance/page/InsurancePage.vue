@@ -36,11 +36,6 @@
           v-if="!isMobile"
           @loading="setLoadingStatus"
         />
-        <PromotionSection
-          v-if="isDesktop && shouldShowDesktopPromotionAd"
-          class="promotion-ad"
-          :page-type="$store.state.insurance.staticData.abbr"
-        />
         <template v-if="isInsurancePage">
           <FaqSection v-if="isMobile" id="faq" class="faq" />
           <RelatedBlogSection :max-post="isMobile ? 5 : 10" :thin="true" />
@@ -58,11 +53,6 @@
             :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
-          <template v-if="isMobile" #ad>
-            <PromotionSection
-              :page-type="$store.state.insurance.staticData.abbr"
-            />
-          </template>
         </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination

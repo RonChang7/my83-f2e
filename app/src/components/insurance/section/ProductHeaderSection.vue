@@ -61,11 +61,11 @@
         </div>
       </div>
       <div class="ProductHeaderSection__features">{{ features }}</div>
-      <div v-if="viewCount" class="ProductHeaderSection__viewCount">
+      <!-- <div v-if="viewCount" class="ProductHeaderSection__viewCount">
         有
         <span>{{ viewCount }}</span>
         人有興趣
-      </div>
+      </div> -->
     </div>
     <div class="ProductHeaderSection__column">
       <div class="ProductHeaderSection__files">
