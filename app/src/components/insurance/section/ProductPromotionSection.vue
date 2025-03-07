@@ -19,12 +19,12 @@
       <div class="ProductPromotionSection__action">
         <BaseButton
           :size="isMobile ? 'l-a' : 'xl'"
-          :type="isMobile ? 'primary' : 'quaternary'"
-          :to="consultLink.path"
+          type="quaternary"
+          to="/insured"
           :is-full-width="isMobile"
           @click.native="tracking"
         >
-          免費諮詢手機
+          免費諮詢
         </BaseButton>
         <div
           v-if="!isMobile"
@@ -108,11 +108,11 @@ export default defineComponent({
     align-items: center;
     position: fixed;
     bottom: 0;
-    background: #fff;
+    background: #ef6e2e;
     width: 100vw;
     box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.15);
     z-index: 1;
-    color: $gray-primary;
+    color: #fff;
     padding: 15px 20px;
   }
 
@@ -154,7 +154,6 @@ export default defineComponent({
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-
     @include hover('_white');
 
     @include max-media('xl') {
@@ -162,6 +161,7 @@ export default defineComponent({
       font-size: 0.75rem;
 
       @include hover('_secondary');
+      color: #fff;
     }
   }
 }

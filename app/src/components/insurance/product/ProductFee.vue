@@ -14,7 +14,7 @@
           <BaseButton
             size="l-a"
             type="quaternary"
-            :to="consultLink.path"
+            to="/insured"
             @click.native="tracking"
           >
             免費諮詢

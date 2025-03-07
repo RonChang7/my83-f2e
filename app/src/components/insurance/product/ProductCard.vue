@@ -85,7 +85,7 @@
                 >
                   {{ product.fee_prefix }}
                 </span>
-                {{ getFormattedFee(product.fee) }}
+                <!-- {{ getFormattedFee(product.fee) }} -->
               </div>
             </transition>
           </div>
