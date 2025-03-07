@@ -6,12 +6,6 @@
       <ProductHeaderSection />
     </div>
 
-    <!-- <div class="InsuranceProduct__row thin">
-      <div class="column left">
-        <ProductDescription />
-      </div>
-    </div> -->
-
     <div class="InsuranceProduct__row">
       <div class="column left">
         <ProductQuerySection
@@ -22,13 +16,13 @@
     </div>
 
     <div class="InsuranceProduct__row withColumns">
-      <div class="column">
+      <div class="column w-100">
         <ProductCoverageSection />
-        <!-- <ProductRuleSection /> -->
         <ProductPromotionSection
           v-if="shouldShowProductPromotionSection"
           @open-modal="openInfoModal"
         />
+        <ProductFQASection />
         <ProductReportSection class="InsuranceProduct__report" />
         <div class="InsuranceProduct__hint">
           本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
@@ -57,6 +51,7 @@ import PromotionSection from '@/components/insurance/section/PromotionSection.vu
 import PopularProductSection from '@/components/insurance/section/PopularProductSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
 import ProductReportSection from '@/components/insurance/section/ProductReportSection.vue'
+import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
@@ -77,6 +72,7 @@ import { InsuranceProductVuexState } from './Index.vue'
     ProductQuerySection,
     BaseScrollToTopButton,
     ProductReportSection,
+    ProductFQASection,
   },
 })
 export default class InsuranceProduct extends DeviceMixin {
@@ -182,6 +178,10 @@ export default class InsuranceProduct extends DeviceMixin {
       @include max-media('xl') {
         margin-bottom: 10px;
       }
+    }
+
+    .w-100 {
+      width: 100%;
     }
 
     &.withColumns {
