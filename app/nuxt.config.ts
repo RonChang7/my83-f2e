@@ -107,6 +107,7 @@ const config: NuxtConfig = {
           { key: 'APP_ENV' },
           { key: 'HOST_URL' },
           { key: 'CLIENT_API_URL' },
+          { key: 'SERVER_PRODUCT_API_URL' },
           { key: 'SERVER_API_URL', secret: true },
           { key: 'SERVER_API_HOST', secret: true },
           { key: 'API_SERVER_BASIC_AUTH_BASE64' },
@@ -130,12 +131,25 @@ const config: NuxtConfig = {
     'nuxt-webfontloader',
     'cookie-universal-nuxt',
     '@nuxtjs/gtm',
+    '@nuxtjs/proxy',
   ],
+  proxy: {
+    'https://local-api.my83.com.tw/3i-api/': {
+      target: 'https://productot.smartbeb.com.tw',
+      changeOrigin: true,
+      pathRewrite: { '^https://local-api.my83.com.tw/3i-api/': '/3i-api/' },
+    },
+  },
+  // 環境變數設定
+  env: {
+    apiProductUrl:
+      process.env.NODE_ENV !== 'production'
+        ? 'https://productot.smartbeb.com.tw/3i-api' // 開發環境使用代理路徑and測試環境
+        : 'https://product.smartbeb.com.tw/3i-api', // 生產環境直接使用實際 URL
+  },
   webfontloader: {
     google: {
-      families: [
-        'Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional',
-      ],
+      families: ['Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional'],
     },
   },
   router: {

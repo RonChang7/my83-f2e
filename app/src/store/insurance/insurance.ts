@@ -18,6 +18,7 @@ import {
   ProductFeeList,
   InsuranceListFilterResponse,
   FetchInsuranceSearchListPayload,
+  CategoryItem,
 } from '@/api/insurance/insurance.type'
 import { RecommendProduct } from '@/api/question/question.type'
 import {
@@ -64,6 +65,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
         filter: {
           defaultValue: null,
           config: null,
+        },
+        insuranceOptions: {
+          categoryList: null,
+          caseList: null,
+          typeList: null,
+          tagList: null,
         },
       }
     },
@@ -272,6 +279,21 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch(() => resolve())
         })
       },
+      [types.FETCH_INSURANCE_OPTIONS]({ commit }) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceOptions()
+            .then((response) => {
+              if (response.status === 'success') {
+                commit(types.UPDATE_INSURANCE_OPTIONS, response.data)
+                resolve()
+              } else {
+                reject(new Error(response.message || '獲取保險選項失敗'))
+              }
+            })
+            .catch((error) => reject(error))
+        })
+      },
     },
     mutations: {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
@@ -373,6 +395,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_CURRENT_PAGE](state, page: number) {
         state.currentParam.page = page
       },
+      [types.UPDATE_INSURANCE_OPTIONS](
+        state,
+        data: {
+          categoryList: CategoryItem[]
+          caseList: CategoryItem[]
+          typeList: CategoryItem[]
+          tagList: CategoryItem[]
+        }
+      ) {
+        state.insuranceOptions = data
+      },
     },
   }
 }
@@ -409,6 +442,12 @@ export interface State {
     defaultValue: FilterValue | null
     config: Record<string, FilterOption> | null
   }
+  insuranceOptions: {
+    categoryList: CategoryItem[] | null
+    caseList: CategoryItem[] | null
+    typeList: CategoryItem[] | null
+    tagList: CategoryItem[] | null
+  } | null
 }
 
 export interface CurrentParam extends FilterValue {

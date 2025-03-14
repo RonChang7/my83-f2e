@@ -26,6 +26,7 @@ import {
   FETCH_INSURANCE_SEARCH_LIST,
   FETCH_INSURANCE_SEARCH_LIST_FILTER,
   FETCH_SEARCH_NO_RESULT,
+  FETCH_INSURANCE_OPTIONS,
 } from '@/store/insurance/insurance.type'
 
 interface StoreState {
@@ -117,6 +118,7 @@ class NormalInsurancePage extends InsurancePage {
 
   protected fetchPageDataRequests() {
     return [
+      this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`),
       this.store.dispatch(`insurance/${FETCH_PAGE_DATA}`, this.page.insurance),
       this.store.dispatch(
         `insurance/${FETCH_INSURANCE_LIST_FILTER}`,
@@ -335,6 +337,12 @@ export class InsurancePageService {
 
   public async fetchData() {
     try {
+      // 只有在選項數據不存在時才獲取
+      // if (!this.store.state.insurance.insuranceOptions?.categoryList) {
+      await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
+      // }
+
+      // 再加載頁面資料
       await this.page.fetch()
     } catch (error) {
       this.handleFetchFailed(error)

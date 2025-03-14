@@ -188,3 +188,19 @@ export interface Coverage {
   amount: string
   postfix: string
 }
+
+export interface CategoryItem {
+  id: number
+  name: string
+}
+
+export interface InsuranceOptionsResponse {
+  status: string
+  message: string
+  data: {
+    categoryList: CategoryItem[]
+    caseList: CategoryItem[]
+    typeList: CategoryItem[]
+    tagList: CategoryItem[]
+  }
+}
