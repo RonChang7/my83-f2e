@@ -1,13 +1,7 @@
 <template>
   <div class="InsurancePage">
-    <InsuranceTipModal
-      v-if="isInsurancePage"
-      :visible.sync="infoModal.visible"
-      :active-tab.sync="infoModal.activeTab"
-      @update-active-tab="updateInfoModalActiveTab"
-    />
-
     <div class="InsurancePage__row" :class="{ 'mb-0': isSearchPage }">
+      <!-- 搜尋：國泰。TODO:確認資料到底從哪來, openInfoModal 在幹嘛 -->
       <HeaderSection
         :is-insurance-page="isInsurancePage"
         @update-active-tab="updateInfoModalActiveTab"
@@ -15,14 +9,8 @@
       />
     </div>
 
-    <div
-      v-if="isInsurancePage && shouldShowPromotionProduct"
-      class="InsurancePage__row promotion"
-    >
-      <PromotionProductSection />
-    </div>
-
     <div class="InsurancePage__row mb-0">
+      <!-- 國泰 的相關產品 TODO: 國泰哪裡來的 scrollToFAQ 是什麼 -->
       <ProductListTitleSection
         :is-insurance-page="isInsurancePage"
         :product-list-description="productListDescription"
@@ -31,25 +19,20 @@
     </div>
 
     <div class="InsurancePage__rowWithTowColumns">
-      <div v-if="shouldShowProductListFilter" class="column thin">
+      <div class="column thin">
         <ProductListDesktopFilterSection
           v-if="!isMobile"
           @loading="setLoadingStatus"
         />
-        <template v-if="isInsurancePage">
-          <FaqSection v-if="isMobile" id="faq" class="faq" />
-          <RelatedBlogSection :max-post="isMobile ? 5 : 10" :thin="true" />
-          <RelatedQuestionSection :max-post="isMobile ? 5 : 10" :thin="true" />
-        </template>
       </div>
       <div class="column wider">
         <ProductListSection
           ref="ProductListSection"
-          :is-empty-search-result="isSearchPage && !shouldShowProductListFilter"
+          :is-empty-search-result="isSearchPage"
           :is-loading="!isExternalPage && isLoading"
         >
           <ProductListMobileFilterSection
-            v-if="isMobile && shouldShowProductListFilter"
+            v-if="isMobile"
             :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
@@ -61,28 +44,6 @@
           />
         </div>
       </div>
-    </div>
-
-    <div
-      v-if="isSearchPage && !shouldShowProductListFilter"
-      class="InsurancePage__row promotion"
-    >
-      <PromotionBundleSection />
-    </div>
-
-    <div
-      v-if="isSearchPage && !shouldShowProductListFilter"
-      class="InsurancePage__row promotion bottom"
-    >
-      <PromotionProductSection />
-    </div>
-
-    <div
-      v-if="!isMobile && isInsurancePage"
-      id="faq"
-      class="InsurancePage__row faq"
-    >
-      <FaqSection />
     </div>
   </div>
 </template>
