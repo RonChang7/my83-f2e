@@ -1,46 +1,38 @@
 <template>
   <div class="DesktopFilterSection__wrapper">
-    <template v-if="multiSection">
-      <BaseCard
-        v-for="field in form.fields"
-        :key="field.id"
-        class="DesktopFilterSection"
-      >
-        <template #title>{{ field.name }}</template>
-        <template #default>
-          <div class="DesktopFilterSection__content">
-            <ProductQueryField
-              class="DesktopFilterSection__field mb-0"
-              :field="field"
-              :value="form.formData[field.id]"
-              :disable-label="multiSection"
-              radio-type="radio"
-              @update="update"
-            />
-            <BaseInputMessage
-              v-if="
-                form.validateState[field.id] &&
-                form.validateState[field.id].message
-              "
-              :msg="form.validateState[field.id].message"
-              type="error"
-            />
-          </div>
-        </template>
-      </BaseCard>
-    </template>
-    <BaseCard v-else class="DesktopFilterSection">
-      <template #title>投保資料</template>
+    <BaseCard
+      v-for="option in formattedInsuranceOptions"
+      :key="option.key"
+      class="DesktopFilterSection"
+    >
+      <template #title>{{ option.title }}{{ option.key }}</template>
       <template #default>
         <div class="DesktopFilterSection__content">
-          <ProductQueryField
-            v-for="field in form.fields"
-            :key="field.id"
-            class="DesktopFilterSection__field"
-            :field="field"
-            :value="form.formData[field.id]"
-            @update="update"
-          />
+          <div class="ProductQueryField">
+            {{ selectedFilters[option.key] }}
+            <div
+              v-for="item in option.items"
+              :key="item.id"
+              class="ProductQueryField__field"
+            >
+              <Radio
+                v-if="option.key !== 'tagList'"
+                :text="item.name"
+                :value="item.id"
+                :current-selected-value="
+                  Number(selectedFilters[option.key]) || 0
+                "
+                @update="(value) => updateValue(option.key, value)"
+              />
+              <Checkbox
+                v-else
+                :text="item.name"
+                :value="item.id"
+                :current-selected-values="selectedFilters[option.key] || []"
+                @update="updateValue(option.key, item.id)"
+              />
+            </div>
+          </div>
         </div>
       </template>
     </BaseCard>
@@ -48,131 +40,112 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import {
   defineComponent,
-  nextTick,
-  ref,
-  useRoute,
-  useRouter,
+  reactive,
   useStore,
-  watch,
+  computed,
 } from '@nuxtjs/composition-api'
-import { useAnalytics } from '@/utils/composition-api'
-import { EventTypes } from '@/analytics/event-listeners/event.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
-import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
-import { InsuranceListType } from '@/routes/insurance'
-import ProductQueryField from '../../product/ProductQueryField.vue'
-
+import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
+import Radio from '@/components/insurance/product/input-field/Radio.vue'
 export default defineComponent({
   components: {
     BaseCard,
-    ProductQueryField,
-    BaseInputMessage,
+    Checkbox,
+    Radio,
   },
-  setup(props, ctx) {
+  setup() {
     const store = useStore<InsuranceVuexState>()
-    const route = useRoute()
-    const router = useRouter()
-    const analytics = useAnalytics()
 
-    const multiSection = !(route.value.name === InsuranceListType.EXTERNAL)
-    const pageType =
-      route.value.name === InsuranceListType.FEATURE_TAG
-        ? '主題標籤頁'
-        : route.value.name === InsuranceListType.SEARCH
-        ? '搜尋結果頁'
-        : '險種頁'
-
-    let isResetForm = false
-    const { defaultValue, config } = store.state.insurance.filter
-    const queryStringValue = _.keys(config).reduce((acc, cur) => {
-      if (!_.isUndefined(route.value.query[cur])) {
-        acc[cur] = route.value.query[cur]
-      }
-      return acc
-    }, {})
-
-    const initValue = {
-      ...defaultValue,
-      ...queryStringValue,
+    // 首先定義資料的介面
+    interface InsuranceItem {
+      id: number
+      name: string
     }
 
-    const form = ref(useInsuranceFilterForm(config, initValue))
-
-    const tracking = (label: string) => {
-      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
-        category: '篩選商品',
-        action: pageType,
-        label,
-      })
+    interface InsuranceOptions {
+      [key: string]: InsuranceItem[] // 索引簽名，允許動態訪問屬性
+      statusList: InsuranceItem[]
+      categoryList: InsuranceItem[]
+      caseList: InsuranceItem[]
+      typeList: InsuranceItem[]
+      tagList: InsuranceItem[]
     }
 
-    const update: typeof form.value.update = (payload) => {
-      const trackingLabel = form.value.fields.find(
-        (field) => field.id === payload.id
-      )?.name
-      if (trackingLabel) {
-        tracking(trackingLabel)
-      }
-      isResetForm = false
-      return form.value.update(payload)
+    interface FormattedInsuranceOption {
+      key: string
+      title: string
+      items: InsuranceItem[]
     }
 
-    const updateQuery = _.debounce(() => {
-      const searchKeyword = route.value.query.q
-      const routeQuery = _.omit(route.value.query, ['q'])
+    // 定義映射類型
+    const mappingType: Record<string, string> = {
+      statusList: '保險產品狀態',
+      categoryList: '保險種類',
+      caseList: '保險年期',
+      typeList: '保險類別',
+      tagList: '保險特色',
+    }
 
-      if (_.isEqual(routeQuery, form.value.formData) || _.isEmpty(routeQuery)) {
-        ctx.emit('loading', false)
+    // 使用 computed 來轉換資料格式
+    const formattedInsuranceOptions = computed<FormattedInsuranceOption[]>(
+      () => {
+        const options = store.state.insurance
+          .insuranceOptions as InsuranceOptions
+
+        return Object.keys(mappingType)
+          .filter((key) => options[key])
+          .map((key) => ({
+            key,
+            title: mappingType[key],
+            items:
+              key === 'statusList' || key === 'tagList'
+                ? options[key]
+                : [{ id: 0, name: '全部' }, ...options[key]],
+          }))
       }
+    )
+    // 選中的過濾器
+    const selectedFilters = reactive({
+      statusList: 1,
+      categoryList: 0,
+      caseList: 0,
+      typeList: 0,
+      tagList: [],
+    })
 
-      if (form.value.isAllValidated) {
-        const query = form.value.formData
+    const updateValue = (key: string, val: number) => {
+      if (key === 'tagList') {
+        // tagList 是多選
+        const index = selectedFilters[key].indexOf(val)
 
-        if (route.value.name === InsuranceListType.SEARCH) {
-          query.q = searchKeyword
+        if (index > -1) {
+          // 如果值已經存在，則移除它
+          selectedFilters[key].splice(index, 1)
+        } else {
+          // 如果值不存在，則加入它
+          selectedFilters[key].push(val)
+
+          // 如果加入後長度大於 1，檢查並移除值為 0 的元素
+          if (selectedFilters[key].length > 1) {
+            const zeroIndex = selectedFilters[key].indexOf(0)
+            if (zeroIndex > -1) {
+              selectedFilters[key].splice(zeroIndex, 1)
+            }
+          }
         }
-
-        /**
-         * @TODO: 之後可以簡化 query 的呈現方式
-         * https://github.com/UPN-TW/my83-f2e/pull/205#issuecomment-843952614
-         */
-        router.push({ query })
+      } else {
+        // 其他選項都是單選
+        selectedFilters[key] = val
       }
-    }, 1000)
-
-    watch(
-      () => form.value.formData,
-      () => {
-        if (isResetForm) return
-
-        nextTick(() => {
-          ctx.emit('loading', form.value.isAllValidated)
-          updateQuery()
-        })
-      },
-      {
-        deep: true,
-      }
-    )
-
-    watch(
-      () => store.state.insurance.filter.config,
-      () => {
-        isResetForm = true
-        const { defaultValue, config } = store.state.insurance.filter
-        form.value = useInsuranceFilterForm(config, defaultValue)
-      }
-    )
+    }
 
     return {
-      multiSection,
-      form,
-      update,
+      formattedInsuranceOptions,
+      selectedFilters,
+      updateValue,
     }
   },
 })
