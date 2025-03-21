@@ -5,13 +5,14 @@
       :key="option.key"
       class="DesktopFilterSection"
     >
-      <template #title>{{ option.title }}{{ option.key }}</template>
+      <template #title>{{ option.title }}</template>
       <template #default>
         <div class="DesktopFilterSection__content">
           <div class="ProductQueryField">
-            {{ selectedFilters[option.key] }}
             <div
-              v-for="item in option.items"
+              v-for="item in option.key !== 'tagList'
+                ? option.items
+                : showTagList"
               :key="item.id"
               class="ProductQueryField__field"
             >
@@ -32,6 +33,18 @@
                 @update="updateValue(option.key, item.id)"
               />
             </div>
+            <div
+              v-if="option.key === 'tagList'"
+              class="dialog__expand"
+              @click="expandTagList(option.items)"
+            >
+              <div class="dialog__expand-line"></div>
+              <div class="dialog__expand-word">
+                <span v-if="!isExpandTagList">展開</span>
+                <span v-else>收起</span>
+              </div>
+              <div class="dialog__expand-line"></div>
+            </div>
           </div>
         </div>
       </template>
@@ -45,6 +58,8 @@ import {
   reactive,
   useStore,
   computed,
+  ref,
+  onMounted,
 } from '@nuxtjs/composition-api'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
@@ -116,6 +131,28 @@ export default defineComponent({
       tagList: [],
     })
 
+    const isExpandTagList = ref(false)
+    const showTagList = ref<InsuranceItem[]>([])
+
+    // 初始化時設置默認顯示的標籤列表
+    onMounted(() => {
+      const tagListOption = formattedInsuranceOptions.value.find(
+        (option) => option.key === 'tagList'
+      )
+      if (tagListOption) {
+        showTagList.value = tagListOption.items.slice(0, 10)
+      }
+    })
+
+    const expandTagList = (items: InsuranceItem[]) => {
+      isExpandTagList.value = !isExpandTagList.value
+      if (isExpandTagList.value) {
+        showTagList.value = items
+      } else {
+        showTagList.value = items.slice(0, 10)
+      }
+    }
+
     const updateValue = (key: string, val: number) => {
       if (key === 'tagList') {
         // tagList 是多選
@@ -146,6 +183,9 @@ export default defineComponent({
       formattedInsuranceOptions,
       selectedFilters,
       updateValue,
+      isExpandTagList,
+      expandTagList,
+      showTagList,
     }
   },
 })
@@ -168,6 +208,46 @@ export default defineComponent({
 
     &:last-child {
       margin-bottom: 0;
+    }
+  }
+  .dialog__expand {
+    display: flex;
+    align-items: center;
+    margin: 20px auto;
+    text-align: center;
+    cursor: pointer;
+    color: #1e2b58;
+    &:hover {
+      color: #ff6a82;
+    }
+
+    &-line {
+      width: 100%;
+      height: 1px;
+      background: #bcbcbc;
+    }
+    &-word {
+      white-space: nowrap;
+      margin: 0 12px;
+      font-size: 0; /* 去除所有空白 */
+
+      span,
+      &:after {
+        font-size: 1rem; /* 恢復文字大小 */
+      }
+
+      &:after {
+        content: '保險特色';
+      }
+    }
+    &-btn {
+      padding: 12px 40px;
+      border-radius: 24px;
+      background: #1e2b58;
+      color: #fff;
+    }
+    &-btn:hover {
+      background: #8395be;
     }
   }
 }
