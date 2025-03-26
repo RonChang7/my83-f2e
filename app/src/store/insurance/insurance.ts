@@ -19,6 +19,8 @@ import {
   InsuranceListFilterResponse,
   FetchInsuranceSearchListPayload,
   CategoryItem,
+  InsuranceSearchPayload,
+  InsuranceSearchProduct,
 } from '@/api/insurance/insurance.type'
 import { RecommendProduct } from '@/api/question/question.type'
 import {
@@ -72,6 +74,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
           typeList: null,
           tagList: null,
         },
+        insuranceSearchProduct: null,
+        insuranceSearchProductTotalCount: 0,
       }
     },
     getters: {},
@@ -294,6 +298,25 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch((error) => reject(error))
         })
       },
+      [types.FETCH_INSURANCE_SEARCH_PRODUCT](
+        { commit },
+        payload: InsuranceSearchPayload
+      ) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceSearchProduct(payload)
+            .then((response) => {
+              const productList = response.data.product
+              commit(types.UPDATE_INSURANCE_SEARCH_PRODUCT, productList)
+              commit(
+                types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT,
+                response.data.totalCount
+              )
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
     },
     mutations: {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
@@ -413,6 +436,18 @@ export const createStoreModule = <R>(): Module<State, R> => {
           statusList,
         } as typeof data & { statusList: typeof statusList }
       },
+      [types.UPDATE_INSURANCE_SEARCH_PRODUCT](
+        state,
+        data: InsuranceSearchProduct[]
+      ) {
+        state.insuranceSearchProduct = data
+      },
+      [types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT](
+        state,
+        totalCount: number
+      ) {
+        state.insuranceSearchProductTotalCount = totalCount
+      },
     },
   }
 }
@@ -455,6 +490,8 @@ export interface State {
     typeList: CategoryItem[] | null
     tagList: CategoryItem[] | null
   } | null
+  insuranceSearchProduct: InsuranceSearchProduct[] | null
+  insuranceSearchProductTotalCount: number
 }
 
 export interface CurrentParam extends FilterValue {

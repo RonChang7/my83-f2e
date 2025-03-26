@@ -20,13 +20,13 @@ import {
   FETCH_PAGE_DATA,
   FETCH_INSURANCE_LIST,
   UPDATE_INSURANCE_PRODUCT_FEE,
-  FETCH_INSURANCE_LIST_FILTER,
   FETCH_TAG_LIST_FILTER,
   FETCH_TAG_LIST,
   FETCH_INSURANCE_SEARCH_LIST,
   FETCH_INSURANCE_SEARCH_LIST_FILTER,
   FETCH_SEARCH_NO_RESULT,
   FETCH_INSURANCE_OPTIONS,
+  FETCH_INSURANCE_SEARCH_PRODUCT,
 } from '@/store/insurance/insurance.type'
 
 interface StoreState {
@@ -119,11 +119,16 @@ class NormalInsurancePage extends InsurancePage {
   protected fetchPageDataRequests() {
     return [
       this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`),
-      this.store.dispatch(`insurance/${FETCH_PAGE_DATA}`, this.page.insurance),
-      this.store.dispatch(
-        `insurance/${FETCH_INSURANCE_LIST_FILTER}`,
-        this.page.insurance
-      ),
+      this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
+        searchText: this.page.searchKeyword,
+        status: '1',
+        categoryId: '',
+        caseId: '',
+        typeId: '',
+        tagId: '',
+        page: 1,
+        perPage: 10,
+      }),
     ]
   }
 
@@ -341,7 +346,16 @@ export class InsurancePageService {
       // if (!this.store.state.insurance.insuranceOptions?.categoryList) {
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
       // }
-
+      await this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
+        searchText: '國泰',
+        status: '1',
+        categoryId: '',
+        caseId: '',
+        typeId: '',
+        tagId: '',
+        page: 1,
+        perPage: 10,
+      })
       // 再加載頁面資料
       await this.page.fetch()
     } catch (error) {

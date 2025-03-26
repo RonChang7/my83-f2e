@@ -15,6 +15,8 @@ import {
   FetchInsuranceSearchListPayload,
   SearchNoResultResponse,
   InsuranceOptionsResponse,
+  InsuranceSearchPayload,
+  InsuranceSearchResponse,
 } from './insurance.type'
 
 const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
@@ -23,7 +25,10 @@ const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
   return _.reduce(
     filters,
     (result, value, key) => {
-      result[key] = typeof value === 'string' || typeof value === 'number' ? value : value.join(',')
+      result[key] =
+        typeof value === 'string' || typeof value === 'number'
+          ? value
+          : value.join(',')
       return result
     },
     {}
@@ -48,7 +53,9 @@ export const fetchInsurancePageStaticData = async ({
     return data
   }
 
-  const { data } = await request.get(`${host}/static/insurance/${insurance}.json`)
+  const { data } = await request.get(
+    `${host}/static/insurance/${insurance}.json`
+  )
   return data
 }
 
@@ -123,7 +130,9 @@ export const updateInsuranceProductFee = async (
  * @description 取得險種相關文章
  * @param {string} insurance 險種名
  */
-export const fetchRelatedBlogs = async (insurance: string): Promise<RelatedBlogsResponse> => {
+export const fetchRelatedBlogs = async (
+  insurance: string
+): Promise<RelatedBlogsResponse> => {
   const { data } = await request.get<RelatedBlogsResponse>(
     `/api/insurance/${insurance}/related-blogs`
   )
@@ -171,7 +180,9 @@ export const fetchInsuranceTagList = async (
 export const fetchInsuranceTagListFilter = async (
   insurance: string
 ): Promise<InsuranceListFilterResponse> => {
-  const { data } = await request.get(`/api/insurance/tags/${insurance}/tags-filter`)
+  const { data } = await request.get(
+    `/api/insurance/tags/${insurance}/tags-filter`
+  )
   return data
 }
 
@@ -215,7 +226,9 @@ export const fetchInsuranceSearchListFilter = async (
 /**
  * @description 取得搜尋關鍵字無資料的內容
  */
-export const fetchSearchNoResult = async (): Promise<SearchNoResultResponse> => {
+export const fetchSearchNoResult = async (): Promise<
+  SearchNoResultResponse
+> => {
   const { data } = await request.get(`/api/insurance/search-no-result`)
 
   return data
@@ -225,9 +238,31 @@ export const fetchSearchNoResult = async (): Promise<SearchNoResultResponse> => 
  * @description 取得保險選項資料（類別、案例、類型、標籤）
  * @returns {Promise<InsuranceOptionsResponse>} 包含保險選項的 Promise
  */
-export const fetchInsuranceOptions = async (): Promise<InsuranceOptionsResponse> => {
+export const fetchInsuranceOptions = async (): Promise<
+  InsuranceOptionsResponse
+> => {
   const { data } = await request.get<InsuranceOptionsResponse>(
     `${process.env.apiProductUrl}/getInsuranceOptions`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': 'egfwfedewg4#213sassx',
+      },
+    }
+  )
+  return data
+}
+
+/**
+ * @description 取得保險搜尋商品
+ * @param {InsuranceSearchPayload} payload
+ */
+export const fetchInsuranceSearchProduct = async (
+  payload: InsuranceSearchPayload
+): Promise<InsuranceSearchResponse> => {
+  const { data } = await request.post<InsuranceSearchResponse>(
+    `${process.env.apiProductUrl}/postInsuranceSearch`,
+    payload,
     {
       headers: {
         'Content-Type': 'application/json',
