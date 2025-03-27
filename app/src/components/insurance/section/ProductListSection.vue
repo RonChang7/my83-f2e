@@ -1,21 +1,5 @@
 <template>
   <div class="ProductListSection">
-    <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
-      <div class="ProductListSection__idealCoverage__title">
-        <span>MY83 建議</span>
-        理想保額
-      </div>
-      <div class="ProductListSection__idealCoverage__wrapper">
-        <CoverageBadge
-          v-for="(coverage, index) in idealCoverages"
-          :key="index"
-          class="ProductListSection__idealCoverage__chart"
-          :percentage="100"
-          :wording="coverage.amount"
-          :legend="coverage.name"
-        />
-      </div>
-    </div>
     <slot />
     <div ref="listWrapper" class="ProductListSection__listWrapper">
       <div
@@ -26,42 +10,14 @@
         <span>載入中</span>
       </div>
       <ProductCard
-        v-for="product in insuranceProducts.slice(0, 5)"
-        :key="product.id"
+        v-for="(product, index) in insuranceProducts"
+        :key="index"
         class="ProductListSection__product"
-        :class="{ enabled: isEnabled(product) }"
         :product="product"
-        :enabled="isEnabled(product)"
-        @click-button="
-          isEnabled(product)
-            ? clickProductButton(`${product.company}${product.name}`)
-            : null
-        "
-        @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
       <ProductListNoResult
         v-if="!insuranceProducts.length"
         :is-empty-search-result="isEmptySearchResult"
-      />
-      <div
-        v-if="!isEmptySearchResult"
-        :class="{ ProductListSection__ad: hasAd }"
-      >
-        <slot name="ad"></slot>
-      </div>
-      <ProductCard
-        v-for="product in insuranceProducts.slice(5)"
-        :key="product.id"
-        class="ProductListSection__product"
-        :class="{ enabled: isEnabled(product) }"
-        :product="product"
-        :enabled="isEnabled(product)"
-        @click-button="
-          isEnabled(product)
-            ? clickProductButton(`${product.company}${product.name}`)
-            : null
-        "
-        @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
     </div>
     <div v-if="insuranceProducts.length" class="ProductListSection__disclaimer">
@@ -114,7 +70,7 @@ const options: ComponentOption = {
       return this.$store.state.insurance.insuranceIdealCoverages || []
     },
     insuranceProducts() {
-      return this.$store.state.insurance.insuranceList || []
+      return this.$store.state.insurance.insuranceSearchProduct || []
     },
     hasAd() {
       return isSlotExist('ad', this)

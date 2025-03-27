@@ -1,169 +1,85 @@
 <template>
-  <BaseCard class="ProductCard" :enable-hover="enabled">
+  <BaseCard class="ProductCard">
     <template #default>
       <div class="ProductCard__content">
         <div class="ProductCard__section">
           <div class="ProductCard__subSection">
             <div class="ProductCard__company">
-              {{ product.company }}
+              {{ product.companyName }}
             </div>
-            <h3 class="ProductCard__name">{{ product.name }}</h3>
-            <div
-              v-if="product.badges.length || product.ranking_badge"
-              class="ProductCard__featureTags"
-            >
-              <ProductFeatureTag
-                v-for="(tag, index) in product.badges"
-                :key="index"
-                :tag="tag"
-              />
-              <div v-if="product.ranking_badge" class="ProductCard__rankingTag">
-                <BaseTag small type="primary-outline">
-                  {{ product.ranking_badge.text }}
-                </BaseTag>
-                <!-- <span>{{ product.ranking_badge.description }}</span> -->
+            <h3 class="ProductCard__name">
+              <span v-if="product.stop" class="ProductCard__name__stop">
+                [停售]
+              </span>
+              {{ product.productCode }}{{ product.productName }}
+            </h3>
+            <div class="ProductCard__featureTags">
+              <!-- TODO: ranking_badge 等同於 熱門 popular>60 / 推薦 promote>60 / 停售stop:true(要確認是否擺這)-->
+              <div v-if="product.popular > 60" class="ProductCard__rankingTag">
+                <BaseTag small type="primary-outline">熱門</BaseTag>
+              </div>
+              <div v-if="product.promote > 60" class="ProductCard__rankingTag">
+                <BaseTag small type="primary-outline">推薦</BaseTag>
               </div>
             </div>
-            <div v-if="features" class="ProductCard__features">
-              {{ features }}
-            </div>
-            <div v-if="product.coverage_age" class="ProductCard__coverageAge">
-              {{ product.coverage_age }}
-            </div>
-            <div v-if="product.promotion" class="ProductCard__promotion">
-              {{ product.promotion }}
-            </div>
-          </div>
-          <div
-            v-if="product.coverage_charts.length || product.coverages.length"
-            class="ProductCard__subSection"
-          >
-            <div
-              class="ProductCard__coverages"
-              :class="{
-                'flex-wrap': enableCoverageFlexWrap,
-              }"
-            >
-              <CoverageBadge
-                v-for="(coverage, index) in product.coverage_charts"
-                :key="index"
-                class="ProductCard__coverages__chart"
-                :percentage="coverage.amount_percentage"
-                :wording="`${coverage.amount_percentage}%`"
-                :legend="coverage.name"
-              />
-              <div
-                v-for="(coverage, index) in product.coverages"
-                :key="index"
-                class="ProductCard__coverages__item"
-              >
-                <span class="name">
-                  {{ coverage.name }}
-                </span>
-                <span class="amount">
-                  {{ coverage.amount }}
-                </span>
-                <span v-if="coverage.postfix" class="postfix">
-                  {{ coverage.postfix }}
-                </span>
-              </div>
-            </div>
+            <div class="ProductCard__features">{{ features }}</div>
+            <div class="ProductCard__features">承保年齡：{{ product.age }}</div>
+            <div class="ProductCard__features">年期：{{ product.period }}</div>
+            <div class="ProductCard__features">理賠項目：{{ benefit }}</div>
           </div>
         </div>
         <div class="ProductCard__section">
           <div class="ProductCard__subSection">
-            <!-- <div class="ProductCard__plan">
-              推薦計畫：
-              <br />
-              {{ product.plan }}
-            </div> -->
-            <transition name="fade" mode="out-in">
-              <div :key="product.fee" class="ProductCard__fee">
-                <span
-                  v-if="product.fee_prefix"
-                  class="ProductCard__fee__prefix"
-                >
-                  {{ product.fee_prefix }}
-                </span>
-                <!-- {{ getFormattedFee(product.fee) }} -->
-              </div>
-            </transition>
-          </div>
-          <div class="ProductCard__subSection">
-            <!-- <div v-if="viewCount" class="ProductCard__viewCount">
-              {{ viewCount }}
-            </div> -->
-            <BaseButton
-              class="ProductCard__btn"
-              :to="enabled ? product.btn.link : null"
-              size="l-a"
-              :is-disabled="!enabled"
-              @click.stop.native="$emit('click-button')"
-            >
-              {{ buttonText }}
-            </BaseButton>
+            <button @click="goToProductDetail(product.url)">詳細內容</button>
           </div>
         </div>
       </div>
     </template>
-    <!-- <template v-if="product.description" #footer>
-      {{ product.description }}
-    </template> -->
   </BaseCard>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from '@nuxtjs/composition-api'
+import { computed, defineComponent, useRouter } from '@nuxtjs/composition-api'
 import { InsuranceProduct } from '@/api/insurance/insurance.type'
 import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
-import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
-import { delimitIntegerWithSymbol } from '@/utils/digital'
 import BaseTag from '@/components/my83-ui-kit/tag/BaseTag.vue'
-import CoverageBadge from '../coverages/CoverageBadge.vue'
-import ProductFeatureTag from './ProductFeatureTag.vue'
 
 export default defineComponent({
   components: {
     BaseCard,
-    BaseButton,
-    ProductFeatureTag,
     BaseTag,
-    CoverageBadge,
   },
   props: {
     product: {
       type: Object as () => InsuranceProduct,
       required: true,
     },
-    enabled: {
-      type: Boolean,
-      default: true,
-    },
   },
   setup(props) {
-    const features = computed(() => props.product.features.join('．'))
-    const viewCount = computed(() =>
-      props.product.view_count ? `有 ${props.product.view_count} 人有興趣` : ''
-    )
-    const enableCoverageFlexWrap = computed(
-      () =>
-        props.product.coverages.length > 0 &&
-        props.product.coverage_charts.length === 0
-    )
-    const buttonText = computed(() =>
-      props.enabled ? props.product.btn.text : '條件不符合'
-    )
-    const getFormattedFee = (fee: number | null) => {
-      const feeString = fee === null ? '　-　' : delimitIntegerWithSymbol(fee)
-      return `${feeString}元 /年`
+    const router = useRouter()
+
+    const features = computed(() => {
+      const categorys =
+        props.product.categoryMain + '．' + props.product.categorySub
+      const tags = props.product.tag.map((item) => item.name)
+      return categorys + '．' + tags.join('．')
+    })
+    const benefit = computed(() => {
+      const arr = []
+      props.product.benefit.forEach((item) => {
+        arr.push(item.name)
+      })
+      return arr.join('．')
+    })
+
+    const goToProductDetail = (url: string) => {
+      router.push(url)
     }
 
     return {
       features,
-      viewCount,
-      enableCoverageFlexWrap,
-      buttonText,
-      getFormattedFee,
+      benefit,
+      goToProductDetail,
     }
   },
 })
@@ -206,8 +122,37 @@ export default defineComponent({
   }
 
   &__subSection {
+    width: 100%;
     @include max-media('xl') {
       flex: 0 0 auto;
+    }
+
+    button {
+      @include max-media('xl') {
+        min-width: 100%;
+      }
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 40px;
+      min-height: 40px;
+      line-height: 1;
+      padding: 0 50px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: 0.3s;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: pointer;
+      color: #fff;
+      background: #ef6e2e;
+      border-color: #ef6e2e;
+      margin-top: 8px;
     }
   }
 
@@ -249,7 +194,6 @@ export default defineComponent({
   }
 
   &__features,
-  &__coverageAge,
   &__viewCount,
   &__promotion {
     font-size: 0.75rem;
