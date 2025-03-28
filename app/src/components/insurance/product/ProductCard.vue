@@ -28,7 +28,7 @@
             <div class="ProductCard__features">理賠項目：{{ benefit }}</div>
           </div>
         </div>
-        <div class="ProductCard__section">
+        <div class="ProductCard__section justify-end ml-12">
           <div class="ProductCard__subSection">
             <button @click="goToProductDetail(product.url)">詳細內容</button>
           </div>
@@ -119,6 +119,14 @@ export default defineComponent({
         text-align: left;
       }
     }
+  }
+
+  .justify-end {
+    justify-content: flex-end;
+  }
+
+  .ml-12 {
+    margin-left: 12px;
   }
 
   &__subSection {
