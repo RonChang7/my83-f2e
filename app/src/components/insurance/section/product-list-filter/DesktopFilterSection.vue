@@ -57,6 +57,8 @@ import {
   defineComponent,
   reactive,
   useStore,
+  useRoute,
+  useRouter,
   computed,
   ref,
   onMounted,
@@ -65,6 +67,8 @@ import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
 import Radio from '@/components/insurance/product/input-field/Radio.vue'
+import { FETCH_INSURANCE_SEARCH_PRODUCT } from '@/store/insurance/insurance.type'
+
 export default defineComponent({
   components: {
     BaseCard,
@@ -73,7 +77,8 @@ export default defineComponent({
   },
   setup() {
     const store = useStore<InsuranceVuexState>()
-
+    const route = useRoute()
+    const router = useRouter()
     // 首先定義資料的介面
     interface InsuranceItem {
       id: number
@@ -82,7 +87,7 @@ export default defineComponent({
 
     interface InsuranceOptions {
       [key: string]: InsuranceItem[] // 索引簽名，允許動態訪問屬性
-      statusList: InsuranceItem[]
+      statusID: InsuranceItem[]
       categoryList: InsuranceItem[]
       caseList: InsuranceItem[]
       typeList: InsuranceItem[]
@@ -97,7 +102,7 @@ export default defineComponent({
 
     // 定義映射類型
     const mappingType: Record<string, string> = {
-      statusList: '保險產品狀態',
+      statusID: '保險產品狀態',
       categoryList: '保險種類',
       caseList: '保險年期',
       typeList: '保險類別',
@@ -116,7 +121,7 @@ export default defineComponent({
             key,
             title: mappingType[key],
             items:
-              key === 'statusList' || key === 'tagList'
+              key === 'statusID' || key === 'tagList'
                 ? options[key]
                 : [{ id: 0, name: '全部' }, ...options[key]],
           }))
@@ -124,7 +129,7 @@ export default defineComponent({
     )
     // 選中的過濾器
     const selectedFilters = reactive({
-      statusList: 1,
+      statusID: 1,
       categoryList: 0,
       caseList: 0,
       typeList: 0,
@@ -152,6 +157,50 @@ export default defineComponent({
         showTagList.value = items.slice(0, 10)
       }
     }
+    const changeRoute = () => {
+      const mappingSelectedIds = {
+        statusID: 'status',
+        categoryList: 'categoryId',
+        caseList: 'caseId',
+        typeList: 'typeId',
+        tagList: 'tagId',
+      }
+      const query = Object.keys(selectedFilters).reduce((acc, key) => {
+        if (mappingSelectedIds[key]) {
+          // 確保值存在且是陣列才調用 join
+          const value = selectedFilters[key]
+          if (key === 'tagList') {
+            acc[mappingSelectedIds[key]] = value.join(',')
+          } else if (value !== null && value !== undefined) {
+            // 處理非陣列但有效的值（轉成字串）
+            acc[mappingSelectedIds[key]] =
+              Number(value) === 0 ? '' : String(value)
+          }
+        }
+        return acc
+      }, {})
+
+      router.push({
+        path: '/insurance/search',
+        query: {
+          q: route.value.query.q,
+          ...query,
+        },
+      })
+    }
+
+    const fetchProduct = async () => {
+      await store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
+        searchText: route.value.query.q,
+        status: route.value.query.statusID,
+        categoryId: route.value.query.categoryId,
+        caseId: route.value.query.caseId,
+        typeId: route.value.query.typeId,
+        tagId: route.value.query.tagList,
+        page: 1,
+        perPage: 10,
+      })
+    }
 
     const updateValue = (key: string, val: number) => {
       if (key === 'tagList') {
@@ -177,6 +226,10 @@ export default defineComponent({
         // 其他選項都是單選
         selectedFilters[key] = val
       }
+      // console.log(selectedFilters)
+      // console.log(route.value.query)
+      changeRoute()
+      fetchProduct()
     }
 
     return {
@@ -186,6 +239,8 @@ export default defineComponent({
       isExpandTagList,
       expandTagList,
       showTagList,
+      changeRoute,
+      fetchProduct,
     }
   },
 })
@@ -210,6 +265,7 @@ export default defineComponent({
       margin-bottom: 0;
     }
   }
+
   .dialog__expand {
     display: flex;
     align-items: center;
@@ -217,6 +273,7 @@ export default defineComponent({
     text-align: center;
     cursor: pointer;
     color: #1e2b58;
+
     &:hover {
       color: #ff6a82;
     }
@@ -226,26 +283,29 @@ export default defineComponent({
       height: 1px;
       background: #bcbcbc;
     }
+
     &-word {
       white-space: nowrap;
       margin: 0 12px;
-      font-size: 0; /* 去除所有空白 */
+      font-size: 0;
 
       span,
       &:after {
-        font-size: 1rem; /* 恢復文字大小 */
+        font-size: 1rem;
       }
 
       &:after {
         content: '保險特色';
       }
     }
+
     &-btn {
       padding: 12px 40px;
       border-radius: 24px;
       background: #1e2b58;
       color: #fff;
     }
+
     &-btn:hover {
       background: #8395be;
     }

@@ -132,7 +132,7 @@ export default defineComponent({
 
     interface InsuranceOptions {
       [key: string]: InsuranceItem[] // 索引簽名，允許動態訪問屬性
-      statusList: InsuranceItem[]
+      statusID: InsuranceItem[]
       categoryList: InsuranceItem[]
       caseList: InsuranceItem[]
       typeList: InsuranceItem[]
@@ -147,7 +147,7 @@ export default defineComponent({
 
     // 定義映射類型
     const mappingType: Record<string, string> = {
-      statusList: '保險產品狀態',
+      statusID: '保險產品狀態',
       categoryList: '保險種類',
       caseList: '保險年期',
       typeList: '保險類別',
@@ -166,7 +166,7 @@ export default defineComponent({
             key,
             title: mappingType[key],
             items:
-              key === 'statusList' || key === 'tagList'
+              key === 'statusID' || key === 'tagList'
                 ? options[key]
                 : [{ id: 0, name: '全部' }, ...options[key]],
           }))
@@ -174,7 +174,7 @@ export default defineComponent({
     )
     // 選中的過濾器
     const selectedFilters = reactive({
-      statusList: 1,
+      statusID: 1,
       categoryList: 0,
       caseList: 0,
       typeList: 0,
@@ -235,7 +235,7 @@ export default defineComponent({
     // const { defaultValue, config } = store.state.insurance.filter
 
     const reset = function () {
-      selectedFilters.statusList = 1
+      selectedFilters.statusID = 1
       selectedFilters.categoryList = 0
       selectedFilters.caseList = 0
       selectedFilters.typeList = 0
@@ -378,6 +378,7 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   color: #1e2b58;
+
   &:hover {
     color: #ff6a82;
   }
@@ -387,6 +388,7 @@ export default defineComponent({
     height: 1px;
     background: #bcbcbc;
   }
+
   &-word {
     white-space: nowrap;
     margin: 0 12px;
@@ -401,12 +403,14 @@ export default defineComponent({
       content: '保險特色';
     }
   }
+
   &-btn {
     padding: 12px 40px;
     border-radius: 24px;
     background: #1e2b58;
     color: #fff;
   }
+
   &-btn:hover {
     background: #8395be;
   }

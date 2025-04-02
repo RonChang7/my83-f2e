@@ -347,7 +347,7 @@ export class InsurancePageService {
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
       // }
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
-        searchText: '國泰',
+        searchText: this.ctx.route.query.q,
         status: '1',
         categoryId: '',
         caseId: '',

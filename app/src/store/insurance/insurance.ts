@@ -427,14 +427,14 @@ export const createStoreModule = <R>(): Module<State, R> => {
           tagList: CategoryItem[]
         }
       ) {
-        const statusList = [
+        const statusID = [
           { id: 1, name: '銷售中' },
           { id: -1, name: '停售' },
         ]
         state.insuranceOptions = {
           ...data,
-          statusList,
-        } as typeof data & { statusList: typeof statusList }
+          statusID,
+        } as typeof data & { statusID: typeof statusID }
       },
       [types.UPDATE_INSURANCE_SEARCH_PRODUCT](
         state,
