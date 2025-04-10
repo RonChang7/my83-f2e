@@ -48,7 +48,7 @@
                 :text="item.name"
                 :value="item.id"
                 :current-selected-values="selectedFilters[option.key] || []"
-                @update="updateValue(option.key, item.id)"
+                @update="(value) => updateValue(option.key, value)"
               />
             </div>
             <div
@@ -97,6 +97,9 @@ import {
   watch,
   reactive,
   onMounted,
+  useRoute,
+  useRouter,
+  nextTick,
 } from '@nuxtjs/composition-api'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
@@ -105,6 +108,7 @@ import BaseFilter18 from '@/assets/icon/18/BaseFilter.svg'
 import BaseFilter24 from '@/assets/icon/24/BaseFilter.svg'
 import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
 import Radio from '@/components/insurance/product/input-field/Radio.vue'
+import { FETCH_INSURANCE_SEARCH_PRODUCT } from '@/store/insurance/insurance.type'
 
 export default defineComponent({
   components: {
@@ -121,8 +125,11 @@ export default defineComponent({
       default: '',
     },
   },
-  setup() {
+  emits: ['submit'],
+  setup(props, { emit }) {
     const store = useStore<InsuranceVuexState>()
+    const route = useRoute()
+    const router = useRouter()
 
     // 首先定義資料的介面
     interface InsuranceItem {
@@ -160,6 +167,8 @@ export default defineComponent({
         const options = store.state.insurance
           .insuranceOptions as InsuranceOptions
 
+        if (!options) return []
+
         return Object.keys(mappingType)
           .filter((key) => options[key])
           .map((key) => ({
@@ -172,6 +181,7 @@ export default defineComponent({
           }))
       }
     )
+
     // 選中的過濾器
     const selectedFilters = reactive({
       statusID: 1,
@@ -180,6 +190,156 @@ export default defineComponent({
       typeList: 0,
       tagList: [],
     })
+
+    // 從 URL 查詢參數初始化過濾器
+    const initializeFiltersFromQuery = () => {
+      const query = route.value.query
+
+      if (query.status) {
+        selectedFilters.statusID = Number(query.status) || 1
+      }
+
+      if (query.categoryId) {
+        selectedFilters.categoryList = Number(query.categoryId) || 0
+      }
+
+      if (query.caseId) {
+        selectedFilters.caseId = Number(query.caseId) || 0
+      }
+
+      if (query.typeId) {
+        selectedFilters.typeId = Number(query.typeId) || 0
+      }
+
+      if (query.tagId) {
+        const tagIds = String(query.tagId).split(',').map(Number)
+        selectedFilters.tagList = tagIds
+      }
+    }
+
+    // 當路由查詢參數變更時更新過濾器
+    watch(
+      () => route.value.query,
+      () => {
+        initializeFiltersFromQuery()
+      },
+      { immediate: true }
+    )
+
+    const isExpandTagList = ref(false)
+    const showTagList = ref<InsuranceItem[]>([])
+
+    // 初始化時設置默認顯示的標籤列表
+    onMounted(() => {
+      const tagListOption = formattedInsuranceOptions.value.find(
+        (option) => option.key === 'tagList'
+      )
+      if (tagListOption) {
+        showTagList.value = tagListOption.items.slice(0, 10)
+      }
+
+      // 從 URL 初始化過濾器
+      initializeFiltersFromQuery()
+    })
+
+    const expandTagList = (items: InsuranceItem[]) => {
+      isExpandTagList.value = !isExpandTagList.value
+      if (isExpandTagList.value) {
+        showTagList.value = items
+      } else {
+        showTagList.value = items.slice(0, 10)
+      }
+    }
+
+    // 修改路由和獲取新資料
+    const changeRoute = () => {
+      // 映射到路由查詢參數
+      const mappingSelectedIds = {
+        statusID: 'status',
+        categoryList: 'categoryId',
+        caseList: 'caseId',
+        typeList: 'typeId',
+        tagList: 'tagId',
+      }
+
+      const query = Object.keys(selectedFilters).reduce((acc, key) => {
+        if (mappingSelectedIds[key]) {
+          // 確保值存在且是陣列才調用 join
+          const value = selectedFilters[key]
+          if (key === 'tagList' && Array.isArray(value) && value.length > 0) {
+            acc[mappingSelectedIds[key]] = value.join(',')
+          } else if (value !== null && value !== undefined && value !== 0) {
+            // 處理非陣列但有效的值（轉成字串），只有非零值添加到查詢
+            acc[mappingSelectedIds[key]] = String(value)
+          }
+        }
+        return acc
+      }, {})
+
+      // 保留原有的 q 查詢參數
+      if (route.value.query.q) {
+        query.q = route.value.query.q
+      }
+
+      router.push({
+        path: route.value.path,
+        query,
+      })
+    }
+
+    // 獲取產品資料
+    const fetchProduct = async () => {
+      try {
+        await store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
+          searchText: route.value.query.q || '',
+          status: selectedFilters.statusID.toString(),
+          categoryId: selectedFilters.categoryList
+            ? selectedFilters.categoryList.toString()
+            : '',
+          caseId: selectedFilters.caseList
+            ? selectedFilters.caseList.toString()
+            : '',
+          typeId: selectedFilters.typeList
+            ? selectedFilters.typeList.toString()
+            : '',
+          tagId:
+            selectedFilters.tagList.length > 0
+              ? selectedFilters.tagList.join(',')
+              : '',
+          page: 1,
+          perPage: 10,
+        })
+        console.log('資料已更新')
+      } catch (error) {
+        console.error('獲取資料失敗:', error)
+      }
+    }
+
+    const visiblePanel = ref(false)
+
+    const openPanel = () => {
+      visiblePanel.value = true
+    }
+
+    const closePanel = () => {
+      visiblePanel.value = false
+    }
+
+    const reset = () => {
+      selectedFilters.statusID = 1
+      selectedFilters.categoryList = 0
+      selectedFilters.caseList = 0
+      selectedFilters.typeList = 0
+      selectedFilters.tagList = []
+
+      isExpandTagList.value = false
+      const tagListOption = formattedInsuranceOptions.value.find(
+        (option) => option.key === 'tagList'
+      )
+      if (tagListOption) {
+        showTagList.value = tagListOption.items.slice(0, 10)
+      }
+    }
 
     const updateValue = (key: string, val: number) => {
       if (key === 'tagList') {
@@ -205,63 +365,23 @@ export default defineComponent({
         // 其他選項都是單選
         selectedFilters[key] = val
       }
-    }
 
-    const isExpandTagList = ref(false)
-    const showTagList = ref<InsuranceItem[]>([])
-
-    // 初始化時設置默認顯示的標籤列表
-    onMounted(() => {
-      const tagListOption = formattedInsuranceOptions.value.find(
-        (option) => option.key === 'tagList'
-      )
-      if (tagListOption) {
-        showTagList.value = tagListOption.items.slice(0, 10)
-      }
-    })
-
-    const expandTagList = (items: InsuranceItem[]) => {
-      isExpandTagList.value = !isExpandTagList.value
-      if (isExpandTagList.value) {
-        showTagList.value = items
-      } else {
-        showTagList.value = items.slice(0, 10)
-      }
-    }
-
-    const visiblePanel = ref(false)
-    const openPanel = () => (visiblePanel.value = true)
-    const closePanel = () => (visiblePanel.value = false)
-    // const { defaultValue, config } = store.state.insurance.filter
-
-    const reset = function () {
-      selectedFilters.statusID = 1
-      selectedFilters.categoryList = 0
-      selectedFilters.caseList = 0
-      selectedFilters.typeList = 0
-      selectedFilters.tagList = []
-      isExpandTagList.value = false
-      const tagListOption = formattedInsuranceOptions.value.find(
-        (option) => option.key === 'tagList'
-      )
-      if (tagListOption) {
-        showTagList.value = tagListOption.items.slice(0, 10)
-      }
+      console.log('更新選項:', key, '值:', val)
+      console.log('當前篩選狀態:', selectedFilters)
     }
 
     const submit = () => {
-      console.log(selectedFilters)
-      // const query = form.value.formData
-      // if (route.value.name === InsuranceListType.SEARCH) {
-      //   query.q = route.value.query.q
-      // }
-      // router.push({ query })
+      console.log('套用篩選條件:', selectedFilters)
+      changeRoute()
+      fetchProduct()
       closePanel()
-      // nextTick(() => {
-      //   ctx.emit('submit')
-      // })
+
+      nextTick(() => {
+        emit('submit')
+      })
     }
 
+    // 監聽篩選條件配置，重置選項
     watch(
       () => store.state.insurance.filter.config,
       () => reset()
@@ -307,7 +427,6 @@ export default defineComponent({
     @include shadow('01');
 
     position: absolute;
-
     left: 0;
     display: flex;
     align-items: center;

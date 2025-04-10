@@ -28,7 +28,9 @@ const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
       result[key] =
         typeof value === 'string' || typeof value === 'number'
           ? value
-          : value.join(',')
+          : Array.isArray(value) && value !== null
+          ? value.join(',')
+          : value
       return result
     },
     {}

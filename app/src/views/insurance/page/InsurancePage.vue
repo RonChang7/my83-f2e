@@ -8,7 +8,7 @@
         @open-modal="openInfoModal"
       />
     </div>
-
+    {{ $store.state.insurance.insuranceSearchProduct }}
     <div class="InsurancePage__row mb-0">
       <!-- 國泰 的相關產品 TODO: 國泰哪裡來的 scrollToFAQ 是什麼 -->
       <ProductListTitleSection
@@ -29,7 +29,7 @@
         <ProductListSection
           ref="ProductListSection"
           :is-empty-search-result="isSearchPage"
-          :is-loading="!isExternalPage && isLoading"
+          :is-loading="isLoading"
         >
           <ProductListMobileFilterSection
             v-if="isMobile"
@@ -171,6 +171,7 @@ const options: ComponentOption = {
       })
     },
     setLoadingStatus(status) {
+      console.log('設置加載狀態:', status)
       this.isLoading = status
     },
   },
@@ -184,7 +185,22 @@ const options: ComponentOption = {
         window.scroll(0, 0)
       })
     },
-    '$store.state.insurance.insuranceList'() {
+    // 當篩選條件變化時監聽 URL 參數變化
+    '$route.query'(newQuery, oldQuery) {
+      // 如果有篩選參數變化（除了 page）
+      const filterParams = ['status', 'categoryId', 'caseId', 'typeId', 'tagId']
+      const hasFilterChange = filterParams.some(
+        (param) => newQuery[param] !== oldQuery[param]
+      )
+
+      if (hasFilterChange) {
+        console.log('檢測到篩選參數變化，滾動到產品列表')
+        this.scrollToProductListSection()
+      }
+    },
+
+    // 資料變化後自動關閉加載狀態
+    '$store.state.insurance.insuranceSearchProduct'() {
       this.$nextTick(() => {
         this.isLoading = false
       })

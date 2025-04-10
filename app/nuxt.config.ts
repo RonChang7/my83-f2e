@@ -144,12 +144,14 @@ const config: NuxtConfig = {
   env: {
     apiProductUrl:
       process.env.NODE_ENV !== 'production'
-        ? 'https://productot.smartbeb.com.tw/3i-api' // 開發環境使用代理路徑and測試環境
+        ? 'https://product.smartbeb.com.tw/3i-api' // 開發環境使用代理路徑and測試環境
         : 'https://product.smartbeb.com.tw/3i-api', // 生產環境直接使用實際 URL
   },
   webfontloader: {
     google: {
-      families: ['Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional'],
+      families: [
+        'Noto+Sans+TC:400,500,700&display=swap&subset=chinese-traditional',
+      ],
     },
   },
   router: {

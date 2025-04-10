@@ -11,12 +11,12 @@
       </div>
       <ProductCard
         v-for="(product, index) in insuranceProducts"
-        :key="index"
+        :key="product.url || index"
         class="ProductListSection__product"
         :product="product"
       />
       <ProductListNoResult
-        v-if="!insuranceProducts.length"
+        v-if="!isLoading && !insuranceProducts.length"
         :is-empty-search-result="isEmptySearchResult"
       />
     </div>
@@ -34,7 +34,11 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
+import {
+  IdealCoverage,
+  InsuranceProduct,
+  InsuranceSearchProduct,
+} from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { isSlotExist } from '@/utils/render-helper'
 import { InsuranceListType } from '@/routes/insurance'
@@ -91,9 +95,12 @@ const options: ComponentOption = {
       return !_.isEmpty(matches)
     },
     clickProductCard(product) {
-      if (this.isNuxtLink(product.btn.link.path)) {
+      if (this.isNuxtLink(product.btn?.link?.path)) {
         this.$router.push(product.btn.link.path)
-      } else {
+      } else if (product.url) {
+        // 處理 insuranceSearchProduct 類型的產品
+        this.$router.push(product.url)
+      } else if (product.btn?.link?.url) {
         window.location.href = product.btn.link.url
       }
     },
@@ -108,19 +115,29 @@ const options: ComponentOption = {
         label: `${insuranceType} ${productName}`,
       })
     },
+    updateMaskHeight() {
+      if (process.server) return
+
+      this.$nextTick(() => {
+        if (this.$refs.listWrapper) {
+          this.mask.height = parseInt(
+            window.getComputedStyle(this.$refs.listWrapper).height
+          )
+        }
+      })
+    },
   },
   watch: {
     insuranceProducts: {
       immediate: true,
       handler() {
-        if (process.server) return
-
-        this.$nextTick(() => {
-          this.mask.height = parseInt(
-            window.getComputedStyle(this.$refs.listWrapper).height
-          )
-        })
+        this.updateMaskHeight()
       },
+    },
+    isLoading(newVal) {
+      if (newVal) {
+        this.updateMaskHeight()
+      }
     },
   },
 }
@@ -155,15 +172,16 @@ export interface Data {
 }
 
 export type Methods = {
-  isEnabled(product: InsuranceProduct): boolean
+  isEnabled(product: InsuranceProduct | InsuranceSearchProduct): boolean
   isNuxtLink(path: string): boolean
-  clickProductCard(product: InsuranceProduct): void
+  clickProductCard(product: InsuranceProduct | InsuranceSearchProduct): void
   clickProductButton(productName: string): void
+  updateMaskHeight(): void
 }
 
 export interface Computed {
   idealCoverages: IdealCoverage[]
-  insuranceProducts: InsuranceProduct[]
+  insuranceProducts: (InsuranceProduct | InsuranceSearchProduct)[]
   hasAd: boolean
   isInsurancePage: boolean
 }
