@@ -93,7 +93,6 @@ export default defineComponent({
 
     interface InsuranceOptions {
       [key: string]: InsuranceItem[] // 索引簽名，允許動態訪問屬性
-      statusID: InsuranceItem[]
       categoryList: InsuranceItem[]
       caseList: InsuranceItem[]
       typeList: InsuranceItem[]
@@ -108,7 +107,6 @@ export default defineComponent({
 
     // 定義映射類型
     const mappingType: Record<string, string> = {
-      statusID: '保險產品狀態',
       categoryList: '保險種類',
       caseList: '保險年期',
       typeList: '保險類別',
@@ -129,7 +127,7 @@ export default defineComponent({
             key,
             title: mappingType[key],
             items:
-              key === 'statusID' || key === 'tagList'
+              key === 'tagList'
                 ? options[key]
                 : [{ id: 0, name: '全部' }, ...options[key]],
           }))
@@ -138,7 +136,6 @@ export default defineComponent({
 
     // 選中的過濾器
     const selectedFilters = reactive({
-      statusID: 1,
       categoryList: 0,
       caseList: 0,
       typeList: 0,
@@ -148,10 +145,6 @@ export default defineComponent({
     // 從 URL 查詢參數初始化過濾器
     const initializeFiltersFromQuery = () => {
       const query = route.value.query
-
-      if (query.status) {
-        selectedFilters.statusID = Number(query.status) || 1
-      }
 
       if (query.categoryId) {
         selectedFilters.categoryList = Number(query.categoryId) || 0
@@ -209,7 +202,6 @@ export default defineComponent({
     const changeRoute = () => {
       // 映射到路由查詢參數
       const mappingSelectedIds = {
-        statusID: 'status',
         categoryList: 'categoryId',
         caseList: 'caseId',
         typeList: 'typeId',
@@ -250,7 +242,6 @@ export default defineComponent({
 
         await store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
           searchText: route.value.query.q || '',
-          status: selectedFilters.statusID.toString(),
           categoryId: selectedFilters.categoryList
             ? selectedFilters.categoryList.toString()
             : '',
@@ -279,7 +270,6 @@ export default defineComponent({
 
     // 重置篩選條件
     const reset = () => {
-      selectedFilters.statusID = 1
       selectedFilters.categoryList = 0
       selectedFilters.caseList = 0
       selectedFilters.typeList = 0

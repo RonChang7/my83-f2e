@@ -212,7 +212,6 @@ export interface InsuranceOptionsData {
 // 定義保險搜尋 API 的請求 payload 型別
 export type InsuranceSearchPayload = {
   searchText: string // 搜尋文字，例如：保險公司名稱
-  status: string // 狀態碼，例如："1" 表示有效的保險
   categoryId: string // 分類 ID，空字串表示不限分類
   caseId: string // 案例 ID，空字串表示不限案例
   typeId: string // 類型 ID，空字串表示不限類型

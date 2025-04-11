@@ -121,7 +121,6 @@ class NormalInsurancePage extends InsurancePage {
       this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`),
       this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
         searchText: this.page.searchKeyword,
-        status: '1',
         categoryId: '',
         caseId: '',
         typeId: '',
@@ -358,7 +357,6 @@ export class InsurancePageService {
       const currentQuery = this.ctx.route.query
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
         searchText: currentQuery.q || '',
-        status: currentQuery.status || '1',
         categoryId: currentQuery.categoryId || '',
         caseId: currentQuery.caseId || '',
         typeId: currentQuery.typeId || '',
