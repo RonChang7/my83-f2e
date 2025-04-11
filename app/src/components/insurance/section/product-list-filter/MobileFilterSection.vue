@@ -309,7 +309,7 @@ export default defineComponent({
           page: 1,
           perPage: 10,
         })
-        console.log('資料已更新')
+        console.log('mobile 資料已更新')
       } catch (error) {
         console.error('獲取資料失敗:', error)
       }

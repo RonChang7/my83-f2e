@@ -316,6 +316,8 @@ export class InsuranceFactory {
 }
 
 export class InsurancePageService {
+  private static isInitialRequestInProgress = false
+
   private page: InsurancePage
 
   private defaultFilterQuery: ReturnType<typeof Filter.normalizeFilterDto>
@@ -342,24 +344,36 @@ export class InsurancePageService {
 
   public async fetchData() {
     try {
+      if (InsurancePageService.isInitialRequestInProgress) {
+        console.log('已有請求在進行中，跳過此次請求')
+        return
+      }
+
+      InsurancePageService.isInitialRequestInProgress = true
       // 只有在選項數據不存在時才獲取
       // if (!this.store.state.insurance.insuranceOptions?.categoryList) {
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
       // }
+      // 獲取最新的路由參數
+      const currentQuery = this.ctx.route.query
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
-        searchText: this.ctx.route.query.q,
-        status: '1',
-        categoryId: '',
-        caseId: '',
-        typeId: '',
-        tagId: '',
-        page: 1,
+        searchText: currentQuery.q || '',
+        status: currentQuery.status || '1',
+        categoryId: currentQuery.categoryId || '',
+        caseId: currentQuery.caseId || '',
+        typeId: currentQuery.typeId || '',
+        tagId: currentQuery.tagId || '',
+        page: parseInt(currentQuery.page as string) || 1,
         perPage: 10,
       })
+      console.log('fetchData 資料已更新')
       // 再加載頁面資料
       await this.page.fetch()
     } catch (error) {
       this.handleFetchFailed(error)
+    } finally {
+      // 請求完成後將標記重設
+      InsurancePageService.isInitialRequestInProgress = false
     }
   }
 
