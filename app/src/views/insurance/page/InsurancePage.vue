@@ -8,7 +8,6 @@
         @open-modal="openInfoModal"
       />
     </div>
-    {{ $store.state.insurance.insuranceSearchProduct }}
     <div class="InsurancePage__row mb-0">
       <!-- 國泰 的相關產品 TODO: 國泰哪裡來的 scrollToFAQ 是什麼 -->
       <ProductListTitleSection
@@ -194,7 +193,6 @@ const options: ComponentOption = {
       )
 
       if (hasFilterChange) {
-        console.log('檢測到篩選參數變化，滾動到產品列表')
         this.scrollToProductListSection()
       }
     },

@@ -108,7 +108,6 @@ import BaseFilter18 from '@/assets/icon/18/BaseFilter.svg'
 import BaseFilter24 from '@/assets/icon/24/BaseFilter.svg'
 import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
 import Radio from '@/components/insurance/product/input-field/Radio.vue'
-import { FETCH_INSURANCE_SEARCH_PRODUCT } from '@/store/insurance/insurance.type'
 
 export default defineComponent({
   components: {
@@ -279,33 +278,6 @@ export default defineComponent({
       })
     }
 
-    // 獲取產品資料
-    const fetchProduct = async () => {
-      try {
-        await store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
-          searchText: route.value.query.q || '',
-          categoryId: selectedFilters.categoryList
-            ? selectedFilters.categoryList.toString()
-            : '',
-          caseId: selectedFilters.caseList
-            ? selectedFilters.caseList.toString()
-            : '',
-          typeId: selectedFilters.typeList
-            ? selectedFilters.typeList.toString()
-            : '',
-          tagId:
-            selectedFilters.tagList.length > 0
-              ? selectedFilters.tagList.join(',')
-              : '',
-          page: 1,
-          perPage: 10,
-        })
-        console.log('mobile 資料已更新')
-      } catch (error) {
-        console.error('獲取資料失敗:', error)
-      }
-    }
-
     const visiblePanel = ref(false)
 
     const openPanel = () => {
@@ -331,39 +303,12 @@ export default defineComponent({
       }
     }
 
-    const updateValue = (key: string, val: number) => {
-      if (key === 'tagList') {
-        // tagList 是多選
-        const index = selectedFilters[key].indexOf(val)
-
-        if (index > -1) {
-          // 如果值已經存在，則移除它
-          selectedFilters[key].splice(index, 1)
-        } else {
-          // 如果值不存在，則加入它
-          selectedFilters[key].push(val)
-
-          // 如果加入後長度大於 1，檢查並移除值為 0 的元素
-          if (selectedFilters[key].length > 1) {
-            const zeroIndex = selectedFilters[key].indexOf(0)
-            if (zeroIndex > -1) {
-              selectedFilters[key].splice(zeroIndex, 1)
-            }
-          }
-        }
-      } else {
-        // 其他選項都是單選
-        selectedFilters[key] = val
-      }
-
-      console.log('更新選項:', key, '值:', val)
-      console.log('當前篩選狀態:', selectedFilters)
+    const updateValue = (key: string, val: number | number[]) => {
+      selectedFilters[key] = val
     }
 
     const submit = () => {
-      console.log('套用篩選條件:', selectedFilters)
       changeRoute()
-      fetchProduct()
       closePanel()
 
       nextTick(() => {

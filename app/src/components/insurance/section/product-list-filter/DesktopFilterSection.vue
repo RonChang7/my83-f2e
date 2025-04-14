@@ -68,8 +68,6 @@ import BaseCard from '@/components/my83-ui-kit/card/BaseCard.vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
 import Radio from '@/components/insurance/product/input-field/Radio.vue'
-import { FETCH_INSURANCE_SEARCH_PRODUCT } from '@/store/insurance/insurance.type'
-
 export default defineComponent({
   components: {
     BaseCard,
@@ -233,41 +231,6 @@ export default defineComponent({
       })
     }
 
-    // 獲取產品資料
-    const fetchProduct = async () => {
-      try {
-        // 設置加載狀態
-        isLoading.value = true
-        emit('loading', true)
-
-        await store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
-          searchText: route.value.query.q || '',
-          categoryId: selectedFilters.categoryList
-            ? selectedFilters.categoryList.toString()
-            : '',
-          caseId: selectedFilters.caseList
-            ? selectedFilters.caseList.toString()
-            : '',
-          typeId: selectedFilters.typeList
-            ? selectedFilters.typeList.toString()
-            : '',
-          tagId:
-            selectedFilters.tagList.length > 0
-              ? selectedFilters.tagList.join(',')
-              : '',
-          page: 1,
-          perPage: 10,
-        })
-        console.log('desktop 資料已更新', selectedFilters)
-      } catch (error) {
-        console.error('獲取資料失敗:', error)
-      } finally {
-        // 無論成功失敗，都設置加載狀態為 false
-        isLoading.value = false
-        emit('loading', false)
-      }
-    }
-
     // 重置篩選條件
     const reset = () => {
       selectedFilters.categoryList = 0
@@ -285,41 +248,12 @@ export default defineComponent({
 
       // 重置後自動應用新的篩選條件
       changeRoute()
-      fetchProduct()
     }
 
     // 更新篩選條件
-    const updateValue = (key: string, val: number) => {
-      if (key === 'tagList') {
-        // tagList 是多選
-        const index = selectedFilters[key].indexOf(val)
-
-        if (index > -1) {
-          // 如果值已經存在，則移除它
-          selectedFilters[key].splice(index, 1)
-        } else {
-          // 如果值不存在，則加入它
-          selectedFilters[key].push(val)
-
-          // 如果加入後長度大於 1，檢查並移除值為 0 的元素
-          if (selectedFilters[key].length > 1) {
-            const zeroIndex = selectedFilters[key].indexOf(0)
-            if (zeroIndex > -1) {
-              selectedFilters[key].splice(zeroIndex, 1)
-            }
-          }
-        }
-      } else {
-        // 其他選項都是單選
-        selectedFilters[key] = val
-      }
-
-      console.log('更新選項:', key, '值:', val)
-      console.log('當前篩選狀態:', selectedFilters)
-
-      // 直接應用篩選條件並獲取新數據
+    const updateValue = (key: string, val: number | number[]) => {
+      selectedFilters[key] = val
       changeRoute()
-      fetchProduct()
     }
 
     // 監聽篩選條件配置，重置選項
@@ -343,7 +277,6 @@ export default defineComponent({
       expandTagList,
       showTagList,
       changeRoute,
-      fetchProduct,
       isLoading,
     }
   },

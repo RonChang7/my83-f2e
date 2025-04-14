@@ -315,8 +315,6 @@ export class InsuranceFactory {
 }
 
 export class InsurancePageService {
-  private static isInitialRequestInProgress = false
-
   private page: InsurancePage
 
   private defaultFilterQuery: ReturnType<typeof Filter.normalizeFilterDto>
@@ -343,13 +341,7 @@ export class InsurancePageService {
 
   public async fetchData() {
     try {
-      if (InsurancePageService.isInitialRequestInProgress) {
-        console.log('已有請求在進行中，跳過此次請求')
-        return
-      }
-
-      InsurancePageService.isInitialRequestInProgress = true
-      // 只有在選項數據不存在時才獲取
+      // 只有在選項數據不存在時才獲取 TODO: 這邊要改
       // if (!this.store.state.insurance.insuranceOptions?.categoryList) {
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
       // }
@@ -364,14 +356,10 @@ export class InsurancePageService {
         page: parseInt(currentQuery.page as string) || 1,
         perPage: 10,
       })
-      console.log('fetchData 資料已更新')
       // 再加載頁面資料
       await this.page.fetch()
     } catch (error) {
       this.handleFetchFailed(error)
-    } finally {
-      // 請求完成後將標記重設
-      InsurancePageService.isInitialRequestInProgress = false
     }
   }
 
