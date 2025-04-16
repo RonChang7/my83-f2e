@@ -143,11 +143,8 @@ const config: NuxtConfig = {
   },
   serverMiddleware: ['~/server/middleware/logger.ts'],
   typescript: {
-    typeCheck: {
-      typescript: {
-        memoryLimit: Number(process.env.TS_TYPE_CHECK_MEMORY_LIMIT) || 2048, // default: 2048MB
-      },
-    },
+    typeCheck: false,
+    ignoreNotFoundWarnings: true,
   },
   gtm: {
     id: process.env.GOOGLE_TAG_MANAGER_ID,

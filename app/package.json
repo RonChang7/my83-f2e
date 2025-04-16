@@ -26,7 +26,7 @@
     }
   },
   "dependencies": {
-    "@nuxtjs/composition-api": "^0.22.4",
+    "@nuxtjs/composition-api": "0.22.4",
     "@nuxtjs/gtm": "^2.4.0",
     "@popperjs/core": "^2.5.4",
     "@sentry/integrations": "^6.2.1",
@@ -35,10 +35,10 @@
     "@tinymce/tinymce-vue": "3.1.0",
     "async-validator": "^3.2.3",
     "autotrack": "^2.4.1",
-    "axios": "^0.21.1",
+    "axios": "0.24.0",
     "compressorjs": "^1.0.6",
     "cookie-universal-nuxt": "^2.1.4",
-    "core-js": "^3.7.0",
+    "core-js": "3.7.0",
     "date-fns": "^2.9.0",
     "eventemitter3": "^4.0.0",
     "intersection-observer": "^0.7.0",
@@ -47,19 +47,19 @@
     "morgan": "^1.10.0",
     "normalize.css": "^8.0.1",
     "notyf": "^3.9.0",
-    "nuxt": "^2.15.7",
+    "nuxt": "2.16.3",
     "nuxt-env": "^0.1.0",
     "nuxt-user-agent": "^1.2.2",
     "nuxt-webfontloader": "^1.1.0",
     "photoswipe": "^4.1.3",
     "qs": "^6.9.3",
-    "tinymce": "5.2.2",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.0.2"
+    "tinymce": "5.10.9",
+    "vue-class-component": "7.2.6",
+    "vue-property-decorator": "9.0.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.7",
-    "@nuxt/typescript-build": "^2.0.6",
+    "@nuxt/typescript-build": "2.0.6",
     "@nuxtjs/eslint-config-typescript": "^6.0.0",
     "@sentry/cli": "1.74.5",
     "@sentry/types": "^6.2.1",
@@ -81,9 +81,10 @@
     "lint-staged": "^10.3.0",
     "nuxt-svg-loader": "^1.2.0",
     "prettier": "^2.1.0",
-    "sass": "^1.32.8",
-    "sass-loader": "^10.1.1",
+    "sass": "1.32.8",
+    "sass-loader": "10.1.1",
     "stylelint": "^13.12.0",
-    "vue-jest": "^4.0.0"
+    "vue-jest": "^4.0.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7"
   }
 }
