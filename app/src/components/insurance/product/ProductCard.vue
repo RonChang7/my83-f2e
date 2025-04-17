@@ -73,7 +73,7 @@ export default defineComponent({
     })
 
     const goToProductDetail = (url: string) => {
-      router.push(url)
+      router.push(`/product/${url}`)
     }
 
     return {
