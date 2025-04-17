@@ -244,7 +244,7 @@ export const fetchInsuranceOptions = async (): Promise<
   InsuranceOptionsResponse
 > => {
   const { data } = await request.get<InsuranceOptionsResponse>(
-    `${process.env.apiProductUrl}/getInsuranceOptions`,
+    `${process.env.apiProductUrl}/3i-api/getInsuranceOptions`,
     {
       headers: {
         'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ export const fetchInsuranceSearchProduct = async (
   payload: InsuranceSearchPayload
 ): Promise<InsuranceSearchResponse> => {
   const { data } = await request.post<InsuranceSearchResponse>(
-    `${process.env.apiProductUrl}/postInsuranceSearch`,
+    `${process.env.apiProductUrl}/3i-api/postInsuranceSearch`,
     payload,
     {
       headers: {

@@ -131,21 +131,13 @@ const config: NuxtConfig = {
     'nuxt-webfontloader',
     'cookie-universal-nuxt',
     '@nuxtjs/gtm',
-    '@nuxtjs/proxy',
   ],
-  proxy: {
-    'https://local-api.my83.com.tw/3i-api/': {
-      target: 'https://productot.smartbeb.com.tw',
-      changeOrigin: true,
-      pathRewrite: { '^https://local-api.my83.com.tw/3i-api/': '/3i-api/' },
-    },
-  },
   // 環境變數設定
   env: {
     apiProductUrl:
       process.env.NODE_ENV !== 'production'
-        ? 'https://product.smartbeb.com.tw/3i-api' // 開發環境使用代理路徑and測試環境
-        : 'https://product.smartbeb.com.tw/3i-api', // 生產環境直接使用實際 URL
+        ? 'https://productot.smartbeb.com.tw' // 開發環境使用代理路徑and測試環境
+        : 'https://product.smartbeb.com.tw', // 生產環境直接使用實際 URL
   },
   webfontloader: {
     google: {
