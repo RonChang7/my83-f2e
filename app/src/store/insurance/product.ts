@@ -5,6 +5,7 @@ import {
   Product,
   Coverage,
   FetchProductFeePayload,
+  SingleProductResponse,
 } from '@/api/insurance/product.type'
 import * as types from './product.type'
 
@@ -16,6 +17,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         id: '',
         fee: 0,
         product: null,
+        singleProduct: null,
       }
     },
     actions: {
@@ -56,6 +58,17 @@ export const createStoreModule = <R>(): Module<State, R> => {
             })
         })
       },
+      [types.FETCH_SINGLE_PRODUCT]({ commit }, productId: string) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchSingleProduct(productId)
+            .then((data) => {
+              commit(types.UPDATE_SINGLE_PRODUCT, data)
+              resolve()
+            })
+            .catch((error) => reject(error))
+        })
+      },
     },
     mutations: {
       [types.UPDATE_PRODUCT](state, data: Product) {
@@ -73,6 +86,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_COVERAGE](state, coverages: Coverage[]) {
         state.product!.coverages = coverages
       },
+      [types.UPDATE_SINGLE_PRODUCT](state, data: SingleProductResponse) {
+        state.singleProduct = data
+      },
     },
   }
 }
@@ -81,6 +97,7 @@ export interface State {
   id: string
   fee: number | null
   product: Product | null
+  singleProduct: SingleProductResponse | null
 }
 
 export interface UpdatePremiumQueryPayload {

@@ -5,6 +5,7 @@ import {
   ProductFeeResponse,
   FetchProductFeePayload,
   ProductReportRequest,
+  SingleProductResponse,
 } from './product.type'
 
 export const fetchProduct = async (id: string): Promise<ProductResponse> => {
@@ -51,5 +52,25 @@ export const productReport = async ({
     reporter_contact: reporterContact,
   })
 
+  return data
+}
+
+/**
+ * @description 取得單一產品詳細資訊
+ * @param {string} productName 產品名稱
+ */
+export const fetchSingleProduct = async (
+  productName: string
+): Promise<SingleProductResponse> => {
+  const encodedProductName = encodeURIComponent(productName)
+  const { data } = await request.post<SingleProductResponse>(
+    `${process.env.apiProductUrl}/sb-api/single_product_intro/${encodedProductName}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': 'egfwfedewg4#213sassx',
+      },
+    }
+  )
   return data
 }
