@@ -312,6 +312,8 @@ export const createStoreModule = <R>(): Module<State, R> => {
                 types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT,
                 response.data.totalCount
               )
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+
               resolve()
             })
             .catch((error) => reject(error))
@@ -440,6 +442,28 @@ export const createStoreModule = <R>(): Module<State, R> => {
         totalCount: number
       ) {
         state.insuranceSearchProductTotalCount = totalCount
+        // 計算分頁資訊
+        const perPage = 10 // 每頁顯示數量，可以設定為常數或從設定中取得
+        const currentPage = state.currentParam.page || 1
+        const totalPage = Math.ceil(totalCount / perPage)
+
+        // 更新 meta.pagination
+        if (!state.meta) {
+          state.meta = {
+            pagination: {
+              currentPage,
+              totalPage,
+              totalCount,
+            },
+            currentFilterConfig: {},
+          }
+        } else {
+          state.meta.pagination = {
+            ...state.meta.pagination,
+            currentPage,
+            totalPage,
+          }
+        }
       },
     },
   }
