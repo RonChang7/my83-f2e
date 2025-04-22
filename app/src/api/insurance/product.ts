@@ -62,9 +62,9 @@ export const productReport = async ({
 export const fetchSingleProduct = async (
   productName: string
 ): Promise<SingleProductResponse> => {
-  const encodedProductName = encodeURIComponent(productName)
   const { data } = await request.post<SingleProductResponse>(
-    `${process.env.apiProductUrl}/sb-api/single_product_intro/${encodedProductName}`,
+    `${process.env.apiProductUrl}/sb-api/single_product_intro/${productName}`,
+    {},
     {
       headers: {
         'Content-Type': 'application/json',

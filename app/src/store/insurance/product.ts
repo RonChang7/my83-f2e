@@ -58,10 +58,10 @@ export const createStoreModule = <R>(): Module<State, R> => {
             })
         })
       },
-      [types.FETCH_SINGLE_PRODUCT]({ commit }, productId: string) {
+      [types.FETCH_SINGLE_PRODUCT]({ commit }, productName: string) {
         return new Promise<void>((resolve, reject) => {
           api
-            .fetchSingleProduct(productId)
+            .fetchSingleProduct(productName)
             .then((data) => {
               commit(types.UPDATE_SINGLE_PRODUCT, data)
               resolve()
