@@ -210,10 +210,13 @@ export default defineComponent({
         if (mappingSelectedIds[key]) {
           // 確保值存在且是陣列才調用 join
           const value = selectedFilters[key]
-          if (key === 'tagList' && Array.isArray(value) && value.length > 0) {
-            acc[mappingSelectedIds[key]] = value.join(',')
+          if (key === 'tagList') {
+            // 只有當陣列有值且長度大於 0 時才添加
+            if (Array.isArray(value) && value.length > 0) {
+              acc[mappingSelectedIds[key]] = value.join(',')
+            }
+            // 不要添加空陣列
           } else if (value !== null && value !== undefined && value !== 0) {
-            // 處理非陣列但有效的值（轉成字串），只有非零值添加到查詢
             acc[mappingSelectedIds[key]] = String(value)
           }
         }

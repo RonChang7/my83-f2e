@@ -30,7 +30,9 @@
         </div>
         <div class="ProductCard__section justify-end ml-12">
           <div class="ProductCard__subSection">
-            <button @click="goToProductDetail(product.url)">詳細內容</button>
+            <button @click.stop="goToProductDetail(product.url)">
+              詳細內容
+            </button>
           </div>
         </div>
       </div>
@@ -73,7 +75,7 @@ export default defineComponent({
     })
 
     const goToProductDetail = (url: string) => {
-      router.push(`/product/${url}`)
+      router.push({ name: 'insuranceProduct', params: { url } })
     }
 
     return {
