@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { Store } from 'vuex'
 import { Context } from '@nuxt/types'
-import { Content } from '@/services/page/Content'
 import { ErrorPageType } from '@/config/error-page.config'
 import { Filter } from '@/services/filter/Filter'
 import { Page } from '@/services/page/insurance/Page'
@@ -50,58 +49,6 @@ abstract class InsurancePage {
     this.page = new Page(this.ctx.route)
     this.filter = new Filter(this.ctx.route.query, this.acceptFilterKeys)
     this.page.searchKeyword = getFirstQuery(this.ctx.route.query.q)
-  }
-
-  public async fetch(): Promise<unknown[]> {
-    const currentPagination = this.store.state.insurance.currentParam.page
-    const previousPage = new Page(this.ctx.from)
-    const previousSearchKeyword = getFirstQuery(this.ctx.from?.query.q)
-    const pageRequest = [...Content.requests(this.ctx)]
-
-    if (
-      !this.page.isEqualInsurance(previousPage) ||
-      !this.page.isEqualSearchKeyword(previousSearchKeyword)
-    ) {
-      pageRequest.push(...this.fetchPageDataRequests())
-    }
-
-    if (
-      !this.page.isEqualInsurance(previousPage) ||
-      !this.page.isEqualPagination(currentPagination) ||
-      !this.page.isEqualSearchKeyword(previousSearchKeyword)
-    ) {
-      pageRequest.push(...this.fetchListDataRequests())
-    }
-
-    if (
-      this.page.isEqualInsurance(previousPage) &&
-      this.page.isEqualSearchKeyword(previousSearchKeyword)
-    ) {
-      const previousFilter = new Filter(
-        this.ctx.from?.query,
-        this.acceptFilterKeys
-      )
-      const defaultFilterQuery = Filter.normalizeFilterDto(
-        this.store.state.insurance.filter.defaultValue
-      )
-      const currentApiFilterConfig = Filter.normalizeFilterDto(
-        this.store.state.insurance.meta?.currentFilterConfig
-      )
-
-      if (
-        !_.isEqual(
-          _.isEmpty(this.filter.createDto())
-            ? defaultFilterQuery
-            : this.filter.createDto(),
-          currentApiFilterConfig
-        ) &&
-        !this.filter.isEqual(previousFilter)
-      ) {
-        pageRequest.push(...this.fetchFilteredDataRequests())
-      }
-    }
-
-    return await Promise.all(pageRequest)
   }
 
   protected abstract fetchPageDataRequests(): Promise<unknown>[]
@@ -356,8 +303,6 @@ export class InsurancePageService {
         page: parseInt(currentQuery.page as string) || 1,
         perPage: 10,
       })
-      // 再加載頁面資料
-      await this.page.fetch()
     } catch (error) {
       this.handleFetchFailed(error)
     }

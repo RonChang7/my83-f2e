@@ -42,7 +42,6 @@ export default defineComponent({
   async asyncData(ctx) {
     try {
       const service = new InsurancePageService(ctx)
-
       await service.fetchData()
       service.reconcileRoute()
     } catch (err) {

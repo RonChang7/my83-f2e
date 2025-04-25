@@ -75,7 +75,6 @@ import DeviceMixin, {
 import { scrollToElement } from '@/utils/scroll'
 import { InsuranceListType } from '@/routes/insurance'
 import { InsuranceVuexState } from './Index.vue'
-
 const options: ComponentOption = {
   mixins: [DeviceMixin],
   components: {
@@ -105,7 +104,15 @@ const options: ComponentOption = {
   computed: {
     pagination() {
       const { meta } = this.$store.state.insurance
-      return meta ? meta.pagination : null
+      if (!meta) return null
+
+      // 直接從路由取得當前頁碼
+      const currentPage = parseInt(this.$route.query.page) || 1
+
+      return {
+        ...meta.pagination,
+        currentPage, // 使用路由中的頁碼
+      }
     },
     shouldShowPromotionProduct() {
       return !!this.$store.state.insurance.promotionProducts?.length
@@ -170,7 +177,6 @@ const options: ComponentOption = {
       })
     },
     setLoadingStatus(status) {
-      console.log('設置加載狀態:', status)
       this.isLoading = status
     },
   },
