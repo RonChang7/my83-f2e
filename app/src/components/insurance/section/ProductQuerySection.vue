@@ -1,16 +1,59 @@
 <template>
   <div class="ProductQuerySection">
     <div ref="content" class="ProductQuerySection__content">
+      <!-- 年齡欄位 -->
       <ProductQueryField
-        v-for="field in fields"
-        :key="field.id"
         class="ProductQuerySection__field"
-        :field="field"
-        :value="formData[field.id]"
-        :validate-state="validateState[field.id]"
-        @update="update"
-        @blur="submit"
+        :field="fields.age"
+        :value="formData.age"
+        :validate-state="validateStates.age"
+        @update="updateField"
+        @blur="calculateFee"
       />
+
+      <!-- 性別欄位 -->
+      <ProductQueryField
+        class="ProductQuerySection__field"
+        :field="fields.gender"
+        :value="formData.gender"
+        :validate-state="validateStates.gender"
+        @update="updateField"
+        @blur="calculateFee"
+      />
+
+      <!-- 職業等級欄位 -->
+      <ProductQueryField
+        v-if="fields.job_level"
+        class="ProductQuerySection__field"
+        :field="fields.job_level"
+        :value="formData.job_level"
+        :validate-state="validateStates.job_level"
+        @update="updateField"
+        @blur="calculateFee"
+      />
+
+      <!-- 保險期間欄位 -->
+      <ProductQueryField
+        v-if="fields.period"
+        class="ProductQuerySection__field"
+        :field="fields.period"
+        :value="formData.period"
+        :validate-state="validateStates.period"
+        @update="updateField"
+        @blur="calculateFee"
+      />
+
+      <!-- 保額欄位 -->
+      <ProductQueryField
+        class="ProductQuerySection__field"
+        :field="fields.amount"
+        :value="formData.amount"
+        :validate-state="validateStates.amount"
+        @update="updateField"
+        @blur="calculateFee"
+      />
+
+      <!-- 保費顯示 -->
       <ProductFee
         class="ProductQuerySection__fee"
         :card-height="feeCardHeight"
@@ -33,7 +76,7 @@
             <ContractTypeCard />
           </template>
         </BaseTooltip>
-        <span>{{ contractType }}</span>
+        <span>{{ productType }}</span>
       </div>
       <div class="ProductQuerySection__column">
         保障類型
@@ -47,7 +90,7 @@
             <WholeLifeTypeCard />
           </template>
         </BaseTooltip>
-        <span>{{ wholeLifeType }}</span>
+        <span>{{ insuranceType }}</span>
       </div>
     </div>
   </div>
@@ -58,19 +101,15 @@ import _ from 'lodash'
 import {
   computed,
   defineComponent,
-  nextTick,
   onMounted,
   reactive,
   ref,
   useStore,
   watch,
 } from '@nuxtjs/composition-api'
-import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
-import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
 import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
-import { useProductQuery } from '@/services/product/ProductQueryScheme'
 import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
 import ProductFee from '../product/ProductFee.vue'
@@ -86,83 +125,300 @@ export default defineComponent({
     WholeLifeTypeCard,
   },
   setup() {
-    const store = useStore<InsuranceProductVuexState>()
+    const store = useStore()
     const { isDesktop } = useDevice()
     const content = ref<HTMLElement | null>(null)
     const feeCardHeight = ref(0)
-    const fields = ref({})
-    const formData = ref({})
-    const submit = ref({})
+    const singleProduct = computed(
+      () => store.state.insuranceProduct.singleProduct
+    )
 
+    // 基本資訊
+    const productType = computed(() => singleProduct.value?.setting.productType)
     const insuranceType = computed(
-      () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+      () => singleProduct.value?.setting.insuranceType
     )
-    const contractType = computed(
-      () => store.state.insuranceProduct.product?.product.contract_type
-    )
-    const wholeLifeType = computed(
-      () => store.state.insuranceProduct.product?.product.whole_life_type
-    )
-    const fee = computed(() => store.state.insuranceProduct.fee)
-    const consultLink = computed(
-      () => store.state.insuranceProduct.product?.consult_link
-    )
-    const premiumConfig = computed(
-      () => store.state.insuranceProduct.product?.premium_config
-    )
-    const amountUnit = computed(
-      () => store.state.insuranceProduct.product?.premium_config.amount_unit
-    )
+    const consultLink = computed(() => ({
+      path: '/consult',
+      url: 'https://my83.com/consult',
+    })) // 假設的連結
 
-    const { scheme, validateState, validateAll, update } = useProductQuery(
-      premiumConfig?.value,
-      store.state.insuranceProduct.product!.default_premium_config
-    )
+    // 表單欄位定義
+    const fields = reactive({
+      age: {
+        id: 'age',
+        name: '年齡',
+        type: 'NUMBER',
+        placeholder: '請輸入年齡',
+        options: computed(() => {
+          if (!singleProduct.value) return { min: 18, max: 65 }
 
-    const fetchProductFeeAction = _.debounce(() => {
-      const payload = {
-        productId: store.state.insuranceProduct.id,
-        amountUnit: amountUnit.value,
-        ...formData.value,
-      }
-      store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`, payload)
-    }, 50)
+          // 從 setPeriod 中找到年齡範圍
+          const periods = singleProduct.value.setting.setPeriod || []
+          const minAge = Math.min(
+            ...periods.map((p) => parseInt(p.ageMin) || 18)
+          )
+          const maxAge = Math.max(
+            ...periods.map((p) => parseInt(p.ageMax) || 65)
+          )
 
-    const fetchProductFee = () => {
-      nextTick(async () => {
-        if (await validateAll()) {
-          fetchProductFeeAction()
-        } else {
-          store.commit(`insuranceProduct/${CLEAR_FEE}`)
+          return {
+            min: minAge,
+            max: maxAge,
+          }
+        }),
+      },
+      gender: {
+        id: 'gender',
+        name: '性別',
+        type: 'RADIO',
+        options: computed(() => {
+          if (!singleProduct.value || !singleProduct.value.setting.setSex) {
+            return [
+              { text: '男性 ', value: '男性' },
+              { text: '女性', value: '女性' },
+            ]
+          }
+
+          return singleProduct.value.setting.setSex.map((sex, idx) => ({
+            text: sex.content,
+            value: idx,
+          }))
+        }),
+      },
+      job_level: computed(() => {
+        if (
+          !singleProduct.value ||
+          !singleProduct.value.setting.setJob ||
+          !singleProduct.value.setting.setJob.length
+        ) {
+          return null
         }
+
+        return {
+          id: 'job_level',
+          name: '職業等級',
+          type: 'OPTION',
+          options: singleProduct.value.setting.setJob.map((job, index) => ({
+            text: job.content,
+            value: index + 1,
+          })),
+        }
+      }),
+      period: computed(() => {
+        if (
+          !singleProduct.value ||
+          !singleProduct.value.setting.setPeriod ||
+          !singleProduct.value.setting.setPeriod.length
+        ) {
+          return null
+        }
+
+        return {
+          id: 'period',
+          name: '年期',
+          type: 'OPTION',
+          options: singleProduct.value.setting.setPeriod.map(
+            (period, index) => ({
+              text: period.content,
+              value: index,
+            })
+          ),
+        }
+      }),
+      amount: {
+        id: 'amount',
+        name: '保額',
+        type: 'NUMBER',
+        placeholder: '請輸入保額',
+        postfix: '元',
+        options: computed(() => {
+          if (!singleProduct.value) return { min: 100000, step: 10000 }
+
+          return {
+            min: parseInt(singleProduct.value.setting.defaultAmount) || 100000,
+            step: parseInt(singleProduct.value.setting.unitstep) || 10000,
+          }
+        }),
+      },
+    })
+
+    // 表單數據
+    const formData = reactive({
+      age: computed(() => singleProduct.value?.setting.defaultAge || 30),
+      gender: computed(() =>
+        singleProduct.value?.setting.defaultSex === '男' ? 'male' : 'female'
+      ),
+      job_level: computed(() => 1), // 預設值
+      period: computed(() => 1), // 預設值
+      amount: computed(
+        () => parseInt(singleProduct.value?.setting.defaultAmount) || 1000000
+      ),
+    })
+
+    // 表單驗證狀態
+    const validateStates = reactive({
+      age: null,
+      gender: null,
+      job_level: null,
+      period: null,
+      amount: null,
+    })
+
+    // 保費
+    const fee = ref(0)
+
+    // 更新保障內容
+    const updateCoverages = () => {
+      if (!singleProduct.value || !singleProduct.value.benefit) return
+
+      const coverages = []
+
+      singleProduct.value.benefit.forEach((benefitGroup) => {
+        if (!benefitGroup.benefitMain) return
+
+        benefitGroup.benefitMain.forEach((benefit) => {
+          // 計算保障金額
+          const amount = formData.amount // 簡單起見，以保額為基準
+
+          coverages.push({
+            name: benefit.name,
+            content: benefit.remark || '',
+            amount,
+            levels: [],
+            ideal_amount: amount, // 假設理想保額等於保額
+          })
+        })
       })
+
+      // 如果你需要更新 store 中的保障內容，可以在這裡提交
+      // store.commit('insuranceProduct/UPDATE_COVERAGE', coverages)
     }
 
-    const createReactive = () => {
-      formData.value = reactive(scheme.form.formData)
-      fields.value = reactive(scheme.form.fields)
-      validateState.value = reactive(scheme.form.validateState)
-      scheme.form.setSubmit(fetchProductFee)
-      submit.value = () => scheme.form.submit()
+    // 表單驗證函數
+    const validateForm = () => {
+      let isValid = true
+
+      // 驗證年齡
+      if (fields.age && fields.age.options) {
+        const { min, max } = fields.age.options
+        if (!formData.age || formData.age < min || formData.age > max) {
+          validateStates.age = {
+            state: 'error',
+            message: `年齡必須在 ${min} 到 ${max} 之間`,
+          }
+          isValid = false
+        } else {
+          validateStates.age = null
+        }
+      }
+
+      // 驗證保額
+      if (fields.amount && fields.amount.options) {
+        const { min } = fields.amount.options
+        if (!formData.amount || formData.amount < min) {
+          validateStates.amount = {
+            state: 'error',
+            message: `保額不能低於 ${min}`,
+          }
+          isValid = false
+        } else {
+          validateStates.amount = null
+        }
+      }
+
+      return isValid
     }
 
-    createReactive()
+    // 計算保費的函數
+    const calculateFee = _.debounce(() => {
+      // 確保數據有效
+      if (!validateForm()) {
+        fee.value = 0
+        return
+      }
+
+      if (!singleProduct.value || !singleProduct.value.premium) {
+        fee.value = 0
+        return
+      }
+
+      // 從 premium 數據中找到符合條件的項目
+      const selectedPeriod = formData.period
+      const periodText =
+        (fields.period && fields.period.options[selectedPeriod - 1]?.text) || ''
+
+      const matchedPremium = singleProduct.value.premium.find(
+        (p) =>
+          p.Age === formData.age &&
+          p.Sex === (formData.gender === 'male' ? '男' : '女') &&
+          (fields.job_level ? parseInt(p.Job) === formData.job_level : true) &&
+          (fields.period ? p.Period === periodText.split('/')[0] : true)
+      )
+
+      if (matchedPremium) {
+        // 計算保費: 基本保費 * (保額 / 單位保額)
+        const baseFee = parseInt(matchedPremium.Value)
+        const unitAmount = parseInt(singleProduct.value.setting.defaultAmount)
+        const selectedAmount = formData.amount
+
+        fee.value = Math.round(baseFee * (selectedAmount / unitAmount))
+      } else {
+        fee.value = 0
+      }
+
+      // 更新保障內容
+      updateCoverages()
+    }, 200)
+
+    // 更新欄位值
+    const updateField = ({ id, value }) => {
+      if (id in formData) {
+        formData[id] = value
+
+        // 驗證單一欄位
+        if (id === 'age') {
+          const { min, max } = fields.age.options
+          if (!value || value < min || value > max) {
+            validateStates.age = {
+              state: 'error',
+              message: `年齡必須在 ${min} 到 ${max} 之間`,
+            }
+          } else {
+            validateStates.age = null
+          }
+        } else if (id === 'amount') {
+          const { min } = fields.amount.options
+          if (!value || value < min) {
+            validateStates.amount = {
+              state: 'error',
+              message: `保額不能低於 ${min}`,
+            }
+          } else {
+            validateStates.amount = null
+          }
+        }
+
+        // 當欄位變更時可以即時計算保費
+        calculateFee()
+      }
+    }
 
     onMounted(() => {
       // 調整費率區塊位置
       feeCardHeight.value = isDesktop.value
         ? (content.value as HTMLElement).offsetHeight - 22
         : 160
+
+      // 初始計算保費
+      calculateFee()
     })
 
+    // 監聽產品數據變更，重新計算保費
     watch(
-      () => scheme.form.formData.plan_id,
-      async (val) => {
-        // 更新 plan id，重建整張 form
-        scheme.updateForm(val)
-        await validateAll()
-        // 重新建立 form 響應的資料
-        createReactive()
+      () => singleProduct.value,
+      () => {
+        calculateFee()
       }
     )
 
@@ -170,13 +426,12 @@ export default defineComponent({
       content,
       fields,
       formData,
-      validateState,
-      update,
-      submit,
+      validateStates,
+      updateField,
+      calculateFee,
       feeCardHeight,
       insuranceType,
-      contractType,
-      wholeLifeType,
+      productType,
       fee,
       consultLink,
     }
