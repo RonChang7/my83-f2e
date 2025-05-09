@@ -470,13 +470,17 @@ export default defineComponent({
   }
 
   &__column {
-    flex: 0 0 50%;
+    flex: 0 0 33%;
     display: flex;
     align-items: center;
 
     &__icon {
       @include hover('_gray-secondary-darker', $has-svg: true);
-      margin: -2px 8px 0 2px;
+      margin: -2px 0px 0 2px;
+    }
+
+    span {
+      margin-left: 8px;
     }
 
     // 行動版佈局調整
