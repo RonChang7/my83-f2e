@@ -1,6 +1,4 @@
-import { Link, LinkButton, Gender, PageResponse } from '../type'
-
-export type ProductResponse = PageResponse<Product>
+import { Link, Gender } from '../type'
 
 export interface ProductReportRequest {
   id: number
@@ -8,37 +6,6 @@ export interface ProductReportRequest {
   refLink: string
   reporter: string
   reporterContact: string
-}
-
-export interface Product {
-  product: ProductData
-  files: LinkButton[]
-  consult_link: Link
-  premium_config: PremiumConfig
-  default_premium_config: DefaultPremiumConfig
-  coverages: Coverage[]
-  claims: string[]
-  rules: Rule[]
-  hot_products: HotProductList
-  online_product: LinkButton | null
-}
-
-type ContractType = '主約' | '附約'
-
-type WholeLifeType = '終身險' | '定期險'
-
-export interface ProductData {
-  id: number
-  name: string
-  description: string
-  company: string
-  badges: LinkButton[]
-  ranking_badge: RankingBadge
-  features: string[]
-  contract_type: ContractType
-  whole_life_type: WholeLifeType
-  insurance_type: string
-  view_count: number
 }
 
 export interface Coverage {
