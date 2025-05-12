@@ -1,6 +1,5 @@
 // Actions
 export const FETCH_PRODUCT = 'FETCH_PRODUCT'
-export const FETCH_PRODUCT_FEE = 'FETCH_PRODUCT_FEE'
 export const FETCH_SINGLE_PRODUCT = 'FETCH_SINGLE_PRODUCT'
 
 // Mutations

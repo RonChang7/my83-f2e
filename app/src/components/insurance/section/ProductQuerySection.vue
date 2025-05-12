@@ -50,7 +50,7 @@
       <ProductFee
         class="ProductQuerySection__fee"
         :card-height="feeCardHeight"
-        :fee="yearFee"
+        :fee="annualFee"
         :consult-link="consultLink"
         :insurance-type="setting && setting.insuranceType"
         @open-modal="$emit('open-modal')"
@@ -109,10 +109,12 @@ import {
   reactive,
   ref,
   useStore,
+  watch,
 } from '@nuxtjs/composition-api'
 import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
+import { UPDATE_FEE } from '@/store/insurance/product.type'
 import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
 import ProductFee from '../product/ProductFee.vue'
@@ -283,7 +285,7 @@ export default defineComponent({
       amount: null,
     })
 
-    const yearFee = computed(() => {
+    const annualFee = computed(() => {
       if (
         userInfo.amount < amountMin.value ||
         userInfo.amount > amountMax.value
@@ -345,6 +347,7 @@ export default defineComponent({
           }
         }
       }
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
     }
 
     // 組件掛載後的處理
@@ -365,8 +368,13 @@ export default defineComponent({
       }
       userInfo.amount = amountMin.value
       // 初始化時計算年繳保費
-      // console.log(yearFee.value)
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
+      // console.log(annualFee.value)
       // console.log(userInfo)
+    })
+
+    watch(annualFee, (newVal) => {
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, newVal)
     })
 
     // 返回所有需要在模板中使用的變數和方法
@@ -381,7 +389,7 @@ export default defineComponent({
       premium,
       benefit,
       consultLink,
-      yearFee,
+      annualFee,
       userInfo,
     }
   },

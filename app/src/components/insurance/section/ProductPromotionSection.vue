@@ -57,13 +57,10 @@ export default defineComponent({
     const analytics = useAnalytics()
     const { isMobile } = useDevice()
     const fee = computed(() => store.state.insuranceProduct.fee)
-    const consultLink = computed(
-      () => store.state.insuranceProduct.product?.consult_link
-    )
 
     const tracking = () => {
       const insuranceType = computed(
-        () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+        () => store.state.insuranceProduct.singleProduct?.basic?.categoryMain
       )
 
       analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
@@ -76,7 +73,6 @@ export default defineComponent({
     return {
       isMobile,
       fee,
-      consultLink,
       tracking,
     }
   },

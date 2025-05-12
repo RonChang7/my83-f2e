@@ -4,7 +4,6 @@ import * as api from '@/api/insurance/product'
 import {
   Product,
   Coverage,
-  FetchProductFeePayload,
   SingleProductResponse,
 } from '@/api/insurance/product.type'
 import * as types from './product.type'
@@ -36,26 +35,6 @@ export const createStoreModule = <R>(): Module<State, R> => {
               resolve()
             })
             .catch((error) => reject(error))
-        })
-      },
-      [types.FETCH_PRODUCT_FEE]({ commit }, payload: FetchProductFeePayload) {
-        return new Promise<void>((resolve) => {
-          api
-            .fetchProductFee(payload)
-            .then(({ data }) => {
-              data.fee >= 0
-                ? commit(types.UPDATE_FEE, data.fee)
-                : commit(types.CLEAR_FEE)
-
-              if (data.coverages) {
-                commit(types.UPDATE_COVERAGE, data.coverages)
-              }
-              resolve()
-            })
-            .catch(() => {
-              commit(types.CLEAR_FEE)
-              resolve()
-            })
         })
       },
       [types.FETCH_SINGLE_PRODUCT]({ commit }, productName: string) {

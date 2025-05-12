@@ -2,24 +2,12 @@ import { Link, LinkButton, Gender, PageResponse } from '../type'
 
 export type ProductResponse = PageResponse<Product>
 
-export interface FetchProductFeePayload extends PremiumQuery {
-  productId: string
-  amountUnit?: number
-}
-
 export interface ProductReportRequest {
   id: number
   content: string
   refLink: string
   reporter: string
   reporterContact: string
-}
-
-export interface ProductFeeResponse {
-  data: {
-    fee: number
-    coverages: Coverage[]
-  }
 }
 
 export interface Product {
