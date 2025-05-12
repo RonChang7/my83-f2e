@@ -1,9 +1,10 @@
 <template>
   <div class="ProductCoverageSection">
+    {{ benefits }}
+
     <div class="ProductCoverageSection__header">
       <h2 class="ProductCoverageSection__title">理賠項目</h2>
       <div
-        v-if="shouldShowCoverageDetail"
         class="ProductCoverageSection__action"
         @click="isPanelActive = !isPanelActive"
       >
@@ -27,14 +28,6 @@
         />
       </div>
     </div>
-    <!-- <div class="ProductCoverageSection__row">
-      <div v-if="claims.length" class="ProductCoverageSection__claim">
-        <h3>其他理賠說明</h3>
-        <ul>
-          <li v-for="(claim, index) in claims" :key="index">{{ claim }}</li>
-        </ul>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -62,13 +55,6 @@ export default class ProductCoverageSection extends Vue {
     return this.isPanelActive ? '收合細項' : '查看細項'
   }
 
-  get claims() {
-    return (
-      (this.$store.state as InsuranceProductVuexState).insuranceProduct.product
-        ?.claims || []
-    )
-  }
-
   get shouldShowCoverageDetail() {
     const coverages = (this.$store.state as InsuranceProductVuexState)
       .insuranceProduct.product?.coverages
@@ -89,6 +75,11 @@ export default class ProductCoverageSection extends Vue {
           return acc
         }, [])
       : []
+  }
+
+  get benefits() {
+    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
+      .singleProduct.benefit
   }
 }
 </script>
