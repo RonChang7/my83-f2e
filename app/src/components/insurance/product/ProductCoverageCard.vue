@@ -4,6 +4,16 @@
       <h3 class="ProductCoverageCard__name">
         {{ coverage.name }}
       </h3>
+      <BaseTooltip v-if="coverage.note" :offset="8" placement="bottom-start">
+        <template #button>
+          <div class="ProductQuerySection__column__icon">
+            <BaseInfo />
+          </div>
+        </template>
+        <template #content>
+          <TooltipCard :info="[{ title: '', content: coverage.note }]" />
+        </template>
+      </BaseTooltip>
     </div>
     <template v-if="typeof coverage.content === 'string'">
       <div class="ProductCoverageCard__content">
@@ -16,31 +26,27 @@
         :key="index"
         class="ProductCoverageCard__content"
       >
-        <div>
-          <span style="font-weight: 700">{{ item.title }}</span>
-          <span>{{ item.remark }}</span>
+        <div class="ProductCoverageCard__info">
+          <div style="font-weight: 700">{{ item.title }}</div>
+          <div>{{ item.remark }}</div>
         </div>
         <div class="ProductCoverageCard__amount">
           {{ processValue(item.highlight) }}
         </div>
       </div>
-    </template>
-    <div
-      v-if="coverage.levels && coverage.levels.length"
-      v-show="isActive"
-      class="ProductCoverageCard__level__wrapper"
-    >
       <div
-        v-for="(level, index) in coverage.levels"
-        :key="index"
-        class="ProductCoverageCard__level"
+        v-if="coverage.table.length && isActive"
+        class="ProductCoverageCard__table"
       >
-        <div class="ProductCoverageCard__level__name">{{ level.name }}</div>
-        <div v-if="level.amount" class="ProductCoverageCard__level__amount">
-          {{ amountConvert(level.amount) }} 元
-        </div>
+        <table>
+          <tr v-for="(row, idx) in coverage.table" :key="idx">
+            <td v-for="(cell, key) in row" :key="key">
+              {{ processValue(cell) }}
+            </td>
+          </tr>
+        </table>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -50,10 +56,16 @@ import { Coverage } from '@/api/insurance/product.type'
 import Ring from '@/components/base/progress/Ring.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { numberConverterWithUnit } from '@/utils/number-converter'
+import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
+import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
+import TooltipCard from './tooltip-card/TooltipCard.vue'
 
 @Component({
   components: {
     Ring,
+    BaseInfo,
+    BaseTooltip,
+    TooltipCard,
   },
 })
 export default class ProductCoverageCard extends Mixins(DeviceMixin) {
@@ -85,7 +97,7 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
     const insuredAmount = this.insuredAmount ?? 1
 
     // 使用正則表達式替換所有匹配的模式
-    return value.replace(/\$\[([\d,]+)\]/g, (match, valuesStr) => {
+    return value.replace(/\$\[([\d\\.,]+)\]/g, (match, valuesStr) => {
       // 將字串分割為數值陣列
       const values = valuesStr.split(',').map(Number)
 
@@ -96,7 +108,10 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
           : values[0]
 
       // 應用保額倍數並四捨五入到兩位小數
-      const result = Math.round(selectedValue * insuredAmount * 100) / 100
+      const result =
+        insuredAmount > 0
+          ? Math.round(selectedValue * insuredAmount * 100) / 100
+          : selectedValue
 
       // 返回格式化後的數值
       return result.toLocaleString('en-US')
@@ -139,22 +154,37 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
 
   &__header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    align-items: center;
+
+    h3 {
+      margin-right: 4px;
+    }
   }
 
   &__name,
   &__amount {
-    font-size: 1.125rem;
     font-weight: 500;
   }
 
   &__name {
     margin: 0;
     color: $gray-primary;
+    font-size: 1.125rem;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    width: 73%;
   }
 
   &__amount {
+    font-size: 16px;
+    width: 25%;
+    white-space: nowrap;
     color: $primary-color;
+    text-align: right;
   }
 
   &__coverage {
@@ -189,23 +219,39 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
     justify-content: space-between;
   }
 
-  &__level {
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid $gray-quaternary;
-    padding: 8px 0 8px 16px;
+  &__content:not(:last-child) {
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #d9d9d9;
+  }
 
-    &__wrapper {
-      margin-top: 20px;
-    }
+  &__table {
+    padding: 20px 0 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
 
-    &__name {
-      color: $gray-primary;
-    }
+    table {
+      font-size: 14px;
+      max-width: 1080px;
+      border-collapse: collapse;
+      border-spacing: 0;
 
-    &__amount {
-      color: $primary-color;
-      font-weight: 500;
+      tr:first-child {
+        background-color: #ededed;
+        text-align: center;
+      }
+
+      td:first-child {
+        background-color: #ededed;
+        text-align: center;
+      }
+
+      td {
+        border: 1px solid #c9c9c9;
+        padding: 8px;
+        text-align: left;
+        word-break: keep-all;
+      }
     }
   }
 }

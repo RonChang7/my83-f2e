@@ -1,8 +1,5 @@
 <template>
   <div class="ProductCoverageSection">
-    <br />
-    {{ columnCount }}
-    {{ coverageGroup }}
     <div class="ProductCoverageSection__header">
       <h2 class="ProductCoverageSection__title">理賠項目</h2>
       <div
