@@ -114,7 +114,11 @@ import {
 import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
-import { UPDATE_FEE } from '@/store/insurance/product.type'
+import {
+  UPDATE_FEE,
+  UPDATE_SELECTED_CASE_INDEX,
+  UPDATE_INSURED_AMOUNT,
+} from '@/store/insurance/product.type'
 import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
 import ProductFee from '../product/ProductFee.vue'
@@ -179,10 +183,15 @@ export default defineComponent({
     })
 
     const choosePeriod = () => {
-      const selectedItem = setting.value.setPeriod.find(
+      const selectedIndex = setting.value.setPeriod.findIndex(
         (item) => item.content === userInfo.period
       )
+      const selectedItem = setting.value.setPeriod[selectedIndex]
       userInfo.selectedCase = selectedItem
+      store.commit(
+        `insuranceProduct/${UPDATE_SELECTED_CASE_INDEX}`,
+        selectedIndex
+      )
     }
 
     // 諮詢連結 - 假設連結
@@ -347,6 +356,9 @@ export default defineComponent({
           }
         }
       }
+      if (id === 'period') {
+        choosePeriod()
+      }
       store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
     }
 
@@ -367,6 +379,10 @@ export default defineComponent({
         userInfo.age = setting.value.defaultAge
       }
       userInfo.amount = amountMin.value
+      store.commit(
+        `insuranceProduct/${UPDATE_INSURED_AMOUNT}`,
+        userInfo.amount / setting.value.unitstep
+      )
       // 初始化時計算年繳保費
       store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
       // console.log(annualFee.value)

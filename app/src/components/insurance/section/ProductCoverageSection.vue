@@ -1,7 +1,8 @@
 <template>
   <div class="ProductCoverageSection">
-    {{ benefits }}
-
+    <br />
+    {{ columnCount }}
+    {{ coverageGroup }}
     <div class="ProductCoverageSection__header">
       <h2 class="ProductCoverageSection__title">理賠項目</h2>
       <div
@@ -55,16 +56,26 @@ export default class ProductCoverageSection extends Vue {
     return this.isPanelActive ? '收合細項' : '查看細項'
   }
 
-  get shouldShowCoverageDetail() {
-    const coverages = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product?.coverages
-
-    return !!coverages?.find((coverage) => coverage.levels.length > 0)
-  }
-
   get coverageGroup() {
-    const coverages = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product?.coverages
+    const benefits = (this.$store.state as InsuranceProductVuexState)
+      .insuranceProduct.singleProduct.benefit
+
+    const coverages = []
+    benefits.flatMap((item) => {
+      if (item.benefitMain.length > 0) {
+        coverages.push(...item.benefitMain)
+      }
+      if (item.benefitExtra.length > 0) {
+        const extraName = item.benefitExtra.map((item) => {
+          return {
+            name: '加值給付項目',
+            ...item,
+          }
+        })
+        coverages.push(...extraName)
+      }
+      return coverages
+    })
 
     return coverages
       ? coverages.reduce<Array<Array<Coverage>>>((acc, cur, index) => {
@@ -75,11 +86,6 @@ export default class ProductCoverageSection extends Vue {
           return acc
         }, [])
       : []
-  }
-
-  get benefits() {
-    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
-      .singleProduct.benefit
   }
 }
 </script>

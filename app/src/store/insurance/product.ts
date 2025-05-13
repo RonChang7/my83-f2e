@@ -8,9 +8,11 @@ export const createStoreModule = <R>(): Module<State, R> => {
     namespaced: true,
     state() {
       return {
-        id: '',
+        id: '', // TODO: 後續要刪除
         fee: 0,
         singleProduct: null,
+        selectedCaseIndex: 0,
+        insuredAmount: 0,
       }
     },
     actions: {
@@ -33,6 +35,12 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_SINGLE_PRODUCT](state, data: SingleProductResponse) {
         state.singleProduct = data
       },
+      [types.UPDATE_SELECTED_CASE_INDEX](state, index: number) {
+        state.selectedCaseIndex = index
+      },
+      [types.UPDATE_INSURED_AMOUNT](state, amount: number) {
+        state.insuredAmount = amount
+      },
     },
   }
 }
@@ -41,14 +49,11 @@ export interface State {
   id: string
   fee: number | null
   singleProduct: SingleProductResponse | null
+  selectedCaseIndex: number
+  insuredAmount: number
 }
 
 export interface UpdatePremiumQueryPayload {
   id: string
   value: string | number
-}
-
-export interface UpdatePremiumQueryValidatePayload {
-  id: string
-  value: boolean
 }

@@ -4,27 +4,27 @@
       <h3 class="ProductCoverageCard__name">
         {{ coverage.name }}
       </h3>
-      <div class="ProductCoverageCard__amount">
-        {{ amountConvert(coverage.amount) }} 元
-      </div>
     </div>
-    <!-- <div v-if="coverage.ideal_amount" class="ProductCoverageCard__coverage">
-      <Ring
-        :length="60"
-        :line-width="4"
-        :percentage="coverageRate"
-        :wording="`${coverageRate}%`"
-        :wording-style="{ 'font-size': '16px' }"
-      />
-      <div class="ProductCoverageCard__coverageWording">
-        與
-        <span>{{ idealCoverageWording }}</span>
-        的比例
+    <template v-if="typeof coverage.content === 'string'">
+      <div class="ProductCoverageCard__content">
+        {{ coverage.content }}
       </div>
-    </div> -->
-    <div v-if="coverage.content" class="ProductCoverageCard__content">
-      {{ coverage.content }}
-    </div>
+    </template>
+    <template v-else>
+      <div
+        v-for="(item, index) in coverage.content"
+        :key="index"
+        class="ProductCoverageCard__content"
+      >
+        <div>
+          <span style="font-weight: 700">{{ item.title }}</span>
+          <span>{{ item.remark }}</span>
+        </div>
+        <div class="ProductCoverageCard__amount">
+          {{ processValue(item.highlight) }}
+        </div>
+      </div>
+    </template>
     <div
       v-if="coverage.levels && coverage.levels.length"
       v-show="isActive"
@@ -36,7 +36,7 @@
         class="ProductCoverageCard__level"
       >
         <div class="ProductCoverageCard__level__name">{{ level.name }}</div>
-        <div class="ProductCoverageCard__level__amount">
+        <div v-if="level.amount" class="ProductCoverageCard__level__amount">
           {{ amountConvert(level.amount) }} 元
         </div>
       </div>
@@ -49,7 +49,6 @@ import { Component, Mixins, Prop } from 'vue-property-decorator'
 import { Coverage } from '@/api/insurance/product.type'
 import Ring from '@/components/base/progress/Ring.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
-import { delimitIntegerWithSymbol } from '@/utils/digital'
 import { numberConverterWithUnit } from '@/utils/number-converter'
 
 @Component({
@@ -64,8 +63,44 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   @Prop({ type: Boolean, default: false })
   isActive!: boolean
 
-  amountConvert(amount: number) {
-    return delimitIntegerWithSymbol(amount)
+  get insuredAmount() {
+    return this.$store.state.insuranceProduct.insuredAmount
+  }
+
+  get selectedCaseIndex() {
+    return this.$store.state.insuranceProduct.selectedCaseIndex
+  }
+
+  /**
+   * 處理格式為 "$[數值1,數值2,...]單位" 的字串
+   * @param {string} value - 需要處理的字串，如 "$[0.1,0.2]萬元"
+   * @returns {string} - 返回處理後的字串
+   */
+  processValue(value) {
+    // 如果字串不包含 $[，直接返回原字串
+    if (!value || !value.includes('$[')) return value
+
+    // 從 computed 屬性獲取值，如果沒有則使用默認值
+    const selectedIndex = this.selectedCaseIndex ?? 0
+    const insuredAmount = this.insuredAmount ?? 1
+
+    // 使用正則表達式替換所有匹配的模式
+    return value.replace(/\$\[([\d,]+)\]/g, (match, valuesStr) => {
+      // 將字串分割為數值陣列
+      const values = valuesStr.split(',').map(Number)
+
+      // 根據索引選擇數值
+      const selectedValue =
+        selectedIndex >= 0 && selectedIndex < values.length
+          ? values[selectedIndex]
+          : values[0]
+
+      // 應用保額倍數並四捨五入到兩位小數
+      const result = Math.round(selectedValue * insuredAmount * 100) / 100
+
+      // 返回格式化後的數值
+      return result.toLocaleString('en-US')
+    })
   }
 
   get coverageRate() {
@@ -150,6 +185,8 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
   &__content {
     font-size: 0.875rem;
     margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__level {
