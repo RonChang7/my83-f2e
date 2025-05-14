@@ -19,19 +19,19 @@
       <div class="column w-100">
         <ProductCoverageSection />
         <ProductPromotionSection @open-modal="openInfoModal" />
-        <!-- <ProductFQASection />
-        <ProductReportSection class="InsuranceProduct__report" /> -->
+        <ProductFQASection />
+        <!-- <ProductReportSection class="InsuranceProduct__report" /> -->
         <div class="InsuranceProduct__hint">
           本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
         </div>
       </div>
     </div>
-    <!-- 
+
     <BaseScrollToTopButton
       v-if="isMobile && shouldShowScrollToTop"
       class="scrollToTop"
       @click="scrollToTop"
-    /> -->
+    />
   </div>
 </template>
 
@@ -42,9 +42,9 @@ import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSe
 import ProductCoverageSection from '@/components/insurance/section/ProductCoverageSection.vue'
 import ProductPromotionSection from '@/components/insurance/section/ProductPromotionSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
-// import ProductReportSection from '@/components/insurance/section/ProductReportSection.vue'
-// import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
-// import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
+import ProductReportSection from '@/components/insurance/section/ProductReportSection.vue'
+import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
+import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
 import { InsuranceProductVuexState } from './Index.vue'
@@ -57,9 +57,9 @@ import { InsuranceProductVuexState } from './Index.vue'
     ProductCoverageSection,
     ProductPromotionSection,
     ProductQuerySection,
-    // BaseScrollToTopButton,
-    // ProductReportSection,
-    // ProductFQASection,
+    BaseScrollToTopButton,
+    ProductReportSection,
+    ProductFQASection,
   },
 })
 export default class InsuranceProduct extends DeviceMixin {
@@ -110,19 +110,19 @@ export default class InsuranceProduct extends DeviceMixin {
     this.infoModalVisible = true
   }
 
-  // mounted() {
-  //   if (this.$refs.productQuerySection) {
-  //     this.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
-  //     this.scrollToTopObserver.observe(this.$refs.productQuerySection.$el)
-  //   }
-  // }
+  mounted() {
+    if (this.$refs.productQuerySection) {
+      this.scrollToTopObserver = this.createScrollToTopIntersectionObserver()
+      this.scrollToTopObserver.observe(this.$refs.productQuerySection.$el)
+    }
+  }
 
-  // beforeDestroy() {
-  //   if (this.scrollToTopObserver) {
-  //     this.scrollToTopObserver.disconnect()
-  //     this.scrollToTopObserver = null
-  //   }
-  // }
+  beforeDestroy() {
+    if (this.scrollToTopObserver) {
+      this.scrollToTopObserver.disconnect()
+      this.scrollToTopObserver = null
+    }
+  }
 }
 </script>
 
