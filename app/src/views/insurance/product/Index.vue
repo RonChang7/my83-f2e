@@ -16,7 +16,6 @@ const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
 
     // 從 URL 中提取產品名稱
     const productName = params.url.split('/').pop() || params.url
-    // 使用產品名稱請求單一產品詳情資料
     fetchPageData.push(
       store
         .dispatch(`insuranceProduct/${FETCH_SINGLE_PRODUCT}`, productName)
