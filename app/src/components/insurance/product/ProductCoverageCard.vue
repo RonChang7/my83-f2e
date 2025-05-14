@@ -28,11 +28,11 @@
       >
         <div class="ProductCoverageCard__info">
           <div style="font-weight: 700">{{ item.title }}</div>
-          <div>{{ item.remark }}</div>
+          <div class="ProductCoverageCard__amount">
+            {{ processValue(item.highlight) }}
+          </div>
         </div>
-        <div class="ProductCoverageCard__amount">
-          {{ processValue(item.highlight) }}
-        </div>
+        <div class="ProductCoverageCard__remark">{{ item.remark }}</div>
       </div>
       <div
         v-if="coverage.table.length && isActive"
@@ -175,16 +175,19 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
 
   &__info {
     display: flex;
-    flex-direction: column;
-    width: 73%;
+    justify-content: space-between;
   }
 
   &__amount {
     font-size: 16px;
-    width: 25%;
     white-space: nowrap;
     color: $primary-color;
     text-align: right;
+  }
+
+  &__remark {
+    font-size: 0.75rem;
+    color: $gray-primary;
   }
 
   &__coverage {
@@ -216,7 +219,7 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
     font-size: 0.875rem;
     margin-top: 16px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
   }
 
   &__content:not(:last-child) {
