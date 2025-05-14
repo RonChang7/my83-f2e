@@ -55,7 +55,7 @@ export default class ProductCoverageSection extends Vue {
 
   get coverageGroup() {
     const benefits = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.singleProduct.benefit
+      .insuranceProduct.singleProduct?.benefit
 
     const coverages = []
     benefits.flatMap((item) => {

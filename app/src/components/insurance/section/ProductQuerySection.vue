@@ -38,7 +38,7 @@
 
       <!-- 保額欄位 -->
       <ProductQueryField
-        v-if="setting.unit"
+        v-if="setting && setting.unit"
         class="ProductQuerySection__field"
         :field="fields.amount"
         :value="userInfo.amount"
@@ -90,12 +90,16 @@
       <!-- 保障年期資訊 -->
       <div class="ProductQuerySection__column">
         保障年期
-        <span>{{ userInfo.selectedCase.insurancePeriod }}</span>
+        <span>
+          {{ userInfo.selectedCase && userInfo.selectedCase.insurancePeriod }}
+        </span>
       </div>
       <!-- 繳費年期資訊 -->
       <div class="ProductQuerySection__column">
         繳費年期
-        <span>{{ userInfo.selectedCase.paymentPeriod }}</span>
+        <span>
+          {{ userInfo.selectedCase && userInfo.selectedCase.paymentPeriod }}
+        </span>
       </div>
     </div>
   </div>
@@ -151,7 +155,6 @@ export default defineComponent({
     const basic = computed(() => singleProduct.value?.basic)
     const setting = computed(() => singleProduct.value?.setting)
     const premium = computed(() => singleProduct.value?.premium)
-    const benefit = computed(() => singleProduct.value?.benefit)
 
     // userInfo
     const userInfo = reactive({
@@ -183,10 +186,10 @@ export default defineComponent({
     })
 
     const choosePeriod = () => {
-      const selectedIndex = setting.value.setPeriod.findIndex(
+      const selectedIndex = setting.value?.setPeriod?.findIndex(
         (item) => item.content === userInfo.period
       )
-      const selectedItem = setting.value.setPeriod[selectedIndex]
+      const selectedItem = setting.value?.setPeriod?.[selectedIndex]
       userInfo.selectedCase = selectedItem
       store.commit(
         `insuranceProduct/${UPDATE_SELECTED_CASE_INDEX}`,
@@ -210,7 +213,7 @@ export default defineComponent({
         // 顯示年齡範圍提示
         range: computed(
           () =>
-            `(${userInfo.selectedCase.ageMin} - ${userInfo.selectedCase.ageMax}歲)`
+            `(${userInfo.selectedCase?.ageMin} - ${userInfo.selectedCase?.ageMax}歲)`
         ),
       },
       // 性別欄位定義
@@ -257,8 +260,8 @@ export default defineComponent({
       period: computed(() => {
         if (
           !singleProduct.value ||
-          !singleProduct.value.setting.setPeriod ||
-          !singleProduct.value.setting.setPeriod.length
+          !singleProduct.value.setting?.setPeriod ||
+          !singleProduct.value.setting?.setPeriod.length
         ) {
           return null
         }
@@ -267,7 +270,7 @@ export default defineComponent({
           id: 'period',
           name: setting.value.casePeriod,
           type: 'OPTION',
-          options: singleProduct.value.setting.setPeriod.map((period) => ({
+          options: singleProduct.value.setting?.setPeriod.map((period) => ({
             ...period,
             text: period.content,
             value: period.content,
@@ -369,19 +372,19 @@ export default defineComponent({
         ? (content.value as HTMLElement).offsetHeight - 22
         : 160
 
-      userInfo.sex = singleProduct.value?.setting.defaultSex
-      userInfo.job_level = singleProduct.value?.setting.defaultJob
-      userInfo.period = singleProduct.value?.setting.defaultPeriod
+      userInfo.sex = singleProduct.value?.setting?.defaultSex
+      userInfo.job_level = singleProduct.value?.setting?.defaultJob
+      userInfo.period = singleProduct.value?.setting?.defaultPeriod
       choosePeriod()
-      if (setting.value.defaultAge > userInfo.selectedCase.ageMax) {
-        userInfo.age = userInfo.selectedCase.ageMax
+      if (setting.value?.defaultAge > userInfo.selectedCase?.ageMax) {
+        userInfo.age = userInfo.selectedCase?.ageMax
       } else {
-        userInfo.age = setting.value.defaultAge
+        userInfo.age = setting.value?.defaultAge
       }
       userInfo.amount = amountMin.value
       store.commit(
         `insuranceProduct/${UPDATE_INSURED_AMOUNT}`,
-        userInfo.amount / setting.value.unitstep
+        userInfo.amount / setting.value?.unitstep
       )
       // 初始化時計算年繳保費
       store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
@@ -403,7 +406,6 @@ export default defineComponent({
       basic,
       setting,
       premium,
-      benefit,
       consultLink,
       annualFee,
       userInfo,

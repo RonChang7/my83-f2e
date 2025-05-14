@@ -62,13 +62,13 @@ export default defineComponent({
 
     const features = computed(() => {
       const categorys =
-        props.product.categoryMain + '．' + props.product.categorySub
-      const tags = props.product.tag.map((item) => item.name)
+        props.product?.categoryMain + '．' + props.product?.categorySub
+      const tags = props.product?.tag.map((item) => item.name)
       return categorys + '．' + tags.join('．')
     })
     const benefit = computed(() => {
       const arr = []
-      props.product.benefit.forEach((item) => {
+      props.product?.benefit.forEach((item) => {
         arr.push(item.name)
       })
       return arr.join('．')
@@ -133,6 +133,9 @@ export default defineComponent({
 
   .ml-12 {
     margin-left: 12px;
+    @include max-media('xl') {
+      margin-left: 0;
+    }
   }
 
   &__subSection {
