@@ -8,7 +8,6 @@
     >
       <BaseFilter18 class="mr-1" />
       篩選商品
-      <template v-if="filterNumberCount">({{ filterNumberCount }})</template>
     </BaseButton>
     <div class="MobileFilterSection__description">
       {{ productListDescription }}
@@ -20,31 +19,50 @@
       </div>
       <div class="MobileFilterSection__content">
         <div
-          v-for="field in form.fields"
-          :key="field.id"
+          v-for="option in formattedInsuranceOptions"
+          :key="option.key"
           class="MobileFilterSection__section"
         >
           <div class="MobileFilterSection__section__title">
-            {{ field.name }}
+            {{ option.title }}
           </div>
           <div class="MobileFilterSection__section__content">
-            <ProductQueryField
+            <div
+              v-for="item in option.key !== 'tagList'
+                ? option.items
+                : showTagList"
+              :key="item.id"
               class="MobileFilterSection__section__field"
-              :field="field"
-              :value="form.formData[field.id]"
-              :disable-label="true"
-              radio-type="radio"
-              @update="update"
-            />
-            <BaseInputMessage
-              v-if="
-                form.validateState[field.id] &&
-                form.validateState[field.id].message
-              "
-              class="MobileFilterSection__section__message"
-              :msg="form.validateState[field.id].message"
-              type="error"
-            />
+            >
+              <Radio
+                v-if="option.key !== 'tagList'"
+                :text="item.name"
+                :value="item.id"
+                :current-selected-value="
+                  Number(selectedFilters[option.key]) || 0
+                "
+                @update="(value) => updateValue(option.key, value)"
+              />
+              <Checkbox
+                v-else
+                :text="item.name"
+                :value="item.id"
+                :current-selected-values="selectedFilters[option.key] || []"
+                @update="(value) => updateValue(option.key, value)"
+              />
+            </div>
+            <div
+              v-if="option.key === 'tagList'"
+              class="dialog__expand"
+              @click="expandTagList(option.items)"
+            >
+              <div class="dialog__expand-line"></div>
+              <div class="dialog__expand-word">
+                <span v-if="!isExpandTagList">展開</span>
+                <span v-else>收起</span>
+              </div>
+              <div class="dialog__expand-line"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -61,7 +79,6 @@
           size="l-a"
           type="primary"
           :is-full-width="true"
-          :disabled="!form.isAllValidated"
           @click.native="submit"
         >
           套用
@@ -72,37 +89,34 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import {
   computed,
   defineComponent,
-  nextTick,
   ref,
-  useRoute,
-  useRouter,
   useStore,
   watch,
+  reactive,
+  onMounted,
+  useRoute,
+  useRouter,
+  nextTick,
 } from '@nuxtjs/composition-api'
-import { useAnalytics } from '@/utils/composition-api'
-import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { useInsuranceFilterForm } from '@/services/product/InsuranceFilterScheme'
-import BaseInputMessage from '@/components/my83-ui-kit/input/BaseInputMessage.vue'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import BaseInfoModal from '@/components/my83-ui-kit/modal/BaseInfoModal.vue'
 import BaseFilter18 from '@/assets/icon/18/BaseFilter.svg'
 import BaseFilter24 from '@/assets/icon/24/BaseFilter.svg'
-import { InsuranceListType } from '@/routes/insurance'
-import ProductQueryField from '../../product/ProductQueryField.vue'
+import Checkbox from '@/components/insurance/product/input-field/Checkbox.vue'
+import Radio from '@/components/insurance/product/input-field/Radio.vue'
 
 export default defineComponent({
   components: {
-    ProductQueryField,
-    BaseInputMessage,
     BaseButton,
     BaseInfoModal,
     BaseFilter18,
     BaseFilter24,
+    Checkbox,
+    Radio,
   },
   props: {
     productListDescription: {
@@ -110,116 +124,219 @@ export default defineComponent({
       default: '',
     },
   },
-  setup(props, ctx) {
+  emits: ['submit'],
+  setup(props, { emit }) {
     const store = useStore<InsuranceVuexState>()
     const route = useRoute()
     const router = useRouter()
-    const analytics = useAnalytics()
 
-    const pageType =
-      route.value.name === InsuranceListType.FEATURE_TAG
-        ? '主題標籤頁'
-        : route.value.name === InsuranceListType.SEARCH
-        ? '搜尋結果頁'
-        : '險種頁'
+    // 首先定義資料的介面
+    interface InsuranceItem {
+      id: number
+      name: string
+    }
 
-    const visiblePanel = ref(false)
-    const openPanel = () => (visiblePanel.value = true)
-    const closePanel = () => (visiblePanel.value = false)
-    const { defaultValue, config } = store.state.insurance.filter
-    const queryStringValue = _.keys(config).reduce((acc, cur) => {
-      if (!_.isUndefined(route.value.query[cur])) {
-        acc[cur] = route.value.query[cur]
+    interface InsuranceOptions {
+      [key: string]: InsuranceItem[] // 索引簽名，允許動態訪問屬性
+      categoryList: InsuranceItem[]
+      caseList: InsuranceItem[]
+      typeList: InsuranceItem[]
+      tagList: InsuranceItem[]
+    }
+
+    interface FormattedInsuranceOption {
+      key: string
+      title: string
+      items: InsuranceItem[]
+    }
+
+    // 定義映射類型
+    const mappingType: Record<string, string> = {
+      categoryList: '保險種類',
+      caseList: '保險年期',
+      typeList: '保險類別',
+      tagList: '保險特色',
+    }
+
+    // 使用 computed 來轉換資料格式
+    const formattedInsuranceOptions = computed<FormattedInsuranceOption[]>(
+      () => {
+        const options = store.state.insurance
+          .insuranceOptions as InsuranceOptions
+
+        if (!options) return []
+
+        return Object.keys(mappingType)
+          .filter((key) => options[key])
+          .map((key) => ({
+            key,
+            title: mappingType[key],
+            items:
+              key === 'tagList'
+                ? options[key]
+                : [{ id: 0, name: '全部' }, ...options[key]],
+          }))
       }
-      return acc
-    }, {})
+    )
 
-    const initValue = {
-      ...defaultValue,
-      ...queryStringValue,
-    }
-
-    const form = ref(useInsuranceFilterForm(config, initValue))
-
-    const tracking = (label: string) => {
-      analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
-        category: '篩選商品',
-        action: pageType,
-        label,
-      })
-    }
-
-    const update: typeof form.value.update = (payload) => {
-      const trackingLabel = form.value.fields.find(
-        (field) => field.id === payload.id
-      )?.name
-      if (trackingLabel) {
-        tracking(trackingLabel)
-      }
-      return form.value.update(payload)
-    }
-
-    const filterNumberCount = computed(() => {
-      return _.reduce(
-        form.value.formData,
-        (result, value, key) => {
-          if (!defaultValue || defaultValue[key] === undefined) return result
-
-          if (_.isArray(defaultValue[key])) {
-            !_.isEqual(
-              (_.cloneDeep(defaultValue[key]) as any[]).sort(),
-              (_.cloneDeep(value) as any[]).sort()
-            ) && result++
-          } else {
-            !_.isEqual(defaultValue[key], value) && result++
-          }
-
-          return result
-        },
-        0
-      )
+    // 選中的過濾器
+    const selectedFilters = reactive({
+      categoryList: 0,
+      caseList: 0,
+      typeList: 0,
+      tagList: [],
     })
 
-    const reset = function () {
-      if (defaultValue) {
-        form.value = useInsuranceFilterForm(config, defaultValue)
+    // 從 URL 查詢參數初始化過濾器
+    const initializeFiltersFromQuery = () => {
+      const query = route.value.query
+
+      if (query.categoryId) {
+        selectedFilters.categoryList = Number(query.categoryId) || 0
+      }
+
+      if (query.caseId) {
+        selectedFilters.caseId = Number(query.caseId) || 0
+      }
+
+      if (query.typeId) {
+        selectedFilters.typeId = Number(query.typeId) || 0
+      }
+
+      if (query.tagId) {
+        const tagIds = String(query.tagId).split(',').map(Number)
+        selectedFilters.tagList = tagIds
       }
     }
 
-    const submit = () => {
-      const query = form.value.formData
+    // 當路由查詢參數變更時更新過濾器
+    watch(
+      () => route.value.query,
+      () => {
+        initializeFiltersFromQuery()
+      },
+      { immediate: true }
+    )
 
-      if (route.value.name === InsuranceListType.SEARCH) {
+    const isExpandTagList = ref(false)
+    const showTagList = ref<InsuranceItem[]>([])
+
+    // 初始化時設置默認顯示的標籤列表
+    onMounted(() => {
+      const tagListOption = formattedInsuranceOptions.value.find(
+        (option) => option.key === 'tagList'
+      )
+      if (tagListOption) {
+        showTagList.value = tagListOption.items.slice(0, 10)
+      }
+
+      // 從 URL 初始化過濾器
+      initializeFiltersFromQuery()
+    })
+
+    const expandTagList = (items: InsuranceItem[]) => {
+      isExpandTagList.value = !isExpandTagList.value
+      if (isExpandTagList.value) {
+        showTagList.value = items
+      } else {
+        showTagList.value = items.slice(0, 10)
+      }
+    }
+
+    // 修改路由和獲取新資料
+    const changeRoute = () => {
+      // 映射到路由查詢參數
+      const mappingSelectedIds = {
+        categoryList: 'categoryId',
+        caseList: 'caseId',
+        typeList: 'typeId',
+        tagList: 'tagId',
+      }
+
+      const query = Object.keys(selectedFilters).reduce((acc, key) => {
+        if (mappingSelectedIds[key]) {
+          // 確保值存在且是陣列才調用 join
+          const value = selectedFilters[key]
+          if (key === 'tagList') {
+            // 只有當陣列有值且長度大於 0 時才添加
+            if (Array.isArray(value) && value.length > 0) {
+              acc[mappingSelectedIds[key]] = value.join(',')
+            }
+            // 不要添加空陣列
+          } else if (value !== null && value !== undefined && value !== 0) {
+            acc[mappingSelectedIds[key]] = String(value)
+          }
+        }
+        return acc
+      }, {})
+
+      // 保留原有的 q 查詢參數
+      if (route.value.query.q) {
         query.q = route.value.query.q
       }
 
-      /**
-       * @TODO: 之後可以簡化 query 的呈現方式
-       * https://github.com/UPN-TW/my83-f2e/pull/205#issuecomment-843952614
-       */
-      router.push({ query })
-
-      closePanel()
-
-      nextTick(() => {
-        ctx.emit('submit')
+      router.push({
+        path: route.value.path,
+        query,
       })
     }
 
+    const visiblePanel = ref(false)
+
+    const openPanel = () => {
+      visiblePanel.value = true
+    }
+
+    const closePanel = () => {
+      visiblePanel.value = false
+    }
+
+    const reset = () => {
+      selectedFilters.categoryList = 0
+      selectedFilters.caseList = 0
+      selectedFilters.typeList = 0
+      selectedFilters.tagList = []
+
+      isExpandTagList.value = false
+      const tagListOption = formattedInsuranceOptions.value.find(
+        (option) => option.key === 'tagList'
+      )
+      if (tagListOption) {
+        showTagList.value = tagListOption.items.slice(0, 10)
+      }
+    }
+
+    const updateValue = (key: string, val: number | number[]) => {
+      selectedFilters[key] = val
+    }
+
+    const submit = () => {
+      changeRoute()
+      closePanel()
+
+      nextTick(() => {
+        emit('submit')
+      })
+    }
+
+    // 監聽篩選條件配置，重置選項
     watch(
       () => store.state.insurance.filter.config,
       () => reset()
     )
 
     return {
-      form,
-      update,
       visiblePanel,
       openPanel,
       closePanel,
       reset,
       submit,
-      filterNumberCount,
+      formattedInsuranceOptions,
+      selectedFilters,
+      updateValue,
+      isExpandTagList,
+      expandTagList,
+      showTagList,
     }
   },
 })
@@ -248,7 +365,6 @@ export default defineComponent({
     @include shadow('01');
 
     position: absolute;
-
     left: 0;
     display: flex;
     align-items: center;
@@ -308,6 +424,52 @@ export default defineComponent({
       padding: 0;
       margin-bottom: 12px;
     }
+  }
+}
+
+.dialog__expand {
+  display: flex;
+  align-items: center;
+  margin: 20px auto;
+  margin-left: -10px;
+  text-align: center;
+  cursor: pointer;
+  color: #1e2b58;
+
+  &:hover {
+    color: #ff6a82;
+  }
+
+  &-line {
+    width: 100%;
+    height: 1px;
+    background: #bcbcbc;
+  }
+
+  &-word {
+    white-space: nowrap;
+    margin: 0 12px;
+    font-size: 0; /* 去除所有空白 */
+
+    span,
+    &:after {
+      font-size: 1rem; /* 恢復文字大小 */
+    }
+
+    &:after {
+      content: '保險特色';
+    }
+  }
+
+  &-btn {
+    padding: 12px 40px;
+    border-radius: 24px;
+    background: #1e2b58;
+    color: #fff;
+  }
+
+  &-btn:hover {
+    background: #8395be;
   }
 }
 </style>

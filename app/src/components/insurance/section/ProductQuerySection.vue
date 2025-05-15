@@ -1,26 +1,63 @@
 <template>
   <div class="ProductQuerySection">
     <div ref="content" class="ProductQuerySection__content">
+      <!-- 年齡欄位 -->
       <ProductQueryField
-        v-for="field in fields"
-        :key="field.id"
         class="ProductQuerySection__field"
-        :field="field"
-        :value="formData[field.id]"
-        :validate-state="validateState[field.id]"
-        @update="update"
-        @blur="submit"
+        :field="fields.age"
+        :value="userInfo.age"
+        :validate-state="validateStates.age"
+        @update="updateField"
       />
+
+      <!-- 性別欄位 -->
+      <ProductQueryField
+        class="ProductQuerySection__field"
+        :field="fields.sex"
+        :value="userInfo.sex"
+        @update="updateField"
+      />
+
+      <!-- 職業等級欄位 - 只有當產品有職業等級設定時才顯示 -->
+      <ProductQueryField
+        v-if="fields.job_level"
+        class="ProductQuerySection__field"
+        :field="fields.job_level"
+        :value="userInfo.job_level"
+        @update="updateField"
+      />
+
+      <!-- case欄位 - 年期/計畫 -->
+      <ProductQueryField
+        v-if="fields.period"
+        class="ProductQuerySection__field"
+        :field="fields.period"
+        :value="userInfo.period"
+        @update="updateField"
+      />
+
+      <!-- 保額欄位 -->
+      <ProductQueryField
+        v-if="setting && setting.unit"
+        class="ProductQuerySection__field"
+        :field="fields.amount"
+        :value="userInfo.amount"
+        :validate-state="validateStates.amount"
+        @update="updateField"
+      />
+
+      <!-- 保費顯示區塊 - 顯示計算結果 -->
       <ProductFee
         class="ProductQuerySection__fee"
         :card-height="feeCardHeight"
-        :fee="fee"
+        :fee="annualFee"
         :consult-link="consultLink"
-        :insurance-type="insuranceType"
+        :insurance-type="setting && setting.insuranceType"
         @open-modal="$emit('open-modal')"
       />
     </div>
     <div class="ProductQuerySection__footer">
+      <!-- 商品類型資訊 -->
       <div class="ProductQuerySection__column">
         商品類型
         <BaseTooltip :offset="8" placement="bottom-start">
@@ -33,8 +70,9 @@
             <ContractTypeCard />
           </template>
         </BaseTooltip>
-        <span>{{ contractType }}</span>
+        <span>{{ setting && setting.productType }}</span>
       </div>
+      <!-- 保障類型資訊 -->
       <div class="ProductQuerySection__column">
         保障類型
         <BaseTooltip :offset="8" placement="bottom-start">
@@ -47,30 +85,44 @@
             <WholeLifeTypeCard />
           </template>
         </BaseTooltip>
-        <span>{{ wholeLifeType }}</span>
+        <span>{{ setting && setting.insuranceType }}</span>
+      </div>
+      <!-- 保障年期資訊 -->
+      <div class="ProductQuerySection__column">
+        保障年期
+        <span>
+          {{ userInfo.selectedCase && userInfo.selectedCase.insurancePeriod }}
+        </span>
+      </div>
+      <!-- 繳費年期資訊 -->
+      <div class="ProductQuerySection__column">
+        繳費年期
+        <span>
+          {{ userInfo.selectedCase && userInfo.selectedCase.paymentPeriod }}
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import _ from 'lodash'
 import {
   computed,
   defineComponent,
-  nextTick,
   onMounted,
   reactive,
   ref,
   useStore,
   watch,
 } from '@nuxtjs/composition-api'
-import { InsuranceProductVuexState } from '@/views/insurance/product/Index.vue'
-import { FETCH_PRODUCT_FEE, CLEAR_FEE } from '@/store/insurance/product.type'
 import { useDevice } from '@/mixins/device/device-mixins'
 import BaseInfo from '@/assets/icon/18/BaseInfo.svg'
 import BaseTooltip from '@/components/base/tooltip/BaseTooltip.vue'
-import { useProductQuery } from '@/services/product/ProductQueryScheme'
+import {
+  UPDATE_FEE,
+  UPDATE_SELECTED_CASE_INDEX,
+  UPDATE_INSURED_AMOUNT,
+} from '@/store/insurance/product.type'
 import WholeLifeTypeCard from '../product/tooltip-card/WholeLifeTypeCard.vue'
 import ContractTypeCard from '../product/tooltip-card/ContractTypeCard.vue'
 import ProductFee from '../product/ProductFee.vue'
@@ -86,99 +138,277 @@ export default defineComponent({
     WholeLifeTypeCard,
   },
   setup() {
-    const store = useStore<InsuranceProductVuexState>()
+    // 取得 Vuex store 和裝置資訊
+    const store = useStore()
     const { isDesktop } = useDevice()
+
+    // 用於保存 DOM 元素引用和計算保費卡片高度
     const content = ref<HTMLElement | null>(null)
     const feeCardHeight = ref(0)
-    const fields = ref({})
-    const formData = ref({})
-    const submit = ref({})
 
-    const insuranceType = computed(
-      () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
-    )
-    const contractType = computed(
-      () => store.state.insuranceProduct.product?.product.contract_type
-    )
-    const wholeLifeType = computed(
-      () => store.state.insuranceProduct.product?.product.whole_life_type
-    )
-    const fee = computed(() => store.state.insuranceProduct.fee)
-    const consultLink = computed(
-      () => store.state.insuranceProduct.product?.consult_link
-    )
-    const premiumConfig = computed(
-      () => store.state.insuranceProduct.product?.premium_config
-    )
-    const amountUnit = computed(
-      () => store.state.insuranceProduct.product?.premium_config.amount_unit
+    // 從 store 中獲取保險產品資料
+    const singleProduct = computed(
+      () => store.state.insuranceProduct.singleProduct
     )
 
-    const { scheme, validateState, validateAll, update } = useProductQuery(
-      premiumConfig?.value,
-      store.state.insuranceProduct.product!.default_premium_config
-    )
+    // 基本資訊區塊 - 從產品資料中提取基本屬性
+    const basic = computed(() => singleProduct.value?.basic)
+    const setting = computed(() => singleProduct.value?.setting)
+    const premium = computed(() => singleProduct.value?.premium)
 
-    const fetchProductFeeAction = _.debounce(() => {
-      const payload = {
-        productId: store.state.insuranceProduct.id,
-        amountUnit: amountUnit.value,
-        ...formData.value,
-      }
-      store.dispatch(`insuranceProduct/${FETCH_PRODUCT_FEE}`, payload)
-    }, 50)
+    // userInfo
+    const userInfo = reactive({
+      age: 0,
+      sex: '',
+      job_level: '',
+      period: '',
+      body: '',
+      amount: 0,
+      selectedCase: {
+        // 動態生成可能為年期或專案或其他
+        ageMin: 0,
+        ageMax: 0,
+        amountMin: 0,
+        amountMax: 0,
+        content: '',
+        insurancePeriod: '',
+        paymentPeriod: '',
+      },
+    })
 
-    const fetchProductFee = () => {
-      nextTick(async () => {
-        if (await validateAll()) {
-          fetchProductFeeAction()
-        } else {
-          store.commit(`insuranceProduct/${CLEAR_FEE}`)
+    const amountMin = computed(() => {
+      const result = userInfo.selectedCase?.amountMin * setting.value?.unitstep
+      return Math.round(result * 100) / 100 // 使用 Math.round() 解決精度問題
+    })
+    const amountMax = computed(() => {
+      const result = userInfo.selectedCase?.amountMax * setting.value?.unitstep
+      return Math.round(result * 100) / 100 // 使用 Math.round() 解決精度問題
+    })
+
+    const choosePeriod = () => {
+      const selectedIndex = setting.value?.setPeriod?.findIndex(
+        (item) => item.content === userInfo.period
+      )
+      const selectedItem = setting.value?.setPeriod?.[selectedIndex]
+      userInfo.selectedCase = selectedItem
+      store.commit(
+        `insuranceProduct/${UPDATE_SELECTED_CASE_INDEX}`,
+        selectedIndex
+      )
+    }
+
+    // 諮詢連結 - 假設連結
+    const consultLink = computed(() => ({
+      path: '/consult',
+      url: 'https://my83.com/consult',
+    }))
+
+    // 表單欄位定義 - 使用 reactive 創建響應式物件
+    const fields = reactive({
+      // 年齡欄位定義
+      age: {
+        id: 'age',
+        name: '年齡',
+        type: 'NUMBER',
+        // 顯示年齡範圍提示
+        range: computed(
+          () =>
+            `(${userInfo.selectedCase?.ageMin} - ${userInfo.selectedCase?.ageMax}歲)`
+        ),
+      },
+      // 性別欄位定義
+      sex: {
+        id: 'sex',
+        name: '性別',
+        type: 'RADIO',
+        // 根據產品設置動態生成性別選項
+        options: computed(() => {
+          if (!singleProduct.value || !singleProduct.value.setting.setSex) {
+            return [
+              { text: '男性 ', value: '男性' },
+              { text: '女性', value: '女性' },
+            ]
+          }
+
+          return singleProduct.value.setting.setSex.map((sex) => ({
+            text: sex.content,
+            value: sex.content,
+          }))
+        }),
+      },
+      // 職業等級欄位 - 只有當產品有相關設置時才會有值
+      job_level: computed(() => {
+        if (
+          !singleProduct.value ||
+          !singleProduct.value.setting.setJob ||
+          !singleProduct.value.setting.setJob.length
+        ) {
+          return null
         }
-      })
+
+        return {
+          id: 'job_level',
+          name: '職業等級',
+          type: 'OPTION',
+          options: singleProduct.value.setting.setJob.map((job) => ({
+            text: job.content,
+            value: job.content,
+          })),
+        }
+      }),
+      // 年期欄位 - 只有當產品有相關設置時才會有值
+      period: computed(() => {
+        if (
+          !singleProduct.value ||
+          !singleProduct.value.setting?.setPeriod ||
+          !singleProduct.value.setting?.setPeriod.length
+        ) {
+          return null
+        }
+
+        return {
+          id: 'period',
+          name: setting.value.casePeriod,
+          type: 'OPTION',
+          options: singleProduct.value.setting?.setPeriod.map((period) => ({
+            ...period,
+            text: period.content,
+            value: period.content,
+          })),
+        }
+      }),
+      // 保額欄位定義
+      // TODO:step似乎只能用1跳
+      amount: {
+        id: 'amount',
+        name: '保額',
+        type: 'NUMBER',
+        postfix: setting.value?.unit,
+        // 根據產品設置計算保額限制和步進值
+        range: computed(() => {
+          return `(${amountMin.value} - ${amountMax.value} ${setting.value?.unit})`
+        }),
+      },
+    })
+
+    // 表單驗證狀態 - 存儲各欄位驗證結果
+    const validateStates = reactive({
+      age: null,
+      amount: null,
+    })
+
+    const annualFee = computed(() => {
+      if (
+        userInfo.amount < amountMin.value ||
+        userInfo.amount > amountMax.value
+      ) {
+        return 0
+      }
+      if (premium.value?.length) {
+        const formattedJob = Number(userInfo.job_level.slice(2))
+        const found = premium.value.find((item) => {
+          return (
+            (!('Sex' in item) || item.Sex === userInfo.sex) &&
+            (!('Age' in item) || item.Age === userInfo.age) &&
+            (!('Job' in item) || item.Job === formattedJob) &&
+            (!('Body' in item) || item.Body === userInfo.body) &&
+            (!('Period' in item) || item.Period === userInfo.period)
+          )
+        })
+
+        if (found) {
+          if (setting.value?.unit) {
+            const result =
+              (userInfo.amount * found.Value * 100) /
+              setting.value?.unitstep /
+              100
+            return Math.round(result)
+          }
+          return Math.round(found.Value)
+        }
+      }
+      return 0
+    })
+
+    // 更新欄位值的處理函數
+    const updateField = ({ id, value }) => {
+      // console.log('updateField', id, value)
+      if (id in userInfo) {
+        // 更新欄位值
+        userInfo[id] = value
+
+        // 根據欄位類型進行單獨驗證
+        if (id === 'age') {
+          const { ageMin, ageMax } = userInfo.selectedCase
+          if (value < ageMin || value > ageMax) {
+            validateStates.age = {
+              state: 'error',
+              message: `年齡不符`,
+            }
+          } else {
+            validateStates.age = null
+          }
+        } else if (id === 'amount') {
+          if (value < amountMin.value || value > amountMax.value) {
+            validateStates.amount = {
+              state: 'error',
+              message: `保額有誤`,
+            }
+          } else {
+            validateStates.amount = null
+          }
+        }
+      }
+      if (id === 'period') {
+        choosePeriod()
+      }
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
     }
 
-    const createReactive = () => {
-      formData.value = reactive(scheme.form.formData)
-      fields.value = reactive(scheme.form.fields)
-      validateState.value = reactive(scheme.form.validateState)
-      scheme.form.setSubmit(fetchProductFee)
-      submit.value = () => scheme.form.submit()
-    }
-
-    createReactive()
-
+    // 組件掛載後的處理
     onMounted(() => {
-      // 調整費率區塊位置
+      // 根據裝置類型調整費率區塊位置
       feeCardHeight.value = isDesktop.value
         ? (content.value as HTMLElement).offsetHeight - 22
         : 160
+
+      userInfo.sex = singleProduct.value?.setting?.defaultSex
+      userInfo.job_level = singleProduct.value?.setting?.defaultJob
+      userInfo.period = singleProduct.value?.setting?.defaultPeriod
+      choosePeriod()
+      if (setting.value?.defaultAge > userInfo.selectedCase?.ageMax) {
+        userInfo.age = userInfo.selectedCase?.ageMax
+      } else {
+        userInfo.age = setting.value?.defaultAge
+      }
+      userInfo.amount = amountMin.value
+      store.commit(
+        `insuranceProduct/${UPDATE_INSURED_AMOUNT}`,
+        userInfo.amount / setting.value?.unitstep
+      )
+      // 初始化時計算年繳保費
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
+      // console.log(annualFee.value)
+      // console.log(userInfo)
     })
 
-    watch(
-      () => scheme.form.formData.plan_id,
-      async (val) => {
-        // 更新 plan id，重建整張 form
-        scheme.updateForm(val)
-        await validateAll()
-        // 重新建立 form 響應的資料
-        createReactive()
-      }
-    )
+    watch(annualFee, (newVal) => {
+      store.commit(`insuranceProduct/${UPDATE_FEE}`, newVal)
+    })
 
+    // 返回所有需要在模板中使用的變數和方法
     return {
       content,
       fields,
-      formData,
-      validateState,
-      update,
-      submit,
+      validateStates,
+      updateField,
       feeCardHeight,
-      insuranceType,
-      contractType,
-      wholeLifeType,
-      fee,
+      basic,
+      setting,
+      premium,
       consultLink,
+      annualFee,
+      userInfo,
     }
   },
 })
@@ -190,12 +420,14 @@ export default defineComponent({
 @import '@/sass/rwd.scss';
 
 .ProductQuerySection {
+  // 桌面版使用卡片樣式
   @include min-media('xl') {
     @include card-primary;
   }
 
   &__content,
   &__footer {
+    // 行動版使用簡化卡片樣式
     @include max-media('xl') {
       @include card-secondary;
     }
@@ -212,6 +444,7 @@ export default defineComponent({
     flex-wrap: wrap;
     position: relative;
 
+    // 行動版佈局調整
     @include max-media('xl') {
       padding: 20px;
       flex-direction: column;
@@ -224,6 +457,7 @@ export default defineComponent({
     width: 50%;
     padding-right: 40px;
 
+    // 行動版佈局調整
     @include max-media('xl') {
       width: 100%;
       padding: 0;
@@ -237,6 +471,7 @@ export default defineComponent({
     left: 40px;
     top: 32px;
 
+    // 行動版保費卡片位置調整
     @include max-media('xl') {
       position: relative;
       margin: -160px auto 10px;
@@ -253,6 +488,7 @@ export default defineComponent({
       color: $primary-color;
     }
 
+    // 行動版佈局調整
     @include max-media('xl') {
       padding: 20px;
       flex-direction: column;
@@ -260,16 +496,20 @@ export default defineComponent({
   }
 
   &__column {
-    flex: 0 0 50%;
+    flex: 0 0 33%;
     display: flex;
     align-items: center;
 
     &__icon {
       @include hover('_gray-secondary-darker', $has-svg: true);
-
-      margin: -2px 8px 0 2px;
+      margin: -2px 0px 0 2px;
     }
 
+    span {
+      margin-left: 8px;
+    }
+
+    // 行動版佈局調整
     @include max-media('xl') {
       flex: 1 1 auto;
 

@@ -6,12 +6,6 @@
       <ProductHeaderSection />
     </div>
 
-    <div class="InsuranceProduct__row thin">
-      <div class="column left">
-        <ProductDescription />
-      </div>
-    </div>
-
     <div class="InsuranceProduct__row">
       <div class="column left">
         <ProductQuerySection
@@ -22,19 +16,13 @@
     </div>
 
     <div class="InsuranceProduct__row withColumns">
-      <div class="column left">
+      <div class="column w-100">
         <ProductCoverageSection />
-        <ProductRuleSection />
-        <ProductPromotionSection
-          v-if="shouldShowProductPromotionSection"
-          @open-modal="openInfoModal"
-        />
-      </div>
-      <div class="column right">
-        <ProductPromotionSalesSection v-if="isDesktop" page-type="商品頁" />
-        <PromotionSection v-else page-type="商品頁" />
-        <PopularProductSection />
-        <ProductReportSection />
+        <ProductPromotionSection @open-modal="openInfoModal" />
+        <ProductFQASection />
+        <div class="InsuranceProduct__hint">
+          本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
+        </div>
       </div>
     </div>
 
@@ -50,15 +38,10 @@
 import { Vue, Component } from 'vue-property-decorator'
 import ProductHowToBuyModal from '@/components/insurance/modal/ProductHowToBuyModal.vue'
 import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSection.vue'
-import ProductDescription from '@/components/insurance/section/ProductDescription.vue'
 import ProductCoverageSection from '@/components/insurance/section/ProductCoverageSection.vue'
-import ProductRuleSection from '@/components/insurance/section/ProductRuleSection.vue'
 import ProductPromotionSection from '@/components/insurance/section/ProductPromotionSection.vue'
-import ProductPromotionSalesSection from '@/components/insurance/section/ProductPromotionSalesSection.vue'
-import PromotionSection from '@/components/insurance/section/PromotionSection.vue'
-import PopularProductSection from '@/components/insurance/section/PopularProductSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
-import ProductReportSection from '@/components/insurance/section/ProductReportSection.vue'
+import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
@@ -69,16 +52,11 @@ import { InsuranceProductVuexState } from './Index.vue'
   components: {
     ProductHowToBuyModal,
     ProductHeaderSection,
-    ProductDescription,
     ProductCoverageSection,
-    ProductRuleSection,
     ProductPromotionSection,
-    ProductPromotionSalesSection,
-    PromotionSection,
-    PopularProductSection,
     ProductQuerySection,
     BaseScrollToTopButton,
-    ProductReportSection,
+    ProductFQASection,
   },
 })
 export default class InsuranceProduct extends DeviceMixin {
@@ -92,20 +70,21 @@ export default class InsuranceProduct extends DeviceMixin {
     productQuerySection: Vue
   }
 
-  get shouldShowProductPromotionSection() {
-    return !(this.isMobile && !this.shouldShowScrollToTop)
-  }
-
   get insuranceType() {
     return (
-      (this.$store.state as InsuranceProductVuexState).pageMeta.pageMeta
-        ?.breadcrumbs?.[0].name || ''
+      (this.$store.state as InsuranceProductVuexState).insuranceProduct
+        .singleProduct?.basic?.categoryMain || ''
     )
   }
 
   get title() {
     const state = this.$store.state as InsuranceProductVuexState
     return `${state.insuranceProduct.product?.product.company} ${state.insuranceProduct.product?.product.name}`
+  }
+
+  get singleProduct() {
+    return (this.$store.state as InsuranceProductVuexState).insuranceProduct
+      .singleProduct
   }
 
   scrollToTop() {
@@ -186,6 +165,10 @@ export default class InsuranceProduct extends DeviceMixin {
       }
     }
 
+    .w-100 {
+      width: 100%;
+    }
+
     &.withColumns {
       @include max-media('xl') {
         flex-direction: column;
@@ -242,6 +225,20 @@ export default class InsuranceProduct extends DeviceMixin {
           }
         }
       }
+    }
+  }
+
+  &__report {
+    margin: 36px auto;
+    width: 264px;
+    padding: 0;
+  }
+
+  &__hint {
+    text-align: center;
+    margin: 36px 16px 72px;
+    @include max-media('sm') {
+      text-align: left;
     }
   }
 }

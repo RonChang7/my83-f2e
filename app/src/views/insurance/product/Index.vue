@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
-import { FETCH_PRODUCT } from '@/store/insurance/product.type'
+import { FETCH_SINGLE_PRODUCT } from '@/store/insurance/product.type'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/product'
 import { ErrorPageType } from '@/config/error-page.config'
@@ -10,21 +10,24 @@ const InsuranceProductComponent = () => import('./InsuranceProduct.vue')
 
 @Component({
   async asyncData(ctx) {
-    const { store, params, error, from, route } = ctx
-    const insuranceProductStore = (store.state as InsuranceProductVuexState)
-      .insuranceProduct
+    const { store, params, error } = ctx
 
     const fetchPageData: Promise<any>[] = []
 
-    if (from?.name !== route?.name || insuranceProductStore.id !== params.id) {
-      fetchPageData.push(
-        store.dispatch(`insuranceProduct/${FETCH_PRODUCT}`, params.id)
-      )
-    }
+    // 從 URL 中提取產品名稱
+    const productName = params.url.split('/').pop() || params.url
+    fetchPageData.push(
+      store
+        .dispatch(`insuranceProduct/${FETCH_SINGLE_PRODUCT}`, productName)
+        .catch((err) => {
+          console.error('Error fetching single product:', err)
+        })
+    )
 
     try {
       await Promise.all([...Content.requests(ctx), ...fetchPageData])
     } catch (err) {
+      console.error('Error in asyncData:', err)
       if (!isAxiosError(err)) throw err
 
       const statusCode =

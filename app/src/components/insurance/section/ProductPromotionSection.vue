@@ -13,25 +13,25 @@
           class="ProductPromotionSection__faq"
           @click="openModal"
         >
-          如何在 MY83 購買保險？
+          想獲得保險相關建議？
         </div>
       </div>
       <div class="ProductPromotionSection__action">
         <BaseButton
           :size="isMobile ? 'l-a' : 'xl'"
-          :type="isMobile ? 'primary' : 'quaternary'"
-          :to="consultLink.path"
+          type="quaternary"
+          to="/insured"
           :is-full-width="isMobile"
           @click.native="tracking"
         >
-          免費找業務員
+          免費諮詢
         </BaseButton>
         <div
           v-if="!isMobile"
           class="ProductPromotionSection__faq"
           @click="openModal"
         >
-          如何在 MY83 購買保險？
+          想獲得保險相關建議？
         </div>
       </div>
     </div>
@@ -57,13 +57,10 @@ export default defineComponent({
     const analytics = useAnalytics()
     const { isMobile } = useDevice()
     const fee = computed(() => store.state.insuranceProduct.fee)
-    const consultLink = computed(
-      () => store.state.insuranceProduct.product?.consult_link
-    )
 
     const tracking = () => {
       const insuranceType = computed(
-        () => store.state.pageMeta.pageMeta?.breadcrumbs?.[0].name || ''
+        () => store.state.insuranceProduct.singleProduct?.basic?.categoryMain
       )
 
       analytics.dispatch<EventTypes.ClickAction>(EventTypes.ClickAction, {
@@ -76,7 +73,6 @@ export default defineComponent({
     return {
       isMobile,
       fee,
-      consultLink,
       tracking,
     }
   },
@@ -91,7 +87,7 @@ export default defineComponent({
 .ProductPromotionSection {
   display: flex;
 
-  @include min-media('sm') {
+  @include min-media('xl') {
     justify-content: center;
     max-width: 680px;
     width: 100%;
@@ -103,16 +99,16 @@ export default defineComponent({
     color: #fff;
   }
 
-  @include max-media('sm') {
+  @include max-media('xl') {
     justify-content: space-between;
     align-items: center;
     position: fixed;
     bottom: 0;
-    background: #fff;
+    background: #ef6e2e;
     width: 100vw;
     box-shadow: 0 -2px 4px 0 rgba(0, 0, 0, 0.15);
     z-index: 1;
-    color: $gray-primary;
+    color: #fff;
     padding: 15px 20px;
   }
 
@@ -128,7 +124,7 @@ export default defineComponent({
       margin-bottom: -4px;
     }
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       font-size: 1.125rem;
       font-weight: 500;
 
@@ -143,7 +139,7 @@ export default defineComponent({
     margin-left: 40px;
     text-align: center;
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       margin: 0;
       width: 128px;
     }
@@ -154,14 +150,14 @@ export default defineComponent({
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
-
     @include hover('_white');
 
-    @include max-media('sm') {
+    @include max-media('xl') {
       margin: 0;
       font-size: 0.75rem;
 
       @include hover('_secondary');
+      color: #fff;
     }
   }
 }

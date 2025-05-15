@@ -53,14 +53,9 @@ export default class ProductHowToBuyModal extends Vue {
     },
     {
       title: '提出需求',
-      content: '發布保險需求，請 MY83 站上的業務員提供專業的建議與規劃。',
-      image: '/front/tutorials/how-to-buy/img-my-83-step-2.png',
-    },
-    {
-      title: '選擇業務員',
       content:
-        '挑選比較 MY83上不同的業務員，也透過私訊與業務員討論了解商品細節。',
-      image: '/front/tutorials/how-to-buy/img-my-83-step-3.png',
+        '填寫您的需求與聯絡方式，MY83 將會安排業務員與您聯繫，並提供專業的建議與規劃。',
+      image: '/front/tutorials/how-to-buy/img-my-83-step-2.png',
     },
     {
       title: '面談成交',
@@ -83,7 +78,7 @@ export default class ProductHowToBuyModal extends Vue {
 
 .ProductHowToBuyModal {
   padding: 9px 41px 33px;
-  width: 950px;
+  width: 890px;
 
   @include max-media('lg') {
     width: 100%;
@@ -104,6 +99,7 @@ export default class ProductHowToBuyModal extends Vue {
 
   &__body {
     display: flex;
+    justify-content: space-between;
 
     @include max-media('lg') {
       flex-direction: column;
@@ -184,7 +180,7 @@ export default class ProductHowToBuyModal extends Vue {
       margin-bottom: -3px;
       position: relative;
       top: -24px;
-      left: -108px;
+      left: -150px;
     }
   }
 }
