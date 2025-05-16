@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <div class="ProductFQASection">
     <h2 class="ProductFQASection__title">常見問題</h2>
@@ -9,7 +10,7 @@
     >
       <div class="ProductFQASection__question">
         <div class="ProductFQASection__question-text">
-          Q：{{ faq.question }}
+          Q{{ index + 1 }}：{{ faq.question }}
         </div>
         <div class="ProductFQASection__action">
           <BaseArrowTop v-if="activePanels[index]" />
@@ -17,7 +18,7 @@
         </div>
       </div>
       <div v-if="activePanels[index]" class="ProductFQASection__answer">
-        {{ faq.answer }}
+        <div v-html="faq.answer" />
       </div>
     </div>
   </div>
@@ -48,24 +49,27 @@ export default class ProductFQASection extends Vue {
     // 預設的硬編碼 FQA 資料
     return [
       {
-        question: '保險有什麼保障？',
-        answer:
-          '本保險提供意外傷害、醫療、住院等多項保障，詳細內容請參閱保單條款。',
+        question: '該怎麼選擇適合自己的保險？',
+        answer: `可依照自身需求與人生階段做選擇：<br/><li>單身族：可考慮醫療險、意外險</li><li>家庭族：建議搭配壽險、重大傷病險</li><li>中高齡族群：可補足長照、退休保障</li><li>建議搭配專業顧問諮詢，進行保障檢視。</li>`,
       },
       {
-        question: '如何申請理賠？',
+        question: '投保需要健康檢查嗎？',
         answer:
-          '請備妥相關文件（如診斷證明、收據等）向保險公司提出申請，可透過線上、郵寄或親自辦理。',
+          '不一定。部分險種如醫療險、壽險可能需簡單健康告知或提供體檢報告，高保額或高風險族群可能需進一步體檢。',
       },
       {
-        question: '保險期間可以退保嗎？',
+        question: '可以幫孩子買保險嗎？有年齡限制嗎？',
         answer:
-          '可以，但會依照保險法規定扣除部分費用，建議在購買前詳細評估需求。',
+          '可以。新生兒出生滿15天就可投保。父母可為孩子規劃醫療險、意外險、儲蓄險，提早建立健康與教育保障。',
       },
       {
-        question: '保險費用如何計算？',
+        question: '按下「免費諮詢」後會發生什麼事？跟我簽約的人是誰？',
         answer:
-          '保險費用根據投保人的年齡、性別、職業、保障內容等因素綜合計算，詳情請洽詢保險業務員。',
+          '填寫完資料後，我們的保險業務員會與你聯繫確認需求，預約你方便的時間當面洽談、規劃與解說保單內容，並且協助簽約投保，絕對不會推銷你其他商品。',
+      },
+      {
+        question: 'MY83這個網站是合法的嗎',
+        answer: '是合法的！錠嵂保險經紀人股份有限公司是經由主管機關核淮經營。',
       },
     ]
   }
