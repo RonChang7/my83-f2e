@@ -6,7 +6,6 @@
     >
       <li v-if="isDesktop" class="HeaderPersonalize__icon">
         <HeaderSearch
-          v-if="shouldShowSearch"
           ref="searchEl"
           class="HeaderPersonalize__search unauthorized"
           @close="disableSearchInput"

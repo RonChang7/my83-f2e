@@ -1,21 +1,5 @@
 <template>
   <div class="ProductListSection">
-    <div v-if="idealCoverages.length" class="ProductListSection__idealCoverage">
-      <div class="ProductListSection__idealCoverage__title">
-        <span>MY83 建議</span>
-        理想保額
-      </div>
-      <div class="ProductListSection__idealCoverage__wrapper">
-        <CoverageBadge
-          v-for="(coverage, index) in idealCoverages"
-          :key="index"
-          class="ProductListSection__idealCoverage__chart"
-          :percentage="100"
-          :wording="coverage.amount"
-          :legend="coverage.name"
-        />
-      </div>
-    </div>
     <slot />
     <div ref="listWrapper" class="ProductListSection__listWrapper">
       <div
@@ -26,46 +10,19 @@
         <span>載入中</span>
       </div>
       <ProductCard
-        v-for="product in insuranceProducts.slice(0, 5)"
-        :key="product.id"
+        v-for="(product, index) in insuranceProducts"
+        :key="product.url || index"
         class="ProductListSection__product"
-        :class="{ enabled: isEnabled(product) }"
         :product="product"
-        :enabled="isEnabled(product)"
-        @click-button="
-          isEnabled(product)
-            ? clickProductButton(`${product.company}${product.name}`)
-            : null
-        "
-        @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
       <ProductListNoResult
-        v-if="!insuranceProducts.length"
+        v-if="!isLoading && !insuranceProducts.length"
         :is-empty-search-result="isEmptySearchResult"
-      />
-      <div
-        v-if="!isEmptySearchResult"
-        :class="{ ProductListSection__ad: hasAd }"
-      >
-        <slot name="ad"></slot>
-      </div>
-      <ProductCard
-        v-for="product in insuranceProducts.slice(5)"
-        :key="product.id"
-        class="ProductListSection__product"
-        :class="{ enabled: isEnabled(product) }"
-        :product="product"
-        :enabled="isEnabled(product)"
-        @click-button="
-          isEnabled(product)
-            ? clickProductButton(`${product.company}${product.name}`)
-            : null
-        "
-        @click.native="isEnabled(product) ? clickProductCard(product) : null"
       />
     </div>
     <div v-if="insuranceProducts.length" class="ProductListSection__disclaimer">
-      本平台呈現資料僅供參考，實際情況會依據個人需求而不同。本站保險商品資訊來自保險事業發展中心及各保險公司網站，商品實際費率與資訊，請以各家保險公司公開資訊為主。
+      本平台呈現資料僅供參考，實際情況會依據個人需求而不同。本站保險商品資訊來自保險事業發展中心及各保險公司網站，商品實際費率與資訊，請以各家保
+      險公司公開資訊為主。
     </div>
   </div>
 </template>
@@ -77,7 +34,11 @@ import { Store } from 'vuex'
 import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
-import { IdealCoverage, InsuranceProduct } from '@/api/insurance/insurance.type'
+import {
+  IdealCoverage,
+  InsuranceProduct,
+  InsuranceSearchProduct,
+} from '@/api/insurance/insurance.type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import { isSlotExist } from '@/utils/render-helper'
 import { InsuranceListType } from '@/routes/insurance'
@@ -113,7 +74,7 @@ const options: ComponentOption = {
       return this.$store.state.insurance.insuranceIdealCoverages || []
     },
     insuranceProducts() {
-      return this.$store.state.insurance.insuranceList || []
+      return this.$store.state.insurance.insuranceSearchProduct || []
     },
     hasAd() {
       return isSlotExist('ad', this)
@@ -134,9 +95,12 @@ const options: ComponentOption = {
       return !_.isEmpty(matches)
     },
     clickProductCard(product) {
-      if (this.isNuxtLink(product.btn.link.path)) {
+      if (this.isNuxtLink(product.btn?.link?.path)) {
         this.$router.push(product.btn.link.path)
-      } else {
+      } else if (product.url) {
+        // 處理 insuranceSearchProduct 類型的產品
+        this.$router.push(product.url)
+      } else if (product.btn?.link?.url) {
         window.location.href = product.btn.link.url
       }
     },
@@ -151,19 +115,29 @@ const options: ComponentOption = {
         label: `${insuranceType} ${productName}`,
       })
     },
+    updateMaskHeight() {
+      if (process.server) return
+
+      this.$nextTick(() => {
+        if (this.$refs.listWrapper) {
+          this.mask.height = parseInt(
+            window.getComputedStyle(this.$refs.listWrapper).height
+          )
+        }
+      })
+    },
   },
   watch: {
     insuranceProducts: {
       immediate: true,
       handler() {
-        if (process.server) return
-
-        this.$nextTick(() => {
-          this.mask.height = parseInt(
-            window.getComputedStyle(this.$refs.listWrapper).height
-          )
-        })
+        this.updateMaskHeight()
       },
+    },
+    isLoading(newVal) {
+      if (newVal) {
+        this.updateMaskHeight()
+      }
     },
   },
 }
@@ -198,15 +172,16 @@ export interface Data {
 }
 
 export type Methods = {
-  isEnabled(product: InsuranceProduct): boolean
+  isEnabled(product: InsuranceProduct | InsuranceSearchProduct): boolean
   isNuxtLink(path: string): boolean
-  clickProductCard(product: InsuranceProduct): void
+  clickProductCard(product: InsuranceProduct | InsuranceSearchProduct): void
   clickProductButton(productName: string): void
+  updateMaskHeight(): void
 }
 
 export interface Computed {
   idealCoverages: IdealCoverage[]
-  insuranceProducts: InsuranceProduct[]
+  insuranceProducts: (InsuranceProduct | InsuranceSearchProduct)[]
   hasAd: boolean
   isInsurancePage: boolean
 }

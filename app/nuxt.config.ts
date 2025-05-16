@@ -107,6 +107,7 @@ const config: NuxtConfig = {
           { key: 'APP_ENV' },
           { key: 'HOST_URL' },
           { key: 'CLIENT_API_URL' },
+          { key: 'SERVER_PRODUCT_API_URL' },
           { key: 'SERVER_API_URL', secret: true },
           { key: 'SERVER_API_HOST', secret: true },
           { key: 'API_SERVER_BASIC_AUTH_BASE64' },
@@ -131,6 +132,13 @@ const config: NuxtConfig = {
     'cookie-universal-nuxt',
     '@nuxtjs/gtm',
   ],
+  // 環境變數設定
+  env: {
+    apiProductUrl:
+      process.env.NODE_ENV !== 'production'
+        ? 'https://productot.smartbeb.com.tw' // 開發環境使用代理路徑and測試環境
+        : 'https://product.smartbeb.com.tw', // 生產環境直接使用實際 URL
+  },
   webfontloader: {
     google: {
       families: [

@@ -1,28 +1,15 @@
 <template>
   <div class="InsurancePage">
-    <InsuranceTipModal
-      v-if="isInsurancePage"
-      :visible.sync="infoModal.visible"
-      :active-tab.sync="infoModal.activeTab"
-      @update-active-tab="updateInfoModalActiveTab"
-    />
-
     <div class="InsurancePage__row" :class="{ 'mb-0': isSearchPage }">
+      <!-- 搜尋：國泰。TODO:確認資料到底從哪來, openInfoModal 在幹嘛 -->
       <HeaderSection
         :is-insurance-page="isInsurancePage"
         @update-active-tab="updateInfoModalActiveTab"
         @open-modal="openInfoModal"
       />
     </div>
-
-    <div
-      v-if="isInsurancePage && shouldShowPromotionProduct"
-      class="InsurancePage__row promotion"
-    >
-      <PromotionProductSection />
-    </div>
-
     <div class="InsurancePage__row mb-0">
+      <!-- 國泰 的相關產品 TODO: 國泰哪裡來的 scrollToFAQ 是什麼 -->
       <ProductListTitleSection
         :is-insurance-page="isInsurancePage"
         :product-list-description="productListDescription"
@@ -31,38 +18,23 @@
     </div>
 
     <div class="InsurancePage__rowWithTowColumns">
-      <div v-if="shouldShowProductListFilter" class="column thin">
+      <div class="column thin">
         <ProductListDesktopFilterSection
           v-if="!isMobile"
           @loading="setLoadingStatus"
         />
-        <PromotionSection
-          v-if="isDesktop && shouldShowDesktopPromotionAd"
-          class="promotion-ad"
-          :page-type="$store.state.insurance.staticData.abbr"
-        />
-        <template v-if="isInsurancePage">
-          <FaqSection v-if="isMobile" id="faq" class="faq" />
-          <RelatedBlogSection :max-post="isMobile ? 5 : 10" :thin="true" />
-          <RelatedQuestionSection :max-post="isMobile ? 5 : 10" :thin="true" />
-        </template>
       </div>
       <div class="column wider">
         <ProductListSection
           ref="ProductListSection"
-          :is-empty-search-result="isSearchPage && !shouldShowProductListFilter"
-          :is-loading="!isExternalPage && isLoading"
+          :is-empty-search-result="isSearchPage"
+          :is-loading="isLoading"
         >
           <ProductListMobileFilterSection
-            v-if="isMobile && shouldShowProductListFilter"
+            v-if="isMobile"
             :product-list-description="productListDescription"
             @submit="scrollToProductListSection"
           />
-          <template v-if="isMobile" #ad>
-            <PromotionSection
-              :page-type="$store.state.insurance.staticData.abbr"
-            />
-          </template>
         </ProductListSection>
         <div v-if="shouldShowPagination" class="pagination">
           <BasePagination
@@ -71,28 +43,6 @@
           />
         </div>
       </div>
-    </div>
-
-    <div
-      v-if="isSearchPage && !shouldShowProductListFilter"
-      class="InsurancePage__row promotion"
-    >
-      <PromotionBundleSection />
-    </div>
-
-    <div
-      v-if="isSearchPage && !shouldShowProductListFilter"
-      class="InsurancePage__row promotion bottom"
-    >
-      <PromotionProductSection />
-    </div>
-
-    <div
-      v-if="!isMobile && isInsurancePage"
-      id="faq"
-      class="InsurancePage__row faq"
-    >
-      <FaqSection />
     </div>
   </div>
 </template>
@@ -125,7 +75,6 @@ import DeviceMixin, {
 import { scrollToElement } from '@/utils/scroll'
 import { InsuranceListType } from '@/routes/insurance'
 import { InsuranceVuexState } from './Index.vue'
-
 const options: ComponentOption = {
   mixins: [DeviceMixin],
   components: {
@@ -155,7 +104,15 @@ const options: ComponentOption = {
   computed: {
     pagination() {
       const { meta } = this.$store.state.insurance
-      return meta ? meta.pagination : null
+      if (!meta) return null
+
+      // 直接從路由取得當前頁碼
+      const currentPage = parseInt(this.$route.query.page) || 1
+
+      return {
+        ...meta.pagination,
+        currentPage, // 使用路由中的頁碼
+      }
     },
     shouldShowPromotionProduct() {
       return !!this.$store.state.insurance.promotionProducts?.length
@@ -233,7 +190,21 @@ const options: ComponentOption = {
         window.scroll(0, 0)
       })
     },
-    '$store.state.insurance.insuranceList'() {
+    // 當篩選條件變化時監聽 URL 參數變化
+    '$route.query'(newQuery, oldQuery) {
+      // 如果有篩選參數變化（除了 page）
+      const filterParams = ['status', 'categoryId', 'caseId', 'typeId', 'tagId']
+      const hasFilterChange = filterParams.some(
+        (param) => newQuery[param] !== oldQuery[param]
+      )
+
+      if (hasFilterChange) {
+        this.scrollToProductListSection()
+      }
+    },
+
+    // 資料變化後自動關閉加載狀態
+    '$store.state.insurance.insuranceSearchProduct'() {
       this.$nextTick(() => {
         this.isLoading = false
       })

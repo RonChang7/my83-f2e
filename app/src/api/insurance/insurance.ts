@@ -14,6 +14,9 @@ import {
   FilterValue,
   FetchInsuranceSearchListPayload,
   SearchNoResultResponse,
+  InsuranceOptionsResponse,
+  InsuranceSearchPayload,
+  InsuranceSearchResponse,
 } from './insurance.type'
 
 const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
@@ -25,7 +28,9 @@ const filtersTransformer = (filters: FetchInsuranceListPayload['filters']) => {
       result[key] =
         typeof value === 'string' || typeof value === 'number'
           ? value
-          : value.join(',')
+          : Array.isArray(value) && value !== null
+          ? value.join(',')
+          : value
       return result
     },
     {}
@@ -228,5 +233,44 @@ export const fetchSearchNoResult = async (): Promise<
 > => {
   const { data } = await request.get(`/api/insurance/search-no-result`)
 
+  return data
+}
+
+/**
+ * @description 取得保險選項資料（類別、案例、類型、標籤）
+ * @returns {Promise<InsuranceOptionsResponse>} 包含保險選項的 Promise
+ */
+export const fetchInsuranceOptions = async (): Promise<
+  InsuranceOptionsResponse
+> => {
+  const { data } = await request.get<InsuranceOptionsResponse>(
+    `${process.env.apiProductUrl}/3i-api/getInsuranceOptions`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': 'egfwfedewg4#213sassx',
+      },
+    }
+  )
+  return data
+}
+
+/**
+ * @description 取得保險搜尋商品
+ * @param {InsuranceSearchPayload} payload
+ */
+export const fetchInsuranceSearchProduct = async (
+  payload: InsuranceSearchPayload
+): Promise<InsuranceSearchResponse> => {
+  const { data } = await request.post<InsuranceSearchResponse>(
+    `${process.env.apiProductUrl}/3i-api/postInsuranceSearch`,
+    payload,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': 'egfwfedewg4#213sassx',
+      },
+    }
+  )
   return data
 }
