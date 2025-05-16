@@ -197,16 +197,16 @@ export const fetchInsuranceSearchList = async (
 ): Promise<InsuranceListResponse> => {
   const { q, page, filters } = payload
 
-  const { data } = await request.get<InsuranceListResponse>(
-    decorateSeoQueryString(`/api/insurance/search`),
-    {
-      params: {
-        q,
-        page,
-        ...filtersTransformer(filters),
-      },
-    }
-  )
+  // 直接使用原始路徑，不經過 decorateSeoQueryString
+  const apiPath = '/api/insurance/search'
+
+  const { data } = await request.get<InsuranceListResponse>(apiPath, {
+    params: {
+      q,
+      page,
+      ...filtersTransformer(filters),
+    },
+  })
   return data
 }
 

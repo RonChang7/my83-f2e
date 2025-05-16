@@ -54,13 +54,28 @@ export default (({ app, req }) => {
 
     // 特別處理 Host 請求頭，記錄修改前後的值
     const originalHost = request.defaults.headers.common.host
-    request.defaults.headers.common.host = SERVER_API_HOST
+
+    // 核心修改：條件性設置 host
+    // 如果是搜尋相關請求，可能需要保留原始 host
+    const preserveOriginalHost =
+      req?.headers?.referer &&
+      (req.headers.referer.includes('insurance/search') ||
+        req.url?.includes('insurance/search'))
+
+    if (!preserveOriginalHost) {
+      request.defaults.headers.common.host = SERVER_API_HOST
+    } else {
+      // 對搜尋相關請求，保留原始 host
+      console.log('\x1B[32mPreserving original host for search request\x1B[0m')
+    }
 
     // 記錄主機頭的變更
     console.log('\x1B[33mHost Header Changed:\x1B[0m', {
       originalHost,
-      newHost: SERVER_API_HOST,
+      newHost: request.defaults.headers.common.host,
+      preserveOriginalHost,
       referer: request.defaults.headers.common.referer,
+      url: req?.url,
     })
 
     // Don't accept brotli encoding because Node can't parse it
