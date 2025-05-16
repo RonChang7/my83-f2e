@@ -39,10 +39,29 @@ export default (({ app, req }) => {
   }
 
   if (process.server) {
+    // 添加日誌輸出，診斷任何環境中的問題
+    console.log('\x1B[33mSSR API Setup:\x1B[0m', {
+      APP_ENV,
+      SERVER_API_URL,
+      SERVER_API_HOST,
+      originalHost: req?.headers?.host,
+      originalReferer: req?.headers?.referer,
+    })
+
+    // 先保存原始 request headers
     request.defaults.headers.common =
       req && req.headers ? Object.assign({}, req.headers) : {}
 
+    // 特別處理 Host 請求頭，記錄修改前後的值
+    const originalHost = request.defaults.headers.common.host
     request.defaults.headers.common.host = SERVER_API_HOST
+
+    // 記錄主機頭的變更
+    console.log('\x1B[33mHost Header Changed:\x1B[0m', {
+      originalHost,
+      newHost: SERVER_API_HOST,
+      referer: request.defaults.headers.common.referer,
+    })
 
     // Don't accept brotli encoding because Node can't parse it
     request.defaults.headers.common['accept-encoding'] = 'gzip, deflate'
@@ -54,6 +73,14 @@ export default (({ app, req }) => {
         },
         (err) => {
           if (err.response) {
+            // 在所有環境中記錄 API 錯誤詳情
+            console.error('\x1B[31mSSR API Error:\x1B[0m', {
+              APP_ENV,
+              status: err?.response?.status,
+              url: err.config.url,
+              data: err?.response?.data,
+            })
+
             if (checkRedirectResponse(err.response)) {
               const res: AxiosResponse<RedirectErrorResponseBody> = err.response
               return Promise.reject(

@@ -138,6 +138,7 @@ const config: NuxtConfig = {
       process.env.NODE_ENV !== 'production'
         ? 'https://productot.smartbeb.com.tw' // 開發環境使用代理路徑and測試環境
         : 'https://product.smartbeb.com.tw', // 生產環境直接使用實際 URL
+    IS_DEBUG_API: 'true', // 開啟 API 調試
   },
   webfontloader: {
     google: {
