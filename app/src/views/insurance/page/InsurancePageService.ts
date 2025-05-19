@@ -26,6 +26,7 @@ import {
   FETCH_SEARCH_NO_RESULT,
   FETCH_INSURANCE_OPTIONS,
   FETCH_INSURANCE_SEARCH_PRODUCT,
+  SET_NO_RESULT,
 } from '@/store/insurance/insurance.type'
 
 interface StoreState {
@@ -303,10 +304,10 @@ export class InsurancePageService {
       })
       const res = this.store.state.insurance.insuranceSearchProduct
       if (res && res.length === 0) {
-        this.store.commit('insurance/setNoResult', true)
+        this.store.commit(`insurance/${SET_NO_RESULT}`, true)
         return
       }
-      this.store.commit('insurance/setNoResult', false)
+      this.store.commit(`insurance/${SET_NO_RESULT}`, false)
     } catch (error) {
       console.error('error:', error)
     }
