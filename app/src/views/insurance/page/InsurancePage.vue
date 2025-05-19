@@ -131,7 +131,7 @@ const options: ComponentOption = {
       )
     },
     shouldShowPagination() {
-      if (!this.pagination) return false
+      if (!this.pagination.totalPage) return false
       return !(this.pagination.totalPage === 1)
     },
     productListDescription() {
