@@ -196,11 +196,11 @@ export default defineComponent({
       }
 
       if (query.caseId) {
-        selectedFilters.caseId = Number(query.caseId) || 0
+        selectedFilters.caseList = Number(query.caseId) || 0
       }
 
       if (query.typeId) {
-        selectedFilters.typeId = Number(query.typeId) || 0
+        selectedFilters.typeList = Number(query.typeId) || 0
       }
 
       if (query.tagId) {
