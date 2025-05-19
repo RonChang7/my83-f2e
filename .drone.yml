@@ -2,7 +2,6 @@ kind: pipeline
 name: default
 
 steps:
-
   - name: build-app
     image: node:14-alpine
     volumes:
@@ -22,8 +21,8 @@ steps:
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
-      SENTRY_ORG: upn-1r
-      SENTRY_PROJECT: my83-front
+      SENTRY_ORG: my83
+      SENTRY_PROJECT: f2e
     commands:
       - sentry-cli releases new $${DRONE_COMMIT_SHA}
       - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
