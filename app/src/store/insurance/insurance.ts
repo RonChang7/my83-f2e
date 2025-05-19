@@ -76,6 +76,7 @@ export const createStoreModule = <R>(): Module<State, R> => {
         },
         insuranceSearchProduct: null,
         insuranceSearchProductTotalCount: 0,
+        noResult: false,
       }
     },
     getters: {},
@@ -306,17 +307,30 @@ export const createStoreModule = <R>(): Module<State, R> => {
           api
             .fetchInsuranceSearchProduct(payload)
             .then((response) => {
-              const productList = response.data.product
+              const productList = response.data.product || []
               commit(types.UPDATE_INSURANCE_SEARCH_PRODUCT, productList)
               commit(
                 types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT,
-                response.data.totalCount
+                response.data.totalCount || 0
               )
               commit(types.UPDATE_CURRENT_PAGE, payload.page)
 
+              if (productList.length === 0) {
+                commit(types.SET_NO_RESULT, true)
+              } else {
+                commit(types.SET_NO_RESULT, false)
+              }
+
               resolve()
             })
-            .catch((error) => reject(error))
+            .catch((error) => {
+              console.error('api-error:', error)
+              if (error.response && error.response.status === 422) {
+                commit(types.SET_NO_RESULT, true)
+              } else {
+                reject(error)
+              }
+            })
         })
       },
     },
@@ -465,6 +479,9 @@ export const createStoreModule = <R>(): Module<State, R> => {
           }
         }
       },
+      [types.SET_NO_RESULT](state, value: boolean) {
+        state.noResult = value
+      },
     },
   }
 }
@@ -509,6 +526,7 @@ export interface State {
   } | null
   insuranceSearchProduct: InsuranceSearchProduct[] | null
   insuranceSearchProductTotalCount: number
+  noResult: boolean
 }
 
 export interface CurrentParam extends FilterValue {

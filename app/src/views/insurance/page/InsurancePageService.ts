@@ -64,6 +64,8 @@ class NormalInsurancePage extends InsurancePage {
   }
 
   protected fetchPageDataRequests() {
+    console.log('fetchPageDataRequests')
+
     return [
       this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`),
       this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
@@ -288,11 +290,7 @@ export class InsurancePageService {
 
   public async fetchData() {
     try {
-      // 只有在選項數據不存在時才獲取 TODO: 這邊要改
-      // if (!this.store.state.insurance.insuranceOptions?.categoryList) {
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_OPTIONS}`)
-      // }
-      // 獲取最新的路由參數
       const currentQuery = this.ctx.route.query
       await this.store.dispatch(`insurance/${FETCH_INSURANCE_SEARCH_PRODUCT}`, {
         searchText: currentQuery.q || '',
@@ -303,8 +301,14 @@ export class InsurancePageService {
         page: parseInt(currentQuery.page as string) || 1,
         perPage: 10,
       })
+      const res = this.store.state.insurance.insuranceSearchProduct
+      if (res && res.length === 0) {
+        this.store.commit('insurance/setNoResult', true)
+        return
+      }
+      this.store.commit('insurance/setNoResult', false)
     } catch (error) {
-      this.handleFetchFailed(error)
+      console.error('error:', error)
     }
   }
 
