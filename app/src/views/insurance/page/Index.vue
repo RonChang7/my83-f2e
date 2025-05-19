@@ -43,7 +43,7 @@ export default defineComponent({
     try {
       const service = new InsurancePageService(ctx)
       await service.fetchData()
-      service.reconcileRoute()
+      // service.reconcileRoute()
     } catch (err) {
       console.error(err)
     }
