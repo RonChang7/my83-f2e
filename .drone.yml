@@ -25,7 +25,7 @@ steps:
       SENTRY_PROJECT: f2e
     commands:
       - sentry-cli releases new $${DRONE_COMMIT_SHA}
-      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
+      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit MY83/f2e@$${DRONE_COMMIT_SHA}
       - sentry-cli releases files $${DRONE_COMMIT_SHA} upload-sourcemaps --url-prefix '~/_nuxt/' ./app/.nuxt/dist/client/
     depends_on:
       - build-app
