@@ -130,8 +130,8 @@ steps:
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
-      SENTRY_ORG: upn-1r
-      SENTRY_PROJECT: my83-front
+      SENTRY_ORG: my83
+      SENTRY_PROJECT: f2e
     commands:
       - sentry-cli releases finalize $${DRONE_COMMIT_SHA}
       - sentry-cli releases deploys $${DRONE_COMMIT_SHA} new -e "production"
