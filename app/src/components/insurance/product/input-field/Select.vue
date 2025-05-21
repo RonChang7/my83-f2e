@@ -1,6 +1,6 @@
 <template>
   <BaseSelect
-    :value="value || 0"
+    :value="value"
     :options="options"
     :disabled="typeof value === 'undefined'"
     :hide-icon="typeof value === 'undefined'"
