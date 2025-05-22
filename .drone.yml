@@ -112,7 +112,7 @@ steps:
       - kubectl config set-context default-context --cluster=main-cluster --user=deploy-account --namespace=my83-f2e
       - kubectl config use-context default-context
       # 2. 更新 env secret（使用 dry-run=client)
-      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.production --dry-run=client -o yaml | kubectl apply -f - --validate=false
+      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.production --dry-run=client -o yaml | kubectl apply -f -
       # 3. 部署 Kubernetes 资源
       - cd kubernetes
       - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_TAG}/" ./prod.yaml
