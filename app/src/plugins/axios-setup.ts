@@ -83,8 +83,20 @@ export default (({ app, req }) => {
       const jwtToken = app.$auth.getToken()
 
       if (jwtToken) {
-        config.headers['X-Auth'] = `Bearer ${jwtToken}`
+        const isProductAPI =
+          config?.url?.includes('product.smartbeb.com.tw') ||
+          config?.url?.includes('productot.smartbeb.com.tw')
+
+        if (isProductAPI) {
+          // Product API 不需要認證，移除可能存在的認證 header
+          delete config.headers['X-Auth']
+          delete config.headers.Authorization
+        } else {
+          // MY83 主 API 使用 X-Auth header
+          config.headers['X-Auth'] = `Bearer ${jwtToken}`
+        }
       }
+
       return config
     })
 
