@@ -14,13 +14,13 @@
           <BaseButton
             size="l-a"
             type="quaternary"
-            :to="consultLink.path"
+            to="/insured"
             @click.native="tracking"
           >
-            免費找業務員
+            免費諮詢
           </BaseButton>
           <div class="ProductFee__faq" @click="openModal">
-            如何在 MY83 購買保險？
+            想獲得保險相關建議？
           </div>
         </div>
       </div>

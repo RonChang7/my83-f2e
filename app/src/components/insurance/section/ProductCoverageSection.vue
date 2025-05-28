@@ -3,7 +3,6 @@
     <div class="ProductCoverageSection__header">
       <h2 class="ProductCoverageSection__title">理賠項目</h2>
       <div
-        v-if="shouldShowCoverageDetail"
         class="ProductCoverageSection__action"
         @click="isPanelActive = !isPanelActive"
       >
@@ -25,14 +24,6 @@
           :coverage="coverage"
           :is-active="isPanelActive"
         />
-      </div>
-    </div>
-    <div class="ProductCoverageSection__row">
-      <div v-if="claims.length" class="ProductCoverageSection__claim">
-        <h3>其他理賠說明</h3>
-        <ul>
-          <li v-for="(claim, index) in claims" :key="index">{{ claim }}</li>
-        </ul>
       </div>
     </div>
   </div>
@@ -62,23 +53,26 @@ export default class ProductCoverageSection extends Vue {
     return this.isPanelActive ? '收合細項' : '查看細項'
   }
 
-  get claims() {
-    return (
-      (this.$store.state as InsuranceProductVuexState).insuranceProduct.product
-        ?.claims || []
-    )
-  }
-
-  get shouldShowCoverageDetail() {
-    const coverages = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product?.coverages
-
-    return !!coverages?.find((coverage) => coverage.levels.length > 0)
-  }
-
   get coverageGroup() {
-    const coverages = (this.$store.state as InsuranceProductVuexState)
-      .insuranceProduct.product?.coverages
+    const benefits = (this.$store.state as InsuranceProductVuexState)
+      .insuranceProduct.singleProduct?.benefit
+
+    const coverages = []
+    benefits.flatMap((item) => {
+      if (item.benefitMain.length > 0) {
+        coverages.push(...item.benefitMain)
+      }
+      if (item.benefitExtra.length > 0) {
+        const extraName = item.benefitExtra.map((item) => {
+          return {
+            name: '加值給付項目',
+            ...item,
+          }
+        })
+        coverages.push(...extraName)
+      }
+      return coverages
+    })
 
     return coverages
       ? coverages.reduce<Array<Array<Coverage>>>((acc, cur, index) => {

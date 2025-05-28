@@ -18,6 +18,9 @@ import {
   ProductFeeList,
   InsuranceListFilterResponse,
   FetchInsuranceSearchListPayload,
+  CategoryItem,
+  InsuranceSearchPayload,
+  InsuranceSearchProduct,
 } from '@/api/insurance/insurance.type'
 import { RecommendProduct } from '@/api/question/question.type'
 import {
@@ -65,6 +68,15 @@ export const createStoreModule = <R>(): Module<State, R> => {
           defaultValue: null,
           config: null,
         },
+        insuranceOptions: {
+          categoryList: null,
+          caseList: null,
+          typeList: null,
+          tagList: null,
+        },
+        insuranceSearchProduct: null,
+        insuranceSearchProductTotalCount: 0,
+        noResult: false,
       }
     },
     getters: {},
@@ -272,6 +284,55 @@ export const createStoreModule = <R>(): Module<State, R> => {
             .catch(() => resolve())
         })
       },
+      [types.FETCH_INSURANCE_OPTIONS]({ commit }) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceOptions()
+            .then((response) => {
+              if (response.status === 'success') {
+                commit(types.UPDATE_INSURANCE_OPTIONS, response.data)
+                resolve()
+              } else {
+                reject(new Error(response.message || '獲取保險選項失敗'))
+              }
+            })
+            .catch((error) => reject(error))
+        })
+      },
+      [types.FETCH_INSURANCE_SEARCH_PRODUCT](
+        { commit },
+        payload: InsuranceSearchPayload
+      ) {
+        return new Promise<void>((resolve, reject) => {
+          api
+            .fetchInsuranceSearchProduct(payload)
+            .then((response) => {
+              const productList = response.data.product || []
+              commit(types.UPDATE_INSURANCE_SEARCH_PRODUCT, productList)
+              commit(
+                types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT,
+                response.data.totalCount || 0
+              )
+              commit(types.UPDATE_CURRENT_PAGE, payload.page)
+
+              if (productList.length === 0) {
+                commit(types.SET_NO_RESULT, true)
+              } else {
+                commit(types.SET_NO_RESULT, false)
+              }
+
+              resolve()
+            })
+            .catch((error) => {
+              console.error('api-error:', error)
+              if (error.response && error.response.status === 422) {
+                commit(types.SET_NO_RESULT, true)
+              } else {
+                reject(error)
+              }
+            })
+        })
+      },
     },
     mutations: {
       [types.UPDATE_STATIC_DATA](state, data: InsurancePageStaticData) {
@@ -373,6 +434,54 @@ export const createStoreModule = <R>(): Module<State, R> => {
       [types.UPDATE_CURRENT_PAGE](state, page: number) {
         state.currentParam.page = page
       },
+      [types.UPDATE_INSURANCE_OPTIONS](
+        state,
+        data: {
+          categoryList: CategoryItem[]
+          caseList: CategoryItem[]
+          typeList: CategoryItem[]
+          tagList: CategoryItem[]
+        }
+      ) {
+        state.insuranceOptions = data
+      },
+      [types.UPDATE_INSURANCE_SEARCH_PRODUCT](
+        state,
+        data: InsuranceSearchProduct[]
+      ) {
+        state.insuranceSearchProduct = data
+      },
+      [types.UPDATE_INSURANCE_SEARCH_PRODUCT_TOTAL_COUNT](
+        state,
+        totalCount: number
+      ) {
+        state.insuranceSearchProductTotalCount = totalCount
+        // 計算分頁資訊
+        const perPage = 10 // 每頁顯示數量，可以設定為常數或從設定中取得
+        const currentPage = state.currentParam.page || 1
+        const totalPage = Math.ceil(totalCount / perPage)
+
+        // 更新 meta.pagination
+        if (!state.meta) {
+          state.meta = {
+            pagination: {
+              currentPage,
+              totalPage,
+              totalCount,
+            },
+            currentFilterConfig: {},
+          }
+        } else {
+          state.meta.pagination = {
+            ...state.meta.pagination,
+            currentPage,
+            totalPage,
+          }
+        }
+      },
+      [types.SET_NO_RESULT](state, value: boolean) {
+        state.noResult = value
+      },
     },
   }
 }
@@ -409,6 +518,15 @@ export interface State {
     defaultValue: FilterValue | null
     config: Record<string, FilterOption> | null
   }
+  insuranceOptions: {
+    categoryList: CategoryItem[] | null
+    caseList: CategoryItem[] | null
+    typeList: CategoryItem[] | null
+    tagList: CategoryItem[] | null
+  } | null
+  insuranceSearchProduct: InsuranceSearchProduct[] | null
+  insuranceSearchProductTotalCount: number
+  noResult: boolean
 }
 
 export interface CurrentParam extends FilterValue {

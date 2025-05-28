@@ -2,7 +2,6 @@ kind: pipeline
 name: default
 
 steps:
-
   - name: build-app
     image: node:14-alpine
     volumes:
@@ -22,11 +21,11 @@ steps:
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
-      SENTRY_ORG: upn-1r
-      SENTRY_PROJECT: my83-front
+      SENTRY_ORG: my83
+      SENTRY_PROJECT: f2e
     commands:
       - sentry-cli releases new $${DRONE_COMMIT_SHA}
-      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit UPN-TW/my83-f2e@$${DRONE_COMMIT_SHA}
+      - sentry-cli releases set-commits $${DRONE_COMMIT_SHA} --commit my83-org/my83-f2e@$${DRONE_COMMIT_SHA}
       - sentry-cli releases files $${DRONE_COMMIT_SHA} upload-sourcemaps --url-prefix '~/_nuxt/' ./app/.nuxt/dist/client/
     depends_on:
       - build-app
@@ -107,14 +106,14 @@ steps:
       K8S_TOKEN:
         from_secret: K8S_TOKEN
     commands:
-      # 設定 k8s context
+      # 1. 配置 K8s context
       - kubectl config set-cluster main-cluster --server=$${K8S_SERVER} --insecure-skip-tls-verify=true
       - kubectl config set-credentials deploy-account --token=$${K8S_TOKEN}
       - kubectl config set-context default-context --cluster=main-cluster --user=deploy-account --namespace=my83-f2e
       - kubectl config use-context default-context
-      # 更新 env secret
-      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.production --dry-run -o yaml | kubectl apply -f -
-      # 用 yaml 部署
+      # 2. 更新 env secret（使用 dry-run=client)
+      - kubectl -n my83-f2e create secret generic my83-f2e-app-env-prod --from-env-file=/drone-secret/env.production --dry-run=client -o yaml | kubectl apply -f -
+      # 3. 部署 Kubernetes 资源
       - cd kubernetes
       - sed -i "s/FRONT_APP_IMAGE_TAG/$${DRONE_TAG}/" ./prod.yaml
       - kubectl apply -f ./prod.yaml
@@ -131,8 +130,8 @@ steps:
     environment:
       SENTRY_AUTH_TOKEN:
         from_secret: SENTRY_AUTH_TOKEN
-      SENTRY_ORG: upn-1r
-      SENTRY_PROJECT: my83-front
+      SENTRY_ORG: my83
+      SENTRY_PROJECT: f2e
     commands:
       - sentry-cli releases finalize $${DRONE_COMMIT_SHA}
       - sentry-cli releases deploys $${DRONE_COMMIT_SHA} new -e "production"

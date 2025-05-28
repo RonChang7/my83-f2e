@@ -1,9 +1,9 @@
 import path from 'path'
 
-const enableLogMockCalls =
-  process.env.NUXT_ENV_APP_ENV === 'development' ||
-  process.env.APP_ENV === 'development'
-
+// const enableLogMockCalls =
+//   process.env.NUXT_ENV_APP_ENV === 'development' ||
+//   process.env.APP_ENV === 'development'
+const enableLogMockCalls = false
 async function getBrowserApiMethods() {
   const SentryBrowser = await import('@sentry/vue')
 

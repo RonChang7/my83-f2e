@@ -5,10 +5,12 @@ import {
   h,
   useRoute,
   useRouter,
+  useStore,
 } from '@nuxtjs/composition-api'
 import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/insurance'
 import { CanonicalService } from '@/seo/canonical-service'
+import * as types from '@/store/insurance/insurance.type'
 import { InsurancePageService } from './InsurancePageService'
 const InsurancePageComponent = defineAsyncComponent(
   () => import('./InsurancePage.vue')
@@ -19,6 +21,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const router = useRouter()
+    const store = useStore()
     const toPage = (index: number) => {
       router.push({
         query: {
@@ -26,6 +29,7 @@ export default defineComponent({
           page: String(index),
         },
       })
+      store.commit(`insurance/${types.UPDATE_CURRENT_PAGE}`, index)
     }
 
     return () =>
@@ -38,9 +42,8 @@ export default defineComponent({
   async asyncData(ctx) {
     try {
       const service = new InsurancePageService(ctx)
-
       await service.fetchData()
-      service.reconcileRoute()
+      // service.reconcileRoute()
     } catch (err) {
       console.error(err)
     }
