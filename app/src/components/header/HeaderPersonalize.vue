@@ -32,13 +32,8 @@
         />
       </li>
       <li v-if="isDesktop" class="HeaderPersonalize__icon">
-        <HeaderSearch
-          v-if="shouldShowSearch"
-          ref="searchEl"
-          class="HeaderPersonalize__search"
-          @close="disableSearchInput"
-        />
-        <BaseSearch @click="enableSearchInput" />
+        <HeaderSearch ref="searchEl" class="HeaderPersonalize__search" />
+        <BaseSearch />
       </li>
       <li>
         <GlobalLink to="/notification/center" class="HeaderPersonalize__name">
@@ -227,7 +222,6 @@ export interface Instance
 
 export interface Data {
   shouldShowMenu: boolean
-  shouldShowSearch: boolean
   screenWidth: number
 }
 
