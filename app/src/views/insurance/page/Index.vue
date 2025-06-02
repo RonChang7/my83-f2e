@@ -11,6 +11,7 @@ import { GlobalVuexState } from '@/store/global-state'
 import { State } from '@/store/insurance/insurance'
 import { CanonicalService } from '@/seo/canonical-service'
 import * as types from '@/store/insurance/insurance.type'
+import { Content } from '@/services/page/Content'
 import { InsurancePageService } from './InsurancePageService'
 const InsurancePageComponent = defineAsyncComponent(
   () => import('./InsurancePage.vue')
@@ -41,6 +42,10 @@ export default defineComponent({
   },
   async asyncData(ctx) {
     try {
+      // 先執行通用的頁面請求（包含 header API）
+      await Promise.all([...Content.requests(ctx)])
+
+      // 再執行保險頁面特定的資料請求
       const service = new InsurancePageService(ctx)
       await service.fetchData()
       // service.reconcileRoute()
