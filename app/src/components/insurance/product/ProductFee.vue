@@ -96,13 +96,17 @@ export default defineComponent({
     padding: 20px 0 20px 50px;
 
     @include max-media('xl') {
+      width: 100vw;
       background: url('#{$image-bucket-url}/front/insurance/product/bg-product-fee-mobile.png')
         no-repeat;
       background-size: 100% 100%;
-      width: 100vw;
       max-width: 412px;
       padding: 0;
       padding-top: 15px;
+    }
+
+    @include max-media('md') {
+      width: 90vw;
     }
   }
 

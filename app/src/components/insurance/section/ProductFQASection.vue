@@ -120,13 +120,13 @@ export default class ProductFQASection extends Vue {
   &__column {
     display: flex;
     flex-direction: column;
-    width: 100%;
     background: #fff;
     border: 1px solid #e8e8e8;
     border-radius: 4px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     padding: 20px 30px;
     cursor: pointer;
+    margin: auto 20px;
   }
 
   &__question {

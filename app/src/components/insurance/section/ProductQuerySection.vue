@@ -422,7 +422,12 @@ export default defineComponent({
 
 .ProductQuerySection {
   // 桌面版使用卡片樣式
+  @include max-media('lg') {
+    margin: auto 20px;
+  }
+
   @include min-media('xl') {
+    margin: auto 0;
     @include card-primary;
   }
 
@@ -477,7 +482,7 @@ export default defineComponent({
       position: relative;
       margin: -160px auto 10px;
       top: 160px;
-      left: -20px;
+      left: -21px;
     }
   }
 

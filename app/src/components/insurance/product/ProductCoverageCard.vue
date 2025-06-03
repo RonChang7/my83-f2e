@@ -150,6 +150,7 @@ export default class ProductCoverageCard extends Mixins(DeviceMixin) {
     @include card-secondary;
 
     padding: 16px 20px;
+    margin: auto 20px;
   }
 
   &__header {

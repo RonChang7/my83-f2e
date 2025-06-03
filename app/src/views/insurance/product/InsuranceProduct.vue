@@ -19,7 +19,7 @@
       <div class="column w-100">
         <ProductCoverageSection />
         <ProductPromotionSection @open-modal="openInfoModal" />
-        <ProductFQASection />
+        <!-- <ProductFQASection /> -->
         <div class="InsuranceProduct__hint">
           本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
         </div>
@@ -41,7 +41,7 @@ import ProductHeaderSection from '@/components/insurance/section/ProductHeaderSe
 import ProductCoverageSection from '@/components/insurance/section/ProductCoverageSection.vue'
 import ProductPromotionSection from '@/components/insurance/section/ProductPromotionSection.vue'
 import ProductQuerySection from '@/components/insurance/section/ProductQuerySection.vue'
-import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
+// import ProductFQASection from '@/components/insurance/section/ProductFQASection.vue'
 import BaseScrollToTopButton from '@/components/my83-ui-kit/button/BaseScrollToTopButton.vue'
 import DeviceMixin from '@/mixins/device/device-mixins'
 import { scrollToElement } from '@/utils/scroll'
@@ -56,7 +56,7 @@ import { InsuranceProductVuexState } from './Index.vue'
     ProductPromotionSection,
     ProductQuerySection,
     BaseScrollToTopButton,
-    ProductFQASection,
+    // ProductFQASection,
   },
 })
 export default class InsuranceProduct extends DeviceMixin {
