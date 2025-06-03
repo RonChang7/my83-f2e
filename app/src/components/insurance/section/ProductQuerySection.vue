@@ -51,7 +51,6 @@
         class="ProductQuerySection__fee"
         :card-height="feeCardHeight"
         :fee="annualFee"
-        :consult-link="consultLink"
         :insurance-type="setting && setting.insuranceType"
         @open-modal="$emit('open-modal')"
       />
@@ -196,12 +195,6 @@ export default defineComponent({
         selectedIndex
       )
     }
-
-    // 諮詢連結 - 假設連結
-    const consultLink = computed(() => ({
-      path: '/consult',
-      url: 'https://my83.com/consult',
-    }))
 
     // 表單欄位定義 - 使用 reactive 創建響應式物件
     const fields = reactive({
@@ -407,7 +400,6 @@ export default defineComponent({
       basic,
       setting,
       premium,
-      consultLink,
       annualFee,
       userInfo,
     }
