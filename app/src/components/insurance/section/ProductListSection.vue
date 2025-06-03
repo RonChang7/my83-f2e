@@ -21,8 +21,7 @@
       />
     </div>
     <div v-if="insuranceProducts.length" class="ProductListSection__disclaimer">
-      本平台呈現資料僅供參考，實際情況會依據個人需求而不同。本站保險商品資訊來自保險事業發展中心及各保險公司網站，商品實際費率與資訊，請以各家保
-      險公司公開資訊為主。
+      本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
     </div>
   </div>
 </template>
