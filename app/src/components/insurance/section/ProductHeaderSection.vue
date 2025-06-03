@@ -6,7 +6,7 @@
           <div class="ProductHeaderSection__company">{{ company }}</div>
         </div>
       </div>
-      <h1 class="ProductHeaderSection__name">{{ name }}</h1>
+      <h1 class="ProductHeaderSection__name">{{ name }} ( {{ productId }} )</h1>
       <div class="ProductHeaderSection__tags">{{ tags }}</div>
     </div>
     <div class="ProductHeaderSection__column">
@@ -46,6 +46,9 @@ export default defineComponent({
     const name = computed(
       () => store.state.insuranceProduct.singleProduct?.basic.productName
     )
+    const productId = computed(
+      () => store.state.insuranceProduct.singleProduct?.basic.productCode
+    )
     const tags = computed(() => {
       const tags = []
       store.state.insuranceProduct.singleProduct?.basic.productTag.forEach(
@@ -79,6 +82,7 @@ export default defineComponent({
       name,
       tags,
       files,
+      productId,
     }
   },
 })
