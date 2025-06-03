@@ -355,6 +355,7 @@ export default defineComponent({
               message: `保額有誤`,
             }
           } else {
+            store.commit(`insuranceProduct/${UPDATE_INSURED_AMOUNT}`, value)
             validateStates.amount = null
           }
         }
