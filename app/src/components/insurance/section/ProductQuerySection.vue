@@ -370,8 +370,11 @@ export default defineComponent({
       userInfo.job_level = singleProduct.value?.setting?.defaultJob
       userInfo.period = singleProduct.value?.setting?.defaultPeriod
       choosePeriod()
+
       if (setting.value?.defaultAge > userInfo.selectedCase?.ageMax) {
         userInfo.age = userInfo.selectedCase?.ageMax
+      } else if (setting.value?.defaultAge < userInfo.selectedCase?.ageMin) {
+        userInfo.age = userInfo.selectedCase?.ageMin
       } else {
         userInfo.age = setting.value?.defaultAge
       }
@@ -382,8 +385,6 @@ export default defineComponent({
       )
       // 初始化時計算年繳保費
       store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
-      // console.log(annualFee.value)
-      // console.log(userInfo)
     })
 
     watch(annualFee, (newVal) => {
