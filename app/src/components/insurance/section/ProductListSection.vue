@@ -15,10 +15,10 @@
         class="ProductListSection__product"
         :product="product"
       />
-      <ProductListNoResult
-        v-if="!isLoading && !insuranceProducts.length"
-        :is-empty-search-result="isEmptySearchResult"
-      />
+      <template v-if="!isLoading && !insuranceProducts.length">
+        <ProductListNoResult :is-empty-search-result="isEmptySearchResult" />
+        <PromotionBundleSection />
+      </template>
     </div>
     <div v-if="insuranceProducts.length" class="ProductListSection__disclaimer">
       本網站商品資訊僅供參考，實際內容以保險公司公開資訊為準。
@@ -44,12 +44,14 @@ import { InsuranceListType } from '@/routes/insurance'
 import CoverageBadge from '../coverages/CoverageBadge.vue'
 import ProductCard from '../product/ProductCard.vue'
 import ProductListNoResult from '../product/ProductListNoResult.vue'
+import PromotionBundleSection from './PromotionBundleSection.vue'
 
 const options: ComponentOption = {
   components: {
     ProductCard,
     CoverageBadge,
     ProductListNoResult,
+    PromotionBundleSection,
   },
   props: {
     isLoading: {

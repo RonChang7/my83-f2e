@@ -20,11 +20,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, useStore } from '@nuxtjs/composition-api'
+import { defineComponent } from '@nuxtjs/composition-api'
 import BaseHorizontalList from '@/components/my83-ui-kit/list/BaseHorizontalList.vue'
 import DesktopRecommendProductCard from '@/components/my83-ui-kit/card/RecommendProductCard/DesktopRecommendProductCard.vue'
 import { useDevice } from '@/mixins/device/device-mixins'
-import { InsuranceVuexState } from '@/views/insurance/page/Index.vue'
 
 export default defineComponent({
   components: {
@@ -32,11 +31,33 @@ export default defineComponent({
     DesktopRecommendProductCard,
   },
   setup() {
-    const store = useStore<InsuranceVuexState>()
     const { isDesktop } = useDevice()
-    const recommendProducts = computed(
-      () => store.state.insurance.recommendProducts
-    )
+    const recommendProducts = [
+      {
+        header: '小資族群首選',
+        btn: {
+          text: '立即試算',
+          link: {
+            path: '/bundle/2',
+          },
+        },
+        image_url: '/images/landing/img-adult@2x.png',
+        title: '2025成人罐頭保單',
+        description: '高CP值的保險組合',
+      },
+      {
+        header: '爸比媽咪首選',
+        btn: {
+          text: '立即試算',
+          link: {
+            path: '/bundle/1',
+          },
+        },
+        image_url: '/images/landing/img-newborn@2x.png',
+        title: '2025新生兒罐頭保單',
+        description: '想給寶貝最好的保障',
+      },
+    ]
 
     return {
       isDesktop,
@@ -52,7 +73,8 @@ export default defineComponent({
 @import '@/sass/rwd.scss';
 
 .PromotionBundleSection {
-  width: 1120px;
+  margin-top: 80px;
+  width: 100%;
 
   &__title,
   &__description {
@@ -61,16 +83,17 @@ export default defineComponent({
 
   &__title {
     margin: 0 0 8px 0;
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     font-weight: 500;
   }
 
   &__description {
     margin-bottom: 12px;
+    color: $gray-secondary;
   }
 
   .product {
-    width: 360px;
+    width: 340px;
 
     &.enabled {
       cursor: pointer;
