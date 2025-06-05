@@ -51,7 +51,6 @@
         class="ProductQuerySection__fee"
         :card-height="feeCardHeight"
         :fee="annualFee"
-        :consult-link="consultLink"
         :insurance-type="setting && setting.insuranceType"
         @open-modal="$emit('open-modal')"
       />
@@ -196,12 +195,6 @@ export default defineComponent({
         selectedIndex
       )
     }
-
-    // 諮詢連結 - 假設連結
-    const consultLink = computed(() => ({
-      path: '/consult',
-      url: 'https://my83.com/consult',
-    }))
 
     // 表單欄位定義 - 使用 reactive 創建響應式物件
     const fields = reactive({
@@ -355,6 +348,7 @@ export default defineComponent({
               message: `保額有誤`,
             }
           } else {
+            store.commit(`insuranceProduct/${UPDATE_INSURED_AMOUNT}`, value)
             validateStates.amount = null
           }
         }
@@ -376,8 +370,11 @@ export default defineComponent({
       userInfo.job_level = singleProduct.value?.setting?.defaultJob
       userInfo.period = singleProduct.value?.setting?.defaultPeriod
       choosePeriod()
+
       if (setting.value?.defaultAge > userInfo.selectedCase?.ageMax) {
         userInfo.age = userInfo.selectedCase?.ageMax
+      } else if (setting.value?.defaultAge < userInfo.selectedCase?.ageMin) {
+        userInfo.age = userInfo.selectedCase?.ageMin
       } else {
         userInfo.age = setting.value?.defaultAge
       }
@@ -388,8 +385,6 @@ export default defineComponent({
       )
       // 初始化時計算年繳保費
       store.commit(`insuranceProduct/${UPDATE_FEE}`, annualFee.value)
-      // console.log(annualFee.value)
-      // console.log(userInfo)
     })
 
     watch(annualFee, (newVal) => {
@@ -406,7 +401,6 @@ export default defineComponent({
       basic,
       setting,
       premium,
-      consultLink,
       annualFee,
       userInfo,
     }
@@ -421,7 +415,12 @@ export default defineComponent({
 
 .ProductQuerySection {
   // 桌面版使用卡片樣式
+  @include max-media('lg') {
+    margin: auto 20px;
+  }
+
   @include min-media('xl') {
+    margin: auto 0;
     @include card-primary;
   }
 
@@ -476,7 +475,7 @@ export default defineComponent({
       position: relative;
       margin: -160px auto 10px;
       top: 160px;
-      left: -20px;
+      left: -21px;
     }
   }
 

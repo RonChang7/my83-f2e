@@ -434,10 +434,10 @@ export default defineComponent({
   margin-left: -10px;
   text-align: center;
   cursor: pointer;
-  color: #1e2b58;
+  color: #344b97;
 
-  &:hover {
-    color: #ff6a82;
+  &:active {
+    color: #ef6e2e;
   }
 
   &-line {

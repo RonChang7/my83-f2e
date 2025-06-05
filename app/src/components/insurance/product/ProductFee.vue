@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import { defineComponent } from '@nuxtjs/composition-api'
-import { Link } from '@/api/type'
 import { EventTypes } from '@/analytics/event-listeners/event.type'
 import BaseButton from '@/components/my83-ui-kit/button/BaseButton.vue'
 import { useAnalytics } from '@/utils/composition-api'
@@ -49,10 +48,6 @@ export default defineComponent({
     fee: {
       type: Number,
       default: null,
-    },
-    consultLink: {
-      type: Object as () => Link,
-      required: true,
     },
     insuranceType: {
       type: String,
@@ -96,13 +91,17 @@ export default defineComponent({
     padding: 20px 0 20px 50px;
 
     @include max-media('xl') {
+      width: 100vw;
       background: url('#{$image-bucket-url}/front/insurance/product/bg-product-fee-mobile.png')
         no-repeat;
       background-size: 100% 100%;
-      width: 100vw;
       max-width: 412px;
       padding: 0;
       padding-top: 15px;
+    }
+
+    @include max-media('md') {
+      width: 90vw;
     }
   }
 

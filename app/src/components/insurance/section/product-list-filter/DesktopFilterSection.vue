@@ -312,10 +312,10 @@ export default defineComponent({
     margin: 20px auto;
     text-align: center;
     cursor: pointer;
-    color: #1e2b58;
+    color: #344b97;
 
     &:hover {
-      color: #ff6a82;
+      color: #ef6e2e;
     }
 
     &-line {
