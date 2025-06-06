@@ -60,10 +60,10 @@ export default class ProductCoverageSection extends Vue {
 
     const coverages = []
     benefits.flatMap((item) => {
-      if (item.benefitMain.length > 0) {
+      if (item.benefitMain?.length > 0) {
         coverages.push(...item.benefitMain)
       }
-      if (item.benefitExtra.length > 0) {
+      if (item.benefitExtra?.length > 0) {
         const extraName = item.benefitExtra.map((item) => {
           return {
             name: '加值給付項目',
@@ -89,7 +89,7 @@ export default class ProductCoverageSection extends Vue {
   get isShowToggle() {
     return this.coverageGroup.some((item) => {
       return item.some((el) => {
-        return el.table.length > 0
+        return el.table?.length > 0
       })
     })
   }
