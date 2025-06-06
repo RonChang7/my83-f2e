@@ -107,6 +107,7 @@ export default defineComponent({
   @include max-media('xl') {
     width: 100%;
     padding: 0 20px;
+    overflow: hidden;
 
     &__title {
       font-size: 1.375rem;

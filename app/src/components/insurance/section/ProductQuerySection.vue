@@ -371,8 +371,9 @@ export default defineComponent({
       userInfo.period = singleProduct.value?.setting?.defaultPeriod
       choosePeriod()
 
+      // 年齡初始化 如果設定年齡大於最大年齡，則設為最小年齡，如果設定年齡小於最小年齡，則設為最小年齡，否則設為設定年齡
       if (setting.value?.defaultAge > userInfo.selectedCase?.ageMax) {
-        userInfo.age = userInfo.selectedCase?.ageMax
+        userInfo.age = userInfo.selectedCase?.ageMin
       } else if (setting.value?.defaultAge < userInfo.selectedCase?.ageMin) {
         userInfo.age = userInfo.selectedCase?.ageMin
       } else {
